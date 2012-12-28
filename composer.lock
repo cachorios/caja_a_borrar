@@ -1,5 +1,5 @@
 {
-    "hash": "addf2541972b996b4b6ae1658b8e4591",
+    "hash": "5c7150b75572e8b3624cbf03efad22e0",
     "packages": [
         {
             "name": "doctrine/common",
@@ -310,7 +310,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -353,7 +353,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -600,6 +600,89 @@
                 "assets",
                 "compression",
                 "minification"
+            ]
+        },
+        {
+            "name": "lar/parametro-bundle",
+            "version": "dev-master",
+            "target-dir": "Lar/ParametroBundle",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:cachorios/ParametroBundle.git",
+                "reference": "0e84c23cb364c83bf73fa150dc04fb2c1f003525"
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "time": "2012-12-27 14:41:50",
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1.x-dev"
+                }
+            },
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "Lar\\ParametroBundle": ""
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Luis Rios",
+                    "email": "cachorios@gmail.com"
+                }
+            ],
+            "description": "Adminstra tablas de parametros",
+            "homepage": "https://github.com/cachorios/ParametroBundle",
+            "keywords": [
+                "Tabla",
+                "Parametro",
+                "admin"
+            ]
+        },
+        {
+            "name": "lar/utiles-bundle",
+            "version": "dev-master",
+            "target-dir": "Lar/UtilsBundle",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:cachorios/UtilsBundle.git",
+                "reference": "0d4dd2622168846d51d8655d579305a67a02b0c0"
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "time": "2012-12-28 02:01:12",
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1.x-dev"
+                }
+            },
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "Lar\\UtilsBundle": ""
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Luis Rios",
+                    "email": "cachorios@gmail.com"
+                }
+            ],
+            "description": "Imagen",
+            "homepage": "https://github.com/cachorios/larutilsbundle",
+            "keywords": [
+                "Imagen",
+                "admin"
             ]
         },
         {
@@ -1224,6 +1307,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "twig/extensions": 20,
-        "kriswallsmith/assetic": 20
+        "kriswallsmith/assetic": 20,
+        "lar/utiles-bundle": 20,
+        "lar/parametro-bundle": 20
     }
 }
