@@ -7,9 +7,9 @@ app/cache/*
 app/logs/*
 vendor/*
 web/bundles/*
-web/css/*
-web/js/*
-web/uploads/*
+#web/css/*
+#web/js/*
+#web/uploads/*
 
 # -- Composer -----------------------------------------
 composer.phar
