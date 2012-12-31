@@ -1,3 +1,28 @@
+caja:
+    resource: "@CajaBundle/Resources/config/routing.yml"
+    prefix:   /
+
+lar_parametro:
+    resource: "@ParametroBundle/Resources/config/routing.yml"
+    prefix:   /
+
+lar_utils:
+    resource: "@LarUtilsBundle/Resources/config/routing.yml"
+    prefix:   /
+
+Usuario:
+    resource: "@UsuarioBundle/Resources/config/routing.yml"
+    prefix:   /
+
+upload_file:
+    pattern:  /upload
+    defaults: { _controller: PortadaBundle:Default:uploadFile }
+
+home_page:
+    pattern: /
+    defaults: { _controller: AcmeDemoBundle:Welcome:index }
+
+
 # Internal routing configuration to handle ESI
 # ****** WARNING ******
 # This route should be enabled with caution as it can open a security vulnerability

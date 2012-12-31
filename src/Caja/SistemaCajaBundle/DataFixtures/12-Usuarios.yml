@@ -1,0 +1,50 @@
+model: Lar\UsuarioBundle\Entity\Usuario
+#tags: [ test, dev, prod ] # optional parameter
+save_in_reverse: false # optional parameter
+persistence: orm
+fixtures:
+    cacho:
+        nombre: Luis Antonio
+        apellido: Rios
+        email: cachorios@gmail.com
+        dni: 20489453
+        password: 113049
+        direccion: ch.113 Sec. 120 Casa 99
+        permite_email: 1
+        is_active: 1
+        is_deleted: 0
+        fecha_nacimiento: 05-11-1968
+        grupos:
+            - gr1
+            - gr2
+
+    Beto:
+        nombre: Alberto
+        apellido: Voefray
+        email: Alberto2000@hotmail.com
+        dni: 26610243
+        password: 111111
+        direccion: Av. Eva Peron y Centenario
+        permite_email: 1
+        is_active: 1
+        is_deleted: 0
+        fecha_nacimiento: 15-01-1980
+        grupos:
+            - gr1
+            - gr3
+
+
+    Usr1:
+        nombre: Ruben
+        apellido: Cardozo
+        email: ruben@hotmail.com
+        dni: 3
+        password: 111111
+        direccion: Av. 1
+        permite_email: 1
+        is_active: 1
+        is_deleted: 0
+        fecha_nacimiento: 15-01-1951
+        grupos:
+            - gr1
+

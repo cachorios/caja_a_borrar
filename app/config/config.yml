@@ -4,7 +4,7 @@ imports:
 
 framework:
     #esi:             ~
-    #translator:      { fallback: "%locale%" }
+    translator:      { fallback: "%locale%" }
     secret:          "%secret%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -22,6 +22,13 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    form:
+        resources:
+            - LexikFormFilterBundle:Form:form_div_layout.html.twig
+            - ParametroBundle:Form:fields.html.twig
+            - LarUtilsBundle:Form:fields.html.twig
+    globals:
+        usuario_imagenes: 'uploads/users/'
 
 # Assetic Configuration
 assetic:
@@ -58,3 +65,25 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+mopa_bootstrap:
+    navbar: ~
+    form:
+        show_legend: false # default is true
+        show_child_legend: false # default is true
+        error_type: block # or inline which is default
+        render_optional_text: false
+        render_required_asterisk: true
+
+white_october_breadcrumbs: ~
+
+lar_utils:
+    token: "lartok1589452221"
+    options:
+        swf:  'dify/uploadify.swf'
+
+khepin_yaml_fixtures:
+    resources:
+        - CajaBundle
+        - ParametroBundle
+

@@ -19,6 +19,20 @@ class AppKernel extends Kernel
             new JMS\AopBundle\JMSAopBundle(),
             new JMS\DiExtraBundle\JMSDiExtraBundle($this),
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
+
+            new Lexik\Bundle\FormFilterBundle\LexikFormFilterBundle(),
+            new JordiLlonch\Bundle\CrudGeneratorBundle\JordiLlonchCrudGeneratorBundle(),
+            new WhiteOctober\BreadcrumbsBundle\WhiteOctoberBreadcrumbsBundle(),
+
+            new Khepin\YamlFixturesBundle\KhepinYamlFixturesBundle(),
+            new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
+
+            new Lar\ParametroBundle\ParametroBundle(),
+            new Lar\UtilsBundle\LarUtilsBundle(),
+
+            new Lar\UsuarioBundle\UsuarioBundle(),
+
+            new Caja\SistemaCajaBundle\CajaBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

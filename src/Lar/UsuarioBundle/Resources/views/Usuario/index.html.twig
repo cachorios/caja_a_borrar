@@ -1,0 +1,108 @@
+{% extends '::layout.html.twig' %}
+
+
+{% block title %}
+    {{ parent() }} - Usuario {{ 'views.index.list'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+{% endblock %}
+
+
+{% block page %}
+    {% spaceless %}
+        <section id="usuario">
+            <header>
+                <h1>Lista de Usuarios
+                    <div class="filters-right">
+                        <a class="btn dropdown-toggle btn-mini" data-toggle="collapse" data-target="#filters">
+                            {{ 'views.index.filters'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                            <span class="caret"></span>
+                        </a> &nbsp;
+                    </div>
+                </h1>
+            </header>
+            {{ wo_render_breadcrumbs() }}
+
+            {% spaceless %}
+                <div class="row-fluid">
+                    <div class="span12">{% if form_errors(filterForm) %}
+                        <div class="alert alert-block alert-error fade in form-errors">{{ form_errors(filterForm) }}</div>{% endif %}
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div id="filters" class="collapse">
+
+                        <form class="well form-horizontal " action="{{ path('usuario') }}"
+                              method="post" {{ form_enctype(filterForm) }}>
+                            <div class="row-fluid">
+                                <div class="span12">
+
+                                    {{ form_row(filterForm.id) }}
+
+                                    {{ form_row(filterForm.nombre) }}
+                                    {{ form_row(filterForm.apellido) }}
+                                    {{ form_row(filterForm.email) }}
+                                    {{ form_row(filterForm.permite_email) }}
+                                    {{ form_row(filterForm.isActive) }}
+                                    {{ form_row(filterForm.dni) }}
+                                    {{ form_rest(filterForm) }}
+                                    <p>
+                                        <button type="submit" name="filter_action"
+                                                value="reset">{{ 'views.index.reset'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
+                                        <button type="submit" name="filter_action"
+                                                value="filter">{{ 'views.index.filter'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
+                                    </p>
+                                    {#</form>#}
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            {% endspaceless %}
+
+            </form>
+            <div class="row-fluid">
+                <div class="span12">
+                    <table class="table table-striped full-section table-hover table-bordered">
+                        {#table table-striped table-bordered table-condensed#}
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Nombre y Apellido</th>
+                            <th>Email</th>
+                            <th>Activo</th>
+                            <th>{{ 'views.index.actions'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for entity in entities %}
+                            <tr>
+                                <td><a href="{{ path('usuario_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                                <td>{{ entity }}</td>
+                                <td>{{ entity.email }}</td>
+                                <td style="text-align: center;">{{ entity.isActive ? '&#10004;' : '&#10008;' }}</td>
+                                <td>
+                                    <a class="btn btn-mini" href="{{ path('usuario_show', { 'id': entity.id }) }}">
+                                        {{ 'views.actions.show'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                                    </a>
+                                    <a class="btn btn-mini" href="{{ path('usuario_edit', { 'id': entity.id }) }}">
+                                        {{ 'views.actions.edit'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                                    </a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span9">
+                    {{ pagerHtml|raw }}
+                </div>
+
+                <div class="span3">
+                    <a class="btn btn-primary likepaginator pull-right" href="{{ path('usuario_new') }}">
+                        {{ 'views.index.createnew'|trans({}, 'JordiLlonchCrudGeneratorBundle') }} Usuario
+                    </a>
+                </div>
+            </div>
+
+        </section>
+    {% endspaceless %}
+{% endblock %}

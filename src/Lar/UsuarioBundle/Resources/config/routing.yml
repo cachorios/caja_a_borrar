@@ -1,0 +1,11 @@
+usuario:
+    resource: "@UsuarioBundle/Resources/config/routing/usuario.yml"
+    prefix:   /usuario
+
+grupo:
+    resource: "@UsuarioBundle/Resources/config/routing/grupo.yml"
+    prefix:   /grupo
+
+seguridad:
+    resource: "@UsuarioBundle/Resources/config/routing/seguridad.yml"
+    prefix:   /

@@ -1,0 +1,38 @@
+views:
+    layout:
+        bannersadmin: Administrador
+    index:
+        filters: Filtros
+        filter: Filtrar
+        reset: Limpiar
+        list: lista
+        actions: Acciones
+        createnew: Nuevo
+        pagprev: '&larr; Anterior'
+        pagnext: 'Siguiente &rarr;'
+    actions:
+        show: ver
+        edit: editar
+    recordactions:
+        backtothelist: Volver a la lista
+        edit: Editar
+        delete: Eliminar
+        confirm: Eliminar el elemento?
+    new:
+        creation: Nuevo
+        create: Guardar
+    edit:
+        edit: editar
+        editbutton: Guardar
+    show:
+        show: ver
+flash:
+    create:
+        success: Elemento creado satisfactoriamente.
+        error: Se ha producido un error durante la creación del elemento.
+    update:
+        success: Elemento actualizado satisfactoriamente.
+        error: Se ha producido un error durante la actualización del elemento.
+    delete:
+        success: Elemento eliminado satisfactoriamente.
+        error: Se ha producido un error durante la eliminación del elemento.

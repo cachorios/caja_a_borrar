@@ -1,0 +1,82 @@
+{% extends '::base.html.twig' %}
+{% block header_content %}
+    <h1> Ingreso</h1>
+    <p class="lead">Ingreso al sistema</p>
+{% endblock header_content %}
+{% block container %}
+
+    <div class="span12">
+        <div id="content" style="border: none; background-color: transparent;">
+            <br>
+            <section id="">
+                {#<header>#}
+
+
+                {#</header>#}
+                {#<div class="container wrapper">#}
+
+                <div class="row-fluid">
+
+
+                    <div class="span4 offset4 well">
+                        <div class="row-fluid">
+                            <img src="{{ asset('bundles/portada/img/stock_logo.png'  ) }}" class="span10 offset1" >
+                        </div>
+
+                        <div>
+                            {% if error %}
+                                <div>{{ error.message }}</div>
+                            {% endif %}
+                        </div>
+
+                        <hr>
+                        <form class="form login-form" action="{{ path('seg_login_check') }}" method="post">
+
+                            <div class="input-prepend" data-rel="tooltip" data-original-title="Username">
+                                <span class="add-on"><i class="icon-user"></i></span><input autofocus=""
+                                                                                            class="input-large span10"
+                                                                                            name="_username"
+                                                                                            id="username" type="text"
+                                                                                            value="">
+                            </div>
+                            <br>
+
+                            <div class="clearfix"></div>
+
+                            <div class="input-prepend" data-rel="tooltip" data-original-title="Password">
+                                <span class="add-on"><i class="icon-lock"></i></span><input class="input-large span10"
+                                                                                            name="_password"
+                                                                                            id="password"
+                                                                                            type="password" value="">
+                            </div>
+
+                            <br>
+
+                            <div class="clearfix"></div>
+
+                            <label class="checkbox"><input type="checkbox" id="remember_me" name="_remember_me">
+                                Recordarme</label>
+                            <br><br>
+                            <div class="clearfix"></div>
+                            <p class="center span4">
+                                <button type="submit" class="btn btn-success "><i class="icon-refresh icon-white"></i>
+                                    Ingresar
+                                </button>
+                            </p>
+                            <div class="clearfix"></div>
+                            <hr>
+
+                            {#<p>Or login with your typical social networks:</p>#}
+                            {#<a class="btn btn-info" href="index.html"><i class="icon icon-twitter"></i> Login with Twitter</a>#}
+                            {#<a class="btn btn-primary" href="index.html"><i class="icon icon-facebook"></i> Login with Facebook</a>#}
+                        </form>
+                    </div>
+                    <!--/span-->
+                </div>
+
+
+                {#</div>#}
+            </section>
+        </div>
+    </div>
+{% endblock container %}

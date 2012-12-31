@@ -1,0 +1,30 @@
+grupo:
+    pattern:  /
+    defaults: { _controller: "UsuarioBundle:Grupo:index" }
+
+grupo_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "UsuarioBundle:Grupo:show" }
+
+grupo_new:
+    pattern:  /new
+    defaults: { _controller: "UsuarioBundle:Grupo:new" }
+
+grupo_create:
+    pattern:  /create
+    defaults: { _controller: "UsuarioBundle:Grupo:create" }
+    requirements: { _method: post }
+
+grupo_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "UsuarioBundle:Grupo:edit" }
+
+grupo_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "UsuarioBundle:Grupo:update" }
+    requirements: { _method: post }
+
+grupo_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "UsuarioBundle:Grupo:delete" }
+    requirements: { _method: post }

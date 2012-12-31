@@ -1,0 +1,9 @@
+seg_login:
+    pattern:  /login
+    defaults: { _controller: "UsuarioBundle:Seguridad:login" }
+
+seg_login_check:
+    pattern: /login_check
+
+seg_logout:
+    pattern: /logout

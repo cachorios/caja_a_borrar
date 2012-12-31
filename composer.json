@@ -18,12 +18,22 @@
         "sensio/generator-bundle": "2.1.*",
         "jms/security-extra-bundle": "1.2.*",
         "jms/di-extra-bundle": "1.1.*",
+
         "kriswallsmith/assetic": "1.1.*@dev",
-		"lar/utiles-bundle": "*@dev",
-        "lar/parametro-bundle": "*@dev"
-        
+        "mopa/bootstrap-bundle": "dev-master",
+
+        "khepin/yaml-fixtures-bundle": "0.7.*",
+
+        "jordillonch/crud-generator": "dev-master",
+        "whiteoctober/breadcrumbs-bundle": "2.1.x-dev",
+
+        "lar/utiles-bundle": "*@dev",
+        "lar/parametro-bundle":  "*@dev"
+
+
+
     },
-	"repositories": [
+    "repositories": [
         {
             "type": "vcs",
             "url":  "git@github.com:cachorios/UtilsBundle.git"
@@ -48,6 +58,7 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
         ]
     },
+    "minimum-stability": "dev",
     "extra": {
         "symfony-app-dir": "app",
         "symfony-web-dir": "web"
