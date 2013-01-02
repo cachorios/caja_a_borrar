@@ -1,5 +1,5 @@
 caja:
-    resource: "@CajaBundle/Resources/config/routing.yml"
+    resource: "@SistemaCajaBundle/Resources/config/routing.yml"
     prefix:   /
 
 lar_parametro:

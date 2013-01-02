@@ -4,6 +4,6 @@ namespace Caja\SistemaCajaBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class CajaBundle extends Bundle
+class SistemaCajaBundle extends Bundle
 {
 }

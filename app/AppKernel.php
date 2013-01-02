@@ -24,15 +24,18 @@ class AppKernel extends Kernel
             new JordiLlonch\Bundle\CrudGeneratorBundle\JordiLlonchCrudGeneratorBundle(),
             new WhiteOctober\BreadcrumbsBundle\WhiteOctoberBreadcrumbsBundle(),
 
+
             new Khepin\YamlFixturesBundle\KhepinYamlFixturesBundle(),
             new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
+
+            new RaulFraile\Bundle\LadybugBundle\RaulFraileLadybugBundle(),
 
             new Lar\ParametroBundle\ParametroBundle(),
             new Lar\UtilsBundle\LarUtilsBundle(),
 
             new Lar\UsuarioBundle\UsuarioBundle(),
 
-            new Caja\SistemaCajaBundle\CajaBundle(),
+            new Caja\SistemaCajaBundle\SistemaCajaBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
