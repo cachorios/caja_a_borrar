@@ -3,7 +3,7 @@
 namespace Caja\SistemaCajaBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-use Lar\UsuarioBundle\Entity\Usuario;
+use Lar\UsuarioBundle\Entity\Usuario2;
 
 /**
  * CajaRepository

@@ -18,14 +18,14 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 /**
  * Lar\UsuarioBundle\Entity\Usuario
  *
- * @ORM\Table()
+ * @ORM\Table(name="usuario")
  * @ORM\Entity
  * @ORM\Entity(repositoryClass="Lar\UsuarioBundle\Entity\UsuarioRepository")
  * //@Assert\Callback(methods={"esDniValido"})
  *
   */
-//class Usuario  implements AdvancedUserInterface
-class Usuario
+class Usuario  implements AdvancedUserInterface
+
 {
     /**
      * @var integer $id
@@ -44,7 +44,7 @@ class Usuario
      */
     private $nombre;
 
-    /**                   email
+    /**
      * @var string $apellido
      *
      * @ORM\Column(name="apellido", type="string", length=32)
@@ -186,14 +186,14 @@ class Usuario
     public function setApellido($apellido)
     {
         $this->apellido = $apellido;
-    
+
         return $this;
     }
 
     /**
      * Get apellido
      *
-     * @return string 
+     * @return string
      */
     public function getApellido()
     {
@@ -209,14 +209,14 @@ class Usuario
     public function setEmail($email)
     {
         $this->email = $email;
-    
+
         return $this;
     }
 
     /**
      * Get email
      *
-     * @return string 
+     * @return string
      */
     public function getEmail()
     {
@@ -232,14 +232,14 @@ class Usuario
     public function setPassword($password)
     {
         $this->password = $password;
-    
+
         return $this;
     }
 
     /**
      * Get password
      *
-     * @return string 
+     * @return string
      */
     public function getPassword()
     {
@@ -255,14 +255,14 @@ class Usuario
     public function setSalt($salt)
     {
         $this->salt = $salt;
-    
+
         return $this;
     }
 
     /**
      * Get salt
      *
-     * @return string 
+     * @return string
      */
     public function getSalt()
     {
@@ -278,14 +278,14 @@ class Usuario
     public function setDireccion($direccion)
     {
         $this->direccion = $direccion;
-    
+
         return $this;
     }
 
     /**
      * Get direccion
      *
-     * @return string 
+     * @return string
      */
     public function getDireccion()
     {
@@ -301,14 +301,14 @@ class Usuario
     public function setPermiteEmail($permiteEmail)
     {
         $this->permite_email = $permiteEmail;
-    
+
         return $this;
     }
 
     /**
      * Get permite_email
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getPermiteEmail()
     {
@@ -324,14 +324,14 @@ class Usuario
     public function setFechaAlta($fechaAlta)
     {
         $this->fecha_alta = $fechaAlta;
-    
+
         return $this;
     }
 
     /**
      * Get fecha_alta
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getFechaAlta()
     {
@@ -347,14 +347,14 @@ class Usuario
     public function setFechaNacimiento($fechaNacimiento)
     {
         $this->fecha_nacimiento = $fechaNacimiento;
-    
+
         return $this;
     }
 
     /**
      * Get fecha_nacimiento
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getFechaNacimiento()
     {
@@ -370,14 +370,14 @@ class Usuario
     public function setDni($dni)
     {
         $this->dni = $dni;
-    
+
         return $this;
     }
 
     /**
      * Get dni
      *
-     * @return string 
+     * @return string
      */
     public function getDni()
     {
@@ -544,11 +544,7 @@ class Usuario
         return $this->getNombre().' '.$this->getApellido();
     }
 
-    /*Validaciones*/
-    public function esDniValido(ExecutionContext $context)
-    {
-        // ...
-    }
+
 
     /**
      * Set foto
@@ -576,8 +572,8 @@ class Usuario
      *
      * @param string $directorioDestino Ruta completa del directorio al que se sube la foto
      */
-    public function subirFoto($directorioDestino)
-    {
+//    public function subirFoto($directorioDestino)
+//    {
 //        if (null === $this->foto) {
 //            return;
 //        }
@@ -587,7 +583,7 @@ class Usuario
 //        $this->foto->move($directorioDestino, $nombreArchivoFoto);
 //
 //        $this->setFoto($nombreArchivoFoto);
-    }
+ //   }
 
 
     /**
@@ -600,11 +596,7 @@ class Usuario
         $this->grupos->removeElement($grupos);
     }
 
-    
 
-    public function getOrigen()
-    {
 
-        return 'anonimo';
-    }
+
 }

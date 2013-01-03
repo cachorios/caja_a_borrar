@@ -108,7 +108,7 @@ class Caja
      * @param \Lar\UsuarioBundle\Entity\Grupo $cajero
      * @return Caja
      */
-    public function setCajero(\Lar\UsuarioBundle\Entity\Grupo $cajero = null)
+    public function setCajero(\Lar\UsuarioBundle\Entity\Usuario $cajero = null)
     {
         $this->cajero = $cajero;
     
