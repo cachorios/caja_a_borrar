@@ -9,7 +9,8 @@ use Lar\UsuarioBundle\Entity\Usuario;
  * Caja
  *
  * @ORM\Table(name="sca_caja")
- * @ORM\Entity(repositoryClass="Caja\SistemaCajaBundle\Entity\CajaRepository")
+ * @ORM\eNTITY
+ * //@ORM\Entity(repositoryClass="Caja\SistemaCajaBundle\Entity\CajaRepository")
  */
 class Caja
 {
@@ -37,8 +38,10 @@ class Caja
     private $ip;
 
     /**
-    * @ORM\ManyToOne(targetEntity="Lar\UsuarioBundle\Entity\Usuario" )
-    * @ORM\JoinColumn(name="cajero_id", referencedColumnName="id")
+    * //@ORM\ManyToOne(targetEntity="\Lar\UsuarioBundle\Entity\Usuario" )
+    * //@ORM\JoinColumn(name="cajero_id", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="\Lar\UsuarioBundle\Entity\Usuario")
+     * @ORM\JoinColumn(name="cajero_id", referencedColumnName="id")
     **/
     protected  $cajero;
 
@@ -102,10 +105,10 @@ class Caja
     /**
      * Set cajero
      *
-     * @param \Lar\UsuarioBundle\Entity\Usuario $cajero
+     * @param \Lar\UsuarioBundle\Entity\Grupo $cajero
      * @return Caja
      */
-    public function setCajero(\Lar\UsuarioBundle\Entity\Usuario $cajero = null)
+    public function setCajero(\Lar\UsuarioBundle\Entity\Grupo $cajero = null)
     {
         $this->cajero = $cajero;
     

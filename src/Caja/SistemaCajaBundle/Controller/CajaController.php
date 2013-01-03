@@ -51,10 +51,10 @@ class CajaController extends Controller
         $session = $request->getSession();
         $filterForm = $this->createForm(new CajaFilterType());
         $em = $this->getDoctrine()->getManager();
-        $queryBuilder = $em->getRepository('SistemaCajaBundle:Caja')->findCajas();
-            //createQueryBuilder('e');
+        $queryBuilder = $em->getRepository('SistemaCajaBundle:Caja')->createQueryBuilder('e');
+            //findCajas();
+            //
 
-        return array($filterForm, $queryBuilder);
 
         // Reset filter
         if ($request->getMethod() == 'POST' && $request->get('filter_action') == 'reset') {

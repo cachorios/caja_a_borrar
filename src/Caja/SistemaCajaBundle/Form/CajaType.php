@@ -5,6 +5,7 @@ namespace Caja\SistemaCajaBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Doctrine\ORM\EntityRepository;
 
 class CajaType extends AbstractType
 {
@@ -13,7 +14,15 @@ class CajaType extends AbstractType
         $builder
             ->add('nombre')
             ->add('ip')
-            ->add('cajero')
+            ->add('cajero'
+//            , 'entity',
+//            array(
+//                'class' => 'UsuarioBundle:Usuario',
+//                'query_builder' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('u');
+//                },
+//            )
+        )
         ;
     }
 

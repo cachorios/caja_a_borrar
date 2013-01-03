@@ -24,7 +24,8 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  * //@Assert\Callback(methods={"esDniValido"})
  *
   */
-class Usuario  implements AdvancedUserInterface
+//class Usuario  implements AdvancedUserInterface
+class Usuario
 {
     /**
      * @var integer $id
