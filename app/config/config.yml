@@ -29,6 +29,9 @@ twig:
             - LarUtilsBundle:Form:fields.html.twig
     globals:
         usuario_imagenes: 'uploads/users/'
+        lar:
+            nombre_sistema: 'Sistema de Cajas'
+            logo_empresa:  'img/logo-posadas_bco.png'
 
 # Assetic Configuration
 assetic:

@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 /**
  * Lar\UsuarioBundle\Entity\Usuario
  *
- * @ORM\Table(name="usuario")
+ * @ORM\Table
  * @ORM\Entity
  * @ORM\Entity(repositoryClass="Lar\UsuarioBundle\Entity\UsuarioRepository")
  * //@Assert\Callback(methods={"esDniValido"})

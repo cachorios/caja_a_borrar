@@ -11,7 +11,7 @@ use Pagerfanta\View\TwitterBootstrapView;
 use Caja\SistemaCajaBundle\Entity\Caja;
 use Caja\SistemaCajaBundle\Form\CajaType;
 use Caja\SistemaCajaBundle\Form\CajaFilterType;
-use Lar\UsuarioBundle\Entity\Usuario2;
+
 
 /**
  * Caja controller.
