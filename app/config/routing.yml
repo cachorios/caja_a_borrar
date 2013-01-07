@@ -20,7 +20,7 @@ upload_file:
 
 home_page:
     pattern: /
-    defaults: { _controller: AcmeDemoBundle:Welcome:index }
+    defaults: { _controller: UsuarioBundle:Usuario:index }
 
 
 # Internal routing configuration to handle ESI

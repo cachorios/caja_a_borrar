@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
-
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
 
 //use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
@@ -21,10 +21,9 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  * @ORM\Table
  * @ORM\Entity
  * @ORM\Entity(repositoryClass="Lar\UsuarioBundle\Entity\UsuarioRepository")
- * //@Assert\Callback(methods={"esDniValido"})
  *
-  */
-class Usuario  implements AdvancedUserInterface
+ */
+class Usuario implements AdvancedUserInterface
 
 {
     /**
@@ -135,6 +134,11 @@ class Usuario  implements AdvancedUserInterface
     protected $foto;
     //@ A s sert\Image(maxSize = "500k"
 
+    /**
+     * @var Symfony\Component\DependencyInjection\ParameterBag\ParameterBag
+     */
+    protected $contenedor;
+
 
 
     public function __construct()
@@ -142,14 +146,29 @@ class Usuario  implements AdvancedUserInterface
         $this->grupos = new ArrayCollection();
         $this->isActive = true;
         $this->salt = sha1(uniqid(mt_rand(), true));
+
+        $this->contenedor = new ParameterBag();
     }
+
+    /**
+     * @return Symfony\Component\DependencyInjection\ParameterBag\ParameterBag
+     */
+    public function getContenedor()
+    {
+        if ($this->contenedor == null) {
+            $this->contenedor = new ParameterBag();
+        }
+        return $this->contenedor;
+    }
+
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
-    public function getId()
+    public
+    function getId()
     {
         return $this->id;
     }
@@ -160,19 +179,21 @@ class Usuario  implements AdvancedUserInterface
      * @param string $nombre
      * @return Usuario
      */
-    public function setNombre($nombre)
+    public
+    function setNombre($nombre)
     {
         $this->nombre = $nombre;
-    
+
         return $this;
     }
 
     /**
      * Get nombre
      *
-     * @return string 
+     * @return string
      */
-    public function getNombre()
+    public
+    function getNombre()
     {
         return $this->nombre;
     }
@@ -183,7 +204,8 @@ class Usuario  implements AdvancedUserInterface
      * @param string $apellido
      * @return Usuario
      */
-    public function setApellido($apellido)
+    public
+    function setApellido($apellido)
     {
         $this->apellido = $apellido;
 
@@ -195,7 +217,8 @@ class Usuario  implements AdvancedUserInterface
      *
      * @return string
      */
-    public function getApellido()
+    public
+    function getApellido()
     {
         return $this->apellido;
     }
@@ -206,7 +229,8 @@ class Usuario  implements AdvancedUserInterface
      * @param string $email
      * @return Usuario
      */
-    public function setEmail($email)
+    public
+    function setEmail($email)
     {
         $this->email = $email;
 
@@ -218,7 +242,8 @@ class Usuario  implements AdvancedUserInterface
      *
      * @return string
      */
-    public function getEmail()
+    public
+    function getEmail()
     {
         return $this->email;
     }
@@ -229,7 +254,8 @@ class Usuario  implements AdvancedUserInterface
      * @param string $password
      * @return Usuario
      */
-    public function setPassword($password)
+    public
+    function setPassword($password)
     {
         $this->password = $password;
 
@@ -241,7 +267,8 @@ class Usuario  implements AdvancedUserInterface
      *
      * @return string
      */
-    public function getPassword()
+    public
+    function getPassword()
     {
         return $this->password;
     }
@@ -252,7 +279,8 @@ class Usuario  implements AdvancedUserInterface
      * @param string $salt
      * @return Usuario
      */
-    public function setSalt($salt)
+    public
+    function setSalt($salt)
     {
         $this->salt = $salt;
 
@@ -264,7 +292,8 @@ class Usuario  implements AdvancedUserInterface
      *
      * @return string
      */
-    public function getSalt()
+    public
+    function getSalt()
     {
         return $this->salt;
     }
@@ -275,7 +304,8 @@ class Usuario  implements AdvancedUserInterface
      * @param string $direccion
      * @return Usuario
      */
-    public function setDireccion($direccion)
+    public
+    function setDireccion($direccion)
     {
         $this->direccion = $direccion;
 
@@ -287,7 +317,8 @@ class Usuario  implements AdvancedUserInterface
      *
      * @return string
      */
-    public function getDireccion()
+    public
+    function getDireccion()
     {
         return $this->direccion;
     }
@@ -298,7 +329,8 @@ class Usuario  implements AdvancedUserInterface
      * @param boolean $permiteEmail
      * @return Usuario
      */
-    public function setPermiteEmail($permiteEmail)
+    public
+    function setPermiteEmail($permiteEmail)
     {
         $this->permite_email = $permiteEmail;
 
@@ -310,7 +342,8 @@ class Usuario  implements AdvancedUserInterface
      *
      * @return boolean
      */
-    public function getPermiteEmail()
+    public
+    function getPermiteEmail()
     {
         return $this->permite_email;
     }
@@ -321,7 +354,8 @@ class Usuario  implements AdvancedUserInterface
      * @param \DateTime $fechaAlta
      * @return Usuario
      */
-    public function setFechaAlta($fechaAlta)
+    public
+    function setFechaAlta($fechaAlta)
     {
         $this->fecha_alta = $fechaAlta;
 
@@ -333,7 +367,8 @@ class Usuario  implements AdvancedUserInterface
      *
      * @return \DateTime
      */
-    public function getFechaAlta()
+    public
+    function getFechaAlta()
     {
         return $this->fecha_alta;
     }
@@ -344,7 +379,8 @@ class Usuario  implements AdvancedUserInterface
      * @param \DateTime $fechaNacimiento
      * @return Usuario
      */
-    public function setFechaNacimiento($fechaNacimiento)
+    public
+    function setFechaNacimiento($fechaNacimiento)
     {
         $this->fecha_nacimiento = $fechaNacimiento;
 
@@ -356,7 +392,8 @@ class Usuario  implements AdvancedUserInterface
      *
      * @return \DateTime
      */
-    public function getFechaNacimiento()
+    public
+    function getFechaNacimiento()
     {
         return $this->fecha_nacimiento;
     }
@@ -367,7 +404,8 @@ class Usuario  implements AdvancedUserInterface
      * @param string $dni
      * @return Usuario
      */
-    public function setDni($dni)
+    public
+    function setDni($dni)
     {
         $this->dni = $dni;
 
@@ -379,7 +417,8 @@ class Usuario  implements AdvancedUserInterface
      *
      * @return string
      */
-    public function getDni()
+    public
+    function getDni()
     {
         return $this->dni;
     }
@@ -407,14 +446,17 @@ class Usuario  implements AdvancedUserInterface
      * @param Grupo $grupo
      * @return Usuario
      */
-    public function addGrupo(Grupo $grupo)
+    public
+    function addGrupo(Grupo $grupo)
     {
         $this->grupos[] = $grupo;
 
         return $this;
     }
 
-    public function setGrupos($grupos){
+    public
+    function setGrupos($grupos)
+    {
         $this->grupos = $grupos;
     }
 
@@ -423,7 +465,8 @@ class Usuario  implements AdvancedUserInterface
      *
      * @return ArrayCollection
      */
-    public function getGrupos()
+    public
+    function getGrupos()
     {
         return $this->grupos;
     }
@@ -434,7 +477,8 @@ class Usuario  implements AdvancedUserInterface
      * @param boolean $isActive
      * @return Usuario
      */
-    public function setIsActive($isActive)
+    public
+    function setIsActive($isActive)
     {
         $this->isActive = $isActive;
 
@@ -446,17 +490,20 @@ class Usuario  implements AdvancedUserInterface
      *
      * @return boolean
      */
-    public function getIsActive()
+    public
+    function getIsActive()
     {
-        return $this->isActive ;
+        return $this->isActive;
 
     }
+
     /**
      * Get isActive
      *
      * @return boolean
      */
-    public function isActive()
+    public
+    function isActive()
     {
         return $this->isActive && !$this->isDeleted;
     }
@@ -467,7 +514,8 @@ class Usuario  implements AdvancedUserInterface
      * @param boolean $isDeleted
      * @return Usuario
      */
-    public function setIsDeleted($isDeleted)
+    public
+    function setIsDeleted($isDeleted)
     {
         $this->isDeleted = $isDeleted;
 
@@ -479,7 +527,8 @@ class Usuario  implements AdvancedUserInterface
      *
      * @return boolean
      */
-    public function isDeleted()
+    public
+    function isDeleted()
     {
         return $this->isDeleted;
     }
@@ -489,24 +538,18 @@ class Usuario  implements AdvancedUserInterface
      *
      * @return boolean
      */
-    public function getIsDeleted()
+    public
+    function getIsDeleted()
     {
-        return $this->isDeleted ;
+        return $this->isDeleted;
 
     }
 
     /**
      * @inheritDoc
      */
-    public function isAccountNonExpired()
-    {
-        return true;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function isAccountNonLocked()
+    public
+    function isAccountNonExpired()
     {
         return true;
     }
@@ -514,7 +557,8 @@ class Usuario  implements AdvancedUserInterface
     /**
      * @inheritDoc
      */
-    public function isCredentialsNonExpired()
+    public
+    function isAccountNonLocked()
     {
         return true;
     }
@@ -522,7 +566,17 @@ class Usuario  implements AdvancedUserInterface
     /**
      * @inheritDoc
      */
-    public function isEnabled()
+    public
+    function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public
+    function isEnabled()
     {
         return $this->isActive();
     }
@@ -530,7 +584,8 @@ class Usuario  implements AdvancedUserInterface
     /**
      * @inheritDoc
      */
-    public function eraseCredentials()
+    public
+    function eraseCredentials()
     {
     }
 
@@ -539,11 +594,11 @@ class Usuario  implements AdvancedUserInterface
         return $this->getEmail();
     }
 
-    public function __toString()
+    public
+    function __toString()
     {
-        return $this->getNombre().' '.$this->getApellido();
+        return $this->getNombre() . ' ' . $this->getApellido();
     }
-
 
 
     /**
@@ -551,7 +606,8 @@ class Usuario  implements AdvancedUserInterface
      *
      * @param string $foto
      */
-    public function setFoto($foto)
+    public
+    function setFoto($foto)
     {
         $this->foto = $foto;
     }
@@ -561,7 +617,8 @@ class Usuario  implements AdvancedUserInterface
      *
      * @return string
      */
-    public function getFoto()
+    public
+    function getFoto()
     {
         return $this->foto;
     }
@@ -583,7 +640,7 @@ class Usuario  implements AdvancedUserInterface
 //        $this->foto->move($directorioDestino, $nombreArchivoFoto);
 //
 //        $this->setFoto($nombreArchivoFoto);
- //   }
+//   }
 
 
     /**
@@ -591,12 +648,11 @@ class Usuario  implements AdvancedUserInterface
      *
      * @param \Lar\UsuarioBundle\Entity\Grupo $grupos
      */
-    public function removeGrupo(\Lar\UsuarioBundle\Entity\Grupo $grupos)
+    public
+    function removeGrupo(\Lar\UsuarioBundle\Entity\Grupo $grupos)
     {
         $this->grupos->removeElement($grupos);
     }
-
-
 
 
 }

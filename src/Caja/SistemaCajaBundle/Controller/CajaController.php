@@ -33,7 +33,7 @@ class CajaController extends Controller
 
         list($entities, $pagerHtml) = $this->paginator($queryBuilder);
 
-    
+
         return $this->render('SistemaCajaBundle:Caja:index.html.twig', array(
             'entities' => $entities,
             'pagerHtml' => $pagerHtml,

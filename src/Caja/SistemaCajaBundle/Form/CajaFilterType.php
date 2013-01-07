@@ -16,7 +16,6 @@ class CajaFilterType extends AbstractType
         $builder
             ->add('id', 'filter_number_range')
             ->add('nombre', 'filter_text')
-            ->add('ip', 'filter_text')
         ;
 
         $listener = function(FormEvent $event)

@@ -40,6 +40,9 @@ security:
 #                providers: ["usuarios", "clientes"]
         usuarios:
             entity: { class: Lar\UsuarioBundle\Entity\Usuario,  property:    email }
+
+
+
 #        clientes:
 #            entity: { class: Stock\StockBundle\Entity\Cliente,    property:    usuario }
 

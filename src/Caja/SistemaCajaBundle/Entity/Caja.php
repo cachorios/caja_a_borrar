@@ -3,14 +3,17 @@
 namespace Caja\SistemaCajaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Lar\UsuarioBundle\Entity\Usuario;
 
 /**
  * Caja
  *
  * @ORM\Table(name="sca_caja")
- * @ORM\eNTITY
- * //@ORM\Entity(repositoryClass="Caja\SistemaCajaBundle\Entity\CajaRepository")
+ * @ORM\Entity(repositoryClass="Caja\SistemaCajaBundle\Entity\CajaRepository")
+ *
+ * @DoctrineAssert\UniqueEntity("nombre")
+ * @DoctrineAssert\UniqueEntity("cajero")
  */
 class Caja
 {
@@ -31,15 +34,6 @@ class Caja
     private $nombre;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="ip", type="string", length=20)
-     */
-    private $ip;
-
-    /**
-    * //@ORM\ManyToOne(targetEntity="\Lar\UsuarioBundle\Entity\Usuario" )
-    * //@ORM\JoinColumn(name="cajero_id", referencedColumnName="id")
      * @ORM\OneToOne(targetEntity="\Lar\UsuarioBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="cajero_id", referencedColumnName="id")
     **/
@@ -78,28 +72,6 @@ class Caja
         return $this->nombre;
     }
 
-    /**
-     * Set ip
-     *
-     * @param string $ip
-     * @return Caja
-     */
-    public function setIp($ip)
-    {
-        $this->ip = $ip;
-    
-        return $this;
-    }
-
-    /**
-     * Get ip
-     *
-     * @return string 
-     */
-    public function getIp()
-    {
-        return $this->ip;
-    }
 
 
     /**
@@ -124,4 +96,6 @@ class Caja
     {
         return $this->cajero;
     }
+
+
 }

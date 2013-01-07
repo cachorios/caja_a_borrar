@@ -13,7 +13,6 @@ class CajaType extends AbstractType
     {
         $builder
             ->add('nombre')
-            ->add('ip')
             ->add('cajero'
 //            , 'entity',
 //            array(

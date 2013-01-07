@@ -36,7 +36,6 @@
                     <form class="well form-horizontal" action="{{ path('caja') }}" method="post" {{ form_enctype(filterForm) }}>
                             {{ form_row(filterForm.id) }}
                             {{ form_row(filterForm.nombre) }}
-                            {{ form_row(filterForm.ip) }}
                         {{ form_rest(filterForm) }}
 
                         <p>
@@ -56,7 +55,6 @@
                     <tr>
                             <th>Id</th>
                             <th>Nombre</th>
-                            <th>Ip</th>
                             <th>Cajero</th>
                         <th>{{ 'views.index.actions'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</th>
                     </tr>
@@ -66,7 +64,6 @@
                     <tr>
                         <td><a href="{{ path('caja_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                             <td>{{ entity.nombre }}</td>
-                            <td>{{ entity.ip }}</td>
                             <td>{{ entity.cajero }}</td>
                             <td>
         <a class="btn btn-mini" href="{{ path('caja_show', { 'id': entity.id }) }}">
