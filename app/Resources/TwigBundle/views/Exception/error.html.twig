@@ -1,0 +1,19 @@
+{% extends "::layout.html.twig" %}
+
+{% block page %}
+<section id="form_Caja">
+
+    <header>
+        <h1>Oops! Ocurrio un error</h1>
+    </header>
+    <div class="row-fluid">
+        <br><br><br><br>
+        <div style="text-align: center;">
+            <h3>El server produjo un error "{{ status_code }} {{ status_text }}".</h3>
+
+            <p>Contancte a la Direccion Gral de Adminstración y Desarrollo.</p>
+        </div>
+    </div>
+    {% endblock page %}
+
+
