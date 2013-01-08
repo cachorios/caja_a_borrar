@@ -43,6 +43,9 @@ class BarraDetalle
     private $longitud;
 
 
+    private $tabla
+
+
     /**
      * Get id
      *

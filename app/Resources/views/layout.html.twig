@@ -1,7 +1,6 @@
 {% extends '::base.html.twig' %}
 
 
-
 {% block container %}
 
     {% include '::includes/navleft.html.twig' ignore missing %}
@@ -9,7 +8,6 @@
     <div id="content-wrapper" class="span9" >
         <div id="content">
 
-            {{ app.user | ld}}
             {% block content %}
             {% endblock content %}
             {% block page %}

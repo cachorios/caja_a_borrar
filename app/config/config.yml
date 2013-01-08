@@ -87,6 +87,6 @@ lar_utils:
 
 khepin_yaml_fixtures:
     resources:
-        - CajaBundle
+        - SistemaCajaBundle
         - ParametroBundle
 
