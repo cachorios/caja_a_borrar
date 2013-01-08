@@ -30,9 +30,44 @@ class CodigoBarra
 
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre", type="string", length=64)
+     */
+    private $empresa;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre", type="integer" )
+     */
+    private $longitud;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre", type="string", length=64)
+     */
+    private $identificador;
+
+    /**
+     * @var text
+     *
+     * @ORM\Column(name="nombre", type="text" )
+     */
+    private $observacion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre", type="string", length=64)
+     */
+    private $valor;
+
+    /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -48,14 +83,14 @@ class CodigoBarra
     public function setNombre($nombre)
     {
         $this->nombre = $nombre;
-    
+
         return $this;
     }
 
     /**
      * Get nombre
      *
-     * @return string 
+     * @return string
      */
     public function getNombre()
     {
