@@ -49,6 +49,32 @@ Habra opciones para reenvios y reimpresiones sin requerir cierres simpre que no 
 
 
 
+CODIGO DE BARRA
+---------------
+La Identificacion del Cliente que es a partir de la Posicion Nº 18 y ocupa 16 caracteres dice asi:
+
+Posicion 1: Indica un 1 si es proveniente del Sistema VIEJO, Indica un 2 si es proveniente del Sistema NUEVO
+(El nuevo es todo lo emitido desde nuestro desarrollo via WEB)`
+
+### Para el Caso de Sistema NUEVO
+
+- Posición 2 y 3: Indica el Sistema desde el cual fue impreso, y se refiere exactamente al ID de la taba TIPO_SECCION, los casos mas típicos son: 01 = INMUEBLES / 02 = PATENTES / 03 =  CONVENIOS / 04 = COMERCIO / 05 = .... 06 = OTRAS TASAS / 07 = MICRO CREDITOS / 10 = PUBLICIDAD / 11 = CEMENTERIO. Sin dudas el sistema debería consultar esta tabla para informar al cajero de que se trata la cobranza
+
+- Posición 4 a 6: Indica el Código de Tributo que se esta cobrando. Es mas util para el caso de que se este cobrando CONVENIOS, ya que te indica de que tributo es el convenio. Otro caso Útil es para cuando la boleta es de OTRAS TASAS que te indica también el tributo que se abona. En este caso en otras tasas puede haber mas de un tributo por boleta, pero en el código de barras solamente sale el primero.
+
+- Posición 7 a 16: Indica el numero de comprobante que se está abonando, que luego será utilizado para impactar los pagos en el sistema (una vez que las cobranzas son informadas). Si el sistema de cajas es vía WEB y funciona en linea, con este comprobante podemos brindar mas informacion al cajero del detalle de lo que se esta cobrando, haciendo las consultas sobre las tablas relacionadas.
+
+### Para el Caso de Sistema VIEJO
+
+para el caso de que se identifique como sistema viejo, que hoy día como ejemplo esta comercio y otras tasas también, los 15 caracteres restantes difieren de acuerdo a cada sistema, esto ya lo conoces (cada uno manejaba ahí como se le antojara) Despues podemos ver cada caso para informar en pantalla algún detalle.
+
+
+# COMO MANEJAR LOS CODIGOS DE BARRA #
+
+Para poder automatizar, ya se vislumbra que minimamente hay dos codigos de barras, sistema nuevo y viejo, y posiblemente, cada subsistema del sistema viejo, tenga un codigo de barra para cada subsistema.
+
+Inicialmente tendriamos dos codigos de barra, ambos de 44 caracteres de longitud, por lo que tiene que haber una forma de identificarlo, ambos empiezan con 9339, en la posicion 18, hay un caracter que identifica, 1 sistema viejo, 2 sistema nuevo, inicialmente utilizaremos esta configuracion.
+Para identificar el codigo, la notacion seria [1,4][18,1] para definicion, y el valor seria 93391 o 93392 en la definicion del codigo de barra.
 
 **Luis Rios**
 
