@@ -1,3 +1,11 @@
 CajaBundle_caja:
     resource: "@SistemaCajaBundle/Resources/config/routing/caja.yml"
     prefix:   /caja
+
+SistemaCajaBundle_codigobarra:
+    resource: "@SistemaCajaBundle/Resources/config/routing/codigobarra.yml"
+    prefix:   /codigobarra
+
+SistemaCajaBundle_barradetalle:
+    resource: "@SistemaCajaBundle/Resources/config/routing/barradetalle.yml"
+    prefix:   /barradetalle

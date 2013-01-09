@@ -21,29 +21,46 @@ class BarraDetalle
      */
     private $id;
 
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="orden", type="integer")
+     */
+    private $orden;
+
     /**
      * @var string
-     *
      * @ORM\Column(name="descripcion", type="string", length=64)
      */
     private $descripcion;
 
     /**
      * @var integer
-     *
      * @ORM\Column(name="posicion", type="integer")
      */
     private $posicion;
 
     /**
      * @var integer
-     *
      * @ORM\Column(name="longitud", type="integer")
      */
     private $longitud;
 
+    /**
+     * @var integer
+     * @ORM\Column(name="tabla", type="integer", nullable = true)
+     */
+    private $tabla;
 
-    private $tabla
+
+    /**
+     * Bidireccional - Muchos comentarios fueron redactados por un usuario (Lado propietario)
+     *
+     * @var Caja\SistemaCajaBundle\Entity\CodigoBarra
+     * @ORM\ManyToOne(targetEntity="CodigoBarra", inversedBy="posiciones", cascade={"persist"})
+     */
+    private $codigobarra;
 
 
     /**
@@ -123,5 +140,78 @@ class BarraDetalle
     public function getLongitud()
     {
         return $this->longitud;
+    }
+
+    /**
+     * Set tabla
+     *
+     * @param integer $tabla
+     * @return BarraDetalle
+     */
+    public function setTabla($tabla)
+    {
+        $this->tabla = $tabla;
+    
+        return $this;
+    }
+
+    /**
+     * Get tabla
+     *
+     * @return integer 
+     */
+    public function getTabla()
+    {
+        return $this->tabla;
+    }
+
+
+
+
+
+    /**
+     * Set codigobarra
+     *
+     * @param \Caja\SistemaCajaBundle\Entity\CodigoBarra $codigobarra
+     * @return BarraDetalle
+     */
+    public function setCodigobarra(\Caja\SistemaCajaBundle\Entity\CodigoBarra $codigobarra = null)
+    {
+        $this->codigobarra = $codigobarra;
+    
+        return $this;
+    }
+
+    /**
+     * Get codigobarra
+     *
+     * @return \Caja\SistemaCajaBundle\Entity\CodigoBarra 
+     */
+    public function getCodigobarra()
+    {
+        return $this->codigobarra;
+    }
+
+    /**
+     * Set orden
+     *
+     * @param integer $orden
+     * @return BarraDetalle
+     */
+    public function setOrden($orden)
+    {
+        $this->orden = $orden;
+    
+        return $this;
+    }
+
+    /**
+     * Get orden
+     *
+     * @return integer 
+     */
+    public function getOrden()
+    {
+        return $this->orden;
     }
 }

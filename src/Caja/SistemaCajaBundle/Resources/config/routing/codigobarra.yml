@@ -1,0 +1,30 @@
+codigobarra:
+    pattern:  /
+    defaults: { _controller: "SistemaCajaBundle:CodigoBarra:index" }
+
+codigobarra_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "SistemaCajaBundle:CodigoBarra:show" }
+
+codigobarra_new:
+    pattern:  /new
+    defaults: { _controller: "SistemaCajaBundle:CodigoBarra:new" }
+
+codigobarra_create:
+    pattern:  /create
+    defaults: { _controller: "SistemaCajaBundle:CodigoBarra:create" }
+    requirements: { _method: post }
+
+codigobarra_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "SistemaCajaBundle:CodigoBarra:edit" }
+
+codigobarra_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "SistemaCajaBundle:CodigoBarra:update" }
+    requirements: { _method: post }
+
+codigobarra_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "SistemaCajaBundle:CodigoBarra:delete" }
+    requirements: { _method: post }

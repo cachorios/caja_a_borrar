@@ -14,7 +14,6 @@ class CodigoBarra
 {
     /**
      * @var integer
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -23,7 +22,6 @@ class CodigoBarra
 
     /**
      * @var string
-     *
      * @ORM\Column(name="nombre", type="string", length=64)
      */
     private $nombre;
@@ -31,38 +29,41 @@ class CodigoBarra
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="nombre", type="string", length=64)
+     * @ORM\Column(name="empresa", type="string", length=64)
      */
     private $empresa;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="nombre", type="integer" )
+     * @ORM\Column(name="longitud", type="integer" )
      */
     private $longitud;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="nombre", type="string", length=64)
+     * @ORM\Column(name="identificador", type="string", length=64)
      */
     private $identificador;
 
-    /**
-     * @var text
-     *
-     * @ORM\Column(name="nombre", type="text" )
-     */
-    private $observacion;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="nombre", type="string", length=64)
+     * @ORM\Column(name="valor", type="string", length=64)
      */
     private $valor;
+
+    /**
+     * @var text
+     * @ORM\Column(name="observacion", type="text", nullable=true )
+     */
+    private $observacion;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity="BarraDetalle", mappedBy="codigobarra", cascade={"persist"}  )
+     */
+    protected $posiciones;
 
     /**
      * Get id
@@ -95,5 +96,164 @@ class CodigoBarra
     public function getNombre()
     {
         return $this->nombre;
+    }
+
+    /**
+     * Set empresa
+     *
+     * @param string $empresa
+     * @return CodigoBarra
+     */
+    public function setEmpresa($empresa)
+    {
+        $this->empresa = $empresa;
+    
+        return $this;
+    }
+
+    /**
+     * Get empresa
+     *
+     * @return string 
+     */
+    public function getEmpresa()
+    {
+        return $this->empresa;
+    }
+
+    /**
+     * Set longitud
+     *
+     * @param integer $longitud
+     * @return CodigoBarra
+     */
+    public function setLongitud($longitud)
+    {
+        $this->longitud = $longitud;
+    
+        return $this;
+    }
+
+    /**
+     * Get longitud
+     *
+     * @return integer 
+     */
+    public function getLongitud()
+    {
+        return $this->longitud;
+    }
+
+    /**
+     * Set identificador
+     *
+     * @param string $identificador
+     * @return CodigoBarra
+     */
+    public function setIdentificador($identificador)
+    {
+        $this->identificador = $identificador;
+    
+        return $this;
+    }
+
+    /**
+     * Get identificador
+     *
+     * @return string 
+     */
+    public function getIdentificador()
+    {
+        return $this->identificador;
+    }
+
+    /**
+     * Set valor
+     *
+     * @param string $valor
+     * @return CodigoBarra
+     */
+    public function setValor($valor)
+    {
+        $this->valor = $valor;
+    
+        return $this;
+    }
+
+    /**
+     * Get valor
+     *
+     * @return string 
+     */
+    public function getValor()
+    {
+        return $this->valor;
+    }
+
+    /**
+     * Set observacion
+     *
+     * @param string $observacion
+     * @return CodigoBarra
+     */
+    public function setObservacion($observacion)
+    {
+        $this->observacion = $observacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get observacion
+     *
+     * @return string 
+     */
+    public function getObservacion()
+    {
+        return $this->observacion;
+    }
+    /**
+     * Constructor
+     */
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->posiciones = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add posiciones
+     *
+     * @param \Caja\SistemaCajaBundle\Entity\BarraDetalle $posicion
+     * @return CodigoBarra
+     */
+    public function addPosicione(\Caja\SistemaCajaBundle\Entity\BarraDetalle $posicion)
+    {
+        $this->posiciones[] = $posicion;
+    
+        return $this;
+    }
+
+    /**
+     * Remove posiciones
+     *
+     * @param \Caja\SistemaCajaBundle\Entity\BarraDetalle $posicion
+     */
+    public function removePosicione(\Caja\SistemaCajaBundle\Entity\BarraDetalle $posicion)
+    {
+        $this->posiciones->removeElement($posicion);
+    }
+
+    /**
+     * Get posiciones
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPosiciones()
+    {
+        return $this->posiciones;
     }
 }

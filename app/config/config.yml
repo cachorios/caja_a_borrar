@@ -24,6 +24,7 @@ twig:
     strict_variables: "%kernel.debug%"
     form:
         resources:
+            - 'MopaBootstrapBundle:Form:fields.html.twig'
             - LexikFormFilterBundle:Form:form_div_layout.html.twig
             - ParametroBundle:Form:fields.html.twig
             - LarUtilsBundle:Form:fields.html.twig
@@ -72,11 +73,24 @@ swiftmailer:
 mopa_bootstrap:
     navbar: ~
     form:
+        #templating: true
+        render_fieldset: false
         show_legend: false # default is true
         show_child_legend: false # default is true
+        render_required_asterisk: false
         error_type: block # or inline which is default
         render_optional_text: false
-        render_required_asterisk: true
+        collection:
+            widget_remove_btn:
+                attr:
+                    class: btn
+                icon: trash
+                icon_color: white
+            widget_add_btn:
+                attr:
+                    class: btn
+                icon: plus-sign
+                icon_color: white
 
 white_october_breadcrumbs: ~
 
