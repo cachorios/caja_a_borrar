@@ -24,7 +24,9 @@
         <div class="span12">
             <form class="form-horizontal" action="{{ path('codigobarra_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
                     <ul class="errorMessages"></ul>
-                    {{ form_widget(edit_form) }}
+
+                    {% include 'SistemaCajaBundle:CodigoBarra:_form.html.twig' %}
+
                 <div class="form-actions">
                     <button type="submit" class="btn btn-success">{{ 'views.edit.editbutton'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
                     <button class="btn" type="reset">Cancelar</button>

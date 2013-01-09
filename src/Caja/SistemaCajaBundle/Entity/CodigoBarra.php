@@ -232,8 +232,15 @@ class CodigoBarra
      */
     public function addPosicione(\Caja\SistemaCajaBundle\Entity\BarraDetalle $posicion)
     {
-        $this->posiciones[] = $posicion;
-    
+        ld("addPosiciones",$posicion);
+        if (!$this->posiciones->contains($posicion)) {
+            ld("addPosiciones2",$posicion);
+            $posicion->setCodigobarra($this);
+            $this->posiciones->add($posicion);
+        }
+
+        //$this->posiciones[] = $posicion;
+        exit;
         return $this;
     }
 
@@ -256,4 +263,16 @@ class CodigoBarra
     {
         return $this->posiciones;
     }
+
+    public function setPosiciones(ArrayCollection $posiciones)
+    {
+        ld("setPosiciones",$posiciones);
+        foreach ($posiciones as $posision) {
+            $this->addPosicione($posision);
+        }
+
+        exit;
+        //$this->posiciones = $posiciones;
+    }
+
 }

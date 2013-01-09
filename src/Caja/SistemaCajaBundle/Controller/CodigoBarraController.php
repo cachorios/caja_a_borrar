@@ -172,6 +172,11 @@ class CodigoBarraController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
+            foreach ($entity->getPosiciones() as $posicion) {
+                $posicion->setCodigoBarra($entity);
+            }
+
             $em->persist($entity);
             $em->flush();
             $this->get('session')->getFlashBag()->add('success', 'flash.create.success');
@@ -228,6 +233,14 @@ class CodigoBarraController extends Controller
             throw $this->createNotFoundException('Unable to find CodigoBarra entity.');
         }
 
+        $originalPosisiones = array();
+
+        // cargar en el array todas las posiciones
+        foreach ($entity->getPosiciones() as $posicion) {
+            $originalPosisiones[] = $posicion;
+        }
+
+
         $editForm   = $this->createForm(new CodigoBarraType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
@@ -236,6 +249,27 @@ class CodigoBarraController extends Controller
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
+
+            // filtrar $originalPosiciones que no estan presente
+            foreach ($entity->getPosiciones() as $posicion) {
+                if($posicion->getCodigoBarra() == null){
+                    $posicion->setCodigoBarra($entity);
+                }
+                foreach ($originalPosisiones as $key => $toDel) {
+                    if ($toDel->getId() === $posicion->getId()) {
+                        unset($originalPosisiones[$key]);
+                    }
+                }
+            }
+
+            // los que quedaron en el array son para borrar
+            foreach ($originalPosisiones as $posicion) {
+                $entity->getPosiciones()->removeElement($posicion);
+                $em->remove($posicion);
+            }
+
+
+
             $em->persist($entity);
             $em->flush();
             $this->get('session')->getFlashBag()->add('success', 'flash.update.success');

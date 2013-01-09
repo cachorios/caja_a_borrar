@@ -23,13 +23,6 @@ class BarraDetalle
 
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="orden", type="integer")
-     */
-    private $orden;
-
-    /**
      * @var string
      * @ORM\Column(name="descripcion", type="string", length=64)
      */
@@ -58,7 +51,7 @@ class BarraDetalle
      * Bidireccional - Muchos comentarios fueron redactados por un usuario (Lado propietario)
      *
      * @var Caja\SistemaCajaBundle\Entity\CodigoBarra
-     * @ORM\ManyToOne(targetEntity="CodigoBarra", inversedBy="posiciones", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="CodigoBarra", inversedBy="posiciones" )
      */
     private $codigobarra;
 
@@ -164,9 +157,6 @@ class BarraDetalle
     {
         return $this->tabla;
     }
-
-
-
 
 
     /**
