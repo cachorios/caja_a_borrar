@@ -240,7 +240,6 @@ class CodigoBarraController extends Controller
             $originalPosisiones[] = $posicion;
         }
 
-
         $editForm   = $this->createForm(new CodigoBarraType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 

@@ -17,7 +17,7 @@ class CodigoBarraType extends AbstractType
             ->add('longitud')
             ->add('identificador')
             ->add('valor')
-            ->add('observacion')
+            ->add('observacion',null,array('attr' =>array("style" => "width: 96%;")))
             ->add('posiciones','collection', array(
                 'type' => new BarraDetalleType(),
                 'allow_add' => true,

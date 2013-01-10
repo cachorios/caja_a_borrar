@@ -15,7 +15,7 @@ class BarraDetalleType extends AbstractType
             ->add('longitud','number',array('attr' =>array("style" => "width: 40px;")))
             ->add('descripcion',null,array('attr' =>array("style" => "width: 150px;")))
             ->add('tabla','parametro_choice',array(
-                        'tabla' => 0,'tabla_padre' => 0))
+                        'tabla' => 0))
         ;
     }
 
