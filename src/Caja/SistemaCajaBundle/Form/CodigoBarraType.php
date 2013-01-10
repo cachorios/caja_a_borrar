@@ -23,21 +23,27 @@ class CodigoBarraType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype' => true,
-                'widget_add_btn' => array('label' => 'Nueva Posicion', 'attr' => array('class' => 'btn btn-small')),
-                'options' => array( // options for collection fields
-                    'widget_remove_btn' => array(
-                            'label' => 'Quitar',
-                            'attr' => array('class' => 'btn btn-small')
-                    ),
-                    'attr' => array('class' => 'span3'),
-                    'widget_addon' => array(
-                        'type' => 'prepend',
-                        'text' => '@',
-                ),
-                'widget_control_group' => true,
-                )
+
         ))
         ;
+
+//        ->add('posiciones','collection', array(
+//            'type' => new BarraDetalleType(),
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'prototype' => true,
+//            'widget_add_btn' => array('label' => 'Nueva Posicion', 'attr' => array('class' => 'btn btn-small')),
+//            'options' => array( // options for collection fields
+//                'widget_remove_btn' => array(
+//                    'label' => 'Quitar',
+//                    'attr' => array('class' => 'btn btn-small')
+//                ),
+//                'attr' => array('class' => 'span3'),
+//                'widget_addon' => array(
+//                    'type' => 'prepend',
+//                    'text' => '@',),
+//                'widget_control_group' => true,))
+//    )
 
 //            ->add('posiciones','collection',array(
 //                'type' => new BarraDetalleType(),
