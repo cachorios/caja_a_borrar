@@ -20,20 +20,18 @@
         {% endfor %} 
     {% endfor %} 
 
-    <div class="row-fluid">
-        <div class="span12">
-            <form class="form-horizontal" action="{{ path('codigobarra_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
-                    <ul class="errorMessages"></ul>
 
-                    {% include 'SistemaCajaBundle:CodigoBarra:_form.html.twig' %}
+    <form class="form-horizontal" action="{{ path('codigobarra_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+            <ul class="errorMessages"></ul>
 
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-success">{{ 'views.edit.editbutton'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
-                    <button class="btn" type="reset">Cancelar</button>
-                </div>
-            </form>
+            {% include 'SistemaCajaBundle:CodigoBarra:_form.html.twig' %}
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-success">{{ 'views.edit.editbutton'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
+            <button class="btn" type="reset">Cancelar</button>
         </div>
-    </div>
+    </form>
+
 
 
         <div class="row-fluid">
