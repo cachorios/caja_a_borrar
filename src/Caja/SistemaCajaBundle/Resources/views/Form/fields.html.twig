@@ -1,9 +1,13 @@
+
+
+
 {% block collection_widget %}
     {% spaceless %}
         <div class="collection">
 
             {% if prototype is defined %}
-                {% set attr = attr|merge({'data-prototype': block('collection_item_widget')  }) %}
+                {% set attr = attr|merge({'data-prototype': block('collection_item_widget') }) %}
+                {#block('collection_item_widget')#}
             {% endif %}
 
             <div {{ block('widget_container_attributes') }}>
@@ -56,10 +60,40 @@
         <div class="clear"></div>
 
     {% endspaceless %}
-
     {{ block('collection_js')  }}
 {% endblock collection_widget %}
 
+
+{% block collection_item_widget %}
+    {% spaceless %}
+        {#<tr>#}
+            {#<td colspan="5">#}
+                {#{{ form_row(prototype) }}#}
+            {#</td>#}
+        {#</tr>#}
+
+        <tr>
+        {% set fieldNum = 1 %}
+        {% for row in prototype %}
+        <td>
+        <div class="field{{ fieldNum }}">
+
+        {{ form_widget(row, { 'attr': { 'class': 'test' }}) }}
+        </div>
+        </td>
+        {% set fieldNum = fieldNum + 1 %}
+
+        {% endfor %}
+        <td>
+        <a class="remove" title="Remove" href="javascript:void()">
+        <span>Delete</span>
+        </a>
+        </td>
+        </tr>
+
+    {% endspaceless %}
+
+{% endblock collection_item_widget %}
 
 {% block collection_js %}
 
@@ -102,33 +136,3 @@
 {% endblock collection_js %}
 
 
-{% block collection_item_widget %}
-    {% spaceless %}
-        <tr>
-            <td colspan="5">
-                {{ form_row(prototype) }}
-            </td>
-        </tr>
-
-        {#<tr>#}
-            {#{% set fieldNum = 1 %}#}
-            {#{% for row in prototype %}#}
-                {#<td>#}
-                    {#<div class="field{{ fieldNum }}">#}
-
-                        {#{{ form_row(row, { 'attr': { 'class': 'test' }}) }}#}
-                    {#</div>#}
-                {#</td>#}
-                {#{% set fieldNum = fieldNum + 1 %}#}
-
-            {#{% endfor %}#}
-            {#<td>#}
-                {#<a class="remove" title="Remove" href="javascript:void()">#}
-                    {#<span>Delete</span>#}
-                {#</a>#}
-            {#</td>#}
-        {#</tr>#}
-
-    {% endspaceless %}
-
-{% endblock collection_item_widget %}
