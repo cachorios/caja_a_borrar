@@ -10,7 +10,7 @@
             <div {{ block('widget_container_attributes') }}>
                 {{ form_errors(form) }}
 
-                <table>
+                <table width="100%">
                     <thead>
                     <tr>
                         <th>Pos.</th>
@@ -33,7 +33,7 @@
                                     {% set fieldNum = fieldNum + 1 %}
                                 </td>
                             {% endfor %}
-                            <td width="120px" style="text-align: center;">
+                            <td width="110px" style="text-align: center;">
                                 <button class="btn btn-mini btn-danger remove">
                                     <span class="icon-trash icon-white"></span> Quitar
                                 </button>
@@ -64,11 +64,6 @@
 
 {% block collection_item_widget %}
     {% spaceless %}
-        {#<tr>#}
-        {#<td colspan="5">#}
-        {#{{ form_row(prototype) }}#}
-        {#</td>#}
-        {#</tr>#}
 
         <tr>
             {% set fieldNum = 1 %}
@@ -82,11 +77,10 @@
                 {% set fieldNum = fieldNum + 1 %}
 
             {% endfor %}
-            <td>
-                <button class="btn btn-danger remove">
-                    <span class="icon-trash"></span> Quitar
+            <td width="110px" style="text-align: center;">
+                <button class="btn btn-mini btn-danger remove">
+                    <span class="icon-trash icon-white"></span> Quitar
                 </button>
-
             </td>
         </tr>
 

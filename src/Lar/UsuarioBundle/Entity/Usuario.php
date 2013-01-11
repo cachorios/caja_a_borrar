@@ -620,6 +620,9 @@ class Usuario implements AdvancedUserInterface
     public
     function getFoto()
     {
+        if(!$this->foto){
+            $this->foto="anonimo.jpg";
+        }
         return $this->foto;
     }
 

@@ -1,0 +1,14 @@
+model: caja\SistemaCajaBundle\Entity\CodigoBarra
+fixtures:
+    c1:
+        nombre: MP Sistema Nuevo
+        empresa: MP
+        identificador: '[1,4][18,1]'
+        valor: 93392
+        longitud: 44
+    c2:
+        nombre: MP Sistema Viejo
+        empresa: MP
+        identificador: '[1,4][18,1]'
+        valor: 93391
+        longitud: 44

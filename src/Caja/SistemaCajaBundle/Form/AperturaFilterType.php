@@ -9,16 +9,15 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormError;
 
-class BarraDetalleFilterType extends AbstractType
+class AperturaFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('id', 'filter_number_range')
-            ->add('descripcion', 'filter_text')
-            ->add('posicion', 'filter_number_range')
-            ->add('longitud', 'filter_number_range')
-            ->add('tabla', 'filter_number_range')
+            ->add('fecha', 'filter_date_range')
+            ->add('importe_inicial', 'filter_number_range')
+            ->add('fecha_cierre', 'filter_date_range')
         ;
 
         $listener = function(FormEvent $event)
@@ -42,6 +41,6 @@ class BarraDetalleFilterType extends AbstractType
 
     public function getName()
     {
-        return 'caja_sistemacajabundle_barradetallefiltertype';
+        return 'caja_sistemacajabundle_aperturafiltertype';
     }
 }

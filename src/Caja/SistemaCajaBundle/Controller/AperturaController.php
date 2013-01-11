@@ -8,32 +8,32 @@ use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\View\TwitterBootstrapView;
 
-use Caja\SistemaCajaBundle\Entity\BarraDetalle;
-use Caja\SistemaCajaBundle\Form\BarraDetalleType;
-use Caja\SistemaCajaBundle\Form\BarraDetalleFilterType;
+use Caja\SistemaCajaBundle\Entity\Apertura;
+use Caja\SistemaCajaBundle\Form\AperturaType;
+use Caja\SistemaCajaBundle\Form\AperturaFilterType;
 
 /**
- * BarraDetalle controller.
+ * Apertura controller.
  *
  */
-class BarraDetalleController extends Controller
+class AperturaController extends Controller
 {
     /**
-     * Lists all BarraDetalle entities.
+     * Lists all Apertura entities.
      *
      */
     public function indexAction()
     {
         $breadcrumbs = $this->get("white_october_breadcrumbs");
         $breadcrumbs->addItem("Inicio", $this->get("router")->generate("home_page"));
-        $breadcrumbs->addItem("BarraDetalle", $this->get("router")->generate("barradetalle"));
+        $breadcrumbs->addItem("Apertura", $this->get("router")->generate("apertura"));
 
         list($filterForm, $queryBuilder) = $this->filter();
 
         list($entities, $pagerHtml) = $this->paginator($queryBuilder);
 
     
-        return $this->render('SistemaCajaBundle:BarraDetalle:index.html.twig', array(
+        return $this->render('SistemaCajaBundle:Apertura:index.html.twig', array(
             'entities' => $entities,
             'pagerHtml' => $pagerHtml,
             'filterForm' => $filterForm->createView(),
@@ -48,13 +48,13 @@ class BarraDetalleController extends Controller
     {
         $request = $this->getRequest();
         $session = $request->getSession();
-        $filterForm = $this->createForm(new BarraDetalleFilterType());
+        $filterForm = $this->createForm(new AperturaFilterType());
         $em = $this->getDoctrine()->getManager();
-        $queryBuilder = $em->getRepository('SistemaCajaBundle:BarraDetalle')->createQueryBuilder('e');
+        $queryBuilder = $em->getRepository('SistemaCajaBundle:Apertura')->createQueryBuilder('e');
     
         // Reset filter
         if ($request->getMethod() == 'POST' && $request->get('filter_action') == 'reset') {
-            $session->remove('BarraDetalleControllerFilter');
+            $session->remove('AperturaControllerFilter');
         }
     
         // Filter action
@@ -67,13 +67,13 @@ class BarraDetalleController extends Controller
                 $this->get('lexik_form_filter.query_builder_updater')->addFilterConditions($filterForm, $queryBuilder);
                 // Save filter to session
                 $filterData = $filterForm->getData();
-                $session->set('BarraDetalleControllerFilter', $filterData);
+                $session->set('AperturaControllerFilter', $filterData);
             }
         } else {
             // Get filter from session
-            if ($session->has('BarraDetalleControllerFilter')) {
-                $filterData = $session->get('BarraDetalleControllerFilter');
-                $filterForm = $this->createForm(new BarraDetalleFilterType(), $filterData);
+            if ($session->has('AperturaControllerFilter')) {
+                $filterData = $session->get('AperturaControllerFilter');
+                $filterForm = $this->createForm(new AperturaFilterType(), $filterData);
                 $this->get('lexik_form_filter.query_builder_updater')->addFilterConditions($filterForm, $queryBuilder);
             }
         }
@@ -98,7 +98,7 @@ class BarraDetalleController extends Controller
         $me = $this;
         $routeGenerator = function($page) use ($me)
         {
-            return $me->generateUrl('barradetalle', array('page' => $page));
+            return $me->generateUrl('apertura', array('page' => $page));
         };
     
         // Paginator - view
@@ -114,60 +114,60 @@ class BarraDetalleController extends Controller
     }
     
     /**
-     * Finds and displays a BarraDetalle entity.
+     * Finds and displays a Apertura entity.
      *
      */
     public function showAction($id)
     {
         $breadcrumbs = $this->get("white_october_breadcrumbs");
         $breadcrumbs->addItem("Inicio", $this->get("router")->generate("home_page"));
-        $breadcrumbs->addItem("BarraDetalle", $this->get("router")->generate("barradetalle"));
+        $breadcrumbs->addItem("Apertura", $this->get("router")->generate("apertura"));
         $breadcrumbs->addItem("Ver" );
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('SistemaCajaBundle:BarraDetalle')->find($id);
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find BarraDetalle entity.');
+            throw $this->createNotFoundException('Unable to find Apertura entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('SistemaCajaBundle:BarraDetalle:show.html.twig', array(
+        return $this->render('SistemaCajaBundle:Apertura:show.html.twig', array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),        ));
     }
 
     /**
-     * Displays a form to create a new BarraDetalle entity.
+     * Displays a form to create a new Apertura entity.
      *
      */
     public function newAction()
     {
         $breadcrumbs = $this->get("white_october_breadcrumbs");
         $breadcrumbs->addItem("Inicio", $this->get("router")->generate("home_page"));
-        $breadcrumbs->addItem("BarraDetalle", $this->get("router")->generate("barradetalle"));
+        $breadcrumbs->addItem("Apertura", $this->get("router")->generate("apertura"));
         $breadcrumbs->addItem("Nuevo" );
 
-        $entity = new BarraDetalle();
-        $form   = $this->createForm(new BarraDetalleType(), $entity);
+        $entity = new Apertura();
+        $form   = $this->createForm(new AperturaType(), $entity);
 
-        return $this->render('SistemaCajaBundle:BarraDetalle:new.html.twig', array(
+        return $this->render('SistemaCajaBundle:Apertura:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
         ));
     }
 
     /**
-     * Creates a new BarraDetalle entity.
+     * Creates a new Apertura entity.
      *
      */
     public function createAction()
     {
-        $entity  = new BarraDetalle();
+        $entity  = new Apertura();
         $request = $this->getRequest();
-        $form    = $this->createForm(new BarraDetalleType(), $entity);
+        $form    = $this->createForm(new AperturaType(), $entity);
         $form->bind($request);
 
         if ($form->isValid()) {
@@ -176,38 +176,38 @@ class BarraDetalleController extends Controller
             $em->flush();
             $this->get('session')->getFlashBag()->add('success', 'flash.create.success');
 
-            return $this->redirect($this->generateUrl('barradetalle_show', array('id' => $entity->getId())));        } else {
+            return $this->redirect($this->generateUrl('apertura_show', array('id' => $entity->getId())));        } else {
             $this->get('session')->getFlashBag()->add('error', 'flash.create.error');
         }
 
-        return $this->render('SistemaCajaBundle:BarraDetalle:new.html.twig', array(
+        return $this->render('SistemaCajaBundle:Apertura:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
         ));
     }
     /**
-     * Displays a form to edit an existing BarraDetalle entity.
+     * Displays a form to edit an existing Apertura entity.
      *
      */
     public function editAction($id)
     {
         $breadcrumbs = $this->get("white_october_breadcrumbs");
         $breadcrumbs->addItem("Inicio", $this->get("router")->generate("home_page"));
-        $breadcrumbs->addItem("BarraDetalle", $this->get("router")->generate("barradetalle"));
+        $breadcrumbs->addItem("Apertura", $this->get("router")->generate("apertura"));
         $breadcrumbs->addItem("Editar" );
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('SistemaCajaBundle:BarraDetalle')->find($id);
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find BarraDetalle entity.');
+            throw $this->createNotFoundException('Unable to find Apertura entity.');
         }
 
-        $editForm = $this->createForm(new BarraDetalleType(), $entity);
+        $editForm = $this->createForm(new AperturaType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('SistemaCajaBundle:BarraDetalle:edit.html.twig', array(
+        return $this->render('SistemaCajaBundle:Apertura:edit.html.twig', array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -215,20 +215,20 @@ class BarraDetalleController extends Controller
     }
 
     /**
-     * Edits an existing BarraDetalle entity.
+     * Edits an existing Apertura entity.
      *
      */
     public function updateAction($id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('SistemaCajaBundle:BarraDetalle')->find($id);
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find BarraDetalle entity.');
+            throw $this->createNotFoundException('Unable to find Apertura entity.');
         }
 
-        $editForm   = $this->createForm(new BarraDetalleType(), $entity);
+        $editForm   = $this->createForm(new AperturaType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         $request = $this->getRequest();
@@ -240,19 +240,19 @@ class BarraDetalleController extends Controller
             $em->flush();
             $this->get('session')->getFlashBag()->add('success', 'flash.update.success');
 
-            return $this->redirect($this->generateUrl('barradetalle_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('apertura_edit', array('id' => $id)));
         } else {
             $this->get('session')->getFlashBag()->add('error', 'flash.update.error');
         }
 
-        return $this->render('SistemaCajaBundle:BarraDetalle:edit.html.twig', array(
+        return $this->render('SistemaCajaBundle:Apertura:edit.html.twig', array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
     }
     /**
-     * Deletes a BarraDetalle entity.
+     * Deletes a Apertura entity.
      *
      */
     public function deleteAction($id)
@@ -264,10 +264,10 @@ class BarraDetalleController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('SistemaCajaBundle:BarraDetalle')->find($id);
+            $entity = $em->getRepository('SistemaCajaBundle:Apertura')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find BarraDetalle entity.');
+                throw $this->createNotFoundException('Unable to find Apertura entity.');
             }
 
             $em->remove($entity);
@@ -277,7 +277,7 @@ class BarraDetalleController extends Controller
             $this->get('session')->getFlashBag()->add('error', 'flash.delete.error');
         }
 
-        return $this->redirect($this->generateUrl('barradetalle'));
+        return $this->redirect($this->generateUrl('apertura'));
     }
 
     private function createDeleteForm($id)

@@ -1,0 +1,8 @@
+model: caja\SistemaCajaBundle\Entity\Caja
+fixtures:
+    c1:
+        nombre:  Caja 1
+        cajero: Beto
+    c2:
+        nombre: Caja 2
+        cajero: Usr1

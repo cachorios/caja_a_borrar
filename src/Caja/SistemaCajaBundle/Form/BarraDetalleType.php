@@ -13,9 +13,9 @@ class BarraDetalleType extends AbstractType
         $builder
             ->add('posicion','number',array('attr' =>array("style" => "width: 40px;")))
             ->add('longitud','number',array('attr' =>array("style" => "width: 40px;")))
-            ->add('descripcion',null,array('attr' =>array("style" => "width: 150px;")))
+            ->add('descripcion',null,array('attr' =>array("style" => "width: 180px;")))
             ->add('tabla','parametro_choice',array(
-                        'tabla' => 0))
+                        'tabla' => 0,'attr' =>array("style" => "width: 200px;")))
         ;
     }
 

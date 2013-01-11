@@ -1,14 +1,14 @@
 {% extends '::layout.html.twig' %}
 
 {% block title %}
-{{ parent() }} - BarraDetalle {{ 'views.index.list'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+{{ parent() }} - Aperturas  }}
 {% endblock %}
 
 {% block page %}
 
-    <section id="BarraDetalle">
+    <section id="Apertura">
         <header>
-           <h1>BarraDetalle {{ 'views.index.list'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+           <h1>Aperturas
                <div class="filters-right">
                     <a class="btn dropdown-toggle btn-mini" data-toggle="collapse" data-target="#filters">
                         {{ 'views.index.filters'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
@@ -33,12 +33,11 @@
             <div class="span12">
                 <div id="filters" class="collapse">
 
-                    <form class="well form-horizontal" action="{{ path('barradetalle') }}" method="post" {{ form_enctype(filterForm) }}>
+                    <form class="well form-horizontal" action="{{ path('apertura') }}" method="post" {{ form_enctype(filterForm) }}>
                             {{ form_row(filterForm.id) }}
-                            {{ form_row(filterForm.descripcion) }}
-                            {{ form_row(filterForm.posicion) }}
-                            {{ form_row(filterForm.longitud) }}
-                            {{ form_row(filterForm.tabla) }}
+                            {{ form_row(filterForm.fecha) }}
+                            {{ form_row(filterForm.importe_inicial) }}
+                            {{ form_row(filterForm.fecha_cierre) }}
                         {{ form_rest(filterForm) }}
 
                         <p>
@@ -56,27 +55,25 @@
                 <table class="table table-striped table-bordered table-condensed">
                     <thead>
                     <tr>
-                            <th>Id</th>
-                            <th>Descripcion</th>
-                            <th>Posicion</th>
-                            <th>Longitud</th>
-                            <th>Tabla</th>
+                            <th>Nro.Apertura</th>
+                            <th>Fecha</th>
+                            <th>Importe Inicio</th>
+                            <th>Cierre</th>
                         <th>{{ 'views.index.actions'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for entity in entities %}
                     <tr>
-                        <td><a href="{{ path('barradetalle_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                            <td>{{ entity.descripcion }}</td>
-                            <td>{{ entity.posicion }}</td>
-                            <td>{{ entity.longitud }}</td>
-                            <td>{{ entity.tabla }}</td>
+                        <td><a href="{{ path('apertura_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                            <td>{% if entity.fecha %}{{ entity.fecha|date('d-m-Y H:i:s') }}{% endif %}</td>
+                            <td>{{ entity.importeinicial }}</td>
+                            <td>{% if entity.fechacierre %}{{ entity.fechacierre|date('d-m-Y H:i:s') }}{% endif %}</td>
                             <td>
-        <a class="btn btn-mini" href="{{ path('barradetalle_show', { 'id': entity.id }) }}">
+        <a class="btn btn-mini" href="{{ path('apertura_show', { 'id': entity.id }) }}">
             {{ 'views.actions.show'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
         </a>
-        <a class="btn btn-mini" href="{{ path('barradetalle_edit', { 'id': entity.id }) }}">
+        <a class="btn btn-mini" href="{{ path('apertura_edit', { 'id': entity.id }) }}">
             {{ 'views.actions.edit'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
         </a>                            </td>
                     </tr>
@@ -92,8 +89,8 @@
             </div>
 
                         <div class="span2">
-                <a class="btn btn-primary likepaginator" href="{{ path('barradetalle_new') }}">
-                    {{ 'views.index.createnew'|trans({}, 'JordiLlonchCrudGeneratorBundle') }} BarraDetalle
+                <a class="btn btn-primary likepaginator" href="{{ path('apertura_new') }}">
+                    {{ 'views.index.createnew'|trans({}, 'JordiLlonchCrudGeneratorBundle') }} Apertura
                 </a>
             </div>
             

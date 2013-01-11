@@ -1,14 +1,14 @@
 {% extends '::layout.html.twig' %}
 
 {% block title %}
-{{ parent() }} - BarraDetalle {{ 'views.show.show'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+{{ parent() }} - Apertura {{ 'views.show.show'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
 {% endblock %}
 
 {% block page %}
 
-<section id="view_BarraDetalle">
+<section id="view_Apertura">
     <header>
-        <h1>BarraDetalle</h1>
+        <h1>Apertura</h1>
     </header>
     {{ wo_render_breadcrumbs() }}
     <div class="row-fluid">
@@ -18,17 +18,14 @@
                             <label class="control-label">Id</label>
                             <div class="controls">                                    <span class="input-xlarge uneditable-input">{{ entity.id }}</span>                            </div>
                         </div>                        <div class="control-group">
-                            <label class="control-label">Descripcion</label>
-                            <div class="controls">                                    <span class="input-xlarge uneditable-input">{{ entity.descripcion }}</span>                            </div>
+                            <label class="control-label">Fecha</label>
+                            <div class="controls">                                    <span class="input-xlarge uneditable-input">{{ entity.fecha|date('Y-m-d H:i:s') }}</span>                            </div>
                         </div>                        <div class="control-group">
-                            <label class="control-label">Posicion</label>
-                            <div class="controls">                                    <span class="input-xlarge uneditable-input">{{ entity.posicion }}</span>                            </div>
+                            <label class="control-label">Importe_inicial</label>
+                            <div class="controls">                                    <span class="input-xlarge uneditable-input">{{ entity.importeinicial }}</span>                            </div>
                         </div>                        <div class="control-group">
-                            <label class="control-label">Longitud</label>
-                            <div class="controls">                                    <span class="input-xlarge uneditable-input">{{ entity.longitud }}</span>                            </div>
-                        </div>                        <div class="control-group">
-                            <label class="control-label">Tabla</label>
-                            <div class="controls">                                    <span class="input-xlarge uneditable-input">{{ entity.tabla }}</span>                            </div>
+                            <label class="control-label">Fecha_cierre</label>
+                            <div class="controls">                                    <span class="input-xlarge uneditable-input">{{ entity.fechacierre|date('Y-m-d H:i:s') }}</span>                            </div>
                         </div>                </fieldset>
             </form>
         </div>
@@ -38,17 +35,17 @@
 <div class="row-fluid">
     <div class="span12">
     <div class="offset2 span2">
-        <a class="btn" href="{{ path('barradetalle') }}">
+        <a class="btn" href="{{ path('apertura') }}">
             {{ 'views.recordactions.backtothelist'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
         </a>
     </div>
     <div class="span2">
-        <a class="btn btn-primary" href="{{ path('barradetalle_edit', { 'id': entity.id }) }}">
+        <a class="btn btn-primary" href="{{ path('apertura_edit', { 'id': entity.id }) }}">
             {{ 'views.recordactions.edit'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
         </a>
     </div>
     <div class="span2">
-        <form action="{{ path('barradetalle_delete', { 'id': entity.id }) }}" method="post">
+        <form action="{{ path('apertura_delete', { 'id': entity.id }) }}" method="post">
             {{ form_widget(delete_form) }}
             <button class="btn btn-danger" type="submit" onclick="return confirm('{{ 'views.recordactions.confirm'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}');">{{ 'views.recordactions.delete'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
         </form>

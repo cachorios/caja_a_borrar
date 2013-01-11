@@ -1,0 +1,30 @@
+apertura:
+    pattern:  /
+    defaults: { _controller: "SistemaCajaBundle:Apertura:index" }
+
+apertura_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "SistemaCajaBundle:Apertura:show" }
+
+apertura_new:
+    pattern:  /new
+    defaults: { _controller: "SistemaCajaBundle:Apertura:new" }
+
+apertura_create:
+    pattern:  /create
+    defaults: { _controller: "SistemaCajaBundle:Apertura:create" }
+    requirements: { _method: post }
+
+apertura_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "SistemaCajaBundle:Apertura:edit" }
+
+apertura_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "SistemaCajaBundle:Apertura:update" }
+    requirements: { _method: post }
+
+apertura_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "SistemaCajaBundle:Apertura:delete" }
+    requirements: { _method: post }

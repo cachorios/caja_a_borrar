@@ -1,36 +1,36 @@
 {% extends '::layout.html.twig' %}
 
 {% block title %}
-{{ parent() }} - CodigoBarra {{ 'views.new.creation'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+    {{ parent() }} - CodigoBarra {{ 'views.new.creation'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
 {% endblock %}
 
 {% block page %}
 
-<section id="new_CodigoBarra">
-    <header>
-        <h1>CodigoBarra {{ 'views.new.creation'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</h1>
-    </header>
-    {{ wo_render_breadcrumbs() }}
-    <div class="row-fluid">
-        <div class="span12">
+    <section id="new_CodigoBarra">
+        <header>
+            <h1>CodigoBarra {{ 'views.new.creation'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</h1>
+        </header>
+        {{ wo_render_breadcrumbs() }}
 
-            <form class="form-horizontal" action="{{ path('codigobarra_create') }}" method="post" {{ form_enctype(form) }}>
-                {{ form_widget(form) }}
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-success">{{ 'views.new.create'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
-                </div>
-            </form>
-        </div>
-    </div>
+
+        <form class="form-horizontal" action="{{ path('codigobarra_create') }}" method="post" {{ form_enctype(form) }}>
+            {#{{ form_widget(form) }}#}
+            {% include 'SistemaCajaBundle:CodigoBarra:_form.html.twig' with {'edit_form': form} %}
+            <div class="form-actions">
+                <button type="submit"
+                        class="btn btn-success">{{ 'views.new.create'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
+            </div>
+        </form>
+
         <div class="row-fluid">
-    <div class="span12">
-    <div class="offset2 span2">
-        <a class="btn" href="{{ path('codigobarra') }}">
-            {{ 'views.recordactions.backtothelist'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
-        </a>
-    </div>
-    </div>
-</div>
-</section>
+            <div class="span12">
+                <div class="offset2 span2">
+                    <a class="btn" href="{{ path('codigobarra') }}">
+                        {{ 'views.recordactions.backtothelist'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
 
 {% endblock %}

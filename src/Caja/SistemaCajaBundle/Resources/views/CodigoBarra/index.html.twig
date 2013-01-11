@@ -1,14 +1,14 @@
 {% extends '::layout.html.twig' %}
 
 {% block title %}
-{{ parent() }} - CodigoBarra {{ 'views.index.list'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+{{ parent() }} - Codigo de Barra {{ 'views.index.list'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
 {% endblock %}
 
 {% block page %}
 
     <section id="CodigoBarra">
         <header>
-           <h1>CodigoBarra {{ 'views.index.list'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+           <h1>Codigos de Barra
                <div class="filters-right">
                     <a class="btn dropdown-toggle btn-mini" data-toggle="collapse" data-target="#filters">
                         {{ 'views.index.filters'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
@@ -64,7 +64,6 @@
                             <th>Longitud</th>
                             <th>Identificador</th>
                             <th>Valor</th>
-                            <th>Observacion</th>
                         <th>{{ 'views.index.actions'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</th>
                     </tr>
                     </thead>
@@ -77,7 +76,6 @@
                             <td>{{ entity.longitud }}</td>
                             <td>{{ entity.identificador }}</td>
                             <td>{{ entity.valor }}</td>
-                            <td>{{ entity.observacion }}</td>
                             <td>
         <a class="btn btn-mini" href="{{ path('codigobarra_show', { 'id': entity.id }) }}">
             {{ 'views.actions.show'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
@@ -99,7 +97,7 @@
 
                         <div class="span2">
                 <a class="btn btn-primary likepaginator" href="{{ path('codigobarra_new') }}">
-                    {{ 'views.index.createnew'|trans({}, 'JordiLlonchCrudGeneratorBundle') }} CodigoBarra
+                    {{ 'views.index.createnew'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
                 </a>
             </div>
             

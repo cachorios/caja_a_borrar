@@ -62,6 +62,7 @@ class CodigoBarra
 
     /**
      * @ORM\OneToMany(targetEntity="BarraDetalle", mappedBy="codigobarra", cascade={"persist"}  )
+     * @ORM\OrderBy({"posicion" = "ASC"})
      */
     protected $posiciones;
 

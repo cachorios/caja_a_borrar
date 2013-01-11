@@ -1,15 +1,15 @@
 {% extends '::layout.html.twig' %}
 
 {% block title %}
-{{ parent() }} - BarraDetalle {{ 'views.edit.edit'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+{{ parent() }} - Apertura {{ 'views.edit.edit'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
 {% endblock %}
 
 {% block page %}
 
-<section id="form_BarraDetalle">
+<section id="form_Apertura">
 
     <header>
-        <h1>BarraDetalle {{ 'views.edit.edit'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</h1>
+        <h1>Apertura {{ 'views.edit.edit'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</h1>
     </header>
     {{ wo_render_breadcrumbs() }}
     {% for type, flashMessages in app.session.flashbag.all() %}
@@ -22,7 +22,7 @@
 
     <div class="row-fluid">
         <div class="span12">
-            <form class="form-horizontal" action="{{ path('barradetalle_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+            <form class="form-horizontal" action="{{ path('apertura_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
                     <ul class="errorMessages"></ul>
                     {{ form_widget(edit_form) }}
                 <div class="form-actions">
@@ -37,12 +37,12 @@
         <div class="row-fluid">
     <div class="span12">
     <div class="offset2 span2">
-        <a class="btn" href="{{ path('barradetalle') }}">
+        <a class="btn" href="{{ path('apertura') }}">
             {{ 'views.recordactions.backtothelist'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
         </a>
     </div>
     <div class="span2">
-        <form action="{{ path('barradetalle_delete', { 'id': entity.id }) }}" method="post">
+        <form action="{{ path('apertura_delete', { 'id': entity.id }) }}" method="post">
             {{ form_widget(delete_form) }}
             <button class="btn btn-danger" type="submit" onclick="return confirm('{{ 'views.recordactions.confirm'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}');">{{ 'views.recordactions.delete'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
         </form>

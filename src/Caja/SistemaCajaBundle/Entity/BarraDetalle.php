@@ -182,26 +182,5 @@ class BarraDetalle
         return $this->codigobarra;
     }
 
-    /**
-     * Set orden
-     *
-     * @param integer $orden
-     * @return BarraDetalle
-     */
-    public function setOrden($orden)
-    {
-        $this->orden = $orden;
-    
-        return $this;
-    }
 
-    /**
-     * Get orden
-     *
-     * @return integer 
-     */
-    public function getOrden()
-    {
-        return $this->orden;
-    }
 }

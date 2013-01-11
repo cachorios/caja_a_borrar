@@ -1,0 +1,78 @@
+model: caja\SistemaCajaBundle\Entity\BarraDetalle
+fixtures:
+    l1:
+        codigobarra:  c1
+        descripcion:  Identificación de la Empresa
+        posicion:     1
+        longitud:     4
+        tabla:        0
+
+    l2:
+        codigobarra: c1
+        descripcion: Tributo
+        posicion:    21
+        longitud:    3
+        tabla:       0
+
+    l3:
+        codigobarra: c1
+        descripcion: Seccion
+        posicion:    19
+        longitud:    2
+        tabla:       0
+
+    l4:
+        codigobarra: c1
+        descripcion: Indica sistema Nuevo
+        posicion:    18
+        longitud:    1
+        tabla:       0
+
+    l5:
+        codigobarra: c1
+        descripcion: Dígitos Verificadores
+        posicion:    43
+        longitud:    2
+        tabla:       0
+
+    l6:
+        codigobarra: c1
+        descripcion: Fecha Segundo Vencimiento
+        posicion:    41
+        longitud:    2
+        tabla:       0
+
+    l7:
+        codigobarra: c1
+        descripcion: Recargo Segundo Vencimiento
+        posicion:    35
+        longitud:    6
+        tabla:       0
+
+    l8:
+        codigobarra: c1
+        descripcion: Moneda
+        posicion:    34
+        longitud:    1
+        tabla:       0
+
+    l9:
+        codigobarra: c1
+        descripcion: Importe Primer Vencimiento
+        posicion:    5
+        longitud:    8
+        tabla:       0
+
+    l10:
+        codigobarra: c1
+        descripcion: Fecha Primer Vencimiento
+        posicion:    13
+        longitud:    5
+        tabla:       0
+
+    l11:
+        codigobarra: c1
+        descripcion: Nro. Comprobante
+        posicion:    24
+        longitud:    10
+        tabla:       0
