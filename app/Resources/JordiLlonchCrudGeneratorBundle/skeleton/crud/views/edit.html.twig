@@ -1,5 +1,5 @@
 {{ "{% extends '::layout.html.twig' %}" }}
-
+{{ "{% block id  'mod_"~ entity ~ "' %}" }}
 {{ "{% block title %}" }}
 {{ "{{ parent() }} - " ~ entity ~ " {{ 'views.edit.edit'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}" }}
 {{ "{% endblock %}" }}

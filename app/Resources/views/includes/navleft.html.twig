@@ -4,8 +4,8 @@
 
             <ul class="nav">
                 {% if esCajero() %}
-                    <li class="selected">
-                        <a href=""><i class="icon-play"></i>Monitor</a>
+                    <li class="monitor">
+                        <a href="{{ path('apertura_monitor') }}"><i class="icon-play"></i>Monitor</a>
                     </li>
                 {% endif %}
 
@@ -16,40 +16,38 @@
                 {% endif %}
 
                 {% if esCajero() %}
-                    <li>
+                    <li class="apertura">
                         <a href="{{ path('apertura') }}"><i class="icon-font icon-white"></i>Apertura</a>
                     </li>
                 {% endif %}
 
                 {% if esCajero() and tieneApertura() %}
-                    <li>
+                    <li class="cierre">
                         <a href="{{ path('apertura_cierre') }}"><i class="icon-user icon-white"></i>Cierre</a>
                     </li>
                 {% endif %}
 
-                {% if is_granted('ROLE_ADMIN')  %}
-                <li>
-                    <a href="{{ path("caja") }}"><i class="icon-retweet icon-white"></i>Caja</a>
-                </li>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="caja">
+                        <a href="{{ path("caja") }}"><i class="icon-retweet icon-white"></i>Caja</a>
+                    </li>
                 {% endif %}
-                {% if is_granted('ROLE_ADMIN')  %}
-                <li>
-                    <a href="{{ path("larparametro") }}"><i class="icon-retweet icon-white"></i>Tablas</a>
-                </li>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="larparametro">
+                        <a href="{{ path("larparametro") }}"><i class="icon-retweet icon-white"></i>Tablas</a>
+                    </li>
                 {% endif %}
-                {% if is_granted('ROLE_ADMIN')  %}
+                {% if is_granted('ROLE_ADMIN') %}
 
-                <li>
-                    <a href="{{ path("codigobarra") }}"><i class="icon-barcode icon-white"></i>Codigo de Barra</a>
-                </li>
+                    <li class="codigobarra">
+                        <a href="{{ path("codigobarra") }}"><i class="icon-barcode icon-white"></i>Codigo de Barra</a>
+                    </li>
                 {% endif %}
-                {% if is_granted('ROLE_ADMIN')  %}
-                <li>
-                    <a href="{{ path("usuario") }}"><i class="icon-user icon-white"></i>Usuarios</a>
-                </li>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="usuario">
+                        <a href="{{ path("usuario") }}"><i class="icon-user icon-white"></i>Usuarios</a>
+                    </li>
                 {% endif %}
-
-
 
 
             </ul>

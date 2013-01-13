@@ -42,13 +42,16 @@ class Apertura
      */
     private $fecha_cierre;
 
-
     /**
      * @ORM\ManyToOne(targetEntity="Caja\SistemaCajaBundle\Entity\Caja")
      * @ORM\JoinColumn(name="caja_id", referencedColumnName="id")
      */
     protected  $caja;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Lote", mappedBy="apertura")
+     */
+    protected $lotes;
 
     public function __construct()
     {
@@ -161,4 +164,86 @@ class Apertura
     {
         return $this->caja;
     }
+
+    /**
+     * Add lotes
+     *
+     * @param \Caja\SistemaCajaBundle\Entity\Lote $lotes
+     * @return Apertura
+     */
+    public function addLote(\Caja\SistemaCajaBundle\Entity\Lote $lotes)
+    {
+        $this->lotes[] = $lotes;
+    
+        return $this;
+    }
+
+    /**
+     * Remove lotes
+     *
+     * @param \Caja\SistemaCajaBundle\Entity\Lote $lotes
+     */
+    public function removeLote(\Caja\SistemaCajaBundle\Entity\Lote $lotes)
+    {
+        $this->lotes->removeElement($lotes);
+    }
+
+    /**
+     * Get lotes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getLotes()
+    {
+        return $this->lotes;
+    }
+
+    public function getComprobanteCantidad(){
+        $n = 0;
+        foreach($this->getLotes() as $lote){
+            $n += $lote->getDetalle()->count();
+        }
+
+        return $n;
+    }
+
+    public function getComprobanteAnulado(){
+        $n = 0;
+        foreach($this->getLotes() as $lote){
+            foreach($lote->getDetalle() as $detalle){
+                if($detalle->getAnulado()){
+                    $n++;
+                }
+            }
+        }
+        return $n;
+    }
+
+    public function getImporteCobro(){
+        $n = 0;
+        foreach($this->getLotes() as $lote){
+            foreach($lote->getPagos() as $pago){
+                if(!$pago->getAnulado()){
+                    $n += $pago->getImporte() ;
+                }
+            }
+        }
+        return $n;
+    }
+
+    public function getImporteAnulado(){
+        $n = 0;
+        foreach($this->getLotes() as $lote){
+            foreach($lote->getPagos() as $pago){
+                if($pago->getAnulado()){
+                    $n += $pago->getImporte() ;
+                }
+            }
+        }
+        return $n;
+    }
+
+
+
+
 }

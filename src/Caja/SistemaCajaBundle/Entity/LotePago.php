@@ -32,7 +32,7 @@ class LotePago
     /**
      * @var float
      *
-     * @ORM\Column(name="importe", type="decimal")
+     * @ORM\Column(name="importe", type="decimal", precision = 15, scale = 2  )
      */
     private $importe;
 
@@ -59,6 +59,11 @@ class LotePago
      * @param \DateTime $fecha
      * @return LotesPago
      */
+
+    public function __construct()
+    {
+        $this->anulado = 0;
+    }
 
     /**
      * Get id

@@ -19,19 +19,23 @@ class CajaManager
 
 
     /**
-    * @return \Caja\SistemaCajaBundle\Entity\Caja
-    */
-    public function getCaja(){
+     * @return \Caja\SistemaCajaBundle\Entity\Caja
+     */
+    public function getCaja()
+    {
 
-        $usuario = $this->contenedor->get("security.context")->getToken()->getUser();
+        if ($this->contenedor->get("security.context")->getToken()->isAuthenticated()) {
 
-        $caja = $this->contenedor->get("doctrine.orm.entity_manager")->getRepository("SistemaCajaBundle:Caja")->findOneBy(array("cajero" => $usuario->getId()));
-        return $caja;
+            $usuario = $this->contenedor->get("security.context")->getToken()->getUser();
+
+            $caja = $this->contenedor->get("doctrine.orm.entity_manager")->getRepository("SistemaCajaBundle:Caja")->findOneBy(array("cajero" => $usuario->getId()));
+            return $caja;
+        }
     }
 
     /**
-    * @return \Caja\SistemaCajaBundle\Entity\Apertura
-    */
+     * @return \Caja\SistemaCajaBundle\Entity\Apertura
+     */
     public function getApertura()
     {
         $caja_id = $this->getCaja()->getId();
@@ -40,7 +44,8 @@ class CajaManager
         return $apertura;
     }
 
-    public function esCajero(){
+    public function esCajero()
+    {
         $caja = $this->getCaja();
         return !$caja == null;
     }

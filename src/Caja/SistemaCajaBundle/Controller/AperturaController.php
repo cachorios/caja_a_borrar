@@ -344,4 +344,46 @@ class AperturaController extends Controller
             ->add('id', 'hidden')
             ->getForm();
     }
+
+
+    public function monitorAction()
+    {
+        $caja = $this->container->get('caja.manager')->getCaja();
+        $apertura = $this->container->get('caja.manager')->getApertura();
+
+        if(!$apertura){
+            $this->get('session')->getFlashBag()->add('success', 'No hay apertura abierta');
+            return $this->redirect($this->generateUrl('apertura_new'));
+        }
+
+        $DetalleTipoPago = $this->getDetalleTipoPago($apertura->getId());
+
+        return $this->render('SistemaCajaBundle:Apertura:monitor.html.twig', array(
+            'caja' => $caja,
+            'apertura' => $apertura,
+            'detallepago' => $DetalleTipoPago
+        ));
+    }
+
+    private function getDetalleTipoPago($ap_id){
+        $em = $this->getDoctrine()->getManager();
+        $PagoTipoPago = $em->getRepository('SistemaCajaBundle:Apertura')->getPagosByTipoPago($ap_id);
+
+        $tipoPago = array();
+
+        foreach($PagoTipoPago as $tipo)
+        {
+            if(!isset($tipoPago[$tipo['id']])){
+                $tipoPago[$tipo['id']] = array($tipo['descripcion'],0,0);
+            }
+            if($tipo['anulado'] == 1){
+                $tipoPago[$tipo['id']][2] = $tipo['1'];
+            }else{
+                $tipoPago[$tipo['id']][1] = $tipo['1'];
+            }
+        }
+
+        return $tipoPago;
+    }
+
 }

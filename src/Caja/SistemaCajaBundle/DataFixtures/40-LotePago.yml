@@ -25,10 +25,12 @@ fixtures:
         fecha: '20130112'
         tipo_pago: t5
         importe: 85.36
+        anulado: 1
     lp6:
         lote: l3
         fecha: '20130112'
         tipo_pago: t2
         importe: 200
+        anulado: 1
 
 

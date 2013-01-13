@@ -38,7 +38,7 @@ class LoteDetalle
     /**
      * @var float
      *
-     * @ORM\Column(name="importe", type="decimal")
+     * @ORM\Column(name="importe", type="decimal", precision = 15, scale = 2  )
      */
     private $importe;
 
@@ -50,7 +50,7 @@ class LoteDetalle
     private $anulado;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Lote")
+     * @ORM\ManyToOne(targetEntity="Lote", inversedBy="detalle")
      */
     private $lote;
 

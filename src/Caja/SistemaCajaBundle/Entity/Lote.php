@@ -29,17 +29,17 @@ class Lote
     private $fecha;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Apertura")
+     * @ORM\ManyToOne(targetEntity="Apertura", inversedBy="lotes")
      */
     private $apertura;
 
     /**
-     * @ORM\OneToMany(targetEntity="LoteDetalle", mappedBy="id")
+     * @ORM\OneToMany(targetEntity="LoteDetalle", mappedBy="lote")
      */
     private $detalle;
 
     /**
-     * @ORM\OneToMany(targetEntity="LotePago", mappedBy="id")
+     * @ORM\OneToMany(targetEntity="LotePago", mappedBy="lote")
      */
     private $pagos;
 
