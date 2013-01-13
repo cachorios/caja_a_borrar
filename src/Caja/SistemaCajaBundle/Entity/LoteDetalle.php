@@ -49,6 +49,10 @@ class LoteDetalle
      */
     private $anulado;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Lote")
+     */
+    private $lote;
 
     /**
      * Get id
@@ -150,5 +154,28 @@ class LoteDetalle
     public function getAnulado()
     {
         return $this->anulado;
+    }
+
+    /**
+     * Set lote
+     *
+     * @param \Caja\SistemaCajaBundle\Entity\Lote $lote
+     * @return LoteDetalle
+     */
+    public function setLote(\Caja\SistemaCajaBundle\Entity\Lote $lote = null)
+    {
+        $this->lote = $lote;
+    
+        return $this;
+    }
+
+    /**
+     * Get lote
+     *
+     * @return \Caja\SistemaCajaBundle\Entity\Lote 
+     */
+    public function getLote()
+    {
+        return $this->lote;
     }
 }

@@ -135,10 +135,17 @@ class Usuario implements AdvancedUserInterface
     //@ A s sert\Image(maxSize = "500k"
 
     /**
+     * @orm\Column(type="array", nullable=true)
      * @var Symfony\Component\DependencyInjection\ParameterBag\ParameterBag
      */
     protected $contenedor;
 
+
+    /**
+     * @var /datetime()
+     * @orm\Column(type="datetime", nullable=true)
+     */
+    protected $ultimo_ingreso;
 
 
     public function __construct()
@@ -158,7 +165,14 @@ class Usuario implements AdvancedUserInterface
         if ($this->contenedor == null) {
             $this->contenedor = new ParameterBag();
         }
+
+
         return $this->contenedor;
+    }
+
+    public function setContenedor($contenedor){
+        $this->contenedor = $contenedor;
+        return $this;
     }
 
 
@@ -626,25 +640,6 @@ class Usuario implements AdvancedUserInterface
         return $this->foto;
     }
 
-    /**
-     * Sube la foto de la oferta copiándola en el directorio que se indica y
-     * guardando en la entidad la ruta hasta la foto
-     *
-     * @param string $directorioDestino Ruta completa del directorio al que se sube la foto
-     */
-//    public function subirFoto($directorioDestino)
-//    {
-//        if (null === $this->foto) {
-//            return;
-//        }
-//
-//        $nombreArchivoFoto = uniqid('user-').'-foto1.'.$this->foto->guessExtension();
-//
-//        $this->foto->move($directorioDestino, $nombreArchivoFoto);
-//
-//        $this->setFoto($nombreArchivoFoto);
-//   }
-
 
     /**
      * Remove grupos
@@ -658,4 +653,27 @@ class Usuario implements AdvancedUserInterface
     }
 
 
+
+    /**
+     * Set ultimo_ingreso
+     *
+     * @param \DateTime $ultimoIngreso
+     * @return Usuario
+     */
+    public function setUltimoIngreso($ultimoIngreso)
+    {
+        $this->ultimo_ingreso = $ultimoIngreso;
+    
+        return $this;
+    }
+
+    /**
+     * Get ultimo_ingreso
+     *
+     * @return \DateTime 
+     */
+    public function getUltimoIngreso()
+    {
+        return $this->ultimo_ingreso;
+    }
 }

@@ -31,7 +31,7 @@ fixtures:
         fecha_nacimiento: 15-01-1980
         grupos:
             - gr1
-            - gr3
+            - gr2
 
 
     Usr1:

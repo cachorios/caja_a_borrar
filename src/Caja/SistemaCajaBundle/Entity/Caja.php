@@ -97,5 +97,8 @@ class Caja
         return $this->cajero;
     }
 
+    public function __toString(){
+        return $this->getNombre();
+    }
 
 }

@@ -5,12 +5,12 @@ namespace Caja\SistemaCajaBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * LotesPago
+ * LotePago
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="Caja\SistemaCajaBundle\Entity\LotesPagoRepository")
+ * @ORM\Entity(repositoryClass="Caja\SistemaCajaBundle\Entity\LotePagoRepository")
  */
-class LotesPago
+class LotePago
 {
     /**
      * @var integer
@@ -28,12 +28,6 @@ class LotesPago
      */
     private $fecha;
 
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="tipo_pago", type="integer")
-     */
-    private $tipo_pago;
 
     /**
      * @var float
@@ -42,16 +36,22 @@ class LotesPago
      */
     private $importe;
 
+    /**
+     * @var boolean
+     * @ORM\Column(name="anulado", nullable=true)
+     */
+    private $anulado;
+
 
     /**
-     * Get id
-     *
-     * @return integer 
+     * @ORM\ManyToOne(targetEntity="Lote")
      */
-    public function getId()
-    {
-        return $this->id;
-    }
+    private $lote;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TipoPago", inversedBy="pagos")
+     */
+    private $tipo_pago;
 
     /**
      * Set fecha
@@ -59,6 +59,17 @@ class LotesPago
      * @param \DateTime $fecha
      * @return LotesPago
      */
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
     public function setFecha($fecha)
     {
         $this->fecha = $fecha;
@@ -120,5 +131,51 @@ class LotesPago
     public function getImporte()
     {
         return $this->importe;
+    }
+
+    /**
+     * Set anulado
+     *
+     * @param string $anulado
+     * @return LotePago
+     */
+    public function setAnulado($anulado)
+    {
+        $this->anulado = $anulado;
+    
+        return $this;
+    }
+
+    /**
+     * Get anulado
+     *
+     * @return string 
+     */
+    public function getAnulado()
+    {
+        return $this->anulado;
+    }
+
+    /**
+     * Set lote
+     *
+     * @param \Caja\SistemaCajaBundle\Entity\Lote $lote
+     * @return LotePago
+     */
+    public function setLote(\Caja\SistemaCajaBundle\Entity\Lote $lote = null)
+    {
+        $this->lote = $lote;
+    
+        return $this;
+    }
+
+    /**
+     * Get lote
+     *
+     * @return \Caja\SistemaCajaBundle\Entity\Lote 
+     */
+    public function getLote()
+    {
+        return $this->lote;
     }
 }

@@ -10,7 +10,9 @@ use Pagerfanta\View\TwitterBootstrapView;
 
 use Caja\SistemaCajaBundle\Entity\Apertura;
 use Caja\SistemaCajaBundle\Form\AperturaType;
+use Caja\SistemaCajaBundle\Form\AperturaCierreType;
 use Caja\SistemaCajaBundle\Form\AperturaFilterType;
+use Caja\SistemaCajaBundle\Entity\Caja;
 
 /**
  * Apertura controller.
@@ -29,10 +31,8 @@ class AperturaController extends Controller
         $breadcrumbs->addItem("Apertura", $this->get("router")->generate("apertura"));
 
         list($filterForm, $queryBuilder) = $this->filter();
-
         list($entities, $pagerHtml) = $this->paginator($queryBuilder);
 
-    
         return $this->render('SistemaCajaBundle:Apertura:index.html.twig', array(
             'entities' => $entities,
             'pagerHtml' => $pagerHtml,
@@ -41,22 +41,22 @@ class AperturaController extends Controller
     }
 
     /**
-    * Create filter form and process filter request.
-    *
-    */
+     * Create filter form and process filter request.
+     *
+     */
     protected function filter()
     {
         $request = $this->getRequest();
         $session = $request->getSession();
         $filterForm = $this->createForm(new AperturaFilterType());
         $em = $this->getDoctrine()->getManager();
-        $queryBuilder = $em->getRepository('SistemaCajaBundle:Apertura')->createQueryBuilder('e');
-    
+        $queryBuilder = $em->getRepository('SistemaCajaBundle:Apertura')->getAperturas($this->getUser());
+
         // Reset filter
         if ($request->getMethod() == 'POST' && $request->get('filter_action') == 'reset') {
             $session->remove('AperturaControllerFilter');
         }
-    
+
         // Filter action
         if ($request->getMethod() == 'POST' && $request->get('filter_action') == 'filter') {
             // Bind values from the request
@@ -77,14 +77,14 @@ class AperturaController extends Controller
                 $this->get('lexik_form_filter.query_builder_updater')->addFilterConditions($filterForm, $queryBuilder);
             }
         }
-    
+
         return array($filterForm, $queryBuilder);
     }
 
     /**
-    * Get results from paginator and get paginator view.
-    *
-    */
+     * Get results from paginator and get paginator view.
+     *
+     */
     protected function paginator($queryBuilder)
     {
         // Paginator
@@ -93,14 +93,13 @@ class AperturaController extends Controller
         $currentPage = $this->getRequest()->get('page', 1);
         $pagerfanta->setCurrentPage($currentPage);
         $entities = $pagerfanta->getCurrentPageResults();
-    
+
         // Paginator - route generator
         $me = $this;
-        $routeGenerator = function($page) use ($me)
-        {
+        $routeGenerator = function ($page) use ($me) {
             return $me->generateUrl('apertura', array('page' => $page));
         };
-    
+
         // Paginator - view
         $translator = $this->get('translator');
         $view = new TwitterBootstrapView();
@@ -109,10 +108,10 @@ class AperturaController extends Controller
             'prev_message' => $translator->trans('views.index.pagprev', array(), 'JordiLlonchCrudGeneratorBundle'),
             'next_message' => $translator->trans('views.index.pagnext', array(), 'JordiLlonchCrudGeneratorBundle'),
         ));
-    
+
         return array($entities, $pagerHtml);
     }
-    
+
     /**
      * Finds and displays a Apertura entity.
      *
@@ -122,11 +121,12 @@ class AperturaController extends Controller
         $breadcrumbs = $this->get("white_october_breadcrumbs");
         $breadcrumbs->addItem("Inicio", $this->get("router")->generate("home_page"));
         $breadcrumbs->addItem("Apertura", $this->get("router")->generate("apertura"));
-        $breadcrumbs->addItem("Ver" );
+        $breadcrumbs->addItem("Ver");
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->find($id);
+        $caja = $this->container->get('caja.manager')->getCaja();
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' =>$id, "caja" => $caja->getId()));
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Apertura entity.');
@@ -135,8 +135,8 @@ class AperturaController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('SistemaCajaBundle:Apertura:show.html.twig', array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),        ));
+            'entity' => $entity,
+            'delete_form' => $deleteForm->createView(),));
     }
 
     /**
@@ -148,14 +148,14 @@ class AperturaController extends Controller
         $breadcrumbs = $this->get("white_october_breadcrumbs");
         $breadcrumbs->addItem("Inicio", $this->get("router")->generate("home_page"));
         $breadcrumbs->addItem("Apertura", $this->get("router")->generate("apertura"));
-        $breadcrumbs->addItem("Nuevo" );
+        $breadcrumbs->addItem("Nuevo");
 
         $entity = new Apertura();
-        $form   = $this->createForm(new AperturaType(), $entity);
+        $form = $this->createForm(new AperturaType(), $entity);
 
         return $this->render('SistemaCajaBundle:Apertura:new.html.twig', array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         ));
     }
 
@@ -165,26 +165,40 @@ class AperturaController extends Controller
      */
     public function createAction()
     {
-        $entity  = new Apertura();
+
+        $entity = new Apertura();
         $request = $this->getRequest();
-        $form    = $this->createForm(new AperturaType(), $entity);
+        $form = $this->createForm(new AperturaType(), $entity);
+
         $form->bind($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
-            $this->get('session')->getFlashBag()->add('success', 'flash.create.success');
+        if (!$this->container->get("caja.manager")->getApertura() == null) {
+            $this->get('session')->getFlashBag()->add('error', 'No puede haber mas de una apertura activa para cada caja');
 
-            return $this->redirect($this->generateUrl('apertura_show', array('id' => $entity->getId())));        } else {
-            $this->get('session')->getFlashBag()->add('error', 'flash.create.error');
+        } else {
+
+            $caja = $this->container->get("caja.manager")->getCaja();
+            $entity->setCaja($caja);
+
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($entity);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('success', 'flash.create.success');
+
+                return $this->redirect($this->generateUrl('apertura'));
+            } else {
+
+                $this->get('session')->getFlashBag()->add('error', 'flash.create.error');
+            }
         }
-
+        $breadcrumbs = $this->get("white_october_breadcrumbs");
         return $this->render('SistemaCajaBundle:Apertura:new.html.twig', array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         ));
     }
+
     /**
      * Displays a form to edit an existing Apertura entity.
      *
@@ -194,11 +208,12 @@ class AperturaController extends Controller
         $breadcrumbs = $this->get("white_october_breadcrumbs");
         $breadcrumbs->addItem("Inicio", $this->get("router")->generate("home_page"));
         $breadcrumbs->addItem("Apertura", $this->get("router")->generate("apertura"));
-        $breadcrumbs->addItem("Editar" );
+        $breadcrumbs->addItem("Editar");
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->find($id);
+        $caja = $this->container->get('caja.manager')->getCaja();
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' =>$id, "caja" => $caja->getId()));
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Apertura entity.');
@@ -208,8 +223,8 @@ class AperturaController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('SistemaCajaBundle:Apertura:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
     }
@@ -222,13 +237,14 @@ class AperturaController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->find($id);
-
+        $caja = $this->container->get('caja.manager')->getCaja();
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' =>$id, "caja" => $caja->getId()));
+        $fecha = $entity->getFecha();
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Apertura entity.');
         }
 
-        $editForm   = $this->createForm(new AperturaType(), $entity);
+        $editForm = $this->createForm(new AperturaType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         $request = $this->getRequest();
@@ -236,6 +252,7 @@ class AperturaController extends Controller
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
+            $entity->setFecha($fecha);
             $em->persist($entity);
             $em->flush();
             $this->get('session')->getFlashBag()->add('success', 'flash.update.success');
@@ -246,11 +263,46 @@ class AperturaController extends Controller
         }
 
         return $this->render('SistemaCajaBundle:Apertura:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
     }
+
+
+    public function cierreAction()
+    {
+        $entity = $this->container->get('caja.manager')->getApertura();
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Apertura entity.');
+        }
+        $entity->setFechaCierre(new \DateTime());
+        $editForm = $this->createForm(new AperturaCierreType(), $entity);
+
+        $request = $this->getRequest();
+
+        if($request->getMethod()=='POST'){
+            $editForm->bind($request);
+            if ($editForm->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($entity);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('success', 'La caja se cerro correctamente');
+
+                return $this->redirect($this->generateUrl('home_page'));
+            } else {
+                $this->get('session')->getFlashBag()->add('error', 'flash.update.error');
+            }
+        }
+
+        return $this->render('SistemaCajaBundle:Apertura:cierre.html.twig', array(
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+        ));
+    }
+
+
     /**
      * Deletes a Apertura entity.
      *
@@ -266,13 +318,19 @@ class AperturaController extends Controller
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('SistemaCajaBundle:Apertura')->find($id);
 
+
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Apertura entity.');
             }
 
-            $em->remove($entity);
-            $em->flush();
-            $this->get('session')->getFlashBag()->add('success', 'flash.delete.success');
+            if(!$entity->getFechaCierre())
+            {
+                $em->remove($entity);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('success', 'flash.delete.success');
+            }else{
+                $this->get('session')->getFlashBag()->add('error', 'No se puede borrar una apertura cerrada');
+            }
         } else {
             $this->get('session')->getFlashBag()->add('error', 'flash.delete.error');
         }
@@ -284,7 +342,6 @@ class AperturaController extends Controller
     {
         return $this->createFormBuilder(array('id' => $id))
             ->add('id', 'hidden')
-            ->getForm()
-        ;
+            ->getForm();
     }
 }

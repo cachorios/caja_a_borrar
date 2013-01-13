@@ -1,6 +1,6 @@
 parameters:
     caja.listener.class: Caja\SistemaCajaBundle\Listener\CajaListener
-
+    caja.cajamanager:    Caja\SistemaCajaBundle\Lib\CajaManager
 services:
 #    caja.example:
 #        class: %caja.example.class%
@@ -16,4 +16,15 @@ services:
         tags:
             - { name: kernel.event_listener, event: security.interactive_login }
 
+    sistemacaja.caja_manager:
+        class: %caja.cajamanager%
+        arguments: [@service_container]
+    caja.manager:
+        alias:  sistemacaja.caja_manager
 
+
+    twig.extension.caja.manager:
+        class:  Caja\SistemaCajaBundle\Twig\Extension\CajaExtension
+        arguments: [@service_container]
+        tags:
+            - { name: twig.extension}

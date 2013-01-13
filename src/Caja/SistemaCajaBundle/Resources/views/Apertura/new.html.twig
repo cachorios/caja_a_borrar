@@ -11,6 +11,14 @@
         <h1>Apertura {{ 'views.new.creation'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</h1>
     </header>
     {{ wo_render_breadcrumbs() }}
+    {% for type, flashMessages in app.session.flashbag.all() %}
+        {% for flashMessage in flashMessages %}
+            <div class='alert alert-{{ type }}'>
+                {{ flashMessage|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
     <div class="row-fluid">
         <div class="span12">
 

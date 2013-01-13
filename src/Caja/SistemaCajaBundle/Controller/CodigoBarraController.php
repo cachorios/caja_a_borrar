@@ -181,7 +181,8 @@ class CodigoBarraController extends Controller
             $em->flush();
             $this->get('session')->getFlashBag()->add('success', 'flash.create.success');
 
-            return $this->redirect($this->generateUrl('codigobarra_show', array('id' => $entity->getId())));        } else {
+            return $this->redirect($this->generateUrl('codigobarra_show', array('id' => $entity->getId())));        }
+        else {
             $this->get('session')->getFlashBag()->add('error', 'flash.create.error');
         }
 

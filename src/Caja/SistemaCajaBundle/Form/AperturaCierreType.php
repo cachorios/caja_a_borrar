@@ -6,16 +6,13 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class AperturaType extends AbstractType
+class AperturaCierreType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if(null == $options['data']->getId()) {
-            $builder->add('fecha');
-        }else{
-            $builder->add('fecha',null,array("disabled" =>true));
-        }
+        $builder->add('fecha',null,array("disabled" =>true));
         $builder->add('importe_inicial','number');
+        $builder->add('fecha_cierre');
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -27,6 +24,6 @@ class AperturaType extends AbstractType
 
     public function getName()
     {
-        return 'caja_sistemacajabundle_aperturatype';
+        return 'caja_sistemacajabundle_aperturacierretype';
     }
 }

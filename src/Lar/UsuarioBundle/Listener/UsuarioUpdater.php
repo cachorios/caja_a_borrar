@@ -33,7 +33,7 @@ class UsuarioUpdater
 
             $old = $em->getUnitOfWork()->getEntityChangeSet($entity);
 
-            if (null == $entity->getPassword()) {
+            if (null == $entity->getPassword() ) {
                 $entity->setPassword($old['password'][0]);
             }else{
                 $entity->setPassword($this->encoder_fact->getEncoder($entity)->encodePassword($entity->getPassword(), $entity->getSalt()));

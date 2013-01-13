@@ -24,13 +24,19 @@ class CajaListener
 
     public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)
     {
-        $tk = $this->contenedor->get('security.context')->getToken();
+        $tk = $event->getAuthenticationToken();
         $usuario = $tk->getUser();
-        //$usuario = $event->getAuthenticationToken()->getUser();
-        $usuario->getContenedor()->set('lar',"Luis A. Rios");
-        $tk->setUser($usuario);
 
-        $this->contenedor->get('security.context')->setToken($tk);
+        $usuario->setUltimoIngreso(new \DateTime() );
+        $usuario->setPassword(null);
+
+        $em = $this->contenedor->get('doctrine.orm.entity_manager');
+
+        $em->persist($usuario);
+        $em->flush();
+
+        //$this->contenedor->get("caja.manager")->setCaja();
+
 
 
     }

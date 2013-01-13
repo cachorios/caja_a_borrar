@@ -1,0 +1,46 @@
+model: caja\SistemaCajaBundle\Entity\Apertura
+fixtures:
+    ap1:
+        caja: c1
+        fecha: '20130105'
+        importe_inicial: 0
+        fecha_cierre: '20130105'
+
+    ap2:
+        caja: c1
+        fecha: '20130106'
+        importe_inicial: 0
+        fecha_cierre: '20130112'
+
+    ap3:
+        caja: c1
+        fecha: '20130107'
+        importe_inicial: 0
+        fecha_cierre: '20130107'
+    ap4:
+        caja: c1
+        fecha: '20130112'
+        importe_inicial: 0
+
+    ap5:
+        caja: c2
+        fecha: '20130105'
+        importe_inicial: 0
+        fecha_cierre: '2013-01-05'
+
+    ap6:
+        caja: c2
+        fecha: '20130106'
+        importe_inicial: 0
+        fecha_cierre: '2013-01-12'
+
+    ap7:
+        caja: c2
+        fecha: '20130107'
+        importe_inicial: 0
+        fecha_cierre: '2013-01-07'
+    ap8:
+        caja: c2
+        fecha: '20130112'
+        importe_inicial: 0
+

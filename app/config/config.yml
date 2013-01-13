@@ -33,6 +33,8 @@ twig:
         lar:
             nombre_sistema: 'Sistema de Cajas'
             logo_empresa:  'img/logo-posadas_bco.png'
+            usuario:
+                imagenes: 'uploads/users/'
 
 # Assetic Configuration
 assetic:
@@ -94,3 +96,5 @@ khepin_yaml_fixtures:
         - SistemaCajaBundle
         - ParametroBundle
 
+parameters:
+    lar.usuario.imagenes: %kernel.root_dir%/../web/uploads/users/

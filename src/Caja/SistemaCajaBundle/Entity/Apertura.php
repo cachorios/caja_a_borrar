@@ -38,11 +38,24 @@ class Apertura
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="fecha_cierre", type="date")
+     * @ORM\Column(name="fecha_cierre", type="date", nullable=true)
      */
     private $fecha_cierre;
 
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Caja\SistemaCajaBundle\Entity\Caja")
+     * @ORM\JoinColumn(name="caja_id", referencedColumnName="id")
+     */
+    protected  $caja;
+
+
+    public function __construct()
+    {
+        $this->fecha = new \DateTime();
+        $this->fecha_cierre = null;
+        $this->importe_inicial = 0;
+    }
     /**
      * Get id
      *
@@ -120,5 +133,32 @@ class Apertura
     public function getFechaCierre()
     {
         return $this->fecha_cierre;
+    }
+
+
+
+
+
+    /**
+     * Set caja
+     *
+     * @param \Caja\SistemaCajaBundle\Entity\Caja $caja
+     * @return Apertura
+     */
+    public function setCaja(\Caja\SistemaCajaBundle\Entity\Caja $caja = null)
+    {
+        $this->caja = $caja;
+    
+        return $this;
+    }
+
+    /**
+     * Get caja
+     *
+     * @return \Caja\SistemaCajaBundle\Entity\Caja 
+     */
+    public function getCaja()
+    {
+        return $this->caja;
     }
 }

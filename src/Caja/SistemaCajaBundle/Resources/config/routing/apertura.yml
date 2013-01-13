@@ -24,6 +24,11 @@ apertura_update:
     defaults: { _controller: "SistemaCajaBundle:Apertura:update" }
     requirements: { _method: post }
 
+apertura_cierre:
+    pattern:  /cierre
+    defaults: { _controller: "SistemaCajaBundle:Apertura:cierre" }
+    #requirements: { _method: post }
+
 apertura_delete:
     pattern:  /{id}/delete
     defaults: { _controller: "SistemaCajaBundle:Apertura:delete" }
