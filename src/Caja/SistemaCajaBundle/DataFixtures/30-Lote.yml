@@ -1,0 +1,11 @@
+model: Caja\SistemaCajaBundle\Entity\Lote
+fixtures:
+    l1:
+        apertura: ap4
+        fecha: '20130112'
+    l2:
+        apertura: ap4
+        fecha: '20130112'
+    l3:
+        apertura: ap4
+        fecha: '20130112'

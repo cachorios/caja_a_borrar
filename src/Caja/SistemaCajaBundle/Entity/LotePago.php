@@ -87,28 +87,6 @@ class LotePago
         return $this->fecha;
     }
 
-    /**
-     * Set tipo_pago
-     *
-     * @param integer $tipoPago
-     * @return LotesPago
-     */
-    public function setTipoPago($tipoPago)
-    {
-        $this->tipo_pago = $tipoPago;
-    
-        return $this;
-    }
-
-    /**
-     * Get tipo_pago
-     *
-     * @return integer 
-     */
-    public function getTipoPago()
-    {
-        return $this->tipo_pago;
-    }
 
     /**
      * Set importe
@@ -177,5 +155,28 @@ class LotePago
     public function getLote()
     {
         return $this->lote;
+    }
+
+    /**
+     * Set tipo_pago
+     *
+     * @param \Caja\SistemaCajaBundle\Entity\TipoPago $tipoPago
+     * @return LotePago
+     */
+    public function setTipoPago(\Caja\SistemaCajaBundle\Entity\TipoPago $tipoPago = null)
+    {
+        $this->tipo_pago = $tipoPago;
+    
+        return $this;
+    }
+
+    /**
+     * Get tipo_pago
+     *
+     * @return \Caja\SistemaCajaBundle\Entity\TipoPago 
+     */
+    public function getTipoPago()
+    {
+        return $this->tipo_pago;
     }
 }

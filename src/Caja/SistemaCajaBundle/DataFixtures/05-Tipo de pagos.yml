@@ -1,0 +1,17 @@
+model: Caja\SistemaCajaBundle\Entity\TipoPago
+fixtures:
+    t1:
+        descripcion: Efectivo
+        divisible: 1
+    t2:
+        descripcion: Cheque
+        divisible: 0
+    t3:
+        descripcion: Visa Macro
+        divisible: 0
+    t4:
+        descripcion: Visa Electron
+        divisible: 0
+    t5:
+        descripcion: Visa Hipotecario
+        divisible: 0

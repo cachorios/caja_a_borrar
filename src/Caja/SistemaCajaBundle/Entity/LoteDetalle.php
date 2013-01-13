@@ -54,6 +54,11 @@ class LoteDetalle
      */
     private $lote;
 
+
+    public function __construct(){
+        $this->anulado = 0;
+    }
+
     /**
      * Get id
      *

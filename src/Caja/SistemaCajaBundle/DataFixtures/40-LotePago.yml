@@ -1,0 +1,34 @@
+model: Caja\SistemaCajaBundle\Entity\LotePago
+fixtures:
+    lp1:
+        lote: l1
+        fecha: '20130112'
+        tipo_pago: t1
+        importe: 62
+    lp2:
+        lote: l2
+        fecha: '20130112'
+        tipo_pago: t1
+        importe: 50
+    lp3:
+        lote: l2
+        fecha: '20130112'
+        tipo_pago: t4
+        importe:  50
+    lp4:
+        lote: l2
+        fecha: '20130112'
+        tipo_pago: t3
+        importe: 75
+    lp5:
+        lote: l3
+        fecha: '20130112'
+        tipo_pago: t5
+        importe: 85.36
+    lp6:
+        lote: l3
+        fecha: '20130112'
+        tipo_pago: t2
+        importe: 200
+
+
