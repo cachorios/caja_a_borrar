@@ -66,6 +66,15 @@ class CodigoBarra
      */
     protected $posiciones;
 
+
+    /**
+     * @ORM\OneToMany(targetEntity="VtoImporteCodigoBarra", mappedBy="codigobarra", cascade={"persist"}  )
+     * @ORM\OrderBy({"vencimiento" = "ASC"})
+     */
+    protected $vtos_importes;
+
+
+
     /**
      * Get id
      *
@@ -233,9 +242,7 @@ class CodigoBarra
      */
     public function addPosicione(\Caja\SistemaCajaBundle\Entity\BarraDetalle $posicion)
     {
-        ld("addPosiciones",$posicion);
         if (!$this->posiciones->contains($posicion)) {
-            ld("addPosiciones2",$posicion);
             $posicion->setCodigobarra($this);
             $this->posiciones->add($posicion);
         }
@@ -267,7 +274,6 @@ class CodigoBarra
 
     public function setPosiciones(ArrayCollection $posiciones)
     {
-        ld("setPosiciones",$posiciones);
         foreach ($posiciones as $posision) {
             $this->addPosicione($posision);
         }
@@ -276,4 +282,37 @@ class CodigoBarra
         //$this->posiciones = $posiciones;
     }
 
+
+    /**
+     * Add vtos_importes
+     *
+     * @param \Caja\SistemaCajaBundle\Entity\VtoImporteCodigoBarra $vtosImportes
+     * @return CodigoBarra
+     */
+    public function addVtosImporte(\Caja\SistemaCajaBundle\Entity\VtoImporteCodigoBarra $vtosImportes)
+    {
+        $this->vtos_importes[] = $vtosImportes;
+    
+        return $this;
+    }
+
+    /**
+     * Remove vtos_importes
+     *
+     * @param \Caja\SistemaCajaBundle\Entity\VtoImporteCodigoBarra $vtosImportes
+     */
+    public function removeVtosImporte(\Caja\SistemaCajaBundle\Entity\VtoImporteCodigoBarra $vtosImportes)
+    {
+        $this->vtos_importes->removeElement($vtosImportes);
+    }
+
+    /**
+     * Get vtos_importes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getVtosImportes()
+    {
+        return $this->vtos_importes;
+    }
 }

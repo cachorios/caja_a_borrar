@@ -23,7 +23,12 @@ class CodigoBarraType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype' => true,
-
+                ))
+            ->add('vtos_importes','collection', array(
+            'type' => new VtoImporteCodBarraType(),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'prototype' => true,
         ))
         ;
 

@@ -48,4 +48,55 @@ class AperturaRepository extends EntityRepository
 
     }
 
+    /**
+     * Obtiene el importe total de pagos de la apertura
+     * @param $apertura_id
+     * @return float
+     */
+    public function getImportePagos($apertura_id)
+    {
+        $em = $this->getEntityManager();
+
+        $q = $em->createQuery("
+              SELECT sum(p.importe)
+              FROM
+                  SistemaCajaBundle:LotePago p JOIN p.lote l
+              WHERE
+                  l.apertura = :apertura_id and p.anulado = 0
+              ")
+            ->setParameter("apertura_id", $apertura_id)
+        ;
+
+        $res = $q->getSingleResult();
+
+        return $res[1];
+
+    }
+
+    /**
+     * Obtiene el importe total de pagos anulado de la apertura
+     * @param $apertura_id
+     * @return float
+     */
+    public function getImportePagosAnulado($apertura_id)
+    {
+        $em = $this->getEntityManager();
+
+        $q = $em->createQuery("
+              SELECT sum(p.importe)
+              FROM
+                  SistemaCajaBundle:LotePago p JOIN p.lote l
+              WHERE
+                  l.apertura = :apertura_id and p.anulado = 1
+              ")
+            ->setParameter("apertura_id", $apertura_id)
+        ;
+
+        $res = $q->getSingleResult();
+
+        return $res[1];
+
+    }
+
+
 }

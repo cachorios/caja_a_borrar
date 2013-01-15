@@ -62,7 +62,6 @@ class UsuarioFilterType extends AbstractType
 
 //    public function addShared(FilterBuilderExecuterInterface $qbe)
 //    {
-//        ld($qbe);
 //        $closure = function(QueryBuilder $filterBuilder, $alias, $joinAlias, Expr $expr) {
 //            // add the join clause to the doctrine query builder
 //            // the where clause for the label and color fields will be added automatically with the right alias later by the Lexik\Filter\QueryBuilderUpdater

@@ -13,14 +13,11 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 
 class UsuarioUpdater
 {
-
     private $encoder_fact;
 
     public function __construct($arg_enc=null)
     {
-
         $this->encoder_fact = $arg_enc ;
-
     }
 
 
@@ -44,10 +41,8 @@ class UsuarioUpdater
 
     public function prePersist(LifecycleEventArgs $args) {
         $entity = $args->getEntity();
-        //$entityManager = $args->getEntityManager();
 
         if ($entity instanceof \Lar\UsuarioBundle\Entity\Usuario) {
-
             $entity->setFechaAlta(new \DateTime());
             $salt = md5(time());
             $entity->setSalt($salt);

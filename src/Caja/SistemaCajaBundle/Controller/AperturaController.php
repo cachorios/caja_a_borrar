@@ -356,11 +356,18 @@ class AperturaController extends Controller
             return $this->redirect($this->generateUrl('apertura_new'));
         }
 
+        $em = $this->getDoctrine()->getManager();
+
+        $pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagos($apertura->getId());
+        $pagosAnulado = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagosAnulado($apertura->getId());
+
         $DetalleTipoPago = $this->getDetalleTipoPago($apertura->getId());
 
         return $this->render('SistemaCajaBundle:Apertura:monitor.html.twig', array(
             'caja' => $caja,
             'apertura' => $apertura,
+            'importe_pago' => $pagos,
+            'pagos_anulado' => $pagosAnulado,
             'detallepago' => $DetalleTipoPago
         ));
     }
@@ -369,11 +376,14 @@ class AperturaController extends Controller
         $em = $this->getDoctrine()->getManager();
         $PagoTipoPago = $em->getRepository('SistemaCajaBundle:Apertura')->getPagosByTipoPago($ap_id);
 
+
+
         $tipoPago = array();
 
         foreach($PagoTipoPago as $tipo)
         {
-            if(!isset($tipoPago[$tipo['id']])){
+            if( !array_key_exists($tipo['id'],$tipoPago))
+            {
                 $tipoPago[$tipo['id']] = array($tipo['descripcion'],0,0);
             }
             if($tipo['anulado'] == 1){
@@ -381,8 +391,8 @@ class AperturaController extends Controller
             }else{
                 $tipoPago[$tipo['id']][1] = $tipo['1'];
             }
-        }
 
+        }
         return $tipoPago;
     }
 

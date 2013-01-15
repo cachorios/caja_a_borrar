@@ -44,12 +44,12 @@ class LotePago
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Lote")
+     * @ORM\ManyToOne(targetEntity="Lote", inversedBy="pagos" )
      */
     private $lote;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TipoPago", inversedBy="pagos")
+     * @ORM\ManyToOne(targetEntity="TipoPago")
      */
     private $tipo_pago;
 
@@ -184,4 +184,6 @@ class LotePago
     {
         return $this->tipo_pago;
     }
+
+
 }

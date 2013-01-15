@@ -46,7 +46,7 @@ class Apertura
      * @ORM\ManyToOne(targetEntity="Caja\SistemaCajaBundle\Entity\Caja")
      * @ORM\JoinColumn(name="caja_id", referencedColumnName="id")
      */
-    protected  $caja;
+    protected $caja;
 
     /**
      * @ORM\OneToMany(targetEntity="Lote", mappedBy="apertura")
@@ -59,10 +59,11 @@ class Apertura
         $this->fecha_cierre = null;
         $this->importe_inicial = 0;
     }
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -78,14 +79,14 @@ class Apertura
     public function setFecha($fecha)
     {
         $this->fecha = $fecha;
-    
+
         return $this;
     }
 
     /**
      * Get fecha
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getFecha()
     {
@@ -101,14 +102,14 @@ class Apertura
     public function setImporteInicial($importeInicial)
     {
         $this->importe_inicial = $importeInicial;
-    
+
         return $this;
     }
 
     /**
      * Get importe_inicial
      *
-     * @return float 
+     * @return float
      */
     public function getImporteInicial()
     {
@@ -124,22 +125,19 @@ class Apertura
     public function setFechaCierre($fechaCierre)
     {
         $this->fecha_cierre = $fechaCierre;
-    
+
         return $this;
     }
 
     /**
      * Get fecha_cierre
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getFechaCierre()
     {
         return $this->fecha_cierre;
     }
-
-
-
 
 
     /**
@@ -151,14 +149,14 @@ class Apertura
     public function setCaja(\Caja\SistemaCajaBundle\Entity\Caja $caja = null)
     {
         $this->caja = $caja;
-    
+
         return $this;
     }
 
     /**
      * Get caja
      *
-     * @return \Caja\SistemaCajaBundle\Entity\Caja 
+     * @return \Caja\SistemaCajaBundle\Entity\Caja
      */
     public function getCaja()
     {
@@ -174,7 +172,7 @@ class Apertura
     public function addLote(\Caja\SistemaCajaBundle\Entity\Lote $lotes)
     {
         $this->lotes[] = $lotes;
-    
+
         return $this;
     }
 
@@ -191,27 +189,29 @@ class Apertura
     /**
      * Get lotes
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getLotes()
     {
         return $this->lotes;
     }
 
-    public function getComprobanteCantidad(){
+    public function getComprobanteCantidad()
+    {
         $n = 0;
-        foreach($this->getLotes() as $lote){
+        foreach ($this->getLotes() as $lote) {
             $n += $lote->getDetalle()->count();
         }
 
         return $n;
     }
 
-    public function getComprobanteAnulado(){
+    public function getComprobanteAnulado()
+    {
         $n = 0;
-        foreach($this->getLotes() as $lote){
-            foreach($lote->getDetalle() as $detalle){
-                if($detalle->getAnulado()){
+        foreach ($this->getLotes() as $lote) {
+            foreach ($lote->getDetalle() as $detalle) {
+                if ($detalle->getAnulado()) {
                     $n++;
                 }
             }
@@ -219,31 +219,37 @@ class Apertura
         return $n;
     }
 
-    public function getImporteCobro(){
+    public function getImporteCobro()
+    {
         $n = 0;
-        foreach($this->getLotes() as $lote){
-            foreach($lote->getPagos() as $pago){
-                if(!$pago->getAnulado()){
-                    $n += $pago->getImporte() ;
+        try {
+            foreach ($this->getLotes() as $lote) {
+                $pagos = $lote->getPagos();
+
+                /*
+                foreach ($pagos as $pago) {
+
+                    if(!$pago->getAnulado()){
+                        $n += $pago->getImporte() ;
+                    }
                 }
+                  */
+
             }
+        } catch (\Symfony\Component\Config\Definition\Exception\Exception $e) {
+
         }
-        return $n;
+        return ($n == null ? 0 : $n);
     }
 
-    public function getImporteAnulado(){
-        $n = 0;
-        foreach($this->getLotes() as $lote){
-            foreach($lote->getPagos() as $pago){
-                if($pago->getAnulado()){
-                    $n += $pago->getImporte() ;
-                }
-            }
+    public function getImporteAnulado()
+    {
+        $n=0;
+        foreach ($this->getLotes() as $lote) {
+           $n += $lote->getImportePagosAnulado();
         }
-        return $n;
+        return ($n == null ? 0 : $n);
     }
-
-
 
 
 }

@@ -76,6 +76,16 @@ Para poder automatizar, ya se vislumbra que minimamente hay dos codigos de barra
 Inicialmente tendriamos dos codigos de barra, ambos de 44 caracteres de longitud, por lo que tiene que haber una forma de identificarlo, ambos empiezan con 9339, en la posicion 18, hay un caracter que identifica, 1 sistema viejo, 2 sistema nuevo, inicialmente utilizaremos esta configuracion.
 Para identificar el codigo, la notacion seria [1,4][18,1] para definicion, y el valor seria 93391 o 93392 en la definicion del codigo de barra.
 
+
+##APERTURA##
+
+Las aperturas son los contenedore de las transacciones de los pagos, o sea cada pago esta asociada a una apertura,
+cada apaertura esta asociado a la caja activa, indica en inicio del cobra hasta el ultimo cobro.
+Solo puede haber una apertura habilitada por caja, una apertura habilitada es una apertura abierta, o sea no tiene fecha de cierre, no so podra crear otra apertura hasta que se cierre la activa.
+
+Estructura se Session para caja
+caja
+
 **Luis Rios**
 
 

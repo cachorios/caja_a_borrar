@@ -108,6 +108,8 @@ class Lote
         $this->pagos = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
+
+
     /**
      * Add detalle
      *
@@ -172,5 +174,37 @@ class Lote
     public function getPagos()
     {
         return $this->pagos;
+    }
+
+
+    /**
+     * Total de pagos del lote no anulado
+     * @return float
+     */
+    public function getImportePagos()
+    {
+        $n=0;
+        foreach($this->getPagos() as $pago){
+             if(!$pago->getAnulado()){
+                 $n+=$pago->getImporte();
+             }
+        }
+
+        return $n;
+    }
+    /**
+     * Total de pagos del lote "anulado"
+     * @return float
+     */
+    public function getImportePagosAnulado()
+    {
+        $n=0;
+        foreach($this->getPagos() as $pago){
+            if($pago->getAnulado()){
+                $n+=$pago->getImporte();
+            }
+        }
+
+        return $n;
     }
 }
