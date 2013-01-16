@@ -69,7 +69,7 @@ class CodigoBarra
 
     /**
      * @ORM\OneToMany(targetEntity="VtoImporteCodigoBarra", mappedBy="codigobarra", cascade={"persist"}  )
-     * @ORM\OrderBy({"vencimiento" = "ASC"})
+     * @ORM\OrderBy({"orden" = "ASC"})
      */
     protected $vtos_importes;
 

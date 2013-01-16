@@ -22,6 +22,11 @@ class VtoImporteCodigoBarra
     private $id;
 
     /**
+     * @var smallint
+     * @ORM\Column(name="orden", type="smallint")
+     */
+    private $orden;
+    /**
      * @var string
      *
      * @ORM\Column(name="vencimiento", type="string", length=64)
@@ -117,5 +122,28 @@ class VtoImporteCodigoBarra
     public function getCodigobarra()
     {
         return $this->codigobarra;
+    }
+
+    /**
+     * Set orden
+     *
+     * @param integer $orden
+     * @return VtoImporteCodigoBarra
+     */
+    public function setOrden($orden)
+    {
+        $this->orden = $orden;
+    
+        return $this;
+    }
+
+    /**
+     * Get orden
+     *
+     * @return integer 
+     */
+    public function getOrden()
+    {
+        return $this->orden;
     }
 }

@@ -15,7 +15,7 @@
         this.$element = $(element);
         this.options = $.extend({}, $.fn.coleccion.defaults, options);
 
-        var embeddedForms = 'div' + this.options.coleccion_id + ' .collection-item';
+        var embeddedForms = 'div' + this.options.coleccion_id +  ' .collection table tbody tr';
         this.options.index = $(embeddedForms).length - 1;
     };
 
@@ -38,6 +38,7 @@
             else {
                 options.coleccion_id = this.id.length === 0 ? '' : '#' + this.id;
             }
+
 
             if (!data) {
                 $this.data('coleccion', (data = new Coleccion(this, options)));
@@ -68,17 +69,21 @@
         },
         addPrototype:function (index) {
 
-            var rowContent = $(this.options.coleccion_id).attr('data-prototype').replace(/__name__/g, index);
+            var rowContent = $(".collection","div"+this.options.coleccion_id).attr('data-prototype').replace(/__name__/g, index);
             var row = $(rowContent);
-            $('div' + this.options.coleccion_id + '> .controls').append(row);
+            $('div' + this.options.coleccion_id +  ' .collection table tbody').append(row);
+            //$('div' + this.options.coleccion_id + '> .controls').append(row);
             //$(this.options.coleccion_id).trigger('add.mopa-collection-item', [row]);
         },
         remove:function () {
-            alert(4)
-            if (this.$element.parents('.collection-item').length !== 0) {
-                var row = this.$element.closest('.collection-item');
-                row.remove();
-                $(this.options.coleccion_id).trigger('remove.mopa-collection-item', [row]);
+            if (this.$element.parents('tr').length !== 0) {
+                var row = this.$element.closest('tr');
+
+                row.find("td").fadeOut(1000, function (){
+                    row.remove();
+                });
+
+                //  $(this.options.coleccion_id).trigger('remove.mopa-collection-item', [row]);
             }
         }
 
@@ -94,16 +99,25 @@
 
     $(function () {
 
-        $('body').on('click.data-api', '[data-coleccion-add-btn]', function (e) {
+        $('body').on('click', '[data-coleccion-add-btn]', function (e) {
             var $btn = $(e.target);
-            alert("por cacho.add");
-
             if (!$btn.hasClass('btn')) {
                 $btn = $btn.closest('.btn');
             }
             $btn.coleccion('add');
             e.preventDefault();
         });
+
+
+        $('body').on('click', '[data-coleccion-remove-btn]', function ( e ) {
+            var $btn = $(e.target);
+            if (!$btn.hasClass('btn')){
+                $btn = $btn.closest('.btn');
+            }
+            $btn.coleccion('remove');
+            e.preventDefault();
+        });
+
     });
 }(window.jQuery);
 

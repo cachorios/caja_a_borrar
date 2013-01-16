@@ -1,60 +1,61 @@
 {% block collection_widget %}
     {% spaceless %}
-        <div class="collection">
+        {% if prototype is defined %}
+            {% set attr = attr|merge({'data-prototype': block('collection_item_widget') }) %}
+        {% endif %}
+        <div class="collection" {{ block('widget_container_attributes') }}>
 
-            {% if prototype is defined %}
-                {% set attr = attr|merge({'data-prototype': block('collection_item_widget') }) %}
-            {% endif %}
+
             {#{{ form.vars.id }}#}
-            <div {{ block('widget_container_attributes') }}>
-                {{ form_errors(form ) }}
 
-                <table width="100%">
-                    <thead>
+            {{ form_errors(form ) }}
 
-                    {% for key, rows in form if key==1 %}
-                        <tr>
-                            {% for f, row in rows %}
-                                <th class="{{ form.vars.id ~ '-' ~ f }}">  {{ form_label(row) }} </th>
-                            {% endfor %}
-                            <th style="width: 10%">Acción</th>
-                            {#<th>Pos.</th>#}
-                            {#<th>Long.</th>#}
-                            {#<th>Descripcion</th>#}
-                            {#<th>Tabla</th>#}
-                            {#<th>Acción</th>#}
-                        </tr>
-                    {% endfor %}
-                    </thead>
-                    <tbody class="items">
-                    {% for rows in form %}
-                        <tr>
-                            {% set fieldNum = 1 %}
+            <table width="100%">
+                <thead>
 
-                            {% for row in rows %}
-                                <td>
-                                    <div class="field{{ fieldNum }}">
-                                        {{ form_widget(row, { 'attr': { 'class': 'test' }}) }}
-                                    </div>
-                                    {% set fieldNum = fieldNum + 1 %}
-                                </td>
-                            {% endfor %}
-                            <td width="110px" style="text-align: center;">
-                                <button class="btn btn-mini btn-danger remove">
-                                    <span class="icon-trash icon-white"></span> Quitar
-                                </button>
+                {% for key, rows in form if key==1 %}
+                    <tr>
+                        {% for f, row in rows %}
+                            <th class="{{ form.vars.id ~ '-' ~ f }}">  {{ form_label(row) }} </th>
+                        {% endfor %}
+                        <th>Acción</th>
+                        {#<th>Pos.</th>#}
+                        {#<th>Long.</th>#}
+                        {#<th>Descripcion</th>#}
+                        {#<th>Tabla</th>#}
+                        {#<th>Acción</th>#}
+                    </tr>
+                {% endfor %}
+                </thead>
+                <tbody class="items">
+                {% for rows in form %}
+                    <tr>
+                        {% set fieldNum = 1 %}
+
+                        {% for row in rows %}
+                            <td>
+                                <div class="field{{ fieldNum }}">
+                                    {{ form_widget(row, { 'attr': { 'class': 'test' }}) }}
+                                </div>
+                                {% set fieldNum = fieldNum + 1 %}
                             </td>
+                        {% endfor %}
+                        <td width="110px" style="text-align: center;">
+                            <button class="btn btn-mini btn-danger remove" data-coleccion-remove-btn="">
+                                <span class="icon-trash icon-white"></span> Quitar
+                            </button>
+                        </td>
 
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-                {{ form_rest(form) }}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {{ form_rest(form) }}
 
-            </div>
+
             <div class="clear"></div>
 
-            <button class="btn btn-mini add_item" style="margin-top: 13px;">
+            <button class="btn btn-mini add_item" style="margin-top: 13px;" data-coleccion-add-btn="">
                 <span class="icon-plus-sign"></span> Agregar
             </button>
 
@@ -64,7 +65,7 @@
         <div class="clear"></div>
 
     {% endspaceless %}
-    {{ block('collection_js') }}
+    {#{{ block('collection_js') }}#}
 {% endblock collection_widget %}
 
 
@@ -84,7 +85,7 @@
 
             {% endfor %}
             <td width="110px" style="text-align: center;">
-                <button class="btn btn-mini btn-danger remove">
+                <button class="btn btn-mini btn-danger remove" data-coleccion-remove-btn="">
                     <span class="icon-trash icon-white"></span> Quitar
                 </button>
             </td>
@@ -96,43 +97,7 @@
 
 {% block collection_js %}
 
-    <script type="text/javascript">
-        var collectionHolder = $('#caja_sistemacajabundle_codigobarratype_posiciones');
-        var $contenedor = $("#caja_sistemacajabundle_codigobarratype_posiciones").find('tbody.items');
 
-
-        jQuery(document).ready(function () {
-
-            $("button.add_item").click(function (e) {
-                e.preventDefault();
-                addCollectionItem();
-            });
-
-            $("button.remove").live('click', function () {
-
-                removeCollectionItem(this);
-                return false;
-            });
-
-        });
-
-
-        function addCollectionItem() {
-            var prototype = collectionHolder.attr('data-prototype');
-            var newItem = prototype.replace(/__name__/g, $contenedor.children().length);
-            $contenedor.append(newItem);
-        }
-
-        function removeCollectionItem(item) {
-            var tr = $(item).parent().parent();
-            tr.find("td").fadeOut(1000, function () {
-                $(this).parent().remove();
-            });
-
-        }
-
-
-    </script>
 {% endblock collection_js %}
 
 

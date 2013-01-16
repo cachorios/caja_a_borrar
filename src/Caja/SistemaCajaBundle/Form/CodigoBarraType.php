@@ -23,28 +23,12 @@ class CodigoBarraType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype' => true,
-//            'widget_add_btn' => array(
-//                'icon' => 'plus-sign',
-//                'label' => 'add email'
-//            ),
-//            'widget_remove_btn' => array(
-//                'icon' => 'trash',
-//                'label' => 'Quitar'
-//            ),
                 ))
-            ->add('vtos_importes','collection', array(
+            ->add('vtos_importes','collection', array('label' => " Vencimientos e Importes",
             'type' => new VtoImporteCodBarraType(),
             'allow_add' => true,
             'allow_delete' => true,
             'prototype' => true,
-//            'widget_add_btn' => array(
-//                'icon' => 'plus-sign',
-//                'label' => 'add email'
-//            ),
-//            'widget_remove_btn' => array(
-//                'icon' => 'trash',
-//                'label' => 'Quitar'
-//            ),
         ))
         ;
 

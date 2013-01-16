@@ -11,8 +11,9 @@ class VtoImporteCodBarraType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('vencimiento',null,array('attr' =>array("style" => "width: 40px;")))
-            ->add('importe',null,array('attr' =>array("style" => "width: 40px;")))
+            ->add("orden")
+            ->add('vencimiento')
+            ->add('importe')
         ;
     }
 
