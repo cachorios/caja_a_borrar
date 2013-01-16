@@ -1,6 +1,4 @@
-#caja_sistemacajabundle_codigobarratype_posiciones_0_posicion{
-    width: 10%;
-}
+
 /*------------- Navegacion izquierda elemento seleccionado  -----------*/
 #prov_inicio .container aside nav ul li:first-child,
 #mod_monitor .container aside nav ul .monitor,
@@ -24,3 +22,59 @@
 #mod_usuario .container aside nav ul .usuario a:hover
 
 {background-color: transparent  !important;}
+
+
+/*---------- para detalle de codigo de barras ----*/
+#caja_sistemacajabundle_codigobarratype_posiciones label.control-label
+{
+    text-align: center;
+    font-weight: bold;
+    float: none;
+    padding: 0;
+    width: inherit;
+}
+#caja_sistemacajabundle_codigobarratype_posiciones thead tr{
+    border-bottom-style: solid;
+    border-bottom-width: thin;
+    margin-bottom: 20px;
+
+}
+
+#caja_sistemacajabundle_codigobarratype_posiciones input[type="text"] ,
+.control-group input[type="password"],
+.control-group textarea {
+    box-shadow: none;
+    padding: 0px 0px;
+}
+
+#caja_sistemacajabundle_codigobarratype_posiciones input,
+#caja_sistemacajabundle_codigobarratype_posiciones textarea,
+#caja_sistemacajabundle_codigobarratype_posiciones .uneditable-input {
+    width: 99%;
+    padding-top: 2px;
+    padding-left: 5px;
+    padding-right: 2px;
+    margin-left: 5px;
+}
+.caja_sistemacajabundle_codigobarratype_posiciones-posicion{
+    width: 5%;
+}
+.caja_sistemacajabundle_codigobarratype_posiciones-longitud{
+    width: 10%;
+}
+
+.caja_sistemacajabundle_codigobarratype_posiciones-descripcion{
+    width: 20%;
+}
+.caja_sistemacajabundle_codigobarratype_posiciones-tabla
+{
+    width: 22%;
+}
+
+#caja_sistemacajabundle_codigobarratype_posiciones select{
+    width: 87%;
+}
+
+#caja_sistemacajabundle_codigobarratype_posiciones td{
+    padding: 1px 3px;
+}

@@ -4,21 +4,27 @@
 
             {% if prototype is defined %}
                 {% set attr = attr|merge({'data-prototype': block('collection_item_widget') }) %}
-                {#block('collection_item_widget')#}
             {% endif %}
-
+            {#{{ form.vars.id }}#}
             <div {{ block('widget_container_attributes') }}>
-                {{ form_errors(form) }}
+                {{ form_errors(form ) }}
 
                 <table width="100%">
                     <thead>
-                    <tr>
-                        <th>Pos.</th>
-                        <th>Long.</th>
-                        <th>Descripcion</th>
-                        <th>Tabla</th>
-                        <th>Acción</th>
-                    </tr>
+
+                    {% for key, rows in form if key==1 %}
+                        <tr>
+                            {% for f, row in rows %}
+                                <th class="{{ form.vars.id ~ '-' ~ f }}">  {{ form_label(row) }} </th>
+                            {% endfor %}
+                            <th style="width: 10%">Acción</th>
+                            {#<th>Pos.</th>#}
+                            {#<th>Long.</th>#}
+                            {#<th>Descripcion</th>#}
+                            {#<th>Tabla</th>#}
+                            {#<th>Acción</th>#}
+                        </tr>
+                    {% endfor %}
                     </thead>
                     <tbody class="items">
                     {% for rows in form %}
@@ -102,9 +108,9 @@
                 addCollectionItem();
             });
 
-            $("button.remove").live('click', function() {
+            $("button.remove").live('click', function () {
 
-                  removeCollectionItem(this);
+                removeCollectionItem(this);
                 return false;
             });
 

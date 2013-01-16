@@ -18,17 +18,33 @@ class CodigoBarraType extends AbstractType
             ->add('identificador')
             ->add('valor')
             ->add('observacion',null,array('attr' =>array("style" => "width: 96%;")))
-            ->add('posiciones','collection', array(
+            ->add('posiciones','collection', array('block_name' => "Block name",
                 'type' => new BarraDetalleType(),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype' => true,
+//            'widget_add_btn' => array(
+//                'icon' => 'plus-sign',
+//                'label' => 'add email'
+//            ),
+//            'widget_remove_btn' => array(
+//                'icon' => 'trash',
+//                'label' => 'Quitar'
+//            ),
                 ))
             ->add('vtos_importes','collection', array(
             'type' => new VtoImporteCodBarraType(),
             'allow_add' => true,
             'allow_delete' => true,
             'prototype' => true,
+//            'widget_add_btn' => array(
+//                'icon' => 'plus-sign',
+//                'label' => 'add email'
+//            ),
+//            'widget_remove_btn' => array(
+//                'icon' => 'trash',
+//                'label' => 'Quitar'
+//            ),
         ))
         ;
 

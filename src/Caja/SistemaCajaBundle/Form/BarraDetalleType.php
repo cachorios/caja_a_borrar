@@ -11,11 +11,11 @@ class BarraDetalleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('posicion','number',array('attr' =>array("style" => "width: 40px;")))
-            ->add('longitud','number',array('attr' =>array("style" => "width: 40px;")))
-            ->add('descripcion',null,array('attr' =>array("style" => "width: 180px;")))
+            ->add('posicion','number')
+            ->add('longitud','number')
+            ->add('descripcion')
             ->add('tabla','parametro_choice',array(
-                        'tabla' => 0,'attr' =>array("style" => "width: 200px;")))
+                        'tabla' => 0,'attr' =>array('data-choice' =>'barra-detalle',)))
         ;
     }
 
