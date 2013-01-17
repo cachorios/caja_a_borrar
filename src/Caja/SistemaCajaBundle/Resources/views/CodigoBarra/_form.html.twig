@@ -18,18 +18,43 @@
     </div>
 </div>
 
-<div class="row-fluid">
-    <div class="span12">
-        <div style="padding-bottom: 24px;" class="bs-docs-example">
-            <a rel="popover" class="btn btn-large btn-danger" href="#" data-original-title="A Title"
-               data-content2="And here's some amasasa asaazing content. It's very engaging. right?">Click to toggle
-                popover</a>
+{#<div class="row-fluid">#}
+{#<div class="span12 right">#}
+{#<a href="$">Ayuda</a>#}
+{#</div>#}
 
-           
+
+{#<div class="span12">#}
+{#{{ form_row(edit_form.vtos_importes) }}#}
+{#</div>#}
+{#</div>#}
+
+<div class="row-fluid">
+    <div class="span12 right">
+        <div id="caja_sistemacajabundle_codigobarratype_vtos_importes_control_group" class=" control-group ">
+            <legend >
+                <a href="#" id="ayuda1" class="text-info" style="float: right" data-original-title="Ayuda de Vencimientos e importe" data-placement="top" data-content="Ayuda" rel="popover" >
+                    <i class="icon-question-sign"></i> Ayuda</a>
+                Vencimientos e Importes</legend>
+            <div class=" controls">
+                {{ form_errors(edit_form.vtos_importes) }}
+                {{ form_widget(edit_form.vtos_importes) }}
+                <div class="clear"></div>
+            </div>
         </div>
-        {{ form_row(edit_form.vtos_importes) }}
     </div>
 </div>
+
+<script>
+
+    $("a[rel=popover]")
+            .popover()
+            .click(function(e) {
+                alert("?");
+                e.preventDefault();
+            });
+
+</script>
 
 <div class="row-fluid">
     <div class="span12">
@@ -43,7 +68,6 @@
 
     </div>
 </div>
-
 
 
 

@@ -24,14 +24,16 @@ class CodigoBarraType extends AbstractType
                 'allow_delete' => true,
                 'prototype' => true,
                 ))
-            ->add('vtos_importes','collection', array('label' => " Vencimientos e Importes",
+            ->add('vtos_importes','collection', array('label' => " Vencimientos e Importes ",
             'type' => new VtoImporteCodBarraType(),
             'allow_add' => true,
             'allow_delete' => true,
             'prototype' => true,
+
         ))
         ;
 
+        //"help_block", "help_inline", "help_label",
 //        ->add('posiciones','collection', array(
 //            'type' => new BarraDetalleType(),
 //            'allow_add' => true,
