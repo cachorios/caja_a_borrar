@@ -1,0 +1,12 @@
+model: caja\SistemaCajaBundle\Entity\VtoImporteCodBarraType
+fixtures:
+    v1:
+        codigobarra:  c1
+        orden:        1
+        vencimiento:  aFechaAADDD( [13] )
+        importe:      [5].00/100
+
+    v2:
+        orden:        2
+        vencimiento:  sumarAFecha( aFechaAADDD( [13] ), [41])
+        importe:      ([5].00 + [35].00)/100
