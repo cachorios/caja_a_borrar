@@ -14,7 +14,51 @@
 </div>
 <div class="row-fluid">
     <div class="span12">
-        {{ form_row(edit_form.posiciones) }}
+        <div class=" control-group " id="caja_sistemacajabundle_codigobarratype_posiciones_control_group">
+            <legend>
+                <a href="#" id="ayuda1" class="text-info" style="float: right"
+                   data-original-title="Ayuda de Posiciones"
+                   data-placement="left"
+                   data-idcontenido="ayuda-pos"
+                   rel="popover">
+                    <i class="icon-question-sign"></i> Ayuda</a>
+                Posiciones
+            </legend>
+            <div class=" controls">
+                <div id="ayuda-pos" style="display: none;">
+                    <p>Las definicion de posiciones permite leer e interpretar el codigo de barra para el cual esta definido, .
+
+                    </p>
+
+                    <h5>Expresiones de ejemplo</h5>
+                    <table width="100%" cellpadding=5 border="1" >
+                        <tr>
+                            <td style="width: 40%;">aFechaAADDD( [13] )</td>
+                            <td style="width: 60%;">Convierte a fecha la expresion de la posicion [13]</td>
+                        </tr>
+                        <tr>
+                            <td>sumarAFecha( aFechaAADDD( [13] ), [41])</td>
+                            <td>Suma a la fecha generada igual al ejemplo anterior, el valor del la expresion [41]</td>
+                        </tr>
+                        <tr>
+                            <td>[5].00/100</td>
+                            <td>Al numero de la expresion de la posicion 5 se le divide por 100 </td>
+                        </tr>
+                        <tr>
+                            <td>([5].00 + [35].00)/100</td>
+                            <td>Se suma el numero de la expresion de la posicion 5 y 35 a estos se le divide por 100 </td>
+                        </tr>
+
+
+                    </table>
+
+
+                </div>
+                {{ form_errors(edit_form.posiciones) }}
+                {{ form_widget(edit_form.posiciones) }}
+                <div class="clear"></div>
+            </div>
+        </div>
     </div>
 </div>
 
