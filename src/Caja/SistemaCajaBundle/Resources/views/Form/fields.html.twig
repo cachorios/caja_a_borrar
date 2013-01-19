@@ -4,16 +4,12 @@
             {% set attr = attr|merge({'data-prototype': block('collection_item_widget') }) %}
         {% endif %}
         <div class="collection" {{ block('widget_container_attributes') }}>
-
-
-            {#{{ form.vars.id }}#}
-
             {{ form_errors(form ) }}
 
             <table width="100%">
                 <thead>
 
-                {% for key, rows in form if key==1 %}
+                {% for key, rows in form if key==0 %}
                     <tr>
                         {% for f, row in rows %}
                             <th class="{{ form.vars.id ~ '-' ~ f }}">  {{ form_label(row) }} </th>

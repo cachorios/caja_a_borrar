@@ -46,6 +46,12 @@ class BarraDetalle
      */
     private $tabla;
 
+    /**
+     * @var integer
+     * @ORM\Column(name="visible", type="boolean", nullable=true)
+     */
+    private $visible;
+
 
     /**
      * Bidireccional - Muchos comentarios fueron redactados por un usuario (Lado propietario)
@@ -183,4 +189,27 @@ class BarraDetalle
     }
 
 
+
+    /**
+     * Set visible
+     *
+     * @param boolean $visible
+     * @return BarraDetalle
+     */
+    public function setVisible($visible)
+    {
+        $this->visible = $visible;
+    
+        return $this;
+    }
+
+    /**
+     * Get visible
+     *
+     * @return boolean 
+     */
+    public function getVisible()
+    {
+        return $this->visible;
+    }
 }

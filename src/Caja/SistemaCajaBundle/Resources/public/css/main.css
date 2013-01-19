@@ -48,20 +48,11 @@
     width: 92%;
     padding: 4px 3px;
 }
-.caja_sistemacajabundle_codigobarratype_posiciones-posicion{
-    width: 8%;
-}
-.caja_sistemacajabundle_codigobarratype_posiciones-longitud{
-    width: 10%;
-}
-
-.caja_sistemacajabundle_codigobarratype_posiciones-descripcion{
-    width: 35%;
-}
-.caja_sistemacajabundle_codigobarratype_posiciones-tabla
-{
-    width: 30%;
-}
+.caja_sistemacajabundle_codigobarratype_posiciones-posicion{    width: 5%;}
+.caja_sistemacajabundle_codigobarratype_posiciones-longitud{    width: 5%;}
+.caja_sistemacajabundle_codigobarratype_posiciones-descripcion{ width: 35%;}
+.caja_sistemacajabundle_codigobarratype_posiciones-tabla{       width: 35%;}
+.caja_sistemacajabundle_codigobarratype_posiciones-visible{     width: 5%;}
 
 #caja_sistemacajabundle_codigobarratype_posiciones select{
     width: 87%;
@@ -108,4 +99,23 @@
     box-shadow: 0 0 0 2px #EEF0F2, 0 2px 2px #EEF0F2 inset;
     width: 98%;
     padding: 4px 3px;
+}
+
+
+/*---------- Pop Over ----------------*/
+#form_CodigoBarra .popover{
+    font-size: 90% !important;
+    width: 50%;
+}
+
+#form_CodigoBarra .popover table{
+    font-size: 90% !important;
+}
+
+.popover-content{
+    color: #0d3349;
+}
+
+.popover-content h1, h2, h3, h4, h5, h6 {
+    color: #006dcc;
 }

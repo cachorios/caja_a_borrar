@@ -248,7 +248,7 @@ class CodigoBarra
         }
 
         //$this->posiciones[] = $posicion;
-        exit;
+
         return $this;
     }
 
@@ -314,5 +314,9 @@ class CodigoBarra
     public function getVtosImportes()
     {
         return $this->vtos_importes;
+    }
+
+    public function __toString(){
+        return $this->getNombre();
     }
 }

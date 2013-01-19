@@ -1,6 +1,7 @@
 parameters:
     caja.listener.class: Caja\SistemaCajaBundle\Listener\CajaListener
     caja.cajamanager:    Caja\SistemaCajaBundle\Lib\CajaManager
+    caja.barra:          Caja\SistemaCajaBundle\Lib\CodigoBarraLive
 services:
 #    caja.example:
 #        class: %caja.example.class%
@@ -20,9 +21,17 @@ services:
     sistemacaja.caja_manager:
         class: %caja.cajamanager%
         arguments: [@service_container]
+
+    sistemacaja.codigobarra:
+        class: %caja.barra%
+        arguments: [@doctrine.orm.entity_manager]
+
+
     caja.manager:
         alias:  sistemacaja.caja_manager
 
+    caja.barra:
+        alias: sistemacaja.codigobarra
 
     twig.extension.caja.manager:
         class:  Caja\SistemaCajaBundle\Twig\Extension\CajaExtension

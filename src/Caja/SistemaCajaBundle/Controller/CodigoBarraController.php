@@ -2,6 +2,7 @@
 
 namespace Caja\SistemaCajaBundle\Controller;
 
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Pagerfanta\Pagerfanta;
@@ -9,8 +10,13 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\View\TwitterBootstrapView;
 
 use Caja\SistemaCajaBundle\Entity\CodigoBarra;
+use Caja\SistemaCajaBundle\Entity\VtoImporteCodigoBarra;
+use Caja\SistemaCajaBundle\Entity\BarraDetalle;
 use Caja\SistemaCajaBundle\Form\CodigoBarraType;
 use Caja\SistemaCajaBundle\Form\CodigoBarraFilterType;
+
+include_once(__DIR__ . '/../Lib/barra_utils.php');
+
 
 /**
  * CodigoBarra controller.
@@ -151,6 +157,9 @@ class CodigoBarraController extends Controller
         $breadcrumbs->addItem("Nuevo" );
 
         $entity = new CodigoBarra();
+        $entity->addPosicione(new BarraDetalle());
+        $entity->addVtosImporte(new VtoImporteCodigoBarra() );
+
         $form   = $this->createForm(new CodigoBarraType(), $entity);
 
         return $this->render('SistemaCajaBundle:CodigoBarra:new.html.twig', array(
@@ -175,6 +184,9 @@ class CodigoBarraController extends Controller
 
             foreach ($entity->getPosiciones() as $posicion) {
                 $posicion->setCodigoBarra($entity);
+            }
+            foreach ($entity->getgetVtosImportes() as $vtoimp) {
+                $vtoimp->setCodigoBarra($entity);
             }
 
             $em->persist($entity);
@@ -204,7 +216,37 @@ class CodigoBarraController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+
+        $bm = $this->container->get("caja.barra");
+
+        $bm->setCodigo("93390001234513015201101000000123400001231000");
+
+        /*
+        $arr = $bm->getDetalle();
+
+        ld($arr);
+
+        $fecha = aFechaAADDD($arr[2][2]);
+        ld( $fecha);
+
+        $fecha = sumarAFecha($fecha,5);
+        ld( $fecha);
+                    */
+     //   ld($bm->getVtosImportes());
+
+
+
         $entity = $em->getRepository('SistemaCajaBundle:CodigoBarra')->find($id);
+
+
+        if($entity->getPosiciones()->count()==0) {
+            $entity->addPosicione(new BarraDetalle());
+        }
+
+        if($entity->getVtosImportes()->count()==0) {
+            $entity->addVtosImporte(new VtoImporteCodigoBarra());
+        }
+
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find CodigoBarra entity.');
@@ -235,11 +277,17 @@ class CodigoBarraController extends Controller
         }
 
         $originalPosisiones = array();
-
         // cargar en el array todas las posiciones
         foreach ($entity->getPosiciones() as $posicion) {
             $originalPosisiones[] = $posicion;
         }
+
+        $originalVtosImp = array();
+        // cargar en el array todas las VtosImp
+        foreach ($entity->getVtosImportes() as $vtoimp) {
+            $originalVtosImp[] = $vtoimp;
+        }
+
 
         $editForm   = $this->createForm(new CodigoBarraType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
@@ -267,8 +315,24 @@ class CodigoBarraController extends Controller
                 $entity->getPosiciones()->removeElement($posicion);
                 $em->remove($posicion);
             }
+            //----------
+            // filtrar $originalVencimeintoImp que no estan presente
+            foreach ($entity->getVtosImportes() as $vtoimp) {
+                if($vtoimp->getCodigoBarra() == null){
+                    $vtoimp->setCodigoBarra($entity);
+                }
+                foreach ($originalVtosImp as $key => $toDel) {
+                    if ($toDel->getId() === $vtoimp->getId()) {
+                        unset($originalVtosImp[$key]);
+                    }
+                }
+            }
 
-
+            // los que quedaron en el array son para borrar
+            foreach ($originalVtosImp as $vtoimp) {
+                $entity->getPosiciones()->removeElement($vtoimp);
+                $em->remove($vtoimp);
+            }
 
             $em->persist($entity);
             $em->flush();
