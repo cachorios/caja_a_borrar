@@ -103,6 +103,27 @@
 
 
 /*---------- Pop Over ----------------*/
+.popover-title {
+    background-color: #F7F7F7;
+    border-bottom-color: #EBEBEB;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    font-size: 20px;
+    font-weight: normal;
+    line-height: 18px;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    padding-bottom: 8px;
+    padding-left: 14px;
+    padding-right: 14px;
+    padding-top: 8px;
+}
 #form_CodigoBarra .popover{
     font-size: 90% !important;
     width: 50%;

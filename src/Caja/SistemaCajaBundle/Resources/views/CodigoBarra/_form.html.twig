@@ -27,31 +27,34 @@
             <div class=" controls">
                 <div id="ayuda-pos" style="display: none;">
                     <p>Las definicion de posiciones permite leer e interpretar el codigo de barra para el cual esta definido, .
-
                     </p>
 
                     <h5>Expresiones de ejemplo</h5>
                     <table width="100%" cellpadding=5 border="1" >
                         <tr>
-                            <td style="width: 40%;">aFechaAADDD( [13] )</td>
-                            <td style="width: 60%;">Convierte a fecha la expresion de la posicion [13]</td>
+                            <td valign=top style="width: 30%;">Pos.</td>
+                            <td style="width: 70%;">Posicion, posicion de inicio, donde empieza una valor en particaluar</td>
                         </tr>
                         <tr>
-                            <td>sumarAFecha( aFechaAADDD( [13] ), [41])</td>
-                            <td>Suma a la fecha generada igual al ejemplo anterior, el valor del la expresion [41]</td>
+                            <td valign=top>Long.</td>
+                            <td>Logintud, Cantidad de caracteres a leer a partir de posicion, con posicion y logitud queda determinado el valor del dato.</td>
                         </tr>
                         <tr>
-                            <td>[5].00/100</td>
-                            <td>Al numero de la expresion de la posicion 5 se le divide por 100 </td>
+                            <td valign=top>Descripción</td>
+                            <td>Narrativa de que es el valor definido en posicion y logitud.</td>
                         </tr>
                         <tr>
-                            <td>([5].00 + [35].00)/100</td>
-                            <td>Se suma el numero de la expresion de la posicion 5 y 35 a estos se le divide por 100 </td>
+                            <td valign=top>Tabla</td>
+                            <td>A partir del valor obtenido, permite la busqueda de este en una tabla, mostrando una descripcion,
+                                por ejemplo, si la valor 101 es el representativo para tasas, se establece en tabla la que corresponde para tasas,y mostrar 'Inmueble' en ves de 101.</td>
                         </tr>
-
+                        <tr>
+                            <td valign=top>Visible</td>
+                            <td>Si el atributo es representatio para orientar al operador, con visible tildado, en el momento de leer el codigo, muestra en la pantalla de registro, para vencimientos e  importe se estable por separado.</td>
+                        </tr>
 
                     </table>
-
+                    <br>
 
                 </div>
                 {{ form_errors(edit_form.posiciones) }}
@@ -124,7 +127,7 @@
                             </tr>
 
 
-                        </table>
+                        </table><br>
 
 
                 </div>
