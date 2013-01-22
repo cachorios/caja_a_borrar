@@ -215,29 +215,22 @@ class CodigoBarraController extends Controller
         $breadcrumbs->addItem("Editar" );
 
         $em = $this->getDoctrine()->getManager();
-
-
+        /*
         $bm = $this->container->get("caja.barra");
-
         $bm->setCodigo("93390001234513015201101000000123400001231000");
 
-        /*
         $arr = $bm->getDetalle();
 
-        ld($arr);
+        echo "--------------2><br>";
 
-        $fecha = aFechaAADDD($arr[2][2]);
-        ld( $fecha);
+        $bm->getVtosImportes();
+        echo "--------------3><br>";
 
-        $fecha = sumarAFecha($fecha,5);
-        ld( $fecha);
-                    */
-     //   ld($bm->getVtosImportes());
-
+        echo "<pre>".print_r($bm->getVtosImportes(),true)."</pre>";
+         */
 
 
         $entity = $em->getRepository('SistemaCajaBundle:CodigoBarra')->find($id);
-
 
         if($entity->getPosiciones()->count()==0) {
             $entity->addPosicione(new BarraDetalle());

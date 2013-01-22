@@ -2,6 +2,7 @@
 /*------------- Navegacion izquierda elemento seleccionado  -----------*/
 #prov_inicio .container aside nav ul li:first-child,
 #mod_monitor .container aside nav ul .monitor,
+#mod_registro .container aside nav ul .registro,
 #mod_apertura .container aside nav ul .apertura,
 #mod_cierre .container aside nav ul .cierre,
 #mod_caja .container aside nav ul .caja,
@@ -14,6 +15,7 @@
 /*------------- Navegacion izquierda hover  -----------*/
 #prov_inicio .container aside nav ul li:first-child a:hover,
 #mod_monitor .container aside nav ul .monitor a:hover,
+#mod_registro .container aside nav ul .registro a:hover,
 #mod_apertura .container aside nav ul .apertura  a:hover,
 #mod_apertura .container aside nav ul .cierre  a:hover,
 #mod_caja .container aside nav ul .caja a:hover,
@@ -49,10 +51,10 @@
     padding: 4px 3px;
 }
 .caja_sistemacajabundle_codigobarratype_posiciones-posicion{    width: 5%;}
-.caja_sistemacajabundle_codigobarratype_posiciones-longitud{    width: 5%;}
-.caja_sistemacajabundle_codigobarratype_posiciones-descripcion{ width: 35%;}
-.caja_sistemacajabundle_codigobarratype_posiciones-tabla{       width: 35%;}
-.caja_sistemacajabundle_codigobarratype_posiciones-visible{     width: 5%;}
+.caja_sistemacajabundle_codigobarratype_posiciones-longitud{    width: 6%;}
+.caja_sistemacajabundle_codigobarratype_posiciones-descripcion{ width: 30%;}
+.caja_sistemacajabundle_codigobarratype_posiciones-tabla{       width: 30%;}
+.caja_sistemacajabundle_codigobarratype_posiciones-estado{      width: 18%;}
 
 #caja_sistemacajabundle_codigobarratype_posiciones select{
     width: 87%;

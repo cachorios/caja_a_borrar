@@ -13,7 +13,7 @@ fixtures:
         posicion:    21
         longitud:    3
         tabla:       0
-        visible:     1
+        estado:     1
 
     l3:
         codigobarra: c1
@@ -21,7 +21,7 @@ fixtures:
         posicion:    19
         longitud:    2
         tabla:       0
-        visible:     1
+        estado:     1
 
     l4:
         codigobarra: c1
@@ -78,4 +78,4 @@ fixtures:
         posicion:    24
         longitud:    10
         tabla:       0
-        visible:     1
+        estado:      2

@@ -185,5 +185,10 @@ class LotePago
         return $this->tipo_pago;
     }
 
+    public function __toString()
+    {
+        return "Pago ".$this->getId();
+    }
+
 
 }

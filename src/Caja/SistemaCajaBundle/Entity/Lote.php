@@ -63,7 +63,6 @@ class Lote
     public function setFecha($fecha)
     {
         $this->fecha = $fecha;
-    
         return $this;
     }
 
@@ -104,6 +103,7 @@ class Lote
      */
     public function __construct()
     {
+        $this->fecha = new \DateTime();
         $this->detalle = new \Doctrine\Common\Collections\ArrayCollection();
         $this->pagos = new \Doctrine\Common\Collections\ArrayCollection();
     }

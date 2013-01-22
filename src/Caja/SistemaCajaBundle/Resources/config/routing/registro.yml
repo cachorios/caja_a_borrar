@@ -1,0 +1,7 @@
+registro:
+    pattern:  /
+    defaults: { _controller: "SistemaCajaBundle:Registro:registro" }
+
+registro_create:
+    pattern:  /create
+    defaults: { _controller: "SistemaCajaBundle:Registro:create" }

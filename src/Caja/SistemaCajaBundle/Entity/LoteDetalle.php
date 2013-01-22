@@ -183,4 +183,9 @@ class LoteDetalle
     {
         return $this->lote;
     }
+
+    public function __toString()
+    {
+        return "Lote ".$this->getId();
+    }
 }

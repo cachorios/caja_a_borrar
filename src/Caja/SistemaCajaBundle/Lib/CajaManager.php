@@ -28,6 +28,7 @@ class CajaManager
 
             $usuario = $this->contenedor->get("security.context")->getToken()->getUser();
 
+            //ld($usuario);
             $caja = $this->contenedor->get("doctrine.orm.entity_manager")->getRepository("SistemaCajaBundle:Caja")->findOneBy(array("cajero" => $usuario->getId()));
             return $caja;
         }

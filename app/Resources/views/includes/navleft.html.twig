@@ -10,8 +10,8 @@
                 {% endif %}
 
                 {% if esCajero() and tieneApertura() %}
-                    <li>
-                        <a href=""><i class="icon-th-list icon-white"></i>Registro</a>
+                    <li class="registro">
+                        <a href="{{ path('registro') }}"><i class="icon-th-list icon-white"></i>Registro</a>
                     </li>
                 {% endif %}
 

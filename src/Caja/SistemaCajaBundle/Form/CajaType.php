@@ -14,13 +14,6 @@ class CajaType extends AbstractType
         $builder
             ->add('nombre')
             ->add('cajero'
-//            , 'entity',
-//            array(
-//                'class' => 'UsuarioBundle:Usuario',
-//                'query_builder' => function(EntityRepository $er) {
-//                    return $er->createQueryBuilder('u');
-//                },
-//            )
         )
         ;
     }

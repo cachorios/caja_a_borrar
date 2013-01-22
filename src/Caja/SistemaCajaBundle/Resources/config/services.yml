@@ -24,7 +24,7 @@ services:
 
     sistemacaja.codigobarra:
         class: %caja.barra%
-        arguments: [@doctrine.orm.entity_manager]
+        arguments: [@doctrine.orm.entity_manager, @lar.parametro.tabla]
 
 
     caja.manager:

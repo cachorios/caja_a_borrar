@@ -9,3 +9,7 @@ SistemaCajaBundle_codigobarra:
 SistemaCajaBundle_apertura:
     resource: "@SistemaCajaBundle/Resources/config/routing/apertura.yml"
     prefix:   /apertura
+
+SistemaCajaBundle_registro:
+    resource: "@SistemaCajaBundle/Resources/config/routing/registro.yml"
+    prefix:   /registro

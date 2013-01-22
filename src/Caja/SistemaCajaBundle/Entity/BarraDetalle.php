@@ -47,10 +47,11 @@ class BarraDetalle
     private $tabla;
 
     /**
-     * @var integer
-     * @ORM\Column(name="visible", type="boolean", nullable=true)
+     * El estado indica si es visible = 1 o si es Comprobante = 2
+     * @var smallint
+     * @ORM\Column(name="estado", type="smallint", nullable=true)
      */
-    private $visible;
+    private $estado;
 
 
     /**
@@ -190,26 +191,27 @@ class BarraDetalle
 
 
 
+
     /**
-     * Set visible
+     * Set estado
      *
-     * @param boolean $visible
+     * @param integer $estado
      * @return BarraDetalle
      */
-    public function setVisible($visible)
+    public function setEstado($estado)
     {
-        $this->visible = $visible;
+        $this->estado = $estado;
     
         return $this;
     }
 
     /**
-     * Get visible
+     * Get estado
      *
-     * @return boolean 
+     * @return integer 
      */
-    public function getVisible()
+    public function getEstado()
     {
-        return $this->visible;
+        return $this->estado;
     }
 }
