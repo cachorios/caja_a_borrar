@@ -3,8 +3,8 @@ fixtures:
     v1:
         codigobarra:  c1
         orden:        1
-        vencimiento:  '#aFechaAADDD( [13] )'
-        importe:      '#[5].00/100'
+        vencimiento:  'aFechaAADDD( [13] )'
+        importe:      '[5].00/100'
 
     v2:
         codigobarra:  c1

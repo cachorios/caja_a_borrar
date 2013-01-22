@@ -140,13 +140,13 @@ class CodigoBarraLive
         return $ret;
     }
 
-    private
-    function evalExp($exp)
+    private  function evalExp($exp)
     {
-       eval("\$ret=".$exp.";");
 
-        //$fn = create_function("", "return ({$exp});");
-        //$ret = $fn();
+       //eval("\$ret=".$exp.";");
+
+        $fn = create_function("", "return ({$exp});");
+        $ret = $fn();
         return $ret;
     }
 
