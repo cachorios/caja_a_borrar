@@ -1,5 +1,5 @@
 {
-    "hash": "36eb91f3c3fceb1c1cc3e9a5f18784d5",
+    "hash": "5ebc36a09fe4abed850a4bc6faeb4950",
     "packages": [
         {
             "name": "doctrine/common",
@@ -819,50 +819,6 @@
             ]
         },
         {
-            "name": "lar/parametro-bundle",
-            "version": "dev-master",
-            "target-dir": "Lar/ParametroBundle",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:cachorios/ParametroBundle.git",
-                "reference": "7276e87c44952a28f4c244feaab2f69f1e107101"
-            },
-            "require": {
-                "symfony/symfony": "2.1.*",
-                "jordillonch/crud-generator": "dev-master",
-                "whiteoctober/breadcrumbs-bundle": "2.1.x-dev"
-            },
-            "time": "2013-01-21 22:19:20",
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.1.x-dev"
-                }
-            },
-            "installation-source": "source",
-            "autoload": {
-                "psr-0": {
-                    "Lar\\ParametroBundle": ""
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Luis Rios",
-                    "email": "cachorios@gmail.com"
-                }
-            ],
-            "description": "Adminstra tablas de parametros",
-            "homepage": "https://github.com/cachorios/ParametroBundle",
-            "keywords": [
-                "Tabla",
-                "Parametro",
-                "admin"
-            ]
-        },
-        {
             "name": "lar/utiles-bundle",
             "version": "dev-master",
             "target-dir": "Lar/UtilsBundle",
@@ -988,7 +944,7 @@
                     "dev-master": "1.3.x-dev"
                 }
             },
-            "installation-source": "dist",
+            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Monolog": "src/"
@@ -1882,7 +1838,6 @@
         "jordillonch/crud-generator": 20,
         "whiteoctober/breadcrumbs-bundle": 20,
         "raulfraile/ladybug-bundle": 20,
-        "lar/utiles-bundle": 20,
-        "lar/parametro-bundle": 20
+        "lar/utiles-bundle": 20
     }
 }

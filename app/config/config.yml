@@ -106,3 +106,4 @@ khepin_yaml_fixtures:
 
 parameters:
     lar.usuario.imagenes: %kernel.root_dir%/../web/uploads/users/
+    parametro.tabla_agregable: true

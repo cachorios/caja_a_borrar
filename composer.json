@@ -29,8 +29,7 @@
 
         "raulfraile/ladybug-bundle": "dev-master",
 
-        "lar/utiles-bundle": "*@dev",
-        "lar/parametro-bundle":  "*@dev"
+        "lar/utiles-bundle": "*@dev"
 
 
 
