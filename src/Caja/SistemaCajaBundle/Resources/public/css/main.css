@@ -24,7 +24,7 @@
 #mod_usuario .container aside nav ul .usuario a:hover
 
 {background-color: transparent  !important;}
-
+/*----------- FIN LEFT NAV  -----------------*
 
 /*---------- para detalle de codigo de barras ----*/
 #caja_sistemacajabundle_codigobarratype_posiciones label.control-label
@@ -142,3 +142,11 @@
 .popover-content h1, h2, h3, h4, h5, h6 {
     color: #006dcc;
 }
+
+/*---- Usuario form ----*/
+      #foto img{
+          width:  250px;
+          height: 250px;
+      }
+/*---- Fin Usuario form ----*/
+

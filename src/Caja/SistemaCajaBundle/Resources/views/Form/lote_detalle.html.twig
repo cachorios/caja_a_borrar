@@ -9,9 +9,10 @@
             <table width="100%">
                 <thead>
                     <tr>
-                        <th>Comprobante </th>
-                        <th>Vencimiento </th>
-                        <th>Importe </th>
+                        <th style="width: 3%;">##</th>
+                        <th style="width: 28%;">Comprobante </th>
+                        <th style="width: 28%;">Vencimiento </th>
+                        <th style="width: 28%;">Importe </th>
                         <th>Acción</th>
 
                     </tr>
@@ -21,8 +22,9 @@
                 {% for rows in form %}
                     <tr>
                         {% set fieldNum = 1 %}
-
+                        <td>?</td>
                         {% for row in rows %}
+
                             <td>
                                 <div class="field{{ fieldNum }}">
                                     {{ form_widget(row, { 'attr': { 'class': 'test' }}) }}
@@ -64,10 +66,14 @@
 
         <tr>
             {% set fieldNum = 1 %}
+            <td style="text-align: center;">
+                <div class="active">
+                <span class="icon-zoom-in "></span>
+                </div>
+            </td>
             {% for row in prototype %}
                 <td>
                     <div class="field{{ fieldNum }}">
-
                         {{ form_widget(row, { 'attr': { 'class': 'test' }}) }}
                     </div>
                 </td>

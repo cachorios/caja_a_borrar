@@ -273,7 +273,7 @@ class UsuarioController extends Controller
 
         if ($editForm->isValid()) {
 
-            if (null == $entity->getFoto()) {
+            if (null == $entity->getFoto() || 'anonimo.jpg' == $entity->getFoto()   ) {
                 // La foto original no se modifica, recuperar su ruta
                 $entity->setFoto($fotoOriginal);
             } else {
@@ -282,10 +282,11 @@ class UsuarioController extends Controller
                     'lar.usuario.imagenes'
                 );
 
-                if ($fotoOriginal != $entity->getFoto()) {
-                    //$entity->subirFoto($directorioFotos);
+                //$ld() ;
+                if ($fotoOriginal != $entity->getFoto()  ) {
+                    $entity->subirFoto($directorioFotos);
                     // Borrar la foto anterior
-                    if (file_exists($directorioFotos . $fotoOriginal) && $fotoOriginal != '') {
+                    if($fotoOriginal != 'anonimo.jpg' && file_exists($directorioFotos . $fotoOriginal) && $fotoOriginal != '') {
                         unlink($directorioFotos . $fotoOriginal);
                     }
                 }

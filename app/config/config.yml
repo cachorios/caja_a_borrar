@@ -24,10 +24,10 @@ twig:
     strict_variables: "%kernel.debug%"
     form:
         resources:
-            #- 'MopaBootstrapBundle:Form:fields.html.twig'
-            - LexikFormFilterBundle:Form:form_div_layout.html.twig
-            - ParametroBundle:Form:fields.html.twig
+#            - 'MopaBootstrapBundle:Form:fields.html.twig'
+            - LarParametroBundle:Form:fields.html.twig
             - LarUtilsBundle:Form:fields.html.twig
+            - LexikFormFilterBundle:Form:form_div_layout.html.twig
     globals:
         usuario_imagenes: 'uploads/users/'
         lar:
@@ -102,8 +102,21 @@ lar_utils:
 khepin_yaml_fixtures:
     resources:
         - SistemaCajaBundle
-        - ParametroBundle
+        - LarParametroBundle
 
 parameters:
     lar.usuario.imagenes: %kernel.root_dir%/../web/uploads/users/
-    parametro.tabla_agregable: true
+
+
+
+lar_parametro:
+    tabla_agregable: true
+
+avalanche_imagine:
+    filters:
+        foto_login:
+            type:    thumbnail
+            options: { size: [50,50], mode: outbound }
+        foto_usuario:
+            type:    thumbnail
+            options: { size: [250,250], mode: outbound }

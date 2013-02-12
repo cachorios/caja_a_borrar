@@ -20,17 +20,18 @@
         "jms/di-extra-bundle": "1.1.*",
 
         "kriswallsmith/assetic": "1.1.*@dev",
-        "mopa/bootstrap-bundle": "dev-master",
+        "mopa/bootstrap-bundle": "2.1.x-dev",
 
         "khepin/yaml-fixtures-bundle": "0.7.*",
 
-        "jordillonch/crud-generator": "dev-master",
-        "whiteoctober/breadcrumbs-bundle": "2.1.x-dev",
-
         "raulfraile/ladybug-bundle": "dev-master",
 
-        "lar/utiles-bundle": "*@dev"
+        "avalanche123/imagine-bundle": "v2.1",
+        "jordillonch/crud-generator": "2.1.x-dev",
+        "whiteoctober/breadcrumbs-bundle": "2.1.x-dev",
 
+        "lar/utiles-bundle": "2.1.x-dev",
+        "lar/lar-parametro-bundle": "2.1.x-dev"
 
 
     },

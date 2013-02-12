@@ -214,7 +214,7 @@ class CodigoBarraController extends Controller
         $breadcrumbs->addItem("CodigoBarra", $this->get("router")->generate("codigobarra"));
         $breadcrumbs->addItem("Editar" );
 
-        $em = $this->getDoctrine()->getManager();
+
 
         $bm = $this->container->get("caja.barra");
 
@@ -222,15 +222,14 @@ class CodigoBarraController extends Controller
 
         $arr = $bm->getDetalle();
 
-//        ld($arr);
-//
-//        $bm->getVtosImportes();
-//        echo "--------------3><br>";
-
-        echo "<pre>".print_r($bm->getVtosImportes(),true)."</pre>";
+        ld($arr);
 
 
+        $p = $bm->getVtosImportes();
 
+        ld($p);
+
+        $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SistemaCajaBundle:CodigoBarra')->find($id);
 
         if($entity->getPosiciones()->count()==0) {

@@ -12,82 +12,42 @@
         <fieldset>
             <!--<legend>Datos Personales</legend>-->
             <br>
-            {{ form_row(edit_form.nombre) }}
-            {{ form_row(edit_form.apellido) }}
-            <div class="row">
+            <div class="controls-row">
+
+
+            <div class="span7">
+                {{ form_row(edit_form.nombre) }}
+                {{ form_row(edit_form.apellido) }}
+                {{ form_row(edit_form.dni) }}
+                {{ form_row(edit_form.fecha_nacimiento) }}
+            </div>
+            <div class="span4">
                 <div class="span9 offset3">
                     <!--| apply_filter('miniatura')-->
-                    <img id="foto" alt="{{ entity }}" src="{{ asset(usuario_imagenes ~entity.foto )   }}"
-                         class="avatar">
+                    <div id="foto">
+                        <img  alt="{{ entity }}" src="{{ asset(usuario_imagenes ~entity.foto ) | apply_filter('foto_usuario')    }}" class="usuario_foto">
+                    </div>
 
                     <div id="fotoUp"></div>
+                    <!--<div class="span3">-->
+                        {{ form_row(edit_form.foto) }}
+                    <!--</div>-->
+
                 </div>
             </div>
-
-            <script type="text/javascript">
-                $(function () {
-
-                    $('#fotoUp').uploadify(
-                            {
-                                uploader:'{{ path("upload_file") }}',
-                                swf:"{{ asset('dify/uploadify.swf') }}",
-                                cancelImg:'dify/uploadify-cancel.png',
-                                auto:true,
-                                buttonClass:'uploadify-button',
-                                buttonCursor:'hand',
-                                buttonImage: null,
-                                buttonText:'Seleccione Foto',
-                                checkExisting:true,
-                                debug:false,
-                                fileObjName:'foto',
-                                fileSizeLimit:0,
-                                fileTypeDesc:'Imagenes',
-                                fileTypeExts:'*.jpg;*.gif;*.png',
-                                formData:null,
-                                height:20,
-                                method:'post',
-                                multi:false,
-                                overrideEvents:null,
-                                preventCaching:     true,
-                                progressData:'percentage',
-                                //queueID:            false,
-                                queueSizeLimit:999,
-                                //removeCompleted:    true,
-                                removeTimeout:3,
-                                requeueErrors:false,
-                                successTimeout:30
-                                /*'onUploadSuccess' : function(file, data, response) {
-
-                                 $("#foto").removeAttr('src');
-                                 // $("#foto").attr('src','{ { as set("uploads/data") }}');
-                                 $("#foto").show();
-
-                                 }
-                            });
-                    $("#fotoUp").uploadify('settings', 'onUploadSuccess', function (file, data, response) {
-                        var filename = data.split('\\').pop().split('/').pop();
-                        $("#foto").attr('src', '{{ asset("uploads/users/") }}' + filename);
-                        $("#lar_usuariobundle_usuariotype_foto").attr('value', filename);
-
-                    });
-
-
-
-                });
-            </script>
+            </div>
             <div id="ver"></div>
-            {{ form_row(edit_form.dni) }}
-            {{ form_row(edit_form.fecha_nacimiento) }}
+
 
         </fieldset>
-        {{ form_row(edit_form.foto) }}
+
     </div>
     <div class="tab-pane" id="tab2">
         <fieldset>
             <br>
             <!--<legend>Datos de Localizaci&oacute;n</legend>-->
-            {{ form_row(edit_form.direccion) }}
             {{ form_row(edit_form.email) }}
+            {{ form_row(edit_form.direccion) }}
             {{ form_row(edit_form.permite_email) }}
 
         </fieldset>
@@ -109,6 +69,7 @@
     <fieldset>
         <!--<legend>Otros...</legend>-->
         {{ form_widget(edit_form) }}
+        <br>
     </fieldset>
 </div>
 

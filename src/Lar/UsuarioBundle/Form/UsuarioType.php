@@ -40,7 +40,18 @@ class UsuarioType extends AbstractType
                     //'help_inline' => 'Help in line',
                     'help_block' => 'El usuario recibirá informacion.'
             ))
-            ->add('foto','hidden')
+            ->add('foto','hidden',array(
+                'larutils_enabled' => true,
+                'div_img' => 'foto',
+                'larutils' => array(
+                    'uploader'  =>'lar_utils_upload',
+                    'folderUpload' => 'uploads/users',
+                    'queueID' => 'fotoUp',
+                    'buttonText' => 'Cambiar Fotografia',
+                    'width'     => '100%',
+                    'height'    => 28),
+                'read_only' => true
+            ))
             ->add('isActive',null,array(
                 'required' => false,
                 'label' => 'Activo?') )

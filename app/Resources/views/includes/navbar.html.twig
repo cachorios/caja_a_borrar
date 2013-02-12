@@ -16,7 +16,7 @@
             <div class="nav-collapse collapse" id="main-menu">
                 <div class="auth pull-right">
                     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                    <img class="avatar" src="{{ asset( usuario_imagenes ~ usuario.foto) }}">
+                    <img class="avatar" src="{{ asset( usuario_imagenes ~ usuario.foto) | apply_filter('foto_login') }}">
                     <span class="name">{{ usuario }}</span><br/>
                     <span class="links">
                         <a href="#">Perfil</a>

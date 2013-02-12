@@ -10,6 +10,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
+use Symfony\Component\HttpFoundation\File\File;
+use Imagine\Gd\Imagine;
+use Imagine\Image\Box;
+
+
+
 
 //use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 //use Symfony\Component\Validator\ExecutionContext;
@@ -676,4 +682,25 @@ class Usuario implements AdvancedUserInterface
     {
         return $this->ultimo_ingreso;
     }
+
+    public function subirFoto($directorioDestino)
+    {
+        if (null === $this->foto) {
+            return;
+        }
+        //$foto = new File('uploads/' . $this->foto, true);
+        //$nombreArchivoFoto = uniqid('user-').'-foto1.'.$foto->guessExtension();
+        $nombreArchivoFoto = uniqid('user-').'-foto1.jpg';
+
+        $imagine = new Imagine();
+        $imagine->open('uploads/' . $this->foto)
+            ->thumbnail(new Box(300,300, 'outbound' ))
+            ->save($directorioDestino.$nombreArchivoFoto);
+
+        //$foto->move($directorioDestino, $nombreArchivoFoto);
+
+
+        $this->setFoto($nombreArchivoFoto);
+    }
+
 }

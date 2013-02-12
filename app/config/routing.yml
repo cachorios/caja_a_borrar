@@ -3,7 +3,7 @@ caja:
     prefix:   /
 
 lar_parametro:
-    resource: "@ParametroBundle/Resources/config/routing.yml"
+    resource: "@LarParametroBundle/Resources/config/routing.yml"
     prefix:   /
 
 lar_utils:
@@ -22,6 +22,9 @@ home_page:
     pattern: /
     defaults: { _controller: UsuarioBundle:Usuario:index }
 
+_imagine:
+    resource: .
+    type:     imagine
 
 # Internal routing configuration to handle ESI
 # ****** WARNING ******

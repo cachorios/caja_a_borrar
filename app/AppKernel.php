@@ -24,15 +24,15 @@ class AppKernel extends Kernel
             new JordiLlonch\Bundle\CrudGeneratorBundle\JordiLlonchCrudGeneratorBundle(),
             new WhiteOctober\BreadcrumbsBundle\WhiteOctoberBreadcrumbsBundle(),
 
-
+            new Avalanche\Bundle\ImagineBundle\AvalancheImagineBundle(),
             new Khepin\YamlFixturesBundle\KhepinYamlFixturesBundle(),
             new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
 
             new RaulFraile\Bundle\LadybugBundle\RaulFraileLadybugBundle(),
 
-            new Lar\ParametroBundle\ParametroBundle(),
-            new Lar\UtilsBundle\LarUtilsBundle(),
 
+            new Lar\UtilsBundle\LarUtilsBundle(),
+            new Lar\LarParametroBundle\LarParametroBundle(),
             new Lar\UsuarioBundle\UsuarioBundle(),
 
             new Caja\SistemaCajaBundle\SistemaCajaBundle()

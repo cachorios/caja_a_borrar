@@ -1,8 +1,17 @@
 {% form_theme form 'SistemaCajaBundle:Form:lote_detalle.html.twig' %}
 
-{{ form_row(form.detalle) }}
+
+<div class="pull-right" style="width: 95%;">
+{{ form_errors(form.detalle) }}
+{{ form_widget(form.detalle) }}
+<div class="clear"></div>
+</div>
 
 {% form_theme form 'SistemaCajaBundle:Form:fields.html.twig' %}
 {{ form_row(form.pagos) }}
 
 {{ form_rest(form) }}
+
+{% block javascripts %}
+    <script src="{{ asset('js/registro/registro.js') }}"></script>
+{% endblock javascripts %}
