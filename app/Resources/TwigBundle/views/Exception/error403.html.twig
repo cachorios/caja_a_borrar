@@ -1,0 +1,30 @@
+{% extends '::base.html.twig' %}
+{% block container %}
+
+    {% include '::includes/navleft.html.twig' ignore missing %}
+
+    <div id="content-wrapper" class="span9" >
+        <div id="content">
+
+            {% block page %}
+                <section>
+                    <header><h1>Error de permiso</h1>
+                    </header>
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <p>Ud. no tiene permiso para acceder a la pagina solicitada".</p>
+                        </div>
+                    </div>
+
+                </section>
+
+            {% endblock page %}
+        </div>
+    </div>
+
+{% endblock container %}
+
+{% block stylesheets %}
+{% endblock %}
+{% block javascripts %}
+{% endblock javascripts %}

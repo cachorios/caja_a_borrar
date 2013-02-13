@@ -19,7 +19,8 @@ class RegistroType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype' => true,))
-            ->add('pagos')
+            ->add('pagos',"collection")
+
         ;
     }
 
