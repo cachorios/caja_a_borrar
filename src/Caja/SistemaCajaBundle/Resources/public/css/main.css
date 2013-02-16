@@ -158,3 +158,36 @@
       }
 /*---- Fin Usuario form ----*/
 
+/*--------- regostro ----------*/
+div#caja_sistemacajabundle_registrotype_detalle tfoot tr{
+    border-top: #2d3134 solid thin;
+}
+
+div#caja_sistemacajabundle_registrotype_detalle tfoot h2{
+    color: #0d3349;
+    font-size: 16px;
+    padding-right: 10px;
+    text-align: right;
+    line-height: 20px;
+}
+
+#lote_detalle_total{
+    color: #0d3349;
+    font-size: 24px;
+    font-weight: bold;
+    padding-right: 10px;
+    text-align: right;
+    line-height: 20px;
+    padding-left: 5px;
+    width: 206px;
+    display: block;
+}
+#msgBarra{
+    color: #ce4f17;
+    font-size: 12px;
+
+}
+.importe{
+    text-align: right;
+
+}

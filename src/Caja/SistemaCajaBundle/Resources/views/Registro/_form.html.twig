@@ -1,9 +1,10 @@
 {% form_theme form 'SistemaCajaBundle:Form:lote_detalle.html.twig' %}
 
 
-<div class="pull-right" style="width: 95%;">
+<div class="pull-right" style="width: 98%; margin-right: 5px;">
 {{ form_errors(form.detalle) }}
 {{ form_widget(form.detalle) }}
+
 <div class="clear"></div>
 </div>
 
@@ -12,6 +13,125 @@
 
 {{ form_rest(form) }}
 
-{% block javascripts %}
-    <script src="{{ asset('js/registro/registro.js') }}"></script>
-{% endblock javascripts %}
+
+
+
+<script type="text/javascript">
+
+
+    $(document).ready(function(e){
+
+        $("#txtcodigobarra").change(function(e){
+            $barra = $(this)
+            cb = 'cb' + $barra.val().replace(/^\s*|\s*$/g,"");
+            $("#msgBarra").text("");
+            if(cb.length <= 3){
+                $barra.val('');
+                $("#msgBarra").text("Codigo invalido"); //.show();
+                setTimeout("$barra.focus()",100);
+
+            }else{
+
+                /***
+                 * Peticion ajax
+                 */
+                $.ajax({
+                    url: "{{ path('registro_barra') }}",
+                    data: { cb: cb  },
+                    dataType: "json",
+                    success: actDesdeCB,
+                    error : function(jqXHR, status, error) {
+                        alert('Disculpe, existió un problema: '+error);
+                    }
+                });
+            }
+
+
+        });
+
+        $('body').on('click', '[data-coleccion-add-btn-det]', function (e) {
+            var $btn = $(e.target);
+            if (!$btn.hasClass('btn')) {
+                $btn = $btn.closest('.btn');
+            }
+            $btn.coleccion('add');
+            e.preventDefault();
+        });
+
+
+        $('body').on('click', '[data-coleccion-remove-btn-det]', function ( e ) {
+            var $btn = $(e.target);
+            if (!$btn.hasClass('btn')){
+                $btn = $btn.closest('.btn');
+            }
+
+            $btn.coleccion({
+                opcion: 'remove',
+                rempostfunc:postBorrarDetalle
+            });
+            e.preventDefault();
+        });
+
+
+    });
+
+
+    /**
+     * Evento que ocurre despues de borrar un elemento en Collection
+     */
+    postBorrarDetalle = function(){
+        $("#txtcodigobarra").val('');
+        $("#txtcodigobarra").focus();
+    };
+
+
+    /**
+     * Actualiza el form con los datos obtenidos
+     * del codigo de barra
+     * @param data
+     */
+    actDesdeCB = function(data){
+
+        if(data.ok == 1){
+
+            //93390001234513015201101000000123400001231000
+            $btn = $('[data-coleccion-add-btn-det]','#caja_sistemacajabundle_registrotype_detalle');
+            $btn.trigger("click");
+            $data = $btn.data('coleccion');
+            idx = $data.options.index;
+
+            $('#caja_sistemacajabundle_registrotype_detalle_'+idx+'_codigo_barra').val(cb);
+            $('#caja_sistemacajabundle_registrotype_detalle_'+idx+'_comprobante').val(data.comprobante);
+            $('#caja_sistemacajabundle_registrotype_detalle_'+idx+'_fecha').val( data.vencimiento );
+            $('#caja_sistemacajabundle_registrotype_detalle_'+idx+'_importe').val(data.importe);
+
+            totalizaComprobante();
+
+            $barra.val('');
+            $barra.focus();
+
+
+        }else{
+            $barra.val('');
+            $barra.focus();
+            $("#msgBarra").text(data.msg);
+
+        }
+    };
+
+    totalizaComprobante = function(){
+        var total = 0;
+        $('input.importe','div#caja_sistemacajabundle_registrotype_detalle').each(function(){
+           total = total + parseFloat( this.value );
+        })
+        $("#lote_detalle_total").text(formato_numero(total,2));
+
+    }
+
+
+//        addpostfunc:false,
+
+
+
+
+</script>

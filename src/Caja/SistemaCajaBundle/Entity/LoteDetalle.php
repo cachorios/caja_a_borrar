@@ -28,6 +28,13 @@ class LoteDetalle
      */
     private $codigo_barra;
 
+	/**
+	 * @var String
+	 *
+	 * @ORM\Column(name="comprobante", type="string", type= "string", length=20  )
+	 */
+	private $comprobante;
+
     /**
      * @var \DateTime
      *
@@ -187,5 +194,28 @@ class LoteDetalle
     public function __toString()
     {
         return "Lote ".$this->getId();
+    }
+
+    /**
+     * Set comprobante
+     *
+     * @param string $comprobante
+     * @return LoteDetalle
+     */
+    public function setComprobante($comprobante)
+    {
+        $this->comprobante = $comprobante;
+    
+        return $this;
+    }
+
+    /**
+     * Get comprobante
+     *
+     * @return string 
+     */
+    public function getComprobante()
+    {
+        return $this->comprobante;
     }
 }

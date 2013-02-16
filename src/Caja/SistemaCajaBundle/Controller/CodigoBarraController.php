@@ -185,7 +185,7 @@ class CodigoBarraController extends Controller
             foreach ($entity->getPosiciones() as $posicion) {
                 $posicion->setCodigoBarra($entity);
             }
-            foreach ($entity->getgetVtosImportes() as $vtoimp) {
+            foreach ($entity->getVtosImportes() as $vtoimp) {
                 $vtoimp->setCodigoBarra($entity);
             }
 
@@ -217,17 +217,12 @@ class CodigoBarraController extends Controller
 
 
         $bm = $this->container->get("caja.barra");
-
-        $bm->setCodigo("93390001234513015201101000000123400001231000");
-
+        $bm->setCodigo("93390004711713051130179887510000000000000000", new \DateTime('2013-01-27'));
         $arr = $bm->getDetalle();
-
         ld($arr);
-
-
-        $p = $bm->getVtosImportes();
-
-        ld($p);
+        $i = $bm->getImporte();
+		$v = $bm->getVto();
+        //ld($i,$v);
 
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SistemaCajaBundle:CodigoBarra')->find($id);

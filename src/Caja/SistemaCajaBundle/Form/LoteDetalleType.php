@@ -17,9 +17,11 @@ class LoteDetalleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
 {
     $builder
-        ->add('codigo_barra')
+
+		->add('comprobante','text')
         ->add('fecha',"text")
-        ->add('importe')
+        ->add('importe','text',array('attr' => array('class' =>'importe')))
+		->add('codigo_barra','hidden')
 
     ;
 }

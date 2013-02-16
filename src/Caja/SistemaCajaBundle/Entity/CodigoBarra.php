@@ -232,6 +232,7 @@ class CodigoBarra
     public function __construct()
     {
         $this->posiciones = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->vtos_importes = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
     /**

@@ -17,34 +17,88 @@ class CodigoBarraLive
      * @var \Lar\ParametroBundle\Lib\LarParametroService
      */
     private $tabla_man;
-
+	private $logger;
     /**
      * @var string
      */
     private $codigo;
     private $cbReg;
     private $detalle;
+	private $detalleVisible;
+	private $fechaCalculo;
     private $comprobante;
+	private $vtos;
 
-    public function __construct($em, $tabla_man)
+
+    public function __construct($em, $tabla_man, $logger = null)
     {
         $this->em = $em;
         $this->tabla_man = $tabla_man;
+		$this->logger = $logger;
+		$this->comprobante=0;
+
+		$this->detalleVisible = array();
+		$this->vtos = array();
     }
 
-    public function setCodigo($codigo)
+    public function setCodigo($codigo,$fecha=null)
     {
         $this->codigo = trim($codigo);
-        $this->identificarCodigo();
+		$this->fechaCalculo = $fecha == null ?  new \DateTime('now') : $fecha;
+
+        if($this->identificarCodigo()){
+			$this->vtos = $this->getVtosImportes();
+		}
+
     }
 
     public function getDetalle()
     {
-        return $this->detalle;
+        return $this->detalleVisible;
     }
 
+	public function getComprobante()
+	{
+	  return $this->comprobante;
+	}
 
-    private function identificarCodigo()
+	public function getImporte()
+	{
+		foreach($this->vtos as $vto){
+
+			if($this->fechaCalculo <= $vto[0] ){
+				return $vto[1];
+			}
+		}
+		$this->logger->info("No tiene importe: ".$this->codigo);
+		return 0;
+
+	}
+
+	public function getVto(){
+		foreach($this->vtos as $vto){
+			if($this->fechaCalculo <= $vto[0] ){
+				return $vto[0]->format('d-m-Y');
+			}
+		}
+		$this->logger->info("No tiene vencimiento: ".$this->codigo);
+		return '';
+	}
+
+	public function getVtos(){
+		return $this->vtos;
+	}
+
+
+
+
+	/**
+	 * Indentificar cual es el codigo de barra que utiilza
+	 * @return bool
+	 *
+	 * Si identifica el codigo de barra, lo carga en detalle
+	 */
+	private function identificarCodigo()
     {
         //Recorrer los codigo hasta encontrar el que corresponda con la longitud y el identidicador
         // primero recuperar los codigos de la longitud
@@ -63,7 +117,15 @@ class CodigoBarraLive
 
     }
 
-    private function obtenerIdentificador($id)
+	/**
+	 * obtenerIdentificador
+	 *
+	 * Obtener el identificador del codigo de barra
+	 *
+	 * @param $id
+	 * @return string
+	 */
+	private function obtenerIdentificador($id)
     {
         $pos = preg_split('/\[+(\d+),(\d+)\]/', $id, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
         $ret = "";
@@ -93,6 +155,13 @@ class CodigoBarraLive
                 }
             }
 
+			if ($pos->getEstado() == 1) {
+				$this->detalleVisible[] = array(
+					$pos->getPosicion(),
+					$pos->getDescripcion(),
+					$ls_desc_tab,
+				);
+			}
             $aDet[] = array(
                 $pos->getPosicion(),
                 $pos->getDescripcion(),
@@ -104,14 +173,12 @@ class CodigoBarraLive
         return $aDet;
     }
 
-    public function getComprobante()
-    {
-        return $this->comprobante;
-    }
 
 
-    public function getVtosImportes()
+
+    private  function getVtosImportes()
     {
+
         $vtos = $this->cbReg->getVtosImportes();
         $aVtos = array();
 

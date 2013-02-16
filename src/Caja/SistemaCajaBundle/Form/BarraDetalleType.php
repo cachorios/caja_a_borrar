@@ -10,6 +10,7 @@ class BarraDetalleType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
             ->add('posicion','number',array('label' => 'Pos.'))
             ->add('longitud','number',array('label' => 'Long.'))

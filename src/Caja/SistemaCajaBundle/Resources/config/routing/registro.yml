@@ -5,3 +5,7 @@ registro:
 registro_create:
     pattern:  /create
     defaults: { _controller: "SistemaCajaBundle:Registro:create" }
+
+registro_barra:
+      pattern:  /barra
+      defaults: { _controller: "SistemaCajaBundle:Registro:barraDetalle" }

@@ -6,10 +6,17 @@
  * To change this template use File | Settings | File Templates.
  */
 
-$(document).ready(function(e){
-    $("#txtcodigobarra").change(function(e){
-        alert(this.value);
-    });
-
-});
+//$(document).ready(function(e){
+//    $("#txtcodigobarra").change(function(e){
+//
+//        /***
+//         * Peticion ajax
+//         */
+//        $.ajax({
+//
+//        })
+//
+//    });
+//
+//});
 

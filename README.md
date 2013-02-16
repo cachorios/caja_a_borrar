@@ -83,8 +83,8 @@ Las aperturas son los contenedore de las transacciones de los pagos, o sea cada 
 cada apaertura esta asociado a la caja activa, indica en inicio del cobra hasta el ultimo cobro.
 Solo puede haber una apertura habilitada por caja, una apertura habilitada es una apertura abierta, o sea no tiene fecha de cierre, no so podra crear otra apertura hasta que se cierre la activa.
 
-Estructura se Session para caja
-caja
+
+##REGISTRO##
 
 **Luis Rios**
 

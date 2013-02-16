@@ -6,18 +6,10 @@
  * To change this template use File | Settings | File Templates.
  */
 
+ 
 !function ($) {
 
     "use strict";
-
-    var Coleccion = function (element, options) {
-
-        this.$element = $(element);
-        this.options = $.extend({}, $.fn.coleccion.defaults, options);
-
-        var embeddedForms = 'div' + this.options.coleccion_id +  ' .collection table tbody tr';
-        this.options.index = $(embeddedForms).length - 1;
-    };
 
 
     $.fn.coleccion = function (opcion) {
@@ -27,8 +19,10 @@
             var $this = $(this),
                 coleccion_id = $this.data('coleccion-add-btn'),
                 data = $this.data('coleccion'),
-                options = typeof option == 'object' ? option : {};
-
+                options = typeof opcion == 'object' ? opcion : {};
+				
+			opcion = typeof opcion == 'object' ? opcion.opcion : opcion;
+				
             if (coleccion_id) {
                 options.coleccion_id = coleccion_id;
             }
@@ -54,8 +48,25 @@
         });
     };
 
+	$.fn.coleccion.defaults = {
+        coleccion_id:null,
+        addcheckfunc:false,
+        addfailedfunc:false,
+		addpostfunc:false,
+		rempostfunc:false
+    };
+	
+	var Coleccion = function (element, options) {
+		
+        this.$element = $(element);
+        this.options = $.extend({}, $.fn.coleccion.defaults, options);
+		
+        var embeddedForms = 'div' + this.options.coleccion_id +  ' .collection table tbody tr';
+        this.options.index = $(embeddedForms).length - 1;
+    };
+	
     Coleccion.prototype = {
-        constructor:Coleccion,
+        constructor: Coleccion,
         add:function () {
             this.options.index = this.options.index + 1;
             var index = this.options.index;
@@ -74,31 +85,38 @@
             $('div' + this.options.coleccion_id +  ' .collection table tbody').append(row);
             //$('div' + this.options.coleccion_id + '> .controls').append(row);
             //$(this.options.coleccion_id).trigger('add.mopa-collection-item', [row]);
+			if ($.isFunction(this.options.addpostfunc) ) {
+				this.options.addpostfunc(index);
+			}
+				
         },
         remove:function () {
             if (this.$element.parents('tr').length !== 0) {
                 var row = this.$element.closest('tr');
 
-                row.find("td").fadeOut(1000, function (){
+                row.find("td").fadeOut(600, function (){
                     row.remove();
                 });
-
+				if ($.isFunction(this.options.rempostfunc) ) {
+					this.options.rempostfunc();
+				}
+				
                 //  $(this.options.coleccion_id).trigger('remove.mopa-collection-item', [row]);
             }
         }
 
     }
+	
+	
+	
+   
 
-    $.fn.coleccion.defaults = {
-        coleccion_id:null,
-        addcheckfunc:false,
-        addfailedfunc:false
-    };
-
+	/***
+	*/
     $.fn.coleccion.Constructor = Coleccion;
 
     $(function () {
-
+		
         $('body').on('click', '[data-coleccion-add-btn]', function (e) {
             var $btn = $(e.target);
             if (!$btn.hasClass('btn')) {
@@ -109,14 +127,14 @@
         });
 
 
-        $('body').on('click', '[data-coleccion-remove-btn]', function ( e ) {
-            var $btn = $(e.target);
-            if (!$btn.hasClass('btn')){
+		$('body').on('click', '[data-coleccion-remove-btn]', function ( e ) { 
+             var $btn = $(e.target);
+             if (!$btn.hasClass('btn')){
                 $btn = $btn.closest('.btn');
-            }
-            $btn.coleccion('remove');
-            e.preventDefault();
-        });
+             }
+             $btn.coleccion('remove');
+             e.preventDefault();
+		});
 
     });
 }(window.jQuery);

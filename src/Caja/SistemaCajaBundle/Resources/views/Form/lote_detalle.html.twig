@@ -18,42 +18,27 @@
                     </tr>
 
                 </thead>
-                <tbody class="items">
-                {% for rows in form %}
+                <tbody class="items"></tbody>
+                <tfoot>
                     <tr>
-                        {% set fieldNum = 1 %}
-                        <td>?</td>
-                        {% for row in rows %}
-
-                            <td>
-                                <div class="field{{ fieldNum }}">
-                                    {{ form_widget(row, { 'attr': { 'class': 'test' }}) }}
-                                </div>
-                                {% set fieldNum = fieldNum + 1 %}
-                            </td>
-                        {% endfor %}
-                        <td width="110px" style="text-align: center;">
-                            <button class="btn btn-mini btn-danger remove" data-coleccion-remove-btn="">
-                                <span class="icon-trash icon-white"></span> Quitar
-                            </button>
-                        </td>
+                        <td colspan="3"><h2>Total: &nbsp;</h2></td>
+                        <td><span id="lote_detalle_total">0.00</span></td>
 
                     </tr>
-                {% endfor %}
-                </tbody>
+                </tfoot>
             </table>
             {{ form_rest(form) }}
 
 
             <div class="clear"></div>
 
-            <button class="btn btn-mini add_item" style="margin-top: 13px;" data-coleccion-add-btn="">
+            <button  class="btn btn-mini add_item" style="margin-top: 13px; display: none;" data-coleccion-add-btn-det="" >
                 <span class="icon-plus-sign"></span> Agregar
             </button>
 
 
         </div>
-
+        <br>
         <div class="clear"></div>
 
     {% endspaceless %}
@@ -71,19 +56,21 @@
                 <span class="icon-zoom-in "></span>
                 </div>
             </td>
-            {% for row in prototype %}
-                <td>
-                    <div class="field{{ fieldNum }}">
-                        {{ form_widget(row, { 'attr': { 'class': 'test' }}) }}
-                    </div>
-                </td>
-                {% set fieldNum = fieldNum + 1 %}
+            <td>
+                {{ form_widget(prototype.comprobante, { 'attr': { 'class': 'test' }}) }}
+            </td>
+            <td>
+                {{ form_widget(prototype.fecha, { 'attr': { 'class': 'test' }}) }}
+            </td>
+            <td>
+                {{ form_widget(prototype.importe, { 'attr': { 'class': 'importe' }}) }}
+            </td>
 
-            {% endfor %}
             <td width="110px" style="text-align: center;">
-                <button class="btn btn-mini btn-danger remove" data-coleccion-remove-btn="">
+                <button class="btn btn-mini btn-danger remove" data-coleccion-remove-btn-det="">
                     <span class="icon-trash icon-white"></span> Quitar
                 </button>
+                {{ form_rest(form) }}
             </td>
         </tr>
 
