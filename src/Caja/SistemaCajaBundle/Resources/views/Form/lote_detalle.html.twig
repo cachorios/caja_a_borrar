@@ -53,11 +53,18 @@
             {% set fieldNum = 1 %}
             <td style="text-align: center;">
                 <div class="active">
-                <span class="icon-zoom-in "></span>
+
+
+                <a href="#"
+                   class="info-barra"
+                   data-content="?"
+                   data-original-title="Mas detalle"  >
+                    <span class="icon-zoom-in"></span>
+                </a>
                 </div>
             </td>
             <td>
-                {{ form_widget(prototype.comprobante, { 'attr': { 'class': 'test' }}) }}
+                {{ form_widget(prototype.comprobante, { 'attr': { 'class': '' }}) }}
             </td>
             <td>
                 {{ form_widget(prototype.fecha, { 'attr': { 'class': 'test' }}) }}
@@ -70,6 +77,7 @@
                 <button class="btn btn-mini btn-danger remove" data-coleccion-remove-btn-det="">
                     <span class="icon-trash icon-white"></span> Quitar
                 </button>
+                {{ form_widget(prototype.codigo_barra, { 'attr': { 'class': 'cbarra' }}) }}
                 {{ form_rest(form) }}
             </td>
         </tr>

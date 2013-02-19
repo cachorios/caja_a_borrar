@@ -143,6 +143,7 @@
     color: #006dcc;
 }
 
+/*----------------*/
 #lar_parametrobundle_larparametrotype_tabla_padre_control_group{
     width: 51.4%;
 }
@@ -189,5 +190,49 @@ div#caja_sistemacajabundle_registrotype_detalle tfoot h2{
 }
 .importe{
     text-align: right;
+}
+
+.registro_detalle_barra{
+    width: 100%;
+}
+
+#caja_sistemacajabundle_registrotype_detalle .popover{
+    /*font-size: 100% !important;*/
+    width: 500px;
+}
+
+#caja_sistemacajabundle_registrotype_detalle .popover table td{
+    text-align: left;
+}
+
+.hapertura{
+    font-size: 16px;
+    color: #2a4456;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+.hapertura span{
+    font-size: 20px;
+    color: #0c5456;
+}
+#masDetalleTemp{
+    color: #575757;
+    font-size: 12px;
+    line-height: 18px;
+}
+
+.ajax_block{
+    width: 100%;
+    background-color: Gray;
+    moz-opacity: 0.5; //Filtro transparencia mozilla
+    khtml-opacity: .5; //Filtro transparencia todos los navegadores
+    opacity: .5; //Filtro transparencia CSS 3
+    filter: alpha(opacity=50); //Filtro transparencia IE 8.0+
+    z-index: 9998;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
 
 }

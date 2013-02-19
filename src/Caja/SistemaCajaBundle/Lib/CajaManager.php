@@ -28,9 +28,8 @@ class CajaManager
 
             $usuario = $this->contenedor->get("security.context")->getToken()->getUser();
 
-            //ld($usuario);
 			if($usuario!=null){
-            	$caja = $this->contenedor->get("doctrine.orm.entity_manager")->getRepository("SistemaCajaBundle:Caja")->findOneBy(array("cajero" => $usuario->getId()));
+            	$caja = $this->contenedor->get("doctrine.orm.entity_manager")->getRepository("SistemaCajaBundle:Caja")->findOneBy(array("cajero" =>$usuario->getId()));
 			}else{
 				throw new \Symfony\Component\Config\Definition\Exception\Exception("Usuario nulo");
 			}

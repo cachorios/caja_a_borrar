@@ -11,7 +11,12 @@
         <section id="form_CodigoBarra">
 
             <header>
-                <h1>Registro de Comprobantes - {{ caja.nombre }}</h1>
+                    <h1>
+
+                        Registro de Comprobantes - {{ caja.nombre }}
+                        <div id="load_indicador" class="pull-right" style="display: none;" ><img src="{{ asset("img/ajax_ind_40x40.gif") }}" /></div>
+                    </h1>
+
             </header>
 
             {#{{ wo_render_breadcrumbs() }}#}
@@ -23,11 +28,11 @@
                 {% endfor %}
             {% endfor %}
 
-            <div class="row-fluid">
-                <h3>
-                    <div class="span6">Cajero: {{ caja.cajero }} </div>
-                    <div class="span6"> Apertura Nro. : {{ apertura.id }}</div>
-                </h3>
+            <div class="row-fluid hapertura ">
+                    <div class="span6">Cajero: <span> {{ caja.cajero }} </span> </div>
+                    <div class="span3"> Apertura Nro. :<span> {{ apertura.id }}</span></div>
+                    <div class="span3"> Fecha. :<span> {{ apertura.fecha | date('d/m/Y') }}</span></div>
+
             </div>
             <div class="sub-header">
                  <h2 style="font-size: 16px;">Codigo de Barra</h2>
@@ -39,6 +44,7 @@
                  </div>
                 <div class="span4">
                     <div id="msgBarra"></div>
+                    <div id="masDetalleTemp"></div>
                 </div>
             </div>
             <div class="sub-header">

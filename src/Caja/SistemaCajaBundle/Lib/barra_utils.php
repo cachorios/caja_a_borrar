@@ -10,6 +10,7 @@
 
 function aFechaAADDD( $texto )
 {
+	$texto --;
     $fecha = date_create_from_format('yz', $texto);
     return $fecha;
 }

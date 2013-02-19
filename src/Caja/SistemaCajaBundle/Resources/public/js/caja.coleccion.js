@@ -86,20 +86,23 @@
             //$('div' + this.options.coleccion_id + '> .controls').append(row);
             //$(this.options.coleccion_id).trigger('add.mopa-collection-item', [row]);
 			if ($.isFunction(this.options.addpostfunc) ) {
-				this.options.addpostfunc(index);
+				this.options.addpostfunc(row,index);
 			}
 				
         },
         remove:function () {
+            var tthis = this;
             if (this.$element.parents('tr').length !== 0) {
                 var row = this.$element.closest('tr');
 
                 row.find("td").fadeOut(600, function (){
                     row.remove();
+                    if ($.isFunction(tthis.options.rempostfunc) ) {
+                        tthis.options.rempostfunc();
+                    }
+
                 });
-				if ($.isFunction(this.options.rempostfunc) ) {
-					this.options.rempostfunc();
-				}
+
 				
                 //  $(this.options.coleccion_id).trigger('remove.mopa-collection-item', [row]);
             }

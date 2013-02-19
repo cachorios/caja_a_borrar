@@ -52,7 +52,8 @@ class RegistroController extends Controller
 		//Codigo de barra recibido
 
 
-		$cb = substr($cb,2);
+		//$cb = substr($cb,2);
+		$cb = trim($cb);
 
 
 
@@ -72,7 +73,7 @@ class RegistroController extends Controller
 										'importe' => number_format($imp,2),
 										'comprobante' => $bm->getComprobante(),
 										'vencimiento' =>$bm->getVto(),
-										'detalle' => $bm->getDetalle()
+										'detalle' => $this->renderView("SistemaCajaBundle:Registro:_detalle.html.twig" ,array('elementos' => $bm->getDetalle()))
 					));
 		}else{
 

@@ -10,6 +10,7 @@
 
     $("a[rel=popover]")
         .popover({
+            trigger: 'hover',
             html:true,
             placement:"top",
             offset:5,
@@ -27,6 +28,15 @@
         .click(function(e) {
             e.preventDefault();
         });
+
+//    $("a[rel=popover]")
+//        .popover({
+//            trigger: 'hover'
+//        })
+//        .click(function(e) {
+//            e.preventDefault()
+//        })
+
 })(window.jQuery);
 
 /*
