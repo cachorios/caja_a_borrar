@@ -21,5 +21,21 @@ class CajaRepository extends EntityRepository
         return $c;
     }
 
+	public function getCajaUsuario($usuario_id)
+	{
+		$em = $this->getEntityManager();
+        $q = $em->createQuery("
+        	SELECT c
+              FROM SistemaCajaBundle:Caja c
+             WHERE c.cajero = :cajero")
+			->setParameter("cajero", $usuario_id)
+		;
+
+		$res = $q->getSingleResult();
+
+		return $res;
+	}
+
+
 
 }

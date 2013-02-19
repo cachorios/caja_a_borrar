@@ -29,7 +29,14 @@ class CajaManager
             $usuario = $this->contenedor->get("security.context")->getToken()->getUser();
 
 			if($usuario!=null){
-            	$caja = $this->contenedor->get("doctrine.orm.entity_manager")->getRepository("SistemaCajaBundle:Caja")->findOneBy(array("cajero" =>$usuario->getId()));
+
+				$idUsuario = $usuario->getId();
+				try{
+            		$caja = $this->contenedor->get("doctrine.orm.entity_manager")->getRepository("SistemaCajaBundle:Caja")->getCajaUsuario($idUsuario);
+						//findOneBy(array("cajero" =>$idUsuario ));
+				} catch (Symfony\Component\Config\Definition\Exception\Exception $e){
+					die("No recupero!");
+				}
 			}else{
 				throw new \Symfony\Component\Config\Definition\Exception\Exception("Usuario nulo");
 			}
