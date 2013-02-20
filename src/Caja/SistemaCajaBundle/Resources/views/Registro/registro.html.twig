@@ -53,16 +53,9 @@
             <form class="form-horizontal" action="{{ path('registro_create' ) }}"
                   method="post" {{ form_enctype(form) }}>
 
-
                 <ul class="errorMessages"></ul>
-
-
                 {% include 'SistemaCajaBundle:Registro:_form.html.twig' %}
 
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-success">Registrar</button>
-                    <button class="btn" type="reset">Cancelar</button>
-                </div>
             </form>
 
 

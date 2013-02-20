@@ -32,6 +32,12 @@
                         <a href="{{ path("caja") }}"><i class="icon-retweet icon-white"></i>Caja</a>
                     </li>
                 {% endif %}
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="tipopago">
+                        <a href="{{ path("tipopago") }}"><i class="icon-retweet icon-white"></i>Tipos de Pago</a>
+                    </li>
+                {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}
                     <li class="larparametro">
                         <a href="{{ path("larparametro") }}"><i class="icon-retweet icon-white"></i>Tablas</a>

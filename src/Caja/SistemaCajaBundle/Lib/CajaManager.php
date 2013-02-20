@@ -10,59 +10,66 @@ namespace Caja\SistemaCajaBundle\Lib;
 class CajaManager
 {
 
-    private $contenedor;
+	private $contenedor;
+	private $caja;
 
-    public function __construct($contenedor)
-    {
-        $this->contenedor = $contenedor;
-    }
+	public function __construct($contenedor)
+	{
+		$this->contenedor = $contenedor;
+	}
 
 
-    /**
-     * @return \Caja\SistemaCajaBundle\Entity\Caja
-     */
-    public function getCaja()
-    {
+	/**
+	 * @return \Caja\SistemaCajaBundle\Entity\Caja
+	 */
+	public function getCaja()
+	{
 
-        if ($this->contenedor->get("security.context")->getToken()->isAuthenticated()) {
+		if($this->contenedor->get("security.context")->getToken()->isAuthenticated()) {
 
-            $usuario = $this->contenedor->get("security.context")->getToken()->getUser();
+			$usuario = $this->contenedor->get("security.context")->getToken()->getUser();
 
-			if($usuario!=null){
 
-				$idUsuario = $usuario->getId();
-				try{
-            		$caja = $this->contenedor->get("doctrine.orm.entity_manager")->getRepository("SistemaCajaBundle:Caja")->getCajaUsuario($idUsuario);
-						//findOneBy(array("cajero" =>$idUsuario ));
-				} catch (Symfony\Component\Config\Definition\Exception\Exception $e){
-					die("No recupero!");
+			$idUsuario = $usuario->getId();
+
+
+			try {
+				if($this->caja == null) {
+					$caja = $this->contenedor->get("doctrine.orm.entity_manager")->getRepository("SistemaCajaBundle:Caja")->find(1);
+						//getCajaUsuario($idUsuario);
+					$this->caja = $caja;
+				} else {
+					$caja = $this->caja;
 				}
-			}else{
-				throw new \Symfony\Component\Config\Definition\Exception\Exception("Usuario nulo");
+
+				//findOneBy(array("cajero" =>$idUsuario ));
+			} catch(Symfony\Component\Config\Definition\Exception\Exception $e) {
+				die("No recupero!");
 			}
 
-				//find(2);
-				//findOneBy(array("cajero" => 2));
-            return $caja;
-        }
-    }
 
-    /**
-     * @return \Caja\SistemaCajaBundle\Entity\Apertura
-     */
-    public function getApertura()
-    {
-        $caja_id = $this->getCaja()->getId();
-        $apertura = $this->contenedor->get("doctrine.orm.entity_manager")->getRepository("SistemaCajaBundle:Apertura")->findOneBy(array("caja" => $caja_id, 'fecha_cierre' => null));
+			//find(2);
+			//findOneBy(array("cajero" => 2));
+			return $caja;
+		}
+	}
 
-        return $apertura;
-    }
+	/**
+	 * @return \Caja\SistemaCajaBundle\Entity\Apertura
+	 */
+	public function getApertura()
+	{
+		$caja_id = $this->getCaja()->getId();
+		$apertura = $this->contenedor->get("doctrine.orm.entity_manager")->getRepository("SistemaCajaBundle:Apertura")->findOneBy(array("caja" => $caja_id, 'fecha_cierre' => null));
 
-    public function esCajero()
-    {
-        $caja = $this->getCaja();
-        return !$caja == null;
-    }
+		return $apertura;
+	}
+
+	public function esCajero()
+	{
+		$caja = $this->getCaja();
+		return !$caja == null;
+	}
 
 
 }

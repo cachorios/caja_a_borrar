@@ -9,13 +9,15 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormError;
 
-class CajaFilterType extends AbstractType
+class TipoPagoFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('numero', 'filter_number_range')
-            ->add('nombre', 'filter_text')
+            ->add('id', 'filter_number_range')
+            ->add('descripcion', 'filter_text')
+            ->add('observacion', 'filter_text')
+            ->add('divisible', 'filter_boolean')
         ;
 
         $listener = function(FormEvent $event)
@@ -39,6 +41,6 @@ class CajaFilterType extends AbstractType
 
     public function getName()
     {
-        return 'caja_sistemacajabundle_cajafiltertype';
+        return 'caja_sistemacajabundle_tipopagofiltertype';
     }
 }

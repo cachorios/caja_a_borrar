@@ -6,50 +6,55 @@ fixtures:
         posicion:     1
         longitud:     4
         tabla:        0
+        estado:       0
 
     l2:
-        codigobarra: c1
-        descripcion: Tributo
-        posicion:    21
-        longitud:    3
-        tabla:       0
-        estado:     1
+        codigobarra:  c1
+        descripcion:  Importe Primer Vencimiento
+        posicion:     5
+        longitud:     8
+        tabla:        0
+        estado:       0
 
     l3:
+        codigobarra:  c1
+        descripcion:  Fecha Primer Vencimiento
+        posicion:     13
+        longitud:     5
+        tabla:        0
+        estado:       0
+
+    l4:
+        codigobarra:  c1
+        descripcion:  Indica sistema Nuevo
+        posicion:     18
+        longitud:     1
+        tabla:        0
+        estado:       0
+
+    l5:
         codigobarra: c1
         descripcion: Seccion
         posicion:    19
         longitud:    2
         tabla:       0
-        estado:     1
-
-    l4:
-        codigobarra: c1
-        descripcion: Indica sistema Nuevo
-        posicion:    18
-        longitud:    1
-        tabla:       0
-
-    l5:
-        codigobarra: c1
-        descripcion: Dígitos Verificadores
-        posicion:    43
-        longitud:    2
-        tabla:       0
+        estado:      1
 
     l6:
         codigobarra: c1
-        descripcion: Fecha Segundo Vencimiento
-        posicion:    41
-        longitud:    2
+        descripcion: Tributo
+        posicion:    21
+        longitud:    3
         tabla:       0
+        estado:      1
 
     l7:
         codigobarra: c1
-        descripcion: Recargo Segundo Vencimiento
-        posicion:    35
-        longitud:    6
+        descripcion: Nro. Comprobante
+        posicion:    24
+        longitud:    10
         tabla:       0
+        estado:      2
 
     l8:
         codigobarra: c1
@@ -57,25 +62,232 @@ fixtures:
         posicion:    34
         longitud:    1
         tabla:       0
+        estado:      0
 
     l9:
         codigobarra: c1
-        descripcion: Importe Primer Vencimiento
-        posicion:    5
-        longitud:    8
+        descripcion: Recargo Segundo Vencimiento
+        posicion:    35
+        longitud:    6
         tabla:       0
+        estado:      0
 
     l10:
         codigobarra: c1
-        descripcion: Fecha Primer Vencimiento
-        posicion:    13
-        longitud:    5
+        descripcion: Fecha Segundo Vencimiento
+        posicion:    41
+        longitud:    2
         tabla:       0
+        estado:      0
 
     l11:
         codigobarra: c1
+        descripcion: Dígitos Verificadores
+        posicion:    43
+        longitud:    2
+        tabla:       0
+        estado:      0
+
+#Comercio
+    l21:
+        codigobarra:  c2
+        descripcion:  Identificación de la Empresa
+        posicion:     1
+        longitud:     4
+        tabla:        0
+        estado:       0
+
+    l22:
+        codigobarra:  c2
+        descripcion:  Importe Primer Vencimiento
+        posicion:     5
+        longitud:     8
+        tabla:        0
+        estado:       0
+
+    l23:
+        codigobarra:  c2
+        descripcion:  Fecha Primer Vencimiento
+        posicion:     13
+        longitud:     5
+        tabla:        0
+        estado:       0
+
+    l24:
+        codigobarra:  c2
+        descripcion:  Indica sistema viejo
+        posicion:     18
+        longitud:     1
+        tabla:        0
+        estado:       0
+
+    l25:
+        codigobarra: c2
+        descripcion: Comercio
+        posicion:    19
+        longitud:    1
+        tabla:       0
+        estado:      1
+
+
+    l26:
+        codigobarra: c2
         descripcion: Nro. Comprobante
-        posicion:    24
-        longitud:    10
+        posicion:    20
+        longitud:    8
         tabla:       0
         estado:      2
+
+    l27:
+        codigobarra: c2
+        descripcion: LIBRE
+        posicion:    28
+        longitud:    6
+        tabla:       0
+        estado:      0
+
+    l28:
+        codigobarra: c2
+        descripcion: Moneda
+        posicion:    34
+        longitud:    1
+        tabla:       0
+        estado:      0
+
+    l29:
+        codigobarra: c2
+        descripcion: Recargo Segundo Vencimiento
+        posicion:    35
+        longitud:    6
+        tabla:       0
+        estado:      0
+
+    l30:
+        codigobarra: c2
+        descripcion: Fecha Segundo Vencimiento
+        posicion:    41
+        longitud:    2
+        tabla:       0
+        estado:      0
+
+    l31:
+        codigobarra: c2
+        descripcion: Dígitos Verificadores
+        posicion:    43
+        longitud:    2
+        tabla:       0
+        estado:      0
+
+#Convenios anr
+    l41:
+        codigobarra:  c4
+        descripcion:  Identificación de la Empresa
+        posicion:     1
+        longitud:     4
+        tabla:        0
+        estado:       0
+
+    l42:
+        codigobarra:  c4
+        descripcion:  Importe Primer Vencimiento
+        posicion:     5
+        longitud:     8
+        tabla:        0
+        estado:       0
+
+    l43:
+        codigobarra:  c4
+        descripcion:  Fecha Primer Vencimiento
+        posicion:     13
+        longitud:     5
+        tabla:        0
+        estado:       0
+
+    l44:
+        codigobarra:  c4
+        descripcion:  Indica sistema viejo
+        posicion:     18
+        longitud:     1
+        tabla:        0
+        estado:       0
+
+    l45:
+        codigobarra: c4
+        descripcion: Convenio
+        posicion:    19
+        longitud:    1
+        tabla:       0
+        estado:      1
+
+    l46:
+        codigobarra: c4
+        descripcion: Tributo
+        posicion:    20
+        longitud:    3
+        tabla:       0
+        estado:      1
+
+
+    l47:
+        codigobarra: c4
+        descripcion: Nro. de Convenio
+        posicion:    23
+        longitud:    5
+        tabla:       0
+        estado:      2
+
+    l48:
+        codigobarra: c4
+        descripcion: Año del convenio
+        posicion:    28
+        longitud:    2
+        tabla:       0
+        estado:      1
+
+    l49:
+        codigobarra: c4
+        descripcion: Nro. de Cuoata
+        posicion:    30
+        longitud:    3
+        tabla:       0
+        estado:      1
+
+    l50:
+        codigobarra: c4
+        descripcion: LIBRE
+        posicion:    33
+        longitud:    1
+        tabla:       0
+        estado:      0
+
+    l51:
+        codigobarra: c4
+        descripcion: Moneda
+        posicion:    34
+        longitud:    1
+        tabla:       0
+        estado:      0
+
+    l52:
+        codigobarra: c4
+        descripcion: Recargo Segundo Vencimiento
+        posicion:    35
+        longitud:    6
+        tabla:       0
+        estado:      0
+
+    l53:
+        codigobarra: c4
+        descripcion: Fecha Segundo Vencimiento
+        posicion:    41
+        longitud:    2
+        tabla:       0
+        estado:      0
+
+    l54:
+        codigobarra: c4
+        descripcion: Dígitos Verificadores
+        posicion:    43
+        longitud:    2
+        tabla:       0
+        estado:      0

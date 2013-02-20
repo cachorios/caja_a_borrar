@@ -5,29 +5,27 @@ namespace Caja\SistemaCajaBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Doctrine\ORM\EntityRepository;
 
-class CajaType extends AbstractType
+class TipoPagoType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-			->add('numero','integer')
-            ->add('nombre')
-            ->add('cajero'
-        )
+            ->add('descripcion')
+            ->add('observacion',"textarea",array('required' => false))
+            ->add('divisible')
         ;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Caja\SistemaCajaBundle\Entity\Caja'
+            'data_class' => 'Caja\SistemaCajaBundle\Entity\TipoPago'
         ));
     }
 
     public function getName()
     {
-        return 'caja_sistemacajabundle_cajatype';
+        return 'caja_sistemacajabundle_tipopagotype';
     }
 }

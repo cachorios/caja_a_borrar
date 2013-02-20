@@ -13,3 +13,7 @@ SistemaCajaBundle_apertura:
 SistemaCajaBundle_registro:
     resource: "@SistemaCajaBundle/Resources/config/routing/registro.yml"
     prefix:   /registro
+
+SistemaCajaBundle_tipopago:
+    resource: "@SistemaCajaBundle/Resources/config/routing/tipopago.yml"
+    prefix:   /tipopago

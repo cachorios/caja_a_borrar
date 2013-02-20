@@ -1,5 +1,5 @@
 {{ "{% extends '::layout.html.twig' %}" }}
-
+{{ "{% block id  'mod_"~ entity ~ "' %}" }}
 {{ "{% block title %}" }}
 {{ "{{ parent() }} - " ~ entity ~ " {{ 'views.index.list'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}" }}
 {{ "{% endblock %}" }}
@@ -32,7 +32,6 @@
         </div>
         {{ '{% endif %}' }}
         &nbsp;
-    </div>
     </div>
 
     <div class="row-fluid">

@@ -8,11 +8,17 @@
 <div class="clear"></div>
 </div>
 
-{% form_theme form 'SistemaCajaBundle:Form:fields.html.twig' %}
-{{ form_row(form.pagos) }}
+{#{% form_theme form 'SistemaCajaBundle:Form:fields.html.twig' %}#}
+
+{% include 'SistemaCajaBundle:Registro:_pagos.html.twig' %}
 
 {{ form_rest(form) }}
 
+<div class="clear"></div>
+<div class="form-actions" >
+    <a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal">&nbsp;&nbsp;Pagar&nbsp;&nbsp;</a>
+    <button class="btn" type="reset">Cancelar</button>
+</div>
 
 
 
@@ -135,13 +141,15 @@
     postBorrarDetalle = function(){
         var $txtcodigoBarra = $("#txtcodigobarra");
         $txtcodigoBarra.val('');
-        $txtcodigoBarra.show(500).focus();
+        $txtcodigoBarra.show(50).focus();
         totalizaComprobante();
 
     };
 
     /**
-     * Evento que se ejecuta al agregar un nnuevo elemento al detalle
+     * Evento que se ejecuta al agregar un nuevo elemento al detalle
+     * lo utilizo para actualizar los registros con los datos recibido
+     * del server
      * @param data
      */
     postAddDetalle = function(row, index){
@@ -158,7 +166,7 @@
     };
 
     /**
-     * Actualiza el form con los datos obtenidos
+     * Si se proceso correctamente la peticion ajax
      * del codigo de barra
      * @param data
      */
@@ -166,8 +174,16 @@
         $barra.val('');
         $barra.focus();
         if(data.ok == 1){
+            /**
+             * guardo data en databarra para acceder desde otros eventos
+             */
             dataBarra = data;
             $btn = $('[data-coleccion-add-btn-det]','#caja_sistemacajabundle_registrotype_detalle');
+
+            /**
+             * Disparo el boton add para agregar el registro nuevo con los
+             * datos del codigo de barra.
+             */
             $btn.trigger("click");
         }else{
             $("#msgBarra").text(data.msg);

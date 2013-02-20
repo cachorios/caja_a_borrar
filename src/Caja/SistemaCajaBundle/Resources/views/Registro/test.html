@@ -1,0 +1,828 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title> Bienvenido! - Registro de Comprobantes
+    </title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="description">
+    <meta content="" name="author">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link href="/favicon.ico" type="image/x-icon" rel="icon">
+    <link rel="stylesheet" href="/css/inspiritas.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/bundles/sistemacaja/css/main.css">
+
+    <script src="/js/jquery.min.js"></script>
+</head>
+
+<body id="mod_registro">
+
+<div class="navbar navbar-static-top navbar-inverse">
+    <div class="navbar-inner">
+        <div class="container">
+            <a data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+
+            <a style="padding-top: 5px; padding-bottom: 4px;" href="/app_dev.php/" class="brand">
+                <img src="/img/logo-posadas.png">
+
+            </a>
+            <span class="tagline">Sistema de Caja. </span>
+
+            <div id="main-menu" class="nav-collapse collapse">
+                <div class="auth pull-right">
+                    <img src="/app_dev.php/media/cache/foto_login/uploads/users/user-511a8ef7b8377-foto1.jpg"
+                         class="avatar">
+                    <span class="name">Alberto Voefray</span><br>
+                    <span class="links">
+                        <a href="#">Perfil</a>
+                        <a href="/app_dev.php/logout">Salir</a>
+                     </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="row-fluid">
+
+        <div class="span3">
+            <aside>
+                <nav>
+
+                    <ul class="nav">
+                        <li class="monitor">
+                            <a href="/app_dev.php/apertura/monitor"><i class="icon-play"></i>Monitor</a>
+                        </li>
+
+                        <li class="registro">
+                            <a href="/app_dev.php/registro/"><i class="icon-th-list icon-white"></i>Registro</a>
+                        </li>
+
+                        <li class="apertura">
+                            <a href="/app_dev.php/apertura/"><i class="icon-font icon-white"></i>Apertura</a>
+                        </li>
+
+                        <li class="cierre">
+                            <a href="/app_dev.php/apertura/cierre"><i class="icon-user icon-white"></i>Cierre</a>
+                        </li>
+
+                        <li class="caja">
+                            <a href="/app_dev.php/caja/"><i class="icon-retweet icon-white"></i>Caja</a>
+                        </li>
+                        <li class="larparametro">
+                            <a href="/app_dev.php/larparametro"><i class="icon-retweet icon-white"></i>Tablas</a>
+                        </li>
+
+                        <li class="codigobarra">
+                            <a href="/app_dev.php/codigobarra/"><i class="icon-barcode icon-white"></i>Codigo de
+                                Barra</a>
+                        </li>
+                        <li class="usuario">
+                            <a href="/app_dev.php/usuario/"><i class="icon-user icon-white"></i>Usuarios</a>
+                        </li>
+
+
+                    </ul>
+
+                </nav>
+            </aside>
+        </div>
+        <div class="span9" id="content-wrapper">
+            <div id="content">
+
+
+                <section id="form_CodigoBarra">
+
+                    <header>
+                        <h1>
+
+                            Registro de Comprobantes - Caja 1
+                            <div style="display: none;" class="pull-right" id="load_indicador"><img
+                                    src="/img/ajax_ind_40x40.gif"></div>
+                        </h1>
+
+                    </header>
+
+
+                    <div class="row-fluid hapertura ">
+                        <div class="span6">Cajero: <span> Alberto Voefray </span></div>
+                        <div class="span3"> Apertura Nro. :<span> 4</span></div>
+                        <div class="span3"> Fecha. :<span> 12/01/2013</span></div>
+
+                    </div>
+                    <div class="sub-header">
+                        <h2 style="font-size: 16px;">Codigo de Barra</h2>
+                    </div>
+                    <div style="line-height: 5px;">&nbsp; </div>
+                    <div class="row-fluid">
+                        <div class="span8">
+                            <input type="text" class="input-xxlarge" name="codigobarra" value="" id="txtcodigobarra">
+                        </div>
+                        <div class="span4">
+                            <div id="msgBarra"></div>
+                            <div id="masDetalleTemp"></div>
+                        </div>
+                    </div>
+                    <div class="sub-header">
+                        <h2 style="font-size: 16px;">Comprobantes</h2>
+                    </div>
+                    <form method="post" action="/app_dev.php/registro/create" class="form-horizontal">
+
+                        <ul class="errorMessages"></ul>
+
+
+                        <div style="width: 98%; margin-right: 5px;" class="pull-right">
+
+                            <div data-prototype="    &lt;tr&gt;&lt;td style=&quot;text-align: center;&quot;&gt;&lt;div class=&quot;active&quot;&gt;&lt;a href=&quot;#&quot;
+                                           class=&quot;info-barra&quot;
+                                           data-content=&quot;?&quot;
+                                           data-original-title=&quot;Mas detalle&quot;  &gt;&lt;span class=&quot;icon-zoom-in&quot;&gt;&lt;/span&gt;&lt;/a&gt;&lt;/div&gt;&lt;/td&gt;&lt;td&gt;&lt;input type=&quot;text&quot; id=&quot;caja_sistemacajabundle_registrotype_detalle___name___comprobante&quot; name=&quot;caja_sistemacajabundle_registrotype[detalle][__name__][comprobante]&quot; required=&quot;required&quot;    class=&quot;&quot; /&gt;&lt;/td&gt;&lt;td&gt;&lt;input type=&quot;text&quot; id=&quot;caja_sistemacajabundle_registrotype_detalle___name___fecha&quot; name=&quot;caja_sistemacajabundle_registrotype[detalle][__name__][fecha]&quot; required=&quot;required&quot;    class=&quot;test&quot; /&gt;&lt;/td&gt;&lt;td&gt;&lt;input type=&quot;text&quot; id=&quot;caja_sistemacajabundle_registrotype_detalle___name___importe&quot; name=&quot;caja_sistemacajabundle_registrotype[detalle][__name__][importe]&quot; required=&quot;required&quot;    class=&quot;importe&quot; /&gt;&lt;/td&gt;&lt;td width=&quot;110px&quot; style=&quot;text-align: center;&quot;&gt;&lt;button class=&quot;btn btn-mini btn-danger remove&quot; data-coleccion-remove-btn-det=&quot;&quot;&gt;&lt;span class=&quot;icon-trash icon-white&quot;&gt;&lt;/span&gt; Quitar
+                                        &lt;/button&gt;&lt;input type=&quot;hidden&quot; id=&quot;caja_sistemacajabundle_registrotype_detalle___name___codigo_barra&quot; name=&quot;caja_sistemacajabundle_registrotype[detalle][__name__][codigo_barra]&quot;    class=&quot;cbarra&quot; /&gt;&lt;/td&gt;&lt;/tr&gt;
+                                      " id="caja_sistemacajabundle_registrotype_detalle" class="collection">
+                                <table width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 3%;">##</th>
+                                        <th style="width: 28%;">Comprobante</th>
+                                        <th style="width: 28%;">Vencimiento</th>
+                                        <th style="width: 28%;">Importe</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="items"></tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="3"><h2>Total: &nbsp;</h2></td>
+                                        <td><span id="lote_detalle_total">0.00</span></td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                                <div class="clear"></div>
+                                <button data-coleccion-add-btn-det="" style="margin-top: 13px; display: none;"
+                                        class="btn btn-mini add_item">
+                                    <span class="icon-plus-sign"></span> Agregar
+                                </button>
+                            </div>
+                            <br>
+
+
+                            <div class="clear"></div>
+                        </div>
+
+
+                        <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1"
+                             class="modal hide fade" id="myModal">
+                            <div class="modal-header">
+                                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                                <h3 id="myModalLabel">Detalle de pago</h3>
+                            </div>
+                            <div class="modal-body">
+                                <div class=" control-group"
+                                     id="caja_sistemacajabundle_registrotype_pagos_control_group">
+                                    <label class=" control-label required"
+                                           for="caja_sistemacajabundle_registrotype_pagos">
+                                        Pagos
+
+                                    </label>
+
+                                    <div class=" controls">
+                                        <select multiple="multiple" class="" required="required"
+                                                name="caja_sistemacajabundle_registrotype[pagos][]"
+                                                id="caja_sistemacajabundle_registrotype_pagos">
+                                            <option value="1">Pago 1</option>
+                                            <option value="2">Pago 2</option>
+                                            <option value="3">Pago 3</option>
+                                            <option value="4">Pago 4</option>
+                                            <option value="5">Pago 5</option>
+                                            <option value="6">Pago 6</option>
+                                        </select></div>
+                                </div>
+                            </div>
+                            <div class="modal-footer pull-right">
+                                <button aria-hidden="true" data-dismiss="modal" class="btn">Cancelar</button>
+                                <button class="btn btn-primary" type="submit">Registrar Pago</button>
+
+
+                            </div>
+                        </div>
+                        <input type="hidden" value="64277353b72538770f9a9cc8262e9098f04e1374"
+                               name="caja_sistemacajabundle_registrotype[_token]"
+                               id="caja_sistemacajabundle_registrotype__token">
+
+                        <div class="form-actions">
+                            <a data-toggle="modal" class="btn btn-primary" role="button" href="#myModal">&nbsp;&nbsp;Pagar&nbsp;&nbsp;</a>
+                            <button type="reset" class="btn">Cancelar</button>
+                        </div>
+
+
+                    </form>
+
+
+                </section>
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- /container -->
+
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+
+<script src="/js/highcharts.js"></script>
+<script src="/js/inspiritas.js "></script>
+<script src="/bootstrap/js/bootstrap-dropdown.js"></script>
+<script src="/bootstrap/js/bootstrap-collapse.js"></script>
+<script src="/bootstrap/js/bootstrap-tab.js"></script>
+<script src="/bootstrap/js/bootstrap-modal.js"></script>
+<script src="/bootstrap/js/bootstrap-tooltip.js"></script>
+<script src="/bootstrap/js/bootstrap-popover.js"></script>
+
+<script src="/bundles/sistemacaja/js/caja.coleccion.js"></script>
+<script src="/bundles/sistemacaja/js/caja.aplicacion.js"></script>
+
+<script src="/js/jquery.blockUI.js"></script>
+
+
+<div style="display: block;" class="sf-toolbar" id="sfwdt51243ab2dc15c" data-sfurl="/app_dev.php/_wdt/51243ab2dc15c">
+<!-- START of Symfony2 Web Debug Toolbar -->
+<style type="text/css">
+.sf-toolbarreset {
+    position: fixed;
+    background-color: #f7f7f7;
+    left: 0;
+    right: 0;
+    height: 38px;
+    margin: 0;
+    padding: 0 40px 0 0;
+    z-index: 6000000;
+    font: 11px Verdana, Arial, sans-serif;
+    text-align: left;
+    color: #2f2f2f;
+
+    background-image: -moz-linear-gradient(-90deg, #e4e4e4, #ffffff);
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#e4e4e4), to(#ffffff));
+    bottom: 0;
+    border-top: 1px solid #bbb;
+}
+
+.sf-toolbarreset span,
+.sf-toolbarreset div {
+    font-size: 11px;
+}
+
+.sf-toolbarreset img {
+    width: auto;
+    display: inline;
+}
+
+.sf-toolbarreset .hide-button {
+    display: block;
+    position: absolute;
+    top: 12px;
+    right: 10px;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAMAAAAMCGV4AAAAllBMVEXDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PExMTPz8/Q0NDR0dHT09Pb29vc3Nzf39/h4eHi4uLj4+P6+vr7+/v8/Pz9/f3///+Nh2QuAAAAIXRSTlMABgwPGBswMzk8QktRV4SKjZOWmaKlq7TAxszb3urt+fy1vNEpAAAAiklEQVQIHUXBBxKCQBREwRFzDqjoGh+C2YV//8u5Sll2S0E/dof1tKdKM6GyqCto7PjZRJIS/mbSELgXOSd/BzpKIH1ZefVWpDDTHsi8mZVnwImPi5ndCLbaAZk3M58Bay0h9VbeSvMpjDUAHj4jL55AW1rxN5fU2PLjIgVRzNdxVFOlGzvnJi0Fb1XNGBHA9uQOAAAAAElFTkSuQmCC');
+}
+
+.sf-toolbar-block {
+    white-space: nowrap;
+    color: #2f2f2f;
+    display: block;
+    min-height: 28px;
+    border-right: 1px solid #e4e4e4;
+    padding: 0;
+    float: left;
+    cursor: default;
+}
+
+.sf-toolbar-block span {
+    display: inline-block;
+}
+
+.sf-toolbar-block .sf-toolbar-info-piece {
+    padding-bottom: 5px;
+}
+
+.sf-toolbar-block .sf-toolbar-info-piece:last-child {
+    padding-bottom: 0;
+}
+
+.sf-toolbar-block .sf-toolbar-info-piece a,
+.sf-toolbar-block .sf-toolbar-info-piece abbr {
+    color: #2f2f2f;
+}
+
+.sf-toolbar-block .sf-toolbar-info-piece b {
+    display: inline-block;
+    width: 110px;
+}
+
+.sf-toolbar-block .sf-toolbar-info-with-next-pointer:after {
+    content: ' :: ';
+    color: #999;
+}
+
+.sf-toolbar-block .sf-toolbar-info-with-delimiter {
+    border-right: 1px solid #999;
+    padding-right: 5px;
+    margin-right: 5px;
+}
+
+.sf-toolbar-block .sf-toolbar-info {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #bbb;
+    padding: 10px 8px;
+    margin-left: -1px;
+
+    bottom: 38px;
+    border-bottom-width: 0;
+}
+
+.sf-toolbar-block .sf-toolbar-info:empty {
+    visibility: hidden;
+}
+
+.sf-toolbar-block .sf-toolbar-status {
+    display: inline-block;
+    color: #fff;
+    background-color: #666;
+    padding: 3px 6px;
+    border-radius: 3px;
+    margin-bottom: 2px;
+    vertical-align: middle;
+    min-width: 6px;
+    min-height: 13px;
+}
+
+.sf-toolbar-block .sf-toolbar-status abbr {
+    color: #fff;
+    border-bottom: 1px dotted black;
+}
+
+.sf-toolbar-block .sf-toolbar-status-green {
+    background-color: #759e1a;
+}
+
+.sf-toolbar-block .sf-toolbar-status-red {
+    background-color: #a33;
+}
+
+.sf-toolbar-block .sf-toolbar-status-yellow {
+    background-color: #ffcc00;
+    color: #000;
+}
+
+.sf-toolbar-block .sf-toolbar-status-black {
+    background-color: #000;
+}
+
+.sf-toolbar-block .sf-toolbar-icon {
+    display: block;
+}
+
+.sf-toolbar-block .sf-toolbar-icon &gt
+
+;
+a,
+.sf-toolbar-block .sf-toolbar-icon &gt
+
+;
+span {
+    display: block;
+    text-decoration: none;
+    margin: 0;
+    padding: 5px 8px;
+    min-width: 20px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.sf-toolbar-block .sf-toolbar-icon &gt
+
+;
+a,
+.sf-toolbar-block .sf-toolbar-icon &gt
+
+;
+a:link
+    .sf-toolbar-block .sf-toolbar-icon &gt
+
+;
+a:hover {
+    color: black !important;
+}
+
+.sf-toolbar-block .sf-toolbar-icon img {
+    border-width: 0;
+    vertical-align: middle;
+}
+
+.sf-toolbar-block .sf-toolbar-icon img + span {
+    margin-left: 5px;
+    margin-top: 2px;
+}
+
+.sf-toolbar-block .sf-toolbar-icon .sf-toolbar-status {
+    border-radius: 12px;
+    border-bottom-left-radius: 0px;
+    margin-top: 0;
+}
+
+.sf-toolbar-block .sf-toolbar-info-method {
+    border-bottom: 1px dashed #ccc;
+    cursor: help;
+}
+
+.sf-toolbar-block .sf-toolbar-info-method[onclick=""] {
+    border-bottom: none;
+    cursor: inherit;
+}
+
+.sf-toolbar-info-php {
+}
+
+.sf-toolbar-info-php-ext {
+}
+
+.sf-toolbar-info-php-ext .sf-toolbar-status {
+    margin-left: 2px;
+}
+
+.sf-toolbar-info-php-ext .sf-toolbar-status:first-child {
+    margin-left: 0;
+}
+
+.sf-toolbar-block a .sf-toolbar-info-piece-additional,
+.sf-toolbar-block a .sf-toolbar-info-piece-additional-detail {
+    display: inline-block;
+}
+
+.sf-toolbar-block a .sf-toolbar-info-piece-additional:empty,
+.sf-toolbar-block a .sf-toolbar-info-piece-additional-detail:empty {
+    display: none;
+}
+
+.sf-toolbarreset:hover {
+    box-shadow: rgba(0, 0, 0, 0.3) 0 0 50px;
+}
+
+.sf-toolbar-block:hover {
+    box-shadow: rgba(0, 0, 0, 0.3) 0 0 5px;
+}
+
+.sf-toolbar-block:hover .sf-toolbar-icon {
+    background-color: #fff;
+}
+
+.sf-toolbar-block:hover .sf-toolbar-info {
+    display: block;
+}
+
+    /***** Override the setting when the toolbar is on the top *****/
+
+    /***** Media query *****/
+@media screen and (max-width: 779px) {
+    .sf-toolbar-block .sf-toolbar-icon &gt
+
+;
+* &gt
+
+;
+:first-child ~ * {
+    display: none;
+}
+
+.sf-toolbar-block .sf-toolbar-icon &gt
+
+;
+* &gt
+
+;
+.sf-toolbar-info-piece-additional,
+.sf-toolbar-block .sf-toolbar-icon &gt
+
+;
+* &gt
+
+;
+.sf-toolbar-info-piece-additional-detail {
+    display: none !important;
+}
+
+    }
+
+@media screen and (min-width: 880px) {
+    .sf-toolbar-block .sf-toolbar-icon a[href$="config"] .sf-toolbar-info-piece-additional {
+        display: inline-block;
+    }
+}
+
+@media screen and (min-width: 980px) {
+    .sf-toolbar-block .sf-toolbar-icon a[href$="security"] .sf-toolbar-info-piece-additional {
+        display: inline-block;
+    }
+}
+
+@media screen and (max-width: 1179px) {
+    .sf-toolbar-block .sf-toolbar-icon &gt
+
+;
+* &gt
+
+;
+.sf-toolbar-info-piece-additional {
+    display: none;
+}
+
+    }
+
+@media screen and (max-width: 1439px) {
+    .sf-toolbar-block .sf-toolbar-icon &gt
+
+;
+* &gt
+
+;
+.sf-toolbar-info-piece-additional-detail {
+    display: none;
+}
+
+    }
+</style>
+<div style="clear: both; height: 38px;"></div>
+
+<div class="sf-toolbarreset">
+    <div class="sf-toolbar-block">
+        <div class="sf-toolbar-icon"><a href="http://symfony.com/">
+            <img width="26" height="28"
+                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAcCAMAAABIzV/hAAACZFBMVEUwLjL///////////////////////////////////////////////////////////////////+Eg4b///+Ni46Xlpj///////////+op6n///////////////////////////////////////////////////////////9ZWFv///////9qaWz///////+mpaf///////////////9ZWFv///////////////9PTVH///91dHb////////////////////g4OD///9NTE+Ih4r///////+Ni47///////92dHeRkJLk5OTLy8xlY2b///////+cm53///////+5ubr////o6Oj////////U1NT///9DQURsa22rq6ysq61hX2L///+LioxTUVVBP0NEQkZpZ2rGxsf///9ram3////s7O2SkZNfXmFxcHKmpae4uLnKysuXlpiop6l3dXiIh4pYVlmrq6ycm52trK7Nzc48Oj5dW158e36dnJ49Oz/Pz9BiYGPAv8BDQUTQz9BVU1aioaNHRUnBwcJXVVk6ODxJR0t3dnmko6U8Oj6lpKY9Oz+0tLXDwsRQTlF7en1QTlHi4eJhX2LFxcZTUVViYGNwb3J+fX83NTlFQ0dUUlW4t7icm524uLk8Oj5YVlmPjpBLSU2enZ9aWVw/PkFBP0NdW153dnk0MjZQTlE1MzdQT1JdXF9ram15eHqGhYdDQkV5eHo2NThEQkZRUFNFQ0dta244NjpGREhTUVU5NztUUlVhX2JubG9HRUlVU1ZiYGM7OTxIRkk7OT1IR0o8Oj4wLjI9Oz8YdG13AAAAynRSTlMAAAEDBAUGCgsMDQ4QEhMUGRobGx0gISIkJiYnKCktLi8wMjM0NTk6Ozw+P0NFSEpLTE5PUFBTWlteXmBiZGVmaWxtcHBxc3R0dnl5fX+BgoOGi46Pj5CRmZqanZ6eoKeoq6ytsLCwsrO0tbe5urq8vL+/wsTFx8jJycvLy8vM0NHR0tLU1NfX2NnZ2trc3N3d3eHh4uLl5ebm5ubn5+fo6urt7e3u7vDx8/Pz9PT19fX19fX29vf39/j4+fn5+vr6+vv7+/z8/f3+yR5EtwAAAbVJREFUeNpl0mVXVFEYhuF3zhkOFqMjYmCi2MUYYKGIYiJ2YCd2t4IBFqgoKjZ2jg3igI2KyO2f8sTMngGvj/te71r7wyMuk4jofZccAihcMzJKXDYnuYcVotyeYKiktV5LA0faaE7S4s7TyMsBupnMcoH/vO6gmanJaiLV1Py+Xwn5zc0fjCbSi2LI2QdkGdLyFBG+rHwMzz4BD7wyGEfFk8pfsD2TkGmyFNvFHfDj55v02VD6DcteOYylatY8oG7boA2QV4vlklzB8tU3/DIwo+dWv58guY5tRcLMtwSGdi1DkTvAn9Jqsgbu4kafRBqlV4sDFCWuIjdhMsp7yQU49rB28/QPLOu2DuWqLMfmfw6M716GskdGVRMSGDKRsEzpvZ+Qs0lFKDd94s2oArh2F7K3oNQt6ChGr5x6+Dx3J7d2E3Ygqam4PCkngRNnngYIO5cWq4lLb5t+vJ6GiifFR1nbMNqP3fSOCN8PZnQynEW5W/nmHy0PXv79eHpRSjsjtEOtWZcRc9YXlNx7VFKwceGYHjG6s0Ob3iK+X3LqlKnjkvt39rjD6w3W6BhvrCdaVw//ADrWicJIvtkmAAAAAElFTkSuQmCC"
+                 alt="Symfony">
+            <span>2.1.8-DEV</span>
+        </a>
+        </div>
+        <div class="sf-toolbar-info">
+            <div class="sf-toolbar-info-piece">
+                Symfony <b>2.1.8-DEV</b>
+            </div>
+            <div class="sf-toolbar-info-piece">
+                <a rel="help" href="http://symfony.com/doc/2.1.8-DEV/index.html">Documentation</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="sf-toolbar-block">
+        <div class="sf-toolbar-icon"><a href="/app_dev.php/_profiler/phpinfo">
+            <img width="26" height="28"
+                 src="data:image/png;base64,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"
+                 alt="PHP">
+        </a>
+        </div>
+        <div class="sf-toolbar-info">
+            <div class="sf-toolbar-info-piece sf-toolbar-info-php"><b>PHP</b><span>5.4.7</span></div>
+            <div class="sf-toolbar-info-piece sf-toolbar-info-php-ext"><b>PHP Extensions</b><span
+                    class="sf-toolbar-status sf-toolbar-status-red">xdebug</span><span
+                    class="sf-toolbar-status sf-toolbar-status-red">accel</span></div>
+        </div>
+    </div>
+
+    <div class="sf-toolbar-block">
+        <div class="sf-toolbar-icon"><a href="/app_dev.php/_profiler/51243ab2dc15c?panel=config"> <img width="21"
+                                                                                                       height="28"
+                                                                                                       src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAcCAMAAAC5xgRsAAAAZlBMVEX///////////////////////////////////////////////////////////////////////////////////////////+ZmZmZmZlISEhJSUmdnZ1HR0fR0dFZWVlpaWlfX18/Pz+puygPAAAAIXRSTlMACwwlJygpLzIzNjs8QEtMUmd6e32AucDBw8fIydTm6u5l8MjvAAAAo0lEQVR42r2P2Q6CMBBFL6XsZRGRfZv//0nbDBNEE19MnJeTc5ILKf58ahiUwzy/AJpIWwREwQnEXRdbGCLjrO+djWRvVMiJcigxB7viGogxDdJpSmHEmCVPS7YczJvgUu+CS30IvtbNYZMvsGVo2mVpG/kbm4auiCpdcC3YPCAhSpAdUzaAn6qPKZtUT6ZSzb4bi2hdo9MQ1nX4ASjfV+/4/Z40pyCHrNTbIgAAAABJRU5ErkJggg=="
+                                                                                                       alt="Environment">
+            <span class="sf-toolbar-info-piece-additional-detail sf-toolbar-status sf-toolbar-status-green"> </span>
+            <span class="sf-toolbar-info-piece-additional sf-toolbar-status">51243ab2dc15c</span>
+        <span class="sf-toolbar-info-piece-additional-detail">
+            <span class="sf-toolbar-info-with-delimiter">app</span><span>dev</span>
+        </span>
+        </a>
+        </div>
+        <div class="sf-toolbar-info">
+            <div class="sf-toolbar-info-piece"><b>Name</b><span>app</span></div>
+            <div class="sf-toolbar-info-piece"><b>Environment</b><span>dev</span></div>
+            <div class="sf-toolbar-info-piece"><b>Debug</b><span class="sf-toolbar-status sf-toolbar-status-green">enabled</span>
+            </div>
+            <div class="sf-toolbar-info-piece"><b>Token</b><span><a href="/app_dev.php/_profiler/51243ab2dc15c">51243ab2dc15c</a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="sf-toolbar-block">
+        <div class="sf-toolbar-icon"><a href="/app_dev.php/_profiler/51243ab2dc15c?panel=request"> <img width="28"
+                                                                                                        height="28"
+                                                                                                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAQAAADYBBcfAAACvElEQVR42tVTbUhTYRTerDCnKVoUUr/KCZmypA9Koet0bXNLJ5XazDJ/WFaCUY0pExRZXxYiJgsxWWjkaL+yK+po1gjyR2QfmqWxtBmaBtqWGnabT++c11Fu4l/P4VzOPc95zoHznsNZodIbLDdRcKnc1Bu8DAK45ZsOnykQNMopsNooLxCknb0cDq5vml9FtHiIgpBR0R6iihYyFMTDt2Lg56ObPkI6TMGXSof1EV67IqCwisJSWliFAG/E0CfFIiebdNypcxi/1zgyFiIiZ3sJQr0RQx5frLa6k7SOKRo3oMFNR5t62h2rttKXEOKFqDCxtXNmmBokO2KKTlp3IdWuT2dYRNGKwEXEBCcL172G5FG0aIxC0kR9PBTVH1kkwQn+IqJnCE33EalVzT9GJQS1tAdD3CKicJYFrxqx7W2ejCEdZy1FiC5tZxHhLJKOZaRdQJAyV/YAvDliySALHxmxR4Hqe2iwvaOR/CEuZYJFSgYhVbZRkA8KGdEktrqnqra90NndCdkt77fjIHIhexOrfO6O3bbbOj/rqu5IptgyR3sU93QbOYhquZK4MCDp0Ina/PLsu5JvbCTRaapUdUmIV/RzoMdsk/0hWRNdAvKOmvqlN0drsJbJf1P4YsQ5lGrJeuosiOUgbOC8cto3LfOXTdVd7BqZsQKbse+0jUL6WPcesqs4MNSUTQAxGjwFiC8m3yzmqwHJBWYKBJ9WNqW/dHkpU/osch1Yj5RJfXPfSEe/2UPsN490NPfZG5CKyJmcV5ayHyzy7BMqsXfuHhGK/cjAIeSpR92gehR55D8TcQhDEKJwytBJ4fr4NULvrEM8NszfJPyxDoHYAQ1oPCWmIX4gifmDS/DV2DKeb25FHWr76yEG7/9L4YFPeiQQ4/8LkgJ8Et+NncTCsYqzXAEXa7CWdPZzGWdlyV+vST0JanfPvwAAAABJRU5ErkJggg=="
+                                                                                                        alt="Request">
+            <span class="sf-toolbar-status sf-toolbar-status-green">200</span>
+        <span class="sf-toolbar-status sf-toolbar-info-piece-additional">                                <span
+                class="sf-toolbar-info-class sf-toolbar-info-with-next-pointer"><abbr
+                title="Caja\SistemaCajaBundle\Controller\RegistroController">RegistroController</abbr></span>
+            <span onclick="" class="sf-toolbar-info-method">
+                registroAction
+            </span>
+            </span>
+            <span class="sf-toolbar-info-piece-additional-detail">on <i>registro</i></span>
+        </a>
+        </div>
+        <div class="sf-toolbar-info">
+            <div class="sf-toolbar-info-piece"><b>Status Code</b><span
+                    class="sf-toolbar-status sf-toolbar-status-green">200</span></div>
+            <div class="sf-toolbar-info-piece"><b>Controller</b><span
+                    class="sf-toolbar-info-class sf-toolbar-info-with-next-pointer"><abbr
+                    title="Caja\SistemaCajaBundle\Controller\RegistroController">RegistroController</abbr></span><span
+                    onclick="" class="sf-toolbar-info-method">
+                registroAction
+            </span></div>
+            <div class="sf-toolbar-info-piece"><b>Route name</b><span>registro</span></div>
+            <div class="sf-toolbar-info-piece"><b>Has session</b><span>yes</span></div>
+        </div>
+    </div>
+
+
+    <div class="sf-toolbar-block">
+        <div class="sf-toolbar-icon"><a href="/app_dev.php/_profiler/51243ab2dc15c?panel=time"> <img width="16"
+                                                                                                     height="28"
+                                                                                                     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAcCAYAAABoMT8aAAABqUlEQVR42t2Vv0sCYRyHX9OmEhsMx/YKGlwLQ69DTEUSBJEQEy5J3FRc/BsuiFqEIIcQIRo6ysUhoaBBWhoaGoJwiMJLglRKrs8bXgienmkQdPDAwX2f57j3fhFJkkbiPwTK5bIiFoul3kmPud8MqKMewDXpwuGww+12n9hsNhFnlijYf/Z4PDmO45Yxo+10ZFGTyWRMEItU6AdCx7lczkgd6n7J2Wx2xm63P6jJMk6n80YQBBN1aUDv9XqvlAbbm2LE7/cLODRB0un0VveAeoDC8/waCQQC18MGQqHQOcEKvw8bcLlcL6TfYnVtCrGRAlartUUYhmn1jKg/E3USjUYfhw3E4/F7ks/nz4YNFIvFQ/ogbUYikdefyqlU6gnuOg2YK5XKvs/n+xhUDgaDTVEUt+HO04ABOBA5isViDTU5kUi81Wq1AzhWMEkDGmAEq2C3UCjcYXGauDvfEsuyUjKZbJRKpVvM8IABU9SVX+cxYABmwIE9cFqtVi9xtgvsC2AHbIAFoKey0gdlHEyDObAEWLACFsEsMALdIJ80+dK0bTS95v7+v/AJnis0eO906QwAAAAASUVORK5CYII="
+                                                                                                     alt="Time">
+            <span>991 ms</span>
+        </a>
+        </div>
+        <div class="sf-toolbar-info">
+            <div class="sf-toolbar-info-piece">
+                <b>Total time</b>
+                <span>991 ms</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="sf-toolbar-block">
+        <div class="sf-toolbar-icon">        <span>
+            <img width="13" height="28"
+                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAcBAMAAABITyhxAAAAJ1BMVEXNzc3///////////////////////8/Pz////////////+NjY0/Pz9lMO+OAAAADHRSTlMAABAgMDhAWXCvv9e8JUuyAAAAQ0lEQVQI12MQBAMBBmLpMwoMDAw6BxjOOABpHyCdAKRzsNDp5eXl1KBh5oHBAYY9YHoDQ+cqIFjZwGCaBgSpBrjcCwCZgkUHKKvX+wAAAABJRU5ErkJggg=="
+                 alt="Memory Usage">
+            <span>13.8 MB</span>
+        </span>
+        </div>
+        <div class="sf-toolbar-info">
+            <div class="sf-toolbar-info-piece">
+                <b>Memory usage</b>
+                <span>13.8 MB</span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="sf-toolbar-block">
+        <div class="sf-toolbar-icon"><a href="/app_dev.php/_profiler/51243ab2dc15c?panel=security"> <img width="24"
+                                                                                                         height="28"
+                                                                                                         src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAcCAYAAAB75n/uAAAC70lEQVR42u2V3UtTYRzHu+mFwCwK+gO6CEryPlg7yiYx50vDqUwjFIZDSYUk2ZTmCysHvg9ZVggOQZiRScsR4VwXTjEwdKZWk8o6gd5UOt0mbev7g/PAkLONIOkiBx+25/v89vuc85zn2Q5Fo9F95UDwnwhS5HK5TyqVRv8m1JN6k+AiC+fn54cwbgFNIrTQ/J9IqDcJJDGBHsgDgYBSq9W6ysvLPf39/SSUUU7zsQ1yc3MjmN90OBzfRkZG1umzQqGIxPSTkIBjgdDkaGNjoza2kcFgUCE/QvMsq6io2PV6vQu1tbV8Xl7etkql2qqvr/+MbDE/Pz8s9OP2Cjhwwmw29+4R3Kec1WZnZ4fn5uamc3Jyttra2qbH8ero6JgdHh5+CvFHq9X6JZHgzODgoCVW0NPTY0N+ltU2Nzdv4GqXsYSrPp+vDw80aLFYxru6uhyQ/rDb7a8TCVJDodB1jUazTVlxcXGQ5/mbyE+z2u7u7veY38BVT3Z2djopm5qa6isrK/tQWVn5qb29fSGR4DC4PDAwMEsZHuArjGnyGKutq6v7ajQaF6urq9/MzMz0QuSemJiwQDwGkR0POhhXgILjNTU1TaWlpTxlOp1uyWQyaUjMajMzM8Nut/tJQUHBOpZppbCwkM/KytrBznuL9xDVxBMo8KXHYnu6qKjIivmrbIy67x6Px4Yd58W672ApfzY0NCyNjo7OZmRkiAv8fr+O47iwmABXtoXaG3uykF6vX7bZbF6cgZWqqiqezYkKcNtmjO+CF2AyhufgjsvlMiU7vXEF+4C4ALf9CwdrlVAqlcFkTdRqdQSHLUDgBEeSCrArAsiGwENs0XfJBE6ncxm1D8Aj/B6tigkkJSUlmxSwLYhMDeRsyyUCd+lHrWxtbe2aTCbbZTn1ZD92F0Cr8GBfgnsgDZwDt8EzMBmHMXBLqD0PDMAh9Gql3iRIESQSIAXp4CRIBZeEjIvDFZAm1J4C6UK9ROiZcvCn/+8FvwHtDdJEaRY+oQAAAABJRU5ErkJggg=="
+                                                                                                         alt="Security">
+            <span class="sf-toolbar-status sf-toolbar-status-green"></span>
+
+            <div class="sf-toolbar-status sf-toolbar-info-piece-additional">Alberto2000@hotmail.com</div>
+        </a>
+        </div>
+        <div class="sf-toolbar-info">
+            <div class="sf-toolbar-info-piece">
+                <b>Logged in as</b>
+                <span class="sf-toolbar-status sf-toolbar-status-green">Alberto2000@hotmail.com</span>
+            </div>
+            <div class="sf-toolbar-info-piece">
+                <b>Authenticated</b>
+                <span class="sf-toolbar-status sf-toolbar-status-green">Yes</span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="sf-toolbar-block">
+        <div class="sf-toolbar-icon"><a href="/app_dev.php/_profiler/51243ab2dc15c?panel=db"> <img width="20"
+                                                                                                   height="28"
+                                                                                                   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAcCAYAAABh2p9gAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAQRJREFUeNpi/P//PwM1ARMDlcGogZQDlpMnT7pxc3NbA9nhQKxOpL5rQLwJiPeBsI6Ozl+YBOOOHTv+AOllQNwtLS39F2owKYZ/gRq8G4i3ggxEToggWzvc3d2Pk+1lNL4fFAs6ODi8JzdS7mMRVyDVoAMHDsANdAPiOCC+jCQvQKqBQB/BDbwBxK5AHA3E/kB8nKJkA8TMQBwLxaBIKQbi70AvTADSBiSadwFXpCikpKQU8PDwkGTaly9fHFigkaKIJid4584dkiMFFI6jkTJII0WVmpHCAixZQEXWYhDeuXMnyLsVlEQKI45qFBQZ8eRECi4DBaAlDqle/8A48ip6gAADANdQY88Uc0oGAAAAAElFTkSuQmCC"
+                                                                                                   alt="Database">
+            <span class="sf-toolbar-status">6</span>
+            <span class="sf-toolbar-info-piece-additional-detail">in 4.96 ms</span>
+        </a>
+        </div>
+        <div class="sf-toolbar-info">
+            <div class="sf-toolbar-info-piece">
+                <b>DB Queries</b>
+                <span>6</span>
+            </div>
+            <div class="sf-toolbar-info-piece">
+                <b>Query time</b>
+                <span>4.96 ms</span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="sf-toolbar-block">
+        <div class="sf-toolbar-icon"><a href="/app_dev.php/_profiler/51243ab2dc15c?panel=ladybug"> <img width="20"
+                                                                                                        height="28"
+                                                                                                        src="data:image/png;base64,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"
+                                                                                                        style="border-width: 0; vertical-align: middle; margin-right: 0;"
+                                                                                                        alt="Ladybug">
+            <span class="sf-toolbar-status">0</span>
+        </a>
+        </div>
+        <div class="sf-toolbar-info">
+            <div class="sf-toolbar-info-piece">
+                <b>Dumps</b>
+                <span>0</span>
+            </div>
+        </div>
+    </div>
+
+
+    <a onclick="
+            var p = this.parentNode;
+            p.style.display = 'none';
+            (p.previousElementSibling || p.previousSibling).style.display = 'none';
+        " title="Close Toolbar" class="hide-button"></a>
+</div>
+<!-- END of Symfony2 Web Debug Toolbar -->
+</div>
+<script type="text/javascript">/*&lt;![CDATA[*/
+Sfjs = (function () {
+    "use strict";
+    var noop = function () {
+    }, request = function (url, onSuccess, onError, payload, options) {
+        var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+        options = options || {};
+        xhr.open(options.method || 'GET', url, true);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        xhr.onreadystatechange = function (state) {
+            if (4 === xhr.readyState &amp;&amp; 200 === xhr.status) {
+                (onSuccess || noop)(xhr);
+            } else if (4 === xhr.readyState &amp;&amp; xhr.status != 200) {
+                (onError || noop)(xhr);
+            }
+        };
+        xhr.send(payload || '');
+    }, hasClass = function (el, klass) {
+        return el.className.match(new RegExp('\\b' + klass + '\\b'));
+    }, removeClass = function (el, klass) {
+        el.className = el.className.replace(new RegExp('\\b' + klass + '\\b'), ' ');
+    }, addClass = function (el, klass) {
+        if (!hasClass(el, klass)) {
+            el.className += " " + klass;
+        }
+    };
+    return {            hasClass:hasClass, removeClass:removeClass, addClass:addClass, request:request, load:function (selector, url, onSuccess, onError, options) {
+        var el = document.getElementById(selector);
+        if (el &amp;&amp; el.getAttribute('data-sfurl') !== url) {
+            request(url, function (xhr) {
+                el.innerHTML = xhr.responseText;
+                el.setAttribute('data-sfurl', url);
+                removeClass(el, 'loading');
+                (onSuccess || noop)(xhr, el);
+            }, function (xhr) {
+                (onError || noop)(xhr, el);
+            }, options);
+        }
+        return this;
+    }, toggle:function (selector, elOn, elOff) {
+        var i, style, tmp = elOn.style.display, el = document.getElementById(selector);
+        elOn.style.display = elOff.style.display;
+        elOff.style.display = tmp;
+        if (el) {
+            el.style.display = 'none' === tmp ? 'none' : 'block';
+        }
+        return this;
+    }        }
+})();
+/*]]&gt;*/</script>
+<script type="text/javascript">/*&lt;![CDATA[*/
+(function () {
+    Sfjs.load('sfwdt51243ab2dc15c', '/app_dev.php/_wdt/51243ab2dc15c', function (xhr, el) {
+        el.style.display = -1 !== xhr.responseText.indexOf('sf-toolbarreset') ? 'block' : 'none';
+    }, function (xhr) {
+        if (xhr.status !== 0) {
+            confirm('An error occurred while loading the web debug toolbar (' + xhr.status + ': ' + xhr.statusText + ').\n\nDo you want to open the profiler?') &amp;&amp; (window.location = '/app_dev.php/_profiler/51243ab2dc15c');
+        }
+    });
+})();
+/*]]&gt;*/</script>
+
+
+</body>
+</html>

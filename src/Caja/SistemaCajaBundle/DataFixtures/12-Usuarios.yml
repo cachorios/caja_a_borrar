@@ -13,6 +13,7 @@ fixtures:
         permite_email: 1
         is_active: 1
         is_deleted: 0
+        foto: user-511a905a4d1de-foto1.jpg
         fecha_nacimiento: 05-11-1968
         grupos:
             - gr1
@@ -28,6 +29,7 @@ fixtures:
         permite_email: 1
         is_active: 1
         is_deleted: 0
+        foto: user-511a8ef7b8377-foto1.jpg
         fecha_nacimiento: 15-01-1980
         grupos:
             - gr1
@@ -44,6 +46,7 @@ fixtures:
         permite_email: 1
         is_active: 1
         is_deleted: 0
+        foto: user-511970d001595-foto1.jpg
         fecha_nacimiento: 15-01-1951
         grupos:
             - gr1

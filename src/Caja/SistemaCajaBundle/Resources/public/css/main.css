@@ -1,4 +1,37 @@
 
+.title_nav{
+    font-size: 22px !important;
+    /*font-weight: bold;*/
+    color: #ececec!important;
+    font-family: "Museo Slab",Georgia,"Times New Roman",Times,serif;
+    text-shadow: 0 1px 1px #000000 !important;
+}
+
+.modal-header{
+    /*background-color: #69807d;*/
+    padding-top: 3px;
+    padding-bottom: 3px;
+
+}
+
+.modal-header h3{
+    color: #3c3c3c;
+    font-size: 20px;
+    margin: 0;
+    margin-top: 2px;
+    font-weight: 400;
+}
+
+.modal{
+    width: 720px;
+    background-color: #e9eff7;
+}
+
+.modal-body{
+    background-color: #fafafa;
+}
+
+
 /*------------- Navegacion izquierda elemento seleccionado  -----------*/
 #prov_inicio .container aside nav ul li:first-child,
 #mod_monitor .container aside nav ul .monitor,
@@ -6,6 +39,7 @@
 #mod_apertura .container aside nav ul .apertura,
 #mod_cierre .container aside nav ul .cierre,
 #mod_caja .container aside nav ul .caja,
+#mod_TipoPago .container aside nav ul .tipopago,
 #mod_codigobarra .container aside nav ul .codigobarra,
 #mod_larparametro .container aside nav ul .larparametro,
 
@@ -19,6 +53,7 @@
 #mod_apertura .container aside nav ul .apertura  a:hover,
 #mod_apertura .container aside nav ul .cierre  a:hover,
 #mod_caja .container aside nav ul .caja a:hover,
+#mod_TipoPago .container aside nav ul .tipopago a:hover,
 #mod_codigobarra .container aside nav ul .codigobarra a:hover,
 #mod_larparametro .container aside nav ul .larparametro  a:hover,
 #mod_usuario .container aside nav ul .usuario a:hover
@@ -140,7 +175,7 @@
 }
 
 .popover-content h1, h2, h3, h4, h5, h6 {
-    color: #006dcc;
+    color: #434b4f;
 }
 
 /*----------------*/
@@ -154,8 +189,8 @@
 
 /*---- Usuario form ----*/
       #foto img{
-          width:  250px;
-          height: 250px;
+          width:  100%;
+          /*height: 250px;*/
       }
 /*---- Fin Usuario form ----*/
 
@@ -234,5 +269,21 @@ div#caja_sistemacajabundle_registrotype_detalle tfoot h2{
     position: absolute;
     top: 0;
     left: 0;
+
+}
+
+.clear{
+    clear: both;
+}
+
+#mod_registro .form-horizontal .form-actions {
+    padding-left: 680px;
+}
+
+/*------- Tipo de pagos  -----*/
+#mod_TipoPago p{
+    margin: 8px 10px;
+    font-size: 14px;
+    color: #006dcc;
 
 }

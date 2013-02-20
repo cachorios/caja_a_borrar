@@ -4,6 +4,7 @@ namespace Caja\SistemaCajaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
+use Symfony\Component\Validator\Constraints as Assert;
 use Lar\UsuarioBundle\Entity\Usuario;
 
 /**
@@ -12,6 +13,7 @@ use Lar\UsuarioBundle\Entity\Usuario;
  * @ORM\Table(name="sca_caja")
  * @ORM\Entity(repositoryClass="Caja\SistemaCajaBundle\Entity\CajaRepository")
  *
+ * @DoctrineAssert\UniqueEntity("numero")
  * @DoctrineAssert\UniqueEntity("nombre")
  * @DoctrineAssert\UniqueEntity("cajero")
  */
@@ -26,6 +28,12 @@ class Caja
      */
     private $id;
 
+	/**
+	 * @var integer
+	 * @ORM\Column(name="numero", type="integer")
+	 * @Assert\Length(min = 1, max = 2)
+	 */
+	private $numero;
     /**
      * @var string
      *
@@ -101,4 +109,27 @@ class Caja
         return $this->getNombre();
     }
 
+
+    /**
+     * Set numero
+     *
+     * @param integer $numero
+     * @return Caja
+     */
+    public function setNumero($numero)
+    {
+        $this->numero = $numero;
+    
+        return $this;
+    }
+
+    /**
+     * Get numero
+     *
+     * @return integer 
+     */
+    public function getNumero()
+    {
+        return $this->numero;
+    }
 }

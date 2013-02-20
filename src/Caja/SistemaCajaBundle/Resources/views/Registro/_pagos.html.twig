@@ -1,0 +1,25 @@
+<br>
+<div class="clear"></div>
+<div id="myModal"
+     class="modal hide fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="myModalLabel"
+     aria-hidden="true"
+     data-backdrop="static"
+     data-keyboard="false" >
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Detalle de pago</h3>
+    </div>
+    <div class="modal-body">
+        {{ form_row(form.pagos) }}
+    </div>
+    <div class="modal-footer">
+        <button class="btn pull-right" data-dismiss="modal" aria-hidden="true2">Cancelar</button>
+        <div class="pull-right">&nbsp;&nbsp;</div>
+        <button type="submit" class="btn btn-primary pull-right">Registrar Pago</button>
+        <div class="pull-right">&nbsp;&nbsp;</div>
+
+    </div>
+</div>

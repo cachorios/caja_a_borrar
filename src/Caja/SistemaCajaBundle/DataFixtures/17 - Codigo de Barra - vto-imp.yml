@@ -11,3 +11,27 @@ fixtures:
         orden:        2
         vencimiento:  'sumarAFecha( aFechaAADDD( [13] ), [41])'
         importe:      '([5].00 + [35].00)/100'
+
+    v21:
+        codigobarra:  c2
+        orden:        1
+        vencimiento:  'aFechaAADDD( [13] )'
+        importe:      '[5].00/100'
+
+    v22:
+        codigobarra:  c2
+        orden:        2
+        vencimiento:  'sumarAFecha( aFechaAADDD( [13] ), [41])'
+        importe:      '([5].00 + [35].00)/100'
+
+    v41:
+        codigobarra:  c4
+        orden:        1
+        vencimiento:  'aFechaAADDD( [13] )'
+        importe:      '[5].00/100'
+
+    v42:
+        codigobarra:  c4
+        orden:        2
+        vencimiento:  'sumarAFecha( aFechaAADDD( [13] ), [41])'
+        importe:      '([5].00 + [35].00)/100'

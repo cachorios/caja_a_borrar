@@ -20,13 +20,20 @@ security:
 
 
     access_control:
-        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/registro, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/usuario/*, role: ROLE_ADMIN }
+        - { path: ^/login,          roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
+
+#        - { path: ^/registro/*,     roles: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: ^/apertura,       roles: ROLE_USUARIO }
+#        - { path: ^/caja,           roles: ROLE_USUARIO }
+
+        - { path: ^/larparametro/*, roles: ROLE_ADMIN }
+        - { path: ^/codigobarra/*,  roles: ROLE_ADMIN }
+        - { path: ^/usuario/*,      roles: ROLE_ADMIN }
+        - { path: ^/*,              roles: ROLE_USUARIO }
 #        - { path: ^/larutils/*, role: ROLE_USUARIO }
-#
-#
-        - { path: ^/*, roles: [ROLE_USUARIO] }
+
+
 
 
     providers:
@@ -52,6 +59,5 @@ security:
         #Stock\StockBundle\Entity\Cliente:   { algorithm: sha512, iterations: 10 }
 
     role_hierarchy:
-        ROLE_ADMIN:       [ROLE_USUARIO, ROLE_ADMIN, ROLE_CLIENTE]
-        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
-        ROLE_PROV_ADMIN:  [ROLE_CLIENTE, ROLE_USUARIO]
+        ROLE_ADMIN:       [ROLE_USUARIO, ROLE_ADMIN]
+        ROLE_USUARIO:     [ROLE_USUARIO]

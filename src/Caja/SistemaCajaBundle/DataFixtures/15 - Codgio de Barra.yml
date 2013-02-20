@@ -7,8 +7,15 @@ fixtures:
         valor: 93392
         longitud: 44
     c2:
-        nombre: MP Sistema Viejo
+        nombre: MP Sistema Comercio
         empresa: MP
-        identificador: '[1,4][18,1]'
-        valor: 93391
+        identificador: '[1,4][18,1][19,1]'
+        valor: 933913
+        longitud: 44
+
+    c4:
+        nombre: MP Convenios ant.
+        empresa: MP
+        identificador: '[1,4][18,1][19,1]'
+        valor: 933916
         longitud: 44

@@ -70,7 +70,7 @@ class RegistroController extends Controller
 
 		if($imp>0){
 			$rJson = json_encode(array(	'ok' => 1,
-										'importe' => number_format($imp,2),
+										'importe' => number_format($imp,2,'.',''),
 										'comprobante' => $bm->getComprobante(),
 										'vencimiento' =>$bm->getVto(),
 										'detalle' => $this->renderView("SistemaCajaBundle:Registro:_detalle.html.twig" ,array('elementos' => $bm->getDetalle()))

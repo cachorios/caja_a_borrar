@@ -1,0 +1,52 @@
+model: Lar\LarParametroBundle\Entity\LarParametro
+fixtures:
+    p25:
+        tabla: 0
+        codigo: 10
+        descripcion: 'Tipo Sección'
+        descripcion_corta: 'TS'
+        agregable: 1
+        modificable: 1
+        sistema: 0
+        borrable: 1
+        activo: 1
+    p26:
+        tabla: 10
+        codigo: 1
+        descripcion: 'Tasa General de Inmueble'
+        descripcion_corta: 'TGI'
+    p27:
+        tabla: 10
+        codigo: 2
+        descripcion: 'Patente'
+        descripcion_corta: 'IPA'
+    p28:
+        tabla: 10
+        codigo: 3
+        descripcion: 'Convenio'
+        descripcion_corta: 'CV'
+    p29:
+        tabla: 10
+        codigo: 4
+        descripcion: 'Comercio'
+        descripcion_corta: 'DHS'
+    p30:
+        tabla: 10
+        codigo: 6
+        descripcion: 'Otras tasas'
+        descripcion_corta: 'OT'
+    p31:
+        tabla: 10
+        codigo: 7
+        descripcion: 'Micro credito'
+        descripcion_corta: 'MC'
+    p32:
+        tabla: 10
+        codigo: 10
+        descripcion: 'Publicidad y Propaganda'
+        descripcion_corta: 'PP'
+    p28:
+        tabla: 10
+        codigo: 11
+        descripcion: 'Cementerio'
+        descripcion_corta: 'Cem.'

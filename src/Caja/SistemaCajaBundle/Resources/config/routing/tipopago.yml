@@ -1,0 +1,30 @@
+tipopago:
+    pattern:  /
+    defaults: { _controller: "SistemaCajaBundle:TipoPago:index" }
+
+tipopago_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "SistemaCajaBundle:TipoPago:show" }
+
+tipopago_new:
+    pattern:  /new
+    defaults: { _controller: "SistemaCajaBundle:TipoPago:new" }
+
+tipopago_create:
+    pattern:  /create
+    defaults: { _controller: "SistemaCajaBundle:TipoPago:create" }
+    requirements: { _method: post }
+
+tipopago_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "SistemaCajaBundle:TipoPago:edit" }
+
+tipopago_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "SistemaCajaBundle:TipoPago:update" }
+    requirements: { _method: post }
+
+tipopago_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "SistemaCajaBundle:TipoPago:delete" }
+    requirements: { _method: post }

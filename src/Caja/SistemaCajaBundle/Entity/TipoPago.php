@@ -38,14 +38,14 @@ class TipoPago
     /**
      * @var boolean
      *
-     * @ORM\Column(name="divisible", type="boolean")
+     * @ORM\Column(name="divisible", type="boolean", nullable = true)
      */
     private $divisible;
 
-    /**
-     * @ORM\OneToMany(targetEntity="LotePago", mappedBy="tipo_pago" )
-     */
-    private $pagos;
+//    /**
+//     * @ORM\OneToMany(targetEntity="LotePago", mappedBy="tipo_pago" )
+//     */
+//    private $pagos;
     /**
      * Get id
      *
@@ -124,44 +124,46 @@ class TipoPago
     {
         return $this->divisible;
     }
+
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->pagos = new \Doctrine\Common\Collections\ArrayCollection();
+        //$this->pagos = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->divisible = false;
     }
-    
-    /**
-     * Add pagos
-     *
-     * @param \Caja\SistemaCajaBundle\Entity\LotePago $pagos
-     * @return TipoPago
-     */
-    public function addPago(\Caja\SistemaCajaBundle\Entity\LotePago $pagos)
-    {
-        $this->pagos[] = $pagos;
-    
-        return $this;
-    }
-
-    /**
-     * Remove pagos
-     *
-     * @param \Caja\SistemaCajaBundle\Entity\LotePago $pagos
-     */
-    public function removePago(\Caja\SistemaCajaBundle\Entity\LotePago $pagos)
-    {
-        $this->pagos->removeElement($pagos);
-    }
-
-    /**
-     * Get pagos
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getPagos()
-    {
-        return $this->pagos;
-    }
+//
+//    /**
+//     * Add pagos
+//     *
+//     * @param \Caja\SistemaCajaBundle\Entity\LotePago $pagos
+//     * @return TipoPago
+//     */
+//    public function addPago(\Caja\SistemaCajaBundle\Entity\LotePago $pagos)
+//    {
+//        $this->pagos[] = $pagos;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Remove pagos
+//     *
+//     * @param \Caja\SistemaCajaBundle\Entity\LotePago $pagos
+//     */
+//    public function removePago(\Caja\SistemaCajaBundle\Entity\LotePago $pagos)
+//    {
+//        $this->pagos->removeElement($pagos);
+//    }
+//
+//    /**
+//     * Get pagos
+//     *
+//     * @return \Doctrine\Common\Collections\Collection
+//     */
+//    public function getPagos()
+//    {
+//        return $this->pagos;
+//    }
 }
