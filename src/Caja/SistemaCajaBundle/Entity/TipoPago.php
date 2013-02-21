@@ -133,6 +133,11 @@ class TipoPago
         //$this->pagos = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->divisible = false;
     }
+
+	public function __toString()
+	{
+		return $this->getDescripcion();
+	}
 //
 //    /**
 //     * Add pagos

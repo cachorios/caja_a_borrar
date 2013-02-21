@@ -12,7 +12,7 @@ class TipoPagoType extends AbstractType
     {
         $builder
             ->add('descripcion')
-            ->add('observacion',"textarea",array('required' => false))
+            ->add('observacion',"textarea",array('required' => false, 'max_length'=>254))
             ->add('divisible')
         ;
     }

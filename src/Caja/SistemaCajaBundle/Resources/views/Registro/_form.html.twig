@@ -8,7 +8,7 @@
 <div class="clear"></div>
 </div>
 
-{#{% form_theme form 'SistemaCajaBundle:Form:fields.html.twig' %}#}
+{% form_theme form 'SistemaCajaBundle:Form:fields.html.twig' %}
 
 {% include 'SistemaCajaBundle:Registro:_pagos.html.twig' %}
 
@@ -41,11 +41,12 @@
      * ya que hay eventos al cual no se le puede pasar, y es nevesario acceder a este.
      */
     var dataBarra;
+    var totalComprobante;
 
     $(document).ready(function(e){
         var $txtcodigoBarra = $("#txtcodigobarra");
         $txtcodigoBarra.focus();
-
+        totalComprobante = 0;
 
         $txtcodigoBarra.change(function(e){
             var $msgBarra = $("#msgBarra");
@@ -202,6 +203,7 @@
         $('input.importe','div#caja_sistemacajabundle_registrotype_detalle').each(function(){
            total = total + parseFloat( this.value );
         });
+        totalComprobante = total;
         $("#lote_detalle_total").text(formato_numero(total,2));
     }
 
