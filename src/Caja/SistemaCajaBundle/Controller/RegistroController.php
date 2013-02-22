@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Caja\SistemaCajaBundle\Entity\Lote;
+use Caja\SistemaCajaBundle\Entity\LotePago;
 use Caja\SistemaCajaBundle\Form\RegistroType;
 
 class RegistroController extends Controller
@@ -19,11 +20,12 @@ class RegistroController extends Controller
     public function registroAction()
     {
         $lote = new Lote();
-
+		$lote->addPago( new LotePago());
         $form = $this->createForm(new RegistroType(), $lote);
 
         $caja = $this->container->get('caja.manager')->getCaja();
         $apertura = $this->container->get('caja.manager')->getApertura();
+
 
         return $this->render("SistemaCajaBundle:Registro:registro.html.twig",array(
             "lote" => $lote,

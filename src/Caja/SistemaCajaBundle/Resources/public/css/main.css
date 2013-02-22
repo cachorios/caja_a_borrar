@@ -23,7 +23,7 @@
 }
 
 .modal{
-    width: 720px;
+    width: 620px;
     background-color: #e9eff7;
 }
 
@@ -194,7 +194,7 @@
       }
 /*---- Fin Usuario form ----*/
 
-/*--------- regostro ----------*/
+/*--------- registro ----------*/
 div#caja_sistemacajabundle_registrotype_detalle tfoot tr{
     border-top: #2d3134 solid thin;
 }
@@ -280,10 +280,50 @@ div#caja_sistemacajabundle_registrotype_detalle tfoot h2{
     padding-left: 680px;
 }
 
+#mod_registro table input
+{
+    line-height: 14px;
+    height: 16px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    box-shadow: 0 0 0 0 #EEF0F2, 0 0 0 #EEF0F2 ;
+}
+
+#mod_registro table select
+{
+    line-height: 22px;
+    height: 23px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    box-shadow: 0 0 0 0 #EEF0F2, 0 0 0 #EEF0F2 ;
+}
+
+#mod_registro table td{
+    vertical-align: top;
+    height: 21px;
+
+}
+
+#PagoModal button.remove,
+#PagoModal button.add_item
+
+{
+    display: none;
+}
+
 /*------- Tipo de pagos  -----*/
 #mod_TipoPago p{
     margin: 8px 10px;
     font-size: 14px;
     color: #006dcc;
 
+}
+
+#PagoModal table{
+    border-bottom: #69807d solid thin;
+}
+
+#PagoModal hr{
+    margin: 0;
+    padding: 0;
 }

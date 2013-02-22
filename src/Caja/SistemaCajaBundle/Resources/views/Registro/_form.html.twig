@@ -1,11 +1,13 @@
 {% form_theme form 'SistemaCajaBundle:Form:lote_detalle.html.twig' %}
 
 
-<div class="pull-right" style="width: 98%; margin-right: 5px;">
-{{ form_errors(form.detalle) }}
-{{ form_widget(form.detalle) }}
+<div class=" control-group " id="caja_sistemacajabundle_registrotype_detalle_control_group">
+    <div class="pull-right" style="width: 98%; margin-right: 5px;">
+        {{ form_errors(form.detalle) }}
+        {{ form_widget(form.detalle) }}
 
-<div class="clear"></div>
+        <div class="clear"></div>
+    </div>
 </div>
 
 {% form_theme form 'SistemaCajaBundle:Form:fields.html.twig' %}
@@ -15,197 +17,118 @@
 {{ form_rest(form) }}
 
 <div class="clear"></div>
-<div class="form-actions" >
-    <a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal">&nbsp;&nbsp;Pagar&nbsp;&nbsp;</a>
+<div class="form-actions">
+    <a id="PagarComprobantes"
+            {#href="#PagoModal" #}
+       role="button" class="btn btn-primary" data-toggle="modal">&nbsp;&nbsp;Pagar&nbsp;&nbsp;</a>
     <button class="btn" type="reset">Cancelar</button>
 </div>
 
 
-
 <script type="text/javascript">
 
-    $('#load_indicador')
-            .ajaxStart(function() {
-                //$('body').append('"<div class="ajax_block"></div>');
-                $(this).show();
-            })
-            .ajaxStop(function() {
-                $(this).hide();
-                $.unblockUI();
-            });
+
+$('#load_indicador')
+        .ajaxStart(function () {
+            //$('body').append('"<div class="ajax_block"></div>');
+            $(this).show();
+        })
+        .ajaxStop(function () {
+            $(this).hide();
+            $.unblockUI();
+        });
+
+/**
+ * @var dataBarra
+ * variable para asignar el balor de data (coleccion de elementos)
+ * que tiene el boton agregar (hidden)
+ * ya que hay eventos al cual no se le puede pasar, y es nevesario acceder a este.
+ */
+var dataBarra;
+var totalComprobante;
+var totalPago;
+
+$(document).ready(function (e) {
+    var $txtcodigoBarra = $("#txtcodigobarra");
+    $txtcodigoBarra.focus();
+    totalComprobante = 0;
+
 
     /**
-     * @var dataBarra
-     * variable para asignar el balor de data (coleccion de elementos)
-     * que tiene el boton agregar (hidden)
-     * ya que hay eventos al cual no se le puede pasar, y es nevesario acceder a este.
+     * Evento para cambio de codigo de barra
      */
-    var dataBarra;
-    var totalComprobante;
+    $txtcodigoBarra.change(function (e) {
+        var $msgBarra = $("#msgBarra");
+        $barra = $(this);
+        dataBarra = "";
 
-    $(document).ready(function(e){
-        var $txtcodigoBarra = $("#txtcodigobarra");
-        $txtcodigoBarra.focus();
-        totalComprobante = 0;
+        $.blockUI({ message:null });
 
-        $txtcodigoBarra.change(function(e){
-            var $msgBarra = $("#msgBarra");
-            $barra = $(this);
-            dataBarra="";
+        cb = $barra.val().replace(/^\s*|\s*$/g, "");
 
-            $.blockUI({ message: null });
+        $msgBarra.text("");
+        $("#masDetalleTemp").html("");
 
-            cb = $barra.val().replace(/^\s*|\s*$/g,"");
+        if (cb.length <= 3) {
+            $barra.val('');
+            $msgBarra.text("Codigo invalido"); //.show();
+            setTimeout("$barra.focus()", 100);
+            $.unblockUI();
+        } else {
 
-            $msgBarra.text("");
-            $("#masDetalleTemp").html("");
+            //Verificar que no este ya agregado en la tabla de comprobantes
 
-            if(cb.length <= 3){
+            if (existeComprobante(cb)) {
                 $barra.val('');
-                $msgBarra.text("Codigo invalido"); //.show();
-                setTimeout("$barra.focus()",100);
+                $msgBarra.text("El codigo de barra ya esta ingresado."); //.show();
+                setTimeout("$barra.focus()", 100);
                 $.unblockUI();
-            }else{
+            } else {
 
-                //Verificar que no este ya agregado en la tabla de comprobantes
-
-               if(existeComprobante(cb)){
-                   $barra.val('');
-                   $msgBarra.text("El codigo de barra ya esta ingresado."); //.show();
-                   setTimeout("$barra.focus()",100);
-                   $.unblockUI();
-               }else{
-
-                    /***
-                     * Peticion ajax
-                     */
-                    $.ajax({
-                        url: "{{ path('registro_barra') }}",
-                        data: { cb: cb  },
-                        dataType: "json",
-                        success: actDesdeCB,
-                        error : function(jqXHR, status, error) {
-                            alert('Disculpe, existió un problema: '+error);
-                        }
-                    });
-               }
+                /***
+                 * Peticion ajax
+                 */
+                $.ajax({
+                    url:"{{ path('registro_barra') }}",
+                    data:{ cb:cb  },
+                    dataType:"json",
+                    success:actDesdeCB,
+                    error:function (jqXHR, status, error) {
+                        alert('Disculpe, existió un problema: ' + error);
+                    }
+                });
             }
-
-
-
-        });
-
-        /**
-         * Boton oculto Agregar detalle
-         * para agregar item en el comprobante
-         * disparado por un trigger en el evento
-         * change del codigo de barra.
-         */
-
-        $('body').on('click', '[data-coleccion-add-btn-det]', function (e) {
-            var $btn = $(e.target);
-            if (!$btn.hasClass('btn')) {
-                $btn = $btn.closest('.btn');
-            }
-            $btn.coleccion({
-                opcion: 'add',
-                addpostfunc: postAddDetalle
-            });
-            e.preventDefault();
-        });
-
-        /**
-         * Quitar - accion Click
-         * Cuando el usuario presiona en el boton quitar
-         * del detalle de comprobantes.
-         */
-        $('body').on('click', '[data-coleccion-remove-btn-det]', function ( e ) {
-            var $btn = $(e.target);
-            if (!$btn.hasClass('btn')){
-                $btn = $btn.closest('.btn');
-            }
-
-            $btn.coleccion({
-                opcion: 'remove',
-                rempostfunc:postBorrarDetalle
-            });
-            e.preventDefault();
-        });
+        }
 
 
     });
 
 
     /**
-     * Evento que ocurre despues de borrar un elemento en Collection
-     */
-    postBorrarDetalle = function(){
-        var $txtcodigoBarra = $("#txtcodigobarra");
-        $txtcodigoBarra.val('');
-        $txtcodigoBarra.show(50).focus();
-        totalizaComprobante();
-
-    };
-
-    /**
-     * Evento que se ejecuta al agregar un nuevo elemento al detalle
-     * lo utilizo para actualizar los registros con los datos recibido
-     * del server
-     * @param data
-     */
-    postAddDetalle = function(row, index){
-        $('#caja_sistemacajabundle_registrotype_detalle_'+index+'_codigo_barra').val(cb);
-        $('#caja_sistemacajabundle_registrotype_detalle_'+index+'_comprobante').val(dataBarra.comprobante);
-        $('#caja_sistemacajabundle_registrotype_detalle_'+index+'_fecha').val( dataBarra.vencimiento );
-        $('#caja_sistemacajabundle_registrotype_detalle_'+index+'_importe').val(dataBarra.importe);
-
-        totalizaComprobante();
-
-        $('a.info-barra',row).attr('data-content',dataBarra.detalle);
-        $("#masDetalleTemp").html(dataBarra.detalle);
-        $('a.info-barra',row).popover({trigger: 'hover',html:true})
-    };
-
-    /**
      * Si se proceso correctamente la peticion ajax
      * del codigo de barra
      * @param data
      */
-    actDesdeCB = function(data){
+    actDesdeCB = function (data) {
         $barra.val('');
         $barra.focus();
-        if(data.ok == 1){
+        if (data.ok == 1) {
             /**
              * guardo data en databarra para acceder desde otros eventos
              */
             dataBarra = data;
-            $btn = $('[data-coleccion-add-btn-det]','#caja_sistemacajabundle_registrotype_detalle');
+            $btn = $('[data-coleccion-add-btn-det]', '#caja_sistemacajabundle_registrotype_detalle');
 
             /**
              * Disparo el boton add para agregar el registro nuevo con los
              * datos del codigo de barra.
              */
             $btn.trigger("click");
-        }else{
+        } else {
             $("#msgBarra").text(data.msg);
         }
     };
 
-    /**
-     * totalizaComprobante
-     * Totaliza el detalle de comprobante, se
-     * ejecuta este meodo cuando agrega o
-     * cuando quita un elemento
-     */
-
-    totalizaComprobante = function(){
-        var total = 0;
-        $('input.importe','div#caja_sistemacajabundle_registrotype_detalle').each(function(){
-           total = total + parseFloat( this.value );
-        });
-        totalComprobante = total;
-        $("#lote_detalle_total").text(formato_numero(total,2));
-    }
 
     /**
      * existeComprobante
@@ -215,19 +138,211 @@
      * @param $cdbarra
      * @return {Boolean}
      */
-    existeComprobante = function($cdbarra){
+    existeComprobante = function ($cdbarra) {
         var existe = false;
-        $('input.cbarra','div#caja_sistemacajabundle_registrotype_detalle').each(function(){
-            if($cdbarra ==  this.value){
+        $('input.cbarra', 'div#caja_sistemacajabundle_registrotype_detalle').each(function () {
+            if ($cdbarra == this.value) {
                 existe = true;
             }
-        }) ;
+        });
 
         return existe;
 
     }
 
 
+    /**
+     * Boton oculto Agregar detalle
+     * para agregar item en el comprobante
+     * disparado por un trigger en el evento
+     * change del codigo de barra.
+     */
+
+    $('body').on('click', '[data-coleccion-add-btn-det]', function (e) {
+        var $btn = $(e.target);
+        if (!$btn.hasClass('btn')) {
+            $btn = $btn.closest('.btn');
+        }
+        $btn.coleccion({
+            opcion:'add',
+            addpostfunc:postAddDetalle
+        });
+        e.preventDefault();
+    });
+
+    /**
+     * Evento que se ejecuta al agregar un nuevo elemento al detalle
+     * lo utilizo para actualizar los registros con los datos recibido
+     * del server
+     * @param data
+     */
+    postAddDetalle = function (row, index) {
+        $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_codigo_barra').val(cb);
+        $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_comprobante').val(dataBarra.comprobante);
+        $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_fecha').val(dataBarra.vencimiento);
+        $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_importe').val(dataBarra.importe);
+
+        totalizaComprobante();
+
+        $('a.info-barra', row).attr('data-content', dataBarra.detalle);
+        $("#masDetalleTemp").html(dataBarra.detalle);
+        $('a.info-barra', row).popover({trigger:'hover', html:true})
+    };
+
+    /**
+     * Quitar - accion Click
+     * Cuando el usuario presiona en el boton quitar
+     * del detalle de comprobantes.
+     */
+    $('body').on('click', '[data-coleccion-remove-btn-det]', function (e) {
+        var $btn = $(e.target);
+        if (!$btn.hasClass('btn')) {
+            $btn = $btn.closest('.btn');
+        }
+
+        $btn.coleccion({
+            opcion:'remove',
+            rempostfunc:postBorrarDetalle
+        });
+        e.preventDefault();
+    });
+
+    /**
+     * Evento que ocurre despues de borrar un elemento en Collection
+     */
+    postBorrarDetalle = function () {
+        var $txtcodigoBarra = $("#txtcodigobarra");
+        $txtcodigoBarra.val('');
+        $txtcodigoBarra.show(50).focus();
+        totalizaComprobante();
+
+    };
+
+    //boton que abre la ventana modal de pago
+    $("#PagarComprobantes").click(function () {
+        var $pagmod,
+                btnAdd,
+                data;
+        totalComprobante = 744.32;
+        totalPago = 0;
+
+        $("#apago_importe").text(formato_numero(totalComprobante, 2));
+
+        /* quitar las lineas actuales para que iniciar */
+        $pagmod = $("#PagoModal");
+        $("table tbody", $pagmod).remove();
+        $("table", $pagmod).append("<tbody></tbody>");
+
+        btnAdd = $("[data-coleccion-add-btn]", $pagmod);
+
+        btnAdd.trigger('click');
+
+        $pagmod.modal();
+
+    });
+
+    $('#PagoModal').on('click', '[data-coleccion-add-btn]', function (e) {
+        var $btn = $(e.target);
+        if (!$btn.hasClass('btn')) {
+            $btn = $btn.closest('.btn');
+        }
+        $btn.coleccion({
+            opcion:'add',
+            addpostfunc:postAddPago
+        });
+        e.preventDefault();
+        return false;
+    });
+
+    postAddPago = function (row, i) {
+
+        $("#caja_sistemacajabundle_registrotype_pagos_" + i + "_tipo_pago").val(1);
+        $("#caja_sistemacajabundle_registrotype_pagos_" + i + "_importe").val(formato_numero(totalComprobante - totalPago, 2, "."));
+        totalizaPagos();
+    };
+
+    /**
+     * Quitar - accion Click
+     * Cuando el usuario presiona en el boton quitar
+     * del pago
+     */
+    $('#PagoModal').on('click', '[data-coleccion-remove-btn]', function (e) {
+        var $btn = $(e.target);
+        if (!$btn.hasClass('btn')) {
+            $btn = $btn.closest('.btn');
+        }
+
+        $btn.coleccion({
+            opcion:'remove',
+            rempostfunc:postBorrarPago
+        });
+        e.preventDefault();
+        return false;
+    });
+
+    postBorrarPago = function () {
+        totalizaPagos();
+    };
+
+    /**
+     * totalizaComprobante
+     * Totaliza el detalle de comprobante, se
+     * ejecuta este meodo cuando agrega o
+     * cuando quita un elemento
+     */
+
+    totalizaComprobante = function () {
+        var total = 0;
+        $('input.importe', 'div#caja_sistemacajabundle_registrotype_detalle').each(function () {
+            total = total + parseFloat(this.value);
+        });
+        totalComprobante = total;
+        $("#lote_detalle_total").text(formato_numero(total, 2));
+    };
+
+
+    /**
+     * Evento que se dispara cuando cambio el monto a pagar
+     */
+    $("#PagoModal").on("change", 'input', function () {
+        var importe = Math.round(parseFloat($(this).val()) * 100) / 100;
+
+        $(this).val(formato_numero($(this).val(), 2, "."));
+        totalizaPagos();
+    });
+
+
+    totalizaPagos = function () {
+        var total = 0, n = 0;
+
+        $('#PagoModal input').each(function () {
+
+            if (n == 1) {
+                //$("button.remove", $(this).closest('tr')).hide();
+                $("button.remove", $(this).closest('tr')).trigger("click");
+            } else {
+                total = Math.round((total + parseFloat(this.value)) * 100) / 100;
+                if (total >= totalComprobante) {
+                    $(this).val(formato_numero(totalComprobante - total + parseFloat(this.value)  , 2,"."));
+                    total = totalComprobante
+                    n = 1;
+                }
+            }
+        });
+
+        totalPago = total;
+
+        $("#totalpago").text(formato_numero(totalPago, 2));
+        $("#totalSaldo").text(formato_numero(totalComprobante - totalPago, 2));
+
+        if( Math.round((totalComprobante - totalPago)*100 )/100 >0 ){
+            $("[data-coleccion-add-btn]", "#PagoModal").trigger('click');
+        }
+
+    };
+
+
+}); //fin document ready
 
 
 </script>
