@@ -63,6 +63,7 @@ class LotePago
     public function __construct()
     {
         $this->anulado = 0;
+		$this->fecha = new \DateTime();
     }
 
     /**

@@ -34,12 +34,12 @@ class Lote
     private $apertura;
 
     /**
-     * @ORM\OneToMany(targetEntity="LoteDetalle", mappedBy="lote")
+     * @ORM\OneToMany(targetEntity="LoteDetalle", mappedBy="lote", cascade={"persist"} )
      */
     private $detalle;
 
     /**
-     * @ORM\OneToMany(targetEntity="LotePago", mappedBy="lote")
+     * @ORM\OneToMany(targetEntity="LotePago", mappedBy="lote", cascade={"persist"})
      */
     private $pagos;
 
@@ -77,7 +77,7 @@ class Lote
     }
 
     /**
-     * Set apertura
+     * Set Apertura
      *
      * @param \Caja\SistemaCajaBundle\Entity\Apertura $apertura
      * @return Lote

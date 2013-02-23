@@ -211,6 +211,7 @@ div#caja_sistemacajabundle_registrotype_detalle tfoot h2{
     color: #0d3349;
     font-size: 24px;
     font-weight: bold;
+    padding-top: 10px;
     padding-right: 10px;
     text-align: right;
     line-height: 20px;
@@ -311,13 +312,6 @@ div#caja_sistemacajabundle_registrotype_detalle tfoot h2{
     display: none;
 }
 
-/*------- Tipo de pagos  -----*/
-#mod_TipoPago p{
-    margin: 8px 10px;
-    font-size: 14px;
-    color: #006dcc;
-
-}
 
 #PagoModal table{
     border-bottom: #69807d solid thin;
@@ -327,3 +321,18 @@ div#caja_sistemacajabundle_registrotype_detalle tfoot h2{
     margin: 0;
     padding: 0;
 }
+
+#PagoModal .coleccion_accion{
+    display: none;
+    width: 2px;
+}
+
+
+/*------- Tipo de pagos  -----*/
+#mod_TipoPago p{
+    margin: 8px 10px;
+    font-size: 14px;
+    color: #006dcc;
+
+}
+

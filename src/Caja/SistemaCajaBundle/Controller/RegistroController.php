@@ -17,44 +17,131 @@ use Caja\SistemaCajaBundle\Form\RegistroType;
 
 class RegistroController extends Controller
 {
-    public function registroAction()
-    {
-        $lote = new Lote();
-		$lote->addPago( new LotePago());
-        $form = $this->createForm(new RegistroType(), $lote);
+	public function registroAction()
+	{
+		$lote = new Lote();
+		$lote->addPago(new LotePago());
+		$form = $this->createForm(new RegistroType(), $lote);
 
-        $caja = $this->container->get('caja.manager')->getCaja();
-        $apertura = $this->container->get('caja.manager')->getApertura();
-
-
-        return $this->render("SistemaCajaBundle:Registro:registro.html.twig",array(
-            "lote" => $lote,
-            "form" => $form->createView(),
-            "caja" => $caja,
-            "apertura" => $apertura
-            )
-        );
-
-    }
-
-    public function createAction()
-    {
-
-    }
+		$caja = $this->container->get('caja.manager')->getCaja();
+		$apertura = $this->container->get('caja.manager')->getApertura();
 
 
-    public function barraDetalleAction()
-    {
+		return $this->render("SistemaCajaBundle:Registro:registro.html.twig", array(
+				"lote" => $lote,
+				"form" => $form->createView(),
+				"caja" => $caja,
+				"apertura" => $apertura
+			)
+		);
+
+	}
+
+	public function createAction()
+	{
+
+		$lote = new Lote();
+		$request = $this->getRequest();
+		$form = $this->createForm(new RegistroType(), $lote);
+
+		$form->bind($request);
+
+
+		$caja = $this->container->get("caja.manager")->getCaja();
+		$apertura = $this->container->get('caja.manager')->getApertura();
+
+		if(!$apertura) {
+			$this->get('session')->getFlashBag()->add('error', 'flash.create.error');
+			return $this->redirect($this->generateUrl('apertura'));
+		}
+
+		$lote->setApertura($apertura);
+
+		if($form->isValid()) {
+
+
+			if(strlen($msg = $this->validarDetallesPagos($lote)) == 0) {
+				$em = $this->getDoctrine()->getManager();
+				$em->persist($lote);
+				$em->flush();
+
+				//Aqui debe retornar al timbrado de cada comprobante
+				$this->get('session')->getFlashBag()->add('success', 'flash.create.success');
+				return $this->redirect($this->generateUrl('registro'));
+			} else {
+				$this->get('session')->getFlashBag()->add('error', $msg );
+			}
+		} else {
+
+			$this->get('session')->getFlashBag()->add('error', 'flash.create.error');
+		}
+
+
+		return $this->render("SistemaCajaBundle:Registro:registro.html.twig", array(
+				"lote" => $lote,
+				"form" => $form->createView(),
+				"caja" => $caja,
+				"apertura" => $apertura
+			)
+		);
+
+	}
+
+	private function validarDetallesPagos(Lote $lote)
+	{
+		$msgError = '';
+		$tDetalle = 0;
+		$tPago = 0;
+		foreach($lote->getDetalle() as $det) {
+			$det->setFecha(new \DateTime());
+			$det->setLote($lote);
+
+			if($det->getCodigoBarra() == null || strlen(trim($det->getCodigoBarra())) == 0) {
+				$msgError += "Falta Codigo de Barra\n";
+			}
+
+			if($det->getComprobante() == null || strlen(trim($det->getComprobante())) == 0) {
+				$msgError += "Comprobante\n";
+			}
+
+			if($det->getImporte() == null || $det->getImporte() <= 0) {
+				$msgError += "Importe invalido\n";
+			} else {
+				$tDetalle += $det->getImporte();
+			}
+
+		}
+
+		foreach($lote->getPagos() as $pago) {
+			$pago->setFecha(new \DateTime());
+			//$pago->setAnulado(0);
+			$pago->setLote($lote);
+
+			if($pago->getImporte() == null || $pago->getImporte() <= 0) {
+				$msgError += "Pago, Importe invalido\n";
+			} else {
+				$tPago += $pago->getImporte();
+			}
+		}
+
+		if(abs($tDetalle - $tPago) > 0.001) {
+			$msgError += "Error de totales";
+		}
+
+		return $msgError;
+	}
+
+
+	public function barraDetalleAction()
+	{
 		$response = new Response();
 		$log = $this->get('logger');
 
 		$cb = $this->getRequest()->get('cb');
 
-		$log->info("---> Codigo de barra: $cb" );
+		$log->info("---> Codigo de barra: $cb");
+
 		//Codigo de barra recibido
-
-
-		//$cb = substr($cb,2);
 		$cb = trim($cb);
 
 
@@ -70,23 +157,23 @@ class RegistroController extends Controller
 
 		$imp = $bm->getImporte();
 
-		if($imp>0){
-			$rJson = json_encode(array(	'ok' => 1,
-										'importe' => number_format($imp,2,'.',''),
-										'comprobante' => $bm->getComprobante(),
-										'vencimiento' =>$bm->getVto(),
-										'detalle' => $this->renderView("SistemaCajaBundle:Registro:_detalle.html.twig" ,array('elementos' => $bm->getDetalle()))
-					));
-		}else{
+		if($imp > 0) {
+			$rJson = json_encode(array('ok' => 1,
+				'importe' => number_format($imp, 2, '.', ''),
+				'comprobante' => $bm->getComprobante(),
+				'vencimiento' => $bm->getVto(),
+				'detalle' => $this->renderView("SistemaCajaBundle:Registro:_detalle.html.twig", array('elementos' => $bm->getDetalle()))
+			));
+		} else {
 
 			$rJson = json_encode(array(
 				'ok' => 0,
-				'msg'=> count($bm->getDetalle())==0 ? 'Codigo de Barra desconocido' : 'Comprobante vencido'
+				'msg' => count($bm->getDetalle()) == 0 ? 'Codigo de Barra desconocido' : 'Comprobante vencido'
 			));
 		}
 
 		return $response->setContent($rJson);
-    }
+	}
 
 
 }

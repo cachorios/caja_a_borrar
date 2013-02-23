@@ -55,6 +55,7 @@ class CajaManager
 	}
 
 	/**
+	 * getApertura
 	 * @return \Caja\SistemaCajaBundle\Entity\Apertura
 	 */
 	public function getApertura()
@@ -64,6 +65,7 @@ class CajaManager
 
 		return $apertura;
 	}
+
 
 	public function esCajero()
 	{

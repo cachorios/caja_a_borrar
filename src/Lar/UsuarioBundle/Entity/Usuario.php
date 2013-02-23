@@ -158,7 +158,7 @@ class Usuario implements AdvancedUserInterface
 		$this->isActive = true;
 		$this->salt = sha1(uniqid(mt_rand(), true));
 
-		$this->contenedor = new ParameterBag();
+		//$this->contenedor = new ParameterBag();
 	}
 
 	/**
