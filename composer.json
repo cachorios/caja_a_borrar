@@ -6,33 +6,34 @@
     },
     "require": {
         "php": ">=5.3.3",
-        "symfony/symfony": "2.1.*",
-        "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "doctrine/doctrine-bundle": "1.0.*",
-        "twig/extensions": "1.0.*@dev",
+        "symfony/symfony": "2.2.*",
+        "doctrine/orm": "~2.2,>=2.2.3",
+        "doctrine/doctrine-bundle": "1.2.*",
+        "twig/extensions": "1.0.*",
         "symfony/assetic-bundle": "2.1.*",
-        "symfony/swiftmailer-bundle": "2.1.*",
-        "symfony/monolog-bundle": "2.1.*",
-        "sensio/distribution-bundle": "2.1.*",
-        "sensio/framework-extra-bundle": "2.1.*",
-        "sensio/generator-bundle": "2.1.*",
-        "jms/security-extra-bundle": "1.2.*",
-        "jms/di-extra-bundle": "1.1.*",
+        "symfony/swiftmailer-bundle": "2.2.*",
+        "symfony/monolog-bundle": "2.2.*",
+        "sensio/distribution-bundle": "2.2.*",
+        "sensio/framework-extra-bundle": "2.2.*",
+        "sensio/generator-bundle": "2.2.*",
+        "jms/security-extra-bundle": "1.4.*",
+        "jms/di-extra-bundle": "1.3.*",
 
-        "kriswallsmith/assetic": "1.1.*@dev",
-        "mopa/bootstrap-bundle": "2.1.x-dev",
+        "mopa/bootstrap-bundle": "dev-master",
 
         "khepin/yaml-fixtures-bundle": "0.7.*",
 
         "raulfraile/ladybug-bundle": "dev-master",
 
         "avalanche123/imagine-bundle": "v2.1",
-        "jordillonch/crud-generator": "2.1.x-dev",
-        "whiteoctober/breadcrumbs-bundle": "2.1.x-dev",
 
-        "lar/utiles-bundle": "2.1.x-dev",
-        "lar/lar-parametro-bundle": "2.1.x-dev"
+        "pagerfanta/pagerfanta": "dev-master",
+        "lexik/form-filter-bundle": "dev-master",
+        "jordillonch/crud-generator": "dev-master",
+        "whiteoctober/breadcrumbs-bundle": "dev-master",
 
+        "lar/utiles-bundle": "dev-master",
+        "lar/lar-parametro-bundle": "dev-master"
 
     },
     "repositories": [
@@ -60,9 +61,15 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
         ]
     },
-    "minimum-stability": "dev",
+    "config": {
+        "bin-dir": "bin"
+    },
+    "minimum-stability": "alpha",
     "extra": {
         "symfony-app-dir": "app",
-        "symfony-web-dir": "web"
+        "symfony-web-dir": "web",
+        "branch-alias": {
+            "dev-master": "2.2-dev"
+        }
     }
 }
