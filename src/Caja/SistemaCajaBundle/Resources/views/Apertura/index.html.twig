@@ -2,7 +2,7 @@
 {% block id 'mod_apertura' %}
 
 {% block title %}
-    {{ parent() }} - Aperturas  }}
+    {{ parent() }} - Aperturas
 {% endblock %}
 
 {% block page %}
@@ -83,7 +83,12 @@
                             <td><a href="{{ path('apertura_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                             <td>{% if entity.fecha %}{{ entity.fecha|date('d-m-Y H:i:s') }}{% endif %}</td>
                             <td>{{ entity.importeinicial }}</td>
-                            <td>{% if entity.fechacierre %}{{ entity.fechacierre|date('d-m-Y H:i:s') }}{% endif %}</td>
+                            <td>{%
+                                if entity.fechacierre %}
+                                    {{ entity.fechacierre|date('d-m-Y H:i:s') }}
+                                {% else %}
+                                    <span class="badge badge-info">&nbsp;&nbsp;&nbsp;Activo&nbsp;&nbsp;&nbsp;</span>
+                                {% endif %}</td>
                             <td>
                                 <a class="btn btn-mini" href="{{ path('apertura_show', { 'id': entity.id }) }}">
                                     {{ 'views.actions.show'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}

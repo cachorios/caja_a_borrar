@@ -29,13 +29,13 @@ class CajaManager
 
 			$usuario = $this->contenedor->get("security.context")->getToken()->getUser();
 
-
 			$idUsuario = $usuario->getId();
 
 
 			try {
 				if($this->caja == null) {
-					$caja = $this->contenedor->get("doctrine.orm.entity_manager")->getRepository("SistemaCajaBundle:Caja")->find(1);
+					$caja = $this->contenedor->get("doctrine.orm.entity_manager")->getRepository("SistemaCajaBundle:Caja")->getCajaUsuario($idUsuario);
+						//find(1);
 						//getCajaUsuario($idUsuario);
 					$this->caja = $caja;
 				} else {
@@ -48,8 +48,6 @@ class CajaManager
 			}
 
 
-			//find(2);
-			//findOneBy(array("cajero" => 2));
 			return $caja;
 		}
 	}

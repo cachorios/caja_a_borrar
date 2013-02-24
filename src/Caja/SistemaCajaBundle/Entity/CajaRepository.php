@@ -31,9 +31,14 @@ class CajaRepository extends EntityRepository
 			->setParameter("cajero", $usuario_id)
 		;
 
-		$res = $q->getSingleResult();
 
-		return $res;
+		$res = $q->getResult();
+
+		if(count($res) == 0){
+			return null;
+		}
+
+		return $res[0];
 	}
 
 
