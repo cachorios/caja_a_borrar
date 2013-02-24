@@ -1,0 +1,82 @@
+{% extends '::layout.html.twig' %}
+{% block id  "mod_perfil" %}
+
+{% block title %}
+    {{ parent() }} - Perfil de {{ entity }}
+{% endblock %}
+
+
+
+{% block page %}
+    <section id="form">
+        <header>
+            <h1>Perfil de  <span style="color: #0064cd"> {{ entity }}</span></h1>
+        </header>
+        {{ wo_render_breadcrumbs() }}
+        {% for type, flashMessages in app.session.flashbag.all() %}
+            {% for flashMessage in flashMessages %}
+                <div class="alert alert-{{ type }}">
+                    {{ flashMessage|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        <div class="row-fluid">
+            <div class="span12">
+                <form class="form-horizontal " action="{{ path('perfil_update') }}"
+                      method="post" {{ form_enctype(edit_form) }}>
+
+                    <ul class="errorMessages"></ul>
+                    {% include 'UsuarioBundle:Perfil:_form.twig.html' %}
+                    {#{{ form_widget(edit_form) }}#}
+                    <div class="form-actions">
+                        <button id="enviar" class="btn btn-primary"
+                                type="submit">{{ 'views.edit.editbutton'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
+                        <button class="btn" type="reset">Cancelar</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </section>
+
+    <script>
+        $(function () {
+            $("#lar_usuariobundle_usuariotype_password_first").val("");
+            var createAllErrors = function () {
+                var form = $(this);
+                var errorList = $('ul.errorMessages', form);
+
+                var showAllErrorMessages = function () {
+                    errorList.empty();
+
+                    //Find all invalid fields within the form.
+                    form.find(':invalid').each(function (index, node) {
+
+                        //Find the field's corresponding label
+                        var label = $('label[for=' + node.id + ']');
+
+                        //Opera incorrectly does not fill the validationMessage property.
+                        var message = node.validationMessage || 'Invalid value.';
+                        errorList
+                                .show()
+                                .append('<li><span>' + label.html() + '</span> ' + message + '</li>');
+                    });
+                };
+
+                $('input[type=submit]', form).on('click', showAllErrorMessages);
+                $('input[type=text]', form).on('keypress', function (event) {
+                    //keyCode 13 is Enter
+                    if (event.keyCode == 13) {
+                        showAllErrorMessages();
+                    }
+                });
+            };
+
+            $('form').each(createAllErrors);
+        });
+    </script>
+
+{% endblock %}
+

@@ -9,3 +9,7 @@ grupo:
 seguridad:
     resource: "@UsuarioBundle/Resources/config/routing/seguridad.yml"
     prefix:   /
+
+perfil:
+    resource: "@UsuarioBundle/Resources/config/routing/perfil.yml"
+    prefix:   /perfil

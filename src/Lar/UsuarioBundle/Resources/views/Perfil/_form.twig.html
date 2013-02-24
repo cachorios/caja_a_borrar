@@ -1,0 +1,74 @@
+
+{{ form_errors(edit_form) }}
+<ul class="nav nav-tabs" id="myForm">
+    <li class="active"> <a href="#tab1" data-toggle="tab">Usuario</a>               </li>
+    <li class="">       <a href="#tab2" data-toggle="tab">Localizaci&oacute;n</a>   </li>
+    <li class="">       <a href="#tab3" data-toggle="tab">Cuenta</a>                </li>
+
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane active" id="tab1">
+        <fieldset>
+            <!--<legend>Datos Personales</legend>-->
+            <br>
+            <div class="controls-row">
+
+
+            <div class="span7">
+                {{ form_row(edit_form.nombre) }}
+                {{ form_row(edit_form.apellido) }}
+                {{ form_row(edit_form.dni) }}
+                {{ form_row(edit_form.fecha_nacimiento) }}
+            </div>
+            <div class="span4">
+                <div class="span9 offset3">
+                    <!--| apply_filter('miniatura')-->
+                    <div id="foto">
+                        <img  alt="{{ entity }}" src="{{ asset(usuario_imagenes ~entity.foto ) | apply_filter('foto_usuario')    }}" class="usuario_foto">
+                    </div>
+
+                    <div id="fotoUp"></div>
+                    <!--<div class="span3">-->
+                        {{ form_row(edit_form.foto) }}
+                    <!--</div>-->
+
+                </div>
+            </div>
+            </div>
+            <div id="ver"></div>
+
+
+        </fieldset>
+
+    </div>
+    <div class="tab-pane" id="tab2">
+        <fieldset>
+            <br>
+            <!--<legend>Datos de Localizaci&oacute;n</legend>-->
+            {{ form_row(edit_form.email) }}
+            {{ form_row(edit_form.direccion) }}
+            {{ form_row(edit_form.permite_email) }}
+
+        </fieldset>
+    </div>
+    <div class="tab-pane" id="tab3">
+        <fieldset>
+            <br>
+            <!--<legend>Datos de cuenta</legend>-->
+
+            {{ form_row(edit_form.password) }}
+
+
+
+        </fieldset>
+
+    </div>
+<hr>
+    <fieldset>
+        <!--<legend>Otros...</legend>-->
+        {{ form_widget(edit_form) }}
+        <br>
+    </fieldset>
+</div>
+

@@ -1,0 +1,8 @@
+perfil:
+    pattern:  /
+    defaults: { _controller: "UsuarioBundle:Perfil:edit" }
+
+perfil_update:
+    pattern:  /update
+    defaults: { _controller: "UsuarioBundle:Perfil:update" }
+    requirements: { _method: post }

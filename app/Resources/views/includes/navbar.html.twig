@@ -19,7 +19,7 @@
                     <img class="avatar" src="{{ asset( usuario_imagenes ~ usuario.foto) | apply_filter('foto_login') }}">
                     <span class="name">{{ usuario }}</span><br/>
                     <span class="links">
-                        <a href="#">Perfil</a>
+                        <a href="{{ path("perfil") }}">Perfil</a>
                         <a href="{{ path("seg_logout") }}">Salir</a>
                      </span>
                     {% endif %}
