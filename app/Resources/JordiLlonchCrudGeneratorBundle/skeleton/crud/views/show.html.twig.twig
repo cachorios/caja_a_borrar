@@ -1,0 +1,46 @@
+{{ "{% extends '::layout.html.twig' %}" }}
+{{ "{% block id  'mod_"~ entity ~ "' %}" }}
+{{ "{% block title %}" }}
+{{ "{{ parent() }} - " ~ entity ~ " {{ 'views.show.show'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}" }}
+{{ "{% endblock %}" }}
+
+{{ "{% block page %}" }}
+
+<section id="view_{{ entity }}">
+    <header>
+        <h1>{{ entity }}</h1>
+    </header>
+    {{ "{{ wo_render_breadcrumbs() }}" }}
+    {{ "{% for type, flashMessages in app.session.flashbag.all() %}" }}
+    {{ "    {% for flashMessage in flashMessages %} " }}
+    {{ "        <div class='alert alert-{{ type }}'> " }}
+    {{ "         {{ flashMessage|trans({}, 'JordiLlonchCrudGeneratorBundle') }}" }}
+    {{ "        </div> " }}
+    {{ "    {% endfor %} " }}
+    {{ "{% endfor %} " }}
+    <div class="row-fluid">
+        <div class="span12">
+            <form class="form-horizontal">
+                <fieldset>
+                    {%- for field, metadata in fields %}
+                        <div class="control-group">
+                            <label class="control-label">{{ field|capitalize }}</label>
+
+                            <div class="controls">
+                                {%- if metadata.type in ['date', 'datetime'] %}
+                                    <span class="input-xlarge uneditable-input">{{ '{{ entity.'~ field|replace({'_': ''}) ~'|date(\'Y-m-d H:i:s\') }}' }}</span>
+                                {%- else %}
+                                    <span class="input-xlarge uneditable-input">{{ '{{ entity.'~ field|replace({'_': ''}) ~' }}' }}</span>
+                                {%- endif %}
+                            </div>
+                        </div>
+                    {%- endfor %}
+                </fieldset>
+            </form>
+        </div>
+    </div>
+
+    {% set hide_edit, hide_delete = false, false %}
+    {% include 'views/others/record_actions.html.twig.twig' %}
+</section>
+{{ "{% endblock %}" }}

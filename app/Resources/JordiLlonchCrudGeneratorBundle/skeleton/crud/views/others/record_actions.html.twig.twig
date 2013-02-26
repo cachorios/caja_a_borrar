@@ -1,6 +1,5 @@
 <div class="row-fluid">
-    <div class="span12">
-    <div class="offset2 span2">
+    <div class="offset1 span2">
         <a class="btn" href="{{ "{{ path('"~ route_name_prefix ~"') }}" }}">
             {{ "{{ 'views.recordactions.backtothelist'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}" }}
         </a>
@@ -13,12 +12,11 @@
     </div>
 {% endif %}
 {% if ('delete' in actions) and (not hide_delete) %}
-    <div class="span2">
+    <div class="float-left">
         <form action="{{ "{{ path('"~ route_name_prefix ~"_delete', { 'id': entity.id }) }}" }}" method="post">
             {{ '{{ form_widget(delete_form) }}' }}
             <button class="btn btn-danger" type="submit" onclick="return confirm('{{ "{{ 'views.recordactions.confirm'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}" }}');">{{ "{{ 'views.recordactions.delete'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}" }}</button>
         </form>
     </div>
 {% endif %}
-    </div>
 </div>

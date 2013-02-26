@@ -1,15 +1,20 @@
 
     /**
-     * Edits an existing {{ entity }} entity.
+     * Displays a form to edit an existing {{ entity }} entity.
      *
 {% if 'annotation' == format %}
-     * @Route("/{id}/update", name="{{ route_name_prefix }}_update")
-     * @Method("post")
-     * @Template("{{ bundle }}:{{ entity }}:edit.html.twig")
+     * @Route("/{id}/edit", name="{{ route_name_prefix }}_edit")
+     * @Method("GET")
+     * @Template()
 {% endif %}
      */
-    public function updateAction($id)
+    public function editAction($id)
     {
+        $breadcrumbs = $this->get("white_october_breadcrumbs");
+        $breadcrumbs->addItem("Inicio", $this->get("router")->generate("home_page"));
+        $breadcrumbs->addItem("{{ entity }}", $this->get("router")->generate("{{ route_name_prefix }}"));
+        $breadcrumbs->addItem("Editar" );
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('{{ bundle }}:{{ entity }}')->find($id);
@@ -18,22 +23,8 @@
             throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
         }
 
-        $editForm   = $this->createForm(new {{ entity_class }}Type(), $entity);
+        $editForm = $this->createForm(new {{ entity_class }}Type(), $entity);
         $deleteForm = $this->createDeleteForm($id);
-
-        $request = $this->getRequest();
-
-        $editForm->bind($request);
-
-        if ($editForm->isValid()) {
-            $em->persist($entity);
-            $em->flush();
-            $this->get('session')->getFlashBag()->add('success', 'flash.update.success');
-
-            return $this->redirect($this->generateUrl('{{ route_name_prefix }}_edit', array('id' => $id)));
-        } else {
-            $this->get('session')->getFlashBag()->add('error', 'flash.update.error');
-        }
 
 {% if 'annotation' == format %}
         return array(

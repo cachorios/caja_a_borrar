@@ -1,29 +1,32 @@
 {
-    "hash": "d613cd945cd39d1ec62fc62e1ac13b8d",
+    "hash": "8f9ed84ee629ce093983d669d1c84aa4",
     "packages": [
         {
             "name": "avalanche123/imagine-bundle",
-            "version": "v2.1",
+            "version": "dev-master",
             "target-dir": "Avalanche/Bundle/ImagineBundle",
             "source": {
                 "type": "git",
-                "url": "git://github.com/avalanche123/AvalancheImagineBundle.git",
-                "reference": "v2.1"
+                "url": "https://github.com/avalanche123/AvalancheImagineBundle.git",
+                "reference": "4ab93873fd0adb8b920ceadb4a365f0694e82e9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/avalanche123/AvalancheImagineBundle/archive/v2.1.zip",
-                "reference": "v2.1",
+                "url": "https://api.github.com/repos/avalanche123/AvalancheImagineBundle/zipball/4ab93873fd0adb8b920ceadb4a365f0694e82e9b",
+                "reference": "4ab93873fd0adb8b920ceadb4a365f0694e82e9b",
                 "shasum": ""
             },
             "require": {
                 "symfony/framework-bundle": "2.*",
-                "imagine/imagine": "v0.3.0"
+                "imagine/imagine": "v0.4.1"
+            },
+            "require-dev": {
+                "makasim/temp-file": "dev-master"
             },
             "suggest": {
                 "symfony/twig-bundle": "2.*"
             },
-            "time": "2012-11-15 18:54:56",
+            "time": "2013-01-19 00:19:51",
             "type": "symfony-bundle",
             "autoload": {
                 "psr-0": {
@@ -415,16 +418,16 @@
         },
         {
             "name": "imagine/Imagine",
-            "version": "v0.3.0",
+            "version": "v0.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/avalanche123/Imagine",
-                "reference": "v0.3.0"
+                "reference": "v0.4.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/avalanche123/Imagine/zipball/v0.3.0",
-                "reference": "v0.3.0",
+                "url": "https://github.com/avalanche123/Imagine/archive/v0.4.1.zip",
+                "reference": "v0.4.1",
                 "shasum": ""
             },
             "require": {
@@ -433,7 +436,7 @@
             "require-dev": {
                 "sami/sami": "dev-master"
             },
-            "time": "2012-07-28 17:35:18",
+            "time": "2012-12-13 18:31:18",
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -2150,6 +2153,7 @@
     "stability-flags": {
         "mopa/bootstrap-bundle": 20,
         "raulfraile/ladybug-bundle": 20,
+        "avalanche123/imagine-bundle": 20,
         "pagerfanta/pagerfanta": 20,
         "lexik/form-filter-bundle": 20,
         "jordillonch/crud-generator": 20,

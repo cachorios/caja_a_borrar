@@ -4,6 +4,7 @@
      *
 {% if 'annotation' == format %}
      * @Route("/new", name="{{ route_name_prefix }}_new")
+     * @Method("GET")
      * @Template()
 {% endif %}
      */
@@ -13,7 +14,6 @@
         $breadcrumbs->addItem("Inicio", $this->get("router")->generate("home_page"));
         $breadcrumbs->addItem("{{ entity }}", $this->get("router")->generate("{{ route_name_prefix }}"));
         $breadcrumbs->addItem("Nuevo" );
-
         $entity = new {{ entity_class }}();
         $form   = $this->createForm(new {{ entity_class }}Type(), $entity);
 

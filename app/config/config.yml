@@ -115,6 +115,15 @@ lar_parametro:
     tabla_agregable: true
 
 avalanche_imagine:
+    source_root: %kernel.root_dir%/../web
+    web_root:     %kernel.root_dir%/../web
+#    source_root: C:/xampp/htdocs/caja/web
+#    web_root:     C:/xampp/htdocs/caja/web
+    cache_prefix: media/cache
+    driver:       gd
+    filters:      []
+
+
     filters:
         foto_login:
             type:    thumbnail

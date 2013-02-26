@@ -1,0 +1,38 @@
+{{ "{% extends '::layout.html.twig' %}" }}
+{{ "{% block id  'mod_"~ entity ~ "' %}" }}
+{{ "{% block title %}" }}
+{{ "{{ parent() }} - " ~ entity ~ " {{ 'views.new.creation'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}" }}
+{{ "{% endblock %}" }}
+
+{{ "{% block page %}" }}
+
+<section id="new_{{ entity }}">
+    <header>
+        <h1>{{ entity }} {{ "{{ 'views.new.creation'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}" }}</h1>
+    </header>
+    {{ "{{ wo_render_breadcrumbs() }}" }}
+    {{ "{% for type, flashMessages in app.session.flashbag.all() %}" }}
+    {{ "    {% for flashMessage in flashMessages %} " }}
+    {{ "        <div class='alert alert-{{ type }}'> " }}
+    {{ "         {{ flashMessage|trans({}, 'JordiLlonchCrudGeneratorBundle') }}" }}
+    {{ "        </div> " }}
+    {{ "    {% endfor %} " }}
+    {{ "{% endfor %} " }}
+    <div class="row-fluid">
+        <div class="span12">
+            <form class="form-horizontal" action="{{ "{{ path('"~ route_name_prefix ~"_create') }}" }}"
+                  method="post" {{ "{{ form_enctype(form) }}" }}>
+                {{ "{{ form_widget(form) }}" }}
+                <p>
+                    <button type="submit"
+                            class="btn btn-success">{{ "{{ 'views.new.create'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}" }}</button>
+                </p>
+            </form>
+        </div>
+    </div>
+    {% set hide_edit, hide_delete = true, true %}
+    {% include 'views/others/record_actions.html.twig.twig' %}
+
+</section>
+
+{{ "{% endblock %}" }}
