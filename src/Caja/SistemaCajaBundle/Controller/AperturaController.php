@@ -396,4 +396,14 @@ class AperturaController extends Controller
         return $tipoPago;
     }
 
+     public function anularAction(){
+
+         $caja = $this->container->get('caja.manager')->getCaja();
+         $apertura = $this->container->get('caja.manager')->getApertura();
+
+         return $this->render('SistemaCajaBundle:Apertura:anular.html.twig', array(
+             'caja' => $caja,
+             'apertura' => $apertura));
+     }
+
 }
