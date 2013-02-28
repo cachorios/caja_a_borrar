@@ -115,9 +115,8 @@ lar_parametro:
     tabla_agregable: true
 
 avalanche_imagine:
-#    source_root: C:/xampp/htdocs
-    source_root: %kernel.root_dir%/../web
-
+    source_root: C:/web
+#    source_root: %kernel.root_dir%/../web
     web_root:     %kernel.root_dir%/../web
 
     cache_prefix: media/cache
