@@ -1,0 +1,36 @@
+{% extends '::layout.html.twig' %}
+{% block id 'mod_anular' %}
+{% block title %}
+    {{ parent() }} - Anular Comprobante
+{% endblock %}
+
+{% block page %}
+
+    <section id="form_Apertura">
+
+        <header>
+            <h1>Anular {{ 'views.edit.edit'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</h1>
+        </header>
+
+        {#{{ wo_render_breadcrumbs() }}#}
+        {% for type, flashMessages in app.session.flashbag.all() %}
+            {% for flashMessage in flashMessages %}
+                <div class='alert alert-{{ type }}'>
+                    {{ flashMessage|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        <div class="row-fluid hapertura ">
+            <div class="span6">Cajero: <span> {{ caja.cajero }} </span> </div>
+            <div class="span3"> Apertura Nro. :<span> {{ apertura.id }}</span></div>
+            <div class="span3"> Fecha. :<span> {{ apertura.fecha | date('d/m/Y') }}</span></div>
+
+        </div>
+
+
+        hola
+
+    </section>
+
+{% endblock page %}
