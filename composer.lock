@@ -1,5 +1,5 @@
 {
-    "hash": "ce7c30b3318e6533b2c091415d43a34e",
+    "hash": "8f9ed84ee629ce093983d669d1c84aa4",
     "packages": [
         {
             "name": "avalanche123/imagine-bundle",
@@ -90,7 +90,7 @@
                     "homepage": "http://www.jwage.com/"
                 },
                 {
-                    "name": "Guilherme Blanco",
+                    "name": "Christoph Dorn",
                     "email": "guilhermeblanco@gmail.com",
                     "homepage": "http://www.instaclick.com"
                 },
@@ -103,7 +103,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -395,7 +395,7 @@
                     "homepage": "http://www.jwage.com/"
                 },
                 {
-                    "name": "Christoph Dorn",
+                    "name": "Guilherme Blanco",
                     "email": "guilhermeblanco@gmail.com",
                     "homepage": "http://www.instaclick.com"
                 },
@@ -1393,7 +1393,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -1446,16 +1446,16 @@
         },
         {
             "name": "raulfraile/ladybug",
-            "version": "v0.5",
+            "version": "v0.6",
             "source": {
                 "type": "git",
-                "url": "https://github.com/raulfraile/Ladybug",
-                "reference": "v0.5"
+                "url": "https://github.com/raulfraile/Ladybug.git",
+                "reference": "v0.6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/raulfraile/Ladybug/zipball/v0.5",
-                "reference": "v0.5",
+                "url": "https://api.github.com/repos/raulfraile/Ladybug/zipball/v0.6",
+                "reference": "v0.6",
                 "shasum": ""
             },
             "require": {
@@ -1487,7 +1487,7 @@
                 "ladybug",
                 "tree"
             ],
-            "time": "2012-02-25 13:31:12"
+            "time": "2013-01-31 14:38:18"
         },
         {
             "name": "raulfraile/ladybug-bundle",
@@ -1541,7 +1541,7 @@
         },
         {
             "name": "sensio/distribution-bundle",
-            "version": "v2.2.0-RC3",
+            "version": "v2.2.0",
             "target-dir": "Sensio/Bundle/DistributionBundle",
             "source": {
                 "type": "git",
@@ -1587,17 +1587,17 @@
         },
         {
             "name": "sensio/framework-extra-bundle",
-            "version": "v2.2.0-RC3",
+            "version": "v2.2.0",
             "target-dir": "Sensio/Bundle/FrameworkExtraBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensio/SensioFrameworkExtraBundle.git",
-                "reference": "v2.2.0-RC3"
+                "reference": "v2.2.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensio/SensioFrameworkExtraBundle/zipball/v2.2.0-RC3",
-                "reference": "v2.2.0-RC3",
+                "url": "https://api.github.com/repos/sensio/SensioFrameworkExtraBundle/zipball/v2.2.0",
+                "reference": "v2.2.0",
                 "shasum": ""
             },
             "require": {
@@ -1630,11 +1630,11 @@
                 "annotations",
                 "controllers"
             ],
-            "time": "2013-02-22 06:41:37"
+            "time": "2013-02-28 14:13:52"
         },
         {
             "name": "sensio/generator-bundle",
-            "version": "v2.2.0-RC3",
+            "version": "v2.2.0",
             "target-dir": "Sensio/Bundle/GeneratorBundle",
             "source": {
                 "type": "git",
@@ -1794,17 +1794,17 @@
         },
         {
             "name": "symfony/monolog-bundle",
-            "version": "v2.2.0-RC2",
+            "version": "v2.2.0",
             "target-dir": "Symfony/Bundle/MonologBundle",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/MonologBundle",
-                "reference": "v2.2.0-RC2"
+                "url": "https://github.com/symfony/MonologBundle.git",
+                "reference": "v2.2.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/MonologBundle/zipball/v2.2.0-RC2",
-                "reference": "v2.2.0-RC2",
+                "url": "https://api.github.com/repos/symfony/MonologBundle/zipball/v2.2.0",
+                "reference": "v2.2.0",
                 "shasum": ""
             },
             "require": {
@@ -1848,20 +1848,20 @@
                 "log",
                 "logging"
             ],
-            "time": "2013-02-11 10:49:31"
+            "time": "2013-02-23 17:18:24"
         },
         {
             "name": "symfony/swiftmailer-bundle",
-            "version": "v2.2.0-BETA2",
+            "version": "v2.2.0",
             "target-dir": "Symfony/Bundle/SwiftmailerBundle",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/SwiftmailerBundle",
+                "url": "https://github.com/symfony/SwiftmailerBundle.git",
                 "reference": "v2.2.0-BETA2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/SwiftmailerBundle/archive/v2.2.0-BETA2.zip",
+                "url": "https://api.github.com/repos/symfony/SwiftmailerBundle/zipball/v2.2.0-BETA2",
                 "reference": "v2.2.0-BETA2",
                 "shasum": ""
             },
@@ -1907,16 +1907,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v2.2.0-RC3",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "v2.2.0-RC3"
+                "reference": "v2.2.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/v2.2.0-RC3",
-                "reference": "v2.2.0-RC3",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/v2.2.0",
+                "reference": "v2.2.0",
                 "shasum": ""
             },
             "require": {
@@ -2002,7 +2002,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2013-02-24 12:07:19"
+            "time": "2013-03-01 06:52:29"
         },
         {
             "name": "twig/extensions",
