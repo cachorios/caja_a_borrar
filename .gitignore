@@ -85,3 +85,7 @@ Icon
 ._*
 .Spotlight-V100
 .Trashes
+
+*.zip
+*.lock
+parameters.yml.modelo
