@@ -37,3 +37,11 @@ apertura_delete:
 apertura_monitor:
     pattern: /monitor
     defaults: { _controller: "SistemaCajaBundle:Apertura:monitor" }
+
+apertura_anulado:
+    pattern: /anular
+    defaults: { _controller: "SistemaCajaBundle:Apertura:anular" }
+
+apertura_anulado_create:
+    pattern: /anular
+    defaults: { _controller: "SistemaCajaBundle:Apertura:anularCreate" }

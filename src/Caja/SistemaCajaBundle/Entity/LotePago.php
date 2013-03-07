@@ -4,6 +4,7 @@ namespace Caja\SistemaCajaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
  * LotePago
  *
@@ -38,7 +39,8 @@ class LotePago
 
     /**
      * @var boolean
-     * @ORM\Column(name="anulado", nullable=true)
+     * @ORM\Column(name="anulado", nullable=true, type="boolean")
+     *
      */
     private $anulado;
 
