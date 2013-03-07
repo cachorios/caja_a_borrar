@@ -9,6 +9,10 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\View\TwitterBootstrapView;
 
 use Caja\SistemaCajaBundle\Entity\Apertura;
+use Caja\SistemaCajaBundle\Entity\Lote;
+use Caja\SistemaCajaBundle\Entity\LotePago;
+
+use Caja\SistemaCajaBundle\Form\AperturaAnularType;
 use Caja\SistemaCajaBundle\Form\AperturaType;
 use Caja\SistemaCajaBundle\Form\AperturaCierreType;
 use Caja\SistemaCajaBundle\Form\AperturaFilterType;
@@ -126,7 +130,7 @@ class AperturaController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $caja = $this->container->get('caja.manager')->getCaja();
-        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' =>$id, "caja" => $caja->getId()));
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id, "caja" => $caja->getId()));
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Apertura entity.');
@@ -213,7 +217,7 @@ class AperturaController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $caja = $this->container->get('caja.manager')->getCaja();
-        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' =>$id, "caja" => $caja->getId()));
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id, "caja" => $caja->getId()));
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Apertura entity.');
@@ -238,7 +242,7 @@ class AperturaController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $caja = $this->container->get('caja.manager')->getCaja();
-        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' =>$id, "caja" => $caja->getId()));
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id, "caja" => $caja->getId()));
         $fecha = $entity->getFecha();
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Apertura entity.');
@@ -282,7 +286,7 @@ class AperturaController extends Controller
 
         $request = $this->getRequest();
 
-        if($request->getMethod()=='POST'){
+        if ($request->getMethod() == 'POST') {
             $editForm->bind($request);
             if ($editForm->isValid()) {
                 $em = $this->getDoctrine()->getManager();
@@ -323,12 +327,11 @@ class AperturaController extends Controller
                 throw $this->createNotFoundException('Unable to find Apertura entity.');
             }
 
-            if(!$entity->getFechaCierre())
-            {
+            if (!$entity->getFechaCierre()) {
                 $em->remove($entity);
                 $em->flush();
                 $this->get('session')->getFlashBag()->add('success', 'flash.delete.success');
-            }else{
+            } else {
                 $this->get('session')->getFlashBag()->add('error', 'No se puede borrar una apertura cerrada');
             }
         } else {
@@ -351,7 +354,7 @@ class AperturaController extends Controller
         $caja = $this->container->get('caja.manager')->getCaja();
         $apertura = $this->container->get('caja.manager')->getApertura();
 
-        if(!$apertura){
+        if (!$apertura) {
             $this->get('session')->getFlashBag()->add('success', 'No hay apertura abierta');
             return $this->redirect($this->generateUrl('apertura_new'));
         }
@@ -372,23 +375,21 @@ class AperturaController extends Controller
         ));
     }
 
-    private function getDetalleTipoPago($ap_id){
+    private function getDetalleTipoPago($ap_id)
+    {
         $em = $this->getDoctrine()->getManager();
         $PagoTipoPago = $em->getRepository('SistemaCajaBundle:Apertura')->getPagosByTipoPago($ap_id);
 
 
-
         $tipoPago = array();
 
-        foreach($PagoTipoPago as $tipo)
-        {
-            if( !array_key_exists($tipo['id'],$tipoPago))
-            {
-                $tipoPago[$tipo['id']] = array($tipo['descripcion'],0,0);
+        foreach ($PagoTipoPago as $tipo) {
+            if (!array_key_exists($tipo['id'], $tipoPago)) {
+                $tipoPago[$tipo['id']] = array($tipo['descripcion'], 0, 0);
             }
-            if($tipo['anulado'] == 1){
+            if ($tipo['anulado'] == 1) {
                 $tipoPago[$tipo['id']][2] = $tipo['1'];
-            }else{
+            } else {
                 $tipoPago[$tipo['id']][1] = $tipo['1'];
             }
 
@@ -396,14 +397,112 @@ class AperturaController extends Controller
         return $tipoPago;
     }
 
-     public function anularAction(){
+    public function anularAction()
+    {
 
-         $caja = $this->container->get('caja.manager')->getCaja();
-         $apertura = $this->container->get('caja.manager')->getApertura();
+        $lote = new Lote();
+        $lote->addPago(new LotePago());
+        $form = $this->createForm(new AperturaAnularType(), $lote);
 
-         return $this->render('SistemaCajaBundle:Apertura:anular.html.twig', array(
-             'caja' => $caja,
-             'apertura' => $apertura));
-     }
+        $caja = $this->container->get('caja.manager')->getCaja();
+        $apertura = $this->container->get('caja.manager')->getApertura();
+
+        return $this->render('SistemaCajaBundle:Apertura:anular.html.twig', array(
+            'caja' => $caja,
+            "form" => $form->createView(),
+            'apertura' => $apertura));
+    }
+
+    public function anularCreateAction()
+    {
+
+        $lote = new Lote();
+        $request = $this->getRequest();
+        $form = $this->createForm(new AperturaAnularType(), $lote);
+
+        $form->bind($request);
+
+
+        $caja = $this->container->get("caja.manager")->getCaja();
+        $apertura = $this->container->get('caja.manager')->getApertura();
+
+        if (!$apertura) {
+            $this->get('session')->getFlashBag()->add('error', 'flash.create.error');
+            return $this->redirect($this->generateUrl('apertura'));
+        }
+
+        $lote->setApertura($apertura);
+
+        if ($form->isValid()) {
+
+
+            if (strlen($msg = $this->validarDetallesPagos($lote)) == 0) {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($lote);
+                $em->flush();
+
+                //Aqui debe retornar al timbrado de cada comprobante
+                $this->get('session')->getFlashBag()->add('success', 'flash.create.success');
+                return $this->redirect($this->generateUrl('registro'));
+            } else {
+                $this->get('session')->getFlashBag()->add('error', $msg);
+            }
+        } else {
+
+            $this->get('session')->getFlashBag()->add('error', 'flash.create.error');
+        }
+
+
+        return $this->render("SistemaCajaBundle:Registro:registro.html.twig", array(
+                "lote" => $lote,
+                "form" => $form->createView(),
+                "caja" => $caja,
+                "apertura" => $apertura
+            )
+        );
+
+    }
+
+    public function barraDetalleAction()
+    {
+        $response = new Response();
+        $log = $this->get('logger');
+
+        $cb = $this->getRequest()->get('cb');
+
+        $log->info("---> Codigo de barra: $cb");
+
+        //Codigo de barra recibido
+        $cb = trim($cb);
+
+
+        $apertura = $this->container->get("caja.manager")->getApertura();
+
+        //Servicio de codigo de barra, para interpretarlo
+        $bm = $this->container->get("caja.barra");
+//        $bm->setCodigo("93390001234513015201101000000123400001231000");
+
+
+        $bm->setCodigo($cb, $apertura->getFecha());
+
+        $imp = $bm->getImporte();
+
+        if ($imp > 0) {
+            $rJson = json_encode(array('ok' => 1,
+                'importe' => number_format($imp, 2, '.', ''),
+                'comprobante' => $bm->getComprobante(),
+                'vencimiento' => $bm->getVto(),
+                'detalle' => $this->renderView("SistemaCajaBundle:Registro:_detalle.html.twig", array('elementos' => $bm->getDetalle()))
+            ));
+        } else {
+
+            $rJson = json_encode(array(
+                'ok' => 0,
+                'msg' => count($bm->getDetalle()) == 0 ? 'Codigo de Barra desconocido' : 'Comprobante vencido'
+            ));
+        }
+
+        return $response->setContent($rJson);
+    }
 
 }

@@ -27,10 +27,33 @@
             <div class="span3"> Fecha. :<span> {{ apertura.fecha | date('d/m/Y') }}</span></div>
 
         </div>
+        <div class="sub-header">
+            <h2 style="font-size: 16px;">Codigo de Barra</h2>
+        </div>
+        <div style="line-height: 5px;">&nbsp; </div>
+        <div class="row-fluid">
+            <div class="span8">
+                <input id="txtcodigobarra" type="text" value="" name="codigobarra" class="input-xxlarge">
+            </div>
+            <div class="span4">
+                <div id="msgBarra"></div>
+                <div id="masDetalleTemp"></div>
+            </div>
+        </div>
+        <div class="sub-header">
+            <h2 style="font-size: 16px;">Comprobantes</h2>
+        </div>
+        <form class="form-horizontal" action="{{ path('apertura_anulado_create' ) }}"
+              method="post" {{ form_enctype(form) }}>
+
+            <ul class="errorMessages"></ul>
+            {% include 'SistemaCajaBundle:Registro:_form.html.twig' %}
+
+        </form>
 
 
-        hola
 
+        {% include 'SistemaCajaBundle:Apertura:_aperturaanular.js.twig' %}
     </section>
 
 {% endblock page %}

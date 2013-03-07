@@ -59,6 +59,11 @@
                         <a href="{{ path("diego") }}"><i class="icon-user icon-white"></i>DiegoCrud</a>
                     </li>
                 {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="diego">
+                        <a href="{{ path("apertura_anulado") }}"><i class="icon-user icon-white"></i>Anular Comp.</a>
+                    </li>
+                {% endif %}
 
 
             </ul>
