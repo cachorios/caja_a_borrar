@@ -1,0 +1,25 @@
+{% form_theme form 'SistemaCajaBundle:Form:lote_detalle.html.twig' %}
+
+
+<div class=" control-group " id="caja_sistemacajabundle_aperturaanulartype_detalle_control_group">
+    <div class="pull-right" style="width: 98%; margin-right: 5px;">
+        {{ form_errors(form.detalle) }}
+        {{ form_widget(form.detalle) }}
+
+        <div class="clear"></div>
+    </div>
+</div>
+
+{% form_theme form 'SistemaCajaBundle:Form:fields.html.twig' %}
+
+{% include 'SistemaCajaBundle:Apertura:_pagos.html.twig' %}
+
+{{ form_rest(form) }}
+
+<div class="clear"></div>
+<div class="form-actions">
+    <a id="AnularComprobantes"
+       role="button" class="btn btn-primary" data-toggle="modal" style="display: none;">&nbsp;&nbsp;Anular Comprobantes&nbsp;&nbsp;</a>
+    <button class="btn" type="reset">Cancelar</button>
+</div>
+

@@ -1,0 +1,73 @@
+<br>
+<div class="clear"></div>
+
+{#<div class="modal"#}
+{#style="position: relative; top: auto; left: auto; right: auto; margin: 0 auto 20px; z-index: 1; max-width: 100%;">#}
+<div id="PagoModal"
+     class="modal hide fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="myModalLabel"
+     aria-hidden="true"
+     data-backdrop="static"
+     data-keyboard="false"
+>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Detalle de pago</h3>
+    </div>
+    <div class="modal-body">
+        <p>
+            <span style="width: 120px; display: inline-block">Total a Pagar:
+            </span>
+            <span id="apago_importe" style="color: #860a18 ;font-size: 20px; font-weight: bold; display: inline-block; text-align: right; width: 350px;">0.00
+            </span>
+        </p>
+        <hr>
+        <div class=" control-group " id="caja_sistemacajabundle_aperuratype_pagos_control_group">
+
+            {{ form_errors(form.pagos) }}
+            {{ form_widget(form.pagos) }}
+
+            <p style="margin-top: 20px;">
+                <span style="width: 120px; display: inline-block">Total:</span>
+                <span id="totalpago"
+                      style="color: #860a18 ;
+                      font-size: 20px;
+                      font-weight: bold;
+                      display: inline-block;
+                      text-align: right;
+                      width: 350px;">0.00
+                </span>
+            </p>
+            <p style="margin-top: 10px;">
+
+                <span style="width: 120px; display: inline-block">Saldo:</span>
+                <span id="totalSaldo"
+                      style="color: #860a18 ;
+                      font-size: 20px;
+                      font-weight: bold;
+                      display: inline-block;
+                      text-align: right;
+                      width: 350px;">0.00
+                </span><br>
+
+
+            <div class="clear"></div>
+            </p>
+
+
+            {#{{ form_row(form.pagos) }}#}
+        </div>
+        <div class="modal-footer">
+            <button class="btn pull-right" data-dismiss="modal" aria-hidden="true2">Cancelar</button>
+            <div class="pull-right">&nbsp;&nbsp;</div>
+            <button type="submit" class="btn btn-primary pull-right" id="pago_save" >Registrar Pago</button>
+            <div class="pull-right">&nbsp;&nbsp;</div>
+
+        </div>
+    </div>
+
+
+</div>

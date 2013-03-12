@@ -453,7 +453,7 @@ class AperturaController extends Controller
         }
 
 
-        return $this->render("SistemaCajaBundle:Registro:registro.html.twig", array(
+        return $this->render("SistemaCajaBundle:Apertura:registro.html.twig", array(
                 "lote" => $lote,
                 "form" => $form->createView(),
                 "caja" => $caja,
@@ -492,7 +492,7 @@ class AperturaController extends Controller
                 'importe' => number_format($imp, 2, '.', ''),
                 'comprobante' => $bm->getComprobante(),
                 'vencimiento' => $bm->getVto(),
-                'detalle' => $this->renderView("SistemaCajaBundle:Registro:_detalle.html.twig", array('elementos' => $bm->getDetalle()))
+                'detalle' => $this->renderView("SistemaCajaBundle:Apertura:_detalle.html.twig", array('elementos' => $bm->getDetalle()))
             ));
         } else {
 
@@ -504,5 +504,8 @@ class AperturaController extends Controller
 
         return $response->setContent($rJson);
     }
+
+
+
 
 }

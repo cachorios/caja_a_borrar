@@ -45,3 +45,7 @@ apertura_anulado:
 apertura_anulado_create:
     pattern: /anular
     defaults: { _controller: "SistemaCajaBundle:Apertura:anularCreate" }
+
+apertura_barra:
+      pattern:  /barra
+      defaults: { _controller: "SistemaCajaBundle:Registro:barraDetalle" }

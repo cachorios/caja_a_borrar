@@ -57,7 +57,7 @@ $(document).ready(function (e) {
                  * Peticion ajax
                  */
                 $.ajax({
-                    url:"{{ path('registro_barra') }}",
+                    url:"{{ path('apertura_barra') }}",
                     data:{ cb:cb  },
                     dataType:"json",
                     success:actDesdeCB,
@@ -90,7 +90,8 @@ $(document).ready(function (e) {
              * guardo data en databarra para acceder desde otros eventos
              */
             dataBarra = data;
-            $btn = $('[data-coleccion-add-btn-det]', '#caja_sistemacajabundle_registrotype_detalle');
+            $btn = $('[data-coleccion-add-btn-det]', '#caja_sistemacajabundle_aperturaanulartype_detalle');
+            postBorrarDetalle();
 
             /**
              * Disparo el boton add para agregar el registro nuevo con los
@@ -113,7 +114,7 @@ $(document).ready(function (e) {
      */
     existeComprobante = function ($cdbarra) {
         var existe = false;
-        $('input.cbarra', 'div#caja_sistemacajabundle_registrotype_detalle').each(function () {
+        $('input.cbarra', 'div#caja_sistemacajabundle_aperturatype_detalle').each(function () {
             if ($cdbarra == this.value) {
                 existe = true;
             }
@@ -136,6 +137,7 @@ $(document).ready(function (e) {
         if (!$btn.hasClass('btn')) {
             $btn = $btn.closest('.btn');
         }
+
         $btn.coleccion({
             opcion:'add',
             addpostfunc:postAddDetalle
@@ -150,14 +152,13 @@ $(document).ready(function (e) {
      * @param data
      */
     postAddDetalle = function (row, index) {
-        $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_codigo_barra').val(cb);
-        $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_comprobante').val(dataBarra.comprobante);
-        $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_fecha').val(dataBarra.vencimiento);
-        $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_importe').val(dataBarra.importe);
-
-        $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_comprobante').attr('readonly', 'readonly');
-        $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_fecha').attr('readonly', 'readonly');
-        $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_importe').attr('readonly', 'readonly');
+        $('#caja_sistemacajabundle_aperturaanulartype_detalle_' + index + '_codigo_barra').val(cb);
+        $('#caja_sistemacajabundle_aperturaanulartype_detalle_' + index + '_comprobante').val(dataBarra.comprobante);
+        $('#caja_sistemacajabundle_aperturaanulartype_detalle_' + index + '_fecha').val(dataBarra.vencimiento);
+        $('#caja_sistemacajabundle_aperturaanulartype_detalle_' + index + '_importe').val(dataBarra.importe);
+        $('#caja_sistemacajabundle_aperturaanulartype_detalle_' + index + '_comprobante').attr('readonly', 'readonly');
+        $('#caja_sistemacajabundle_aperturaanulartype_detalle_' + index + '_fecha').attr('readonly', 'readonly');
+        $('#caja_sistemacajabundle_aperturaanulartype_detalle_' + index + '_importe').attr('readonly', 'readonly');
 
         totalizaComprobante();
 
@@ -204,20 +205,21 @@ $(document).ready(function (e) {
 
     totalizaComprobante = function () {
         var total = 0;
-        $('input.importe', 'div#caja_sistemacajabundle_registrotype_detalle').each(function () {
+        $('input.importe', 'div#caja_sistemacajabundle_aperturaanulartype_detalle').each(function () {
             total = total + parseFloat(this.value);
         });
         totalComprobante = Math.round(total*100)/100;
         $("#lote_detalle_total").text(formato_numero(total, 2));
         if(totalComprobante>0){
-            $("#PagarComprobantes").show();
+            $("#AnularComprobantes").show();
         }else{
-            $("#PagarComprobantes").hide();
+            $("#AnularComprobantes").hide();
         }
+        $.unblockUI();
     };
 
     //boton que abre la ventana modal de pago
-    $("#PagarComprobantes").click(function () {
+    $("#AnularComprobantes").click(function () {
         var $pagmod,
              btnAdd,
              data;
@@ -226,7 +228,7 @@ $(document).ready(function (e) {
 
         $.msgBox({
             title: "Confirmación",
-            content: "Realiza el pago de estos comprobantes?",
+            content: "Realiza la anulación de estos comprobantes?",
             type: "confirm",
             buttons: [{ value: "Si" },  { value: "Cancelar"}],
             success: function (result) {
@@ -265,10 +267,10 @@ $(document).ready(function (e) {
 
     postAddPago = function (row, i) {
 
-        $("#caja_sistemacajabundle_registrotype_pagos_" + i + "_tipo_pago").val(1);
-        $("#caja_sistemacajabundle_registrotype_pagos_" + i + "_importe").val(formato_numero(totalComprobante - totalPago, 2, "."));
+        $("#caja_sistemacajabundle_aperturatype_pagos_" + i + "_tipo_pago").val(1);
+        $("#caja_sistemacajabundle_aperturatype_pagos_" + i + "_importe").val(formato_numero(totalComprobante - totalPago, 2, "."));
         totalizaPagos();
-        $("#caja_sistemacajabundle_registrotype_pagos_" + i + "_tipo_pago").focus();
+        $("#caja_sistemacajabundle_aperturatype_pagos_" + i + "_tipo_pago").focus();
 
     };
 
