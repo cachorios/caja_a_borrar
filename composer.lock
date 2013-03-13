@@ -1,5 +1,5 @@
 {
-    "hash": "8f9ed84ee629ce093983d669d1c84aa4",
+    "hash": "ce7c30b3318e6533b2c091415d43a34e",
     "packages": [
         {
             "name": "avalanche123/imagine-bundle",
@@ -395,7 +395,7 @@
                     "homepage": "http://www.jwage.com/"
                 },
                 {
-                    "name": "Guilherme Blanco",
+                    "name": "Christoph Dorn",
                     "email": "guilhermeblanco@gmail.com",
                     "homepage": "http://www.instaclick.com"
                 },
@@ -923,16 +923,16 @@
         },
         {
             "name": "kriswallsmith/assetic",
-            "version": "v1.1.0-alpha3",
+            "version": "v1.1.0-alpha4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kriswallsmith/assetic.git",
-                "reference": "v1.1.0-alpha3"
+                "reference": "v1.1.0-alpha4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kriswallsmith/assetic/zipball/v1.1.0-alpha3",
-                "reference": "v1.1.0-alpha3",
+                "url": "https://api.github.com/repos/kriswallsmith/assetic/zipball/v1.1.0-alpha4",
+                "reference": "v1.1.0-alpha4",
                 "shasum": ""
             },
             "require": {
@@ -990,7 +990,7 @@
                 "compression",
                 "minification"
             ],
-            "time": "2013-02-18 16:17:57"
+            "time": "2013-02-24 17:22:20"
         },
         {
             "name": "lar/lar-parametro-bundle",
@@ -1000,6 +1000,12 @@
                 "type": "git",
                 "url": "git@github.com:cachorios/ParametroBundle.git",
                 "reference": "5a53e423b3d85e2f01456ac6730eebddff55d25c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cachorios/ParametroBundle/zipball/5a53e423b3d85e2f01456ac6730eebddff55d25c",
+                "reference": "5a53e423b3d85e2f01456ac6730eebddff55d25c",
+                "shasum": ""
             },
             "require": {
                 "jordillonch/crud-generator": "dev-master",
@@ -1033,6 +1039,10 @@
                 "Tabla",
                 "admin"
             ],
+            "support": {
+                "source": "https://github.com/cachorios/ParametroBundle/tree/master",
+                "issues": "https://github.com/cachorios/ParametroBundle/issues"
+            },
             "time": "2013-02-23 16:59:35"
         },
         {
@@ -1043,6 +1053,12 @@
                 "type": "git",
                 "url": "git@github.com:cachorios/UtilsBundle.git",
                 "reference": "dbdb8f2b5dc7164deb1bc782dae09a2801cb95ad"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cachorios/UtilsBundle/zipball/dbdb8f2b5dc7164deb1bc782dae09a2801cb95ad",
+                "reference": "dbdb8f2b5dc7164deb1bc782dae09a2801cb95ad",
+                "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
@@ -1073,6 +1089,10 @@
                 "Imagen",
                 "admin"
             ],
+            "support": {
+                "source": "https://github.com/cachorios/UtilsBundle/tree/master",
+                "issues": "https://github.com/cachorios/UtilsBundle/issues"
+            },
             "time": "2013-02-23 17:01:25"
         },
         {
@@ -1082,12 +1102,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/lexik/LexikFormFilterBundle.git",
-                "reference": "9c01c1475f37814d47d3558a23659a7e6eec4a95"
+                "reference": "v1.2.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lexik/LexikFormFilterBundle/zipball/9c01c1475f37814d47d3558a23659a7e6eec4a95",
-                "reference": "9c01c1475f37814d47d3558a23659a7e6eec4a95",
+                "url": "https://api.github.com/repos/lexik/LexikFormFilterBundle/zipball/v1.2.0",
+                "reference": "v1.2.0",
                 "shasum": ""
             },
             "require": {
@@ -1125,7 +1145,7 @@
                 "filter",
                 "form"
             ],
-            "time": "2013-01-21 08:32:48"
+            "time": "2013-03-04 10:33:12"
         },
         {
             "name": "monolog/monolog",
@@ -1196,16 +1216,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phiamo/MopaBootstrapBundle.git",
-                "reference": "65f27149f2baac59029d84a2ea2aba9c4f629fec"
+                "reference": "f17372ed379a350cc460bbeca261c0040d599086"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phiamo/MopaBootstrapBundle/zipball/65f27149f2baac59029d84a2ea2aba9c4f629fec",
-                "reference": "65f27149f2baac59029d84a2ea2aba9c4f629fec",
+                "url": "https://api.github.com/repos/phiamo/MopaBootstrapBundle/zipball/f17372ed379a350cc460bbeca261c0040d599086",
+                "reference": "f17372ed379a350cc460bbeca261c0040d599086",
                 "shasum": ""
             },
             "require": {
-                "mopa/composer-bridge": "v1.0.0",
+                "mopa/composer-bridge": "1.*",
                 "symfony/symfony": ">=2.1,<2.3-dev"
             },
             "suggest": {
@@ -1249,20 +1269,20 @@
                 "form",
                 "template"
             ],
-            "time": "2013-02-24 11:24:04"
+            "time": "2013-03-04 12:52:55"
         },
         {
             "name": "mopa/composer-bridge",
-            "version": "v1.0.0",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
-                "url": "git://github.com/phiamo/MopaComposerBridge.git",
-                "reference": "v1.0.0"
+                "url": "https://github.com/phiamo/MopaComposerBridge.git",
+                "reference": "v1.1.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/phiamo/MopaComposerBridge/archive/v1.0.0.zip",
-                "reference": "v1.0.0",
+                "url": "https://api.github.com/repos/phiamo/MopaComposerBridge/zipball/v1.1.0",
+                "reference": "v1.1.0",
                 "shasum": ""
             },
             "require": {
@@ -1295,7 +1315,7 @@
                 "Symfony2",
                 "composer"
             ],
-            "time": "2012-10-11 18:29:49"
+            "time": "2013-03-04 11:32:33"
         },
         {
             "name": "pagerfanta/pagerfanta",
@@ -1393,7 +1413,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
