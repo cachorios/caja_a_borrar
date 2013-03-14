@@ -17,7 +17,7 @@ use Caja\SistemaCajaBundle\Form\AperturaType;
 use Caja\SistemaCajaBundle\Form\AperturaCierreType;
 use Caja\SistemaCajaBundle\Form\AperturaFilterType;
 use Caja\SistemaCajaBundle\Entity\Caja;
-
+use Symfony\Component\HttpFoundation\Response;
 /**
  * Apertura controller.
  *
@@ -463,7 +463,10 @@ class AperturaController extends Controller
 
     }
 
-    public function barraDetalleAction()
+    /**
+     * Método usado para verificar la existencia de un comprobante que se desea anular
+     */
+    public function existeComprobanteAction()
     {
         $response = new Response();
         $log = $this->get('logger');
@@ -475,37 +478,28 @@ class AperturaController extends Controller
         //Codigo de barra recibido
         $cb = trim($cb);
 
-
         $apertura = $this->container->get("caja.manager")->getApertura();
 
         //Servicio de codigo de barra, para interpretarlo
         $bm = $this->container->get("caja.barra");
-//        $bm->setCodigo("93390001234513015201101000000123400001231000");
-
 
         $bm->setCodigo($cb, $apertura->getFecha());
-
         $imp = $bm->getImporte();
-
-        if ($imp > 0) {
+        //Se verifica si existe en la base:
+        $em = $this->getDoctrine()->getManager();
+        $lotes = $em->getRepository('SistemaCajaBundle:Lote')->getLote($cb);
+        //ld($lotes->getDetalle());
+        if ($lotes <> null) {
             $rJson = json_encode(array('ok' => 1,
-                'importe' => number_format($imp, 2, '.', ''),
-                'comprobante' => $bm->getComprobante(),
-                'vencimiento' => $bm->getVto(),
-                'detalle' => $this->renderView("SistemaCajaBundle:Apertura:_detalle.html.twig", array('elementos' => $bm->getDetalle()))
+                //'datos' => $lotes->getDetalle(),
+                'detalle' => $this->renderView("SistemaCajaBundle:Apertura:_loteDetalle.html.twig", array('elementos' => $lotes->getDetalle()))
             ));
         } else {
-
             $rJson = json_encode(array(
                 'ok' => 0,
-                'msg' => count($bm->getDetalle()) == 0 ? 'Codigo de Barra desconocido' : 'Comprobante vencido'
+                'msg' => 'No existe el comprobante ingresado'
             ));
         }
-
         return $response->setContent($rJson);
     }
-
-
-
-
 }

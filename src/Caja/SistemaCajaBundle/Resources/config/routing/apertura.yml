@@ -46,6 +46,6 @@ apertura_anulado_create:
     pattern: /anular
     defaults: { _controller: "SistemaCajaBundle:Apertura:anularCreate" }
 
-apertura_barra:
+apertura_existe_comprobante:
       pattern:  /barra
-      defaults: { _controller: "SistemaCajaBundle:Registro:barraDetalle" }
+      defaults: { _controller: "SistemaCajaBundle:Apertura:existeComprobante" }

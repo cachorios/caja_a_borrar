@@ -3,7 +3,6 @@
 namespace Caja\SistemaCajaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
 /**
  * Lote
  *

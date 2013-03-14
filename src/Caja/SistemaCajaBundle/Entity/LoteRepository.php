@@ -3,7 +3,7 @@
 namespace Caja\SistemaCajaBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-
+use Caja\SistemaCajaBundle\Entity\LoteDetalle;
 /**
  * LoteRepository
  *
@@ -12,4 +12,31 @@ use Doctrine\ORM\EntityRepository;
  */
 class LoteRepository extends EntityRepository
 {
+    /**
+     * A partir de un numero de comprobante, se recupera el lote correspondiente
+     * @param $codigo_barra
+     * @return mixed
+     */
+    public function getLote($codigo_barra)
+    {
+        $em = $this->getEntityManager();
+
+        $q = $em->createQuery("
+              SELECT ld
+              FROM
+                  SistemaCajaBundle:LoteDetalle ld JOIN ld.lote l
+              WHERE
+                  ld.codigo_barra = :codigo_barra
+              ")
+            ->setParameter("codigo_barra", $codigo_barra);
+
+        $res = $q->getSingleResult();
+
+        if ($res == null) {
+            return null;
+        }
+        //ld($res);
+        return $res->getLote();
+
+    }
 }

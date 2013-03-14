@@ -3,12 +3,14 @@
 namespace Caja\SistemaCajaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * LoteDetalle
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Caja\SistemaCajaBundle\Entity\LoteDetalleRepository")
+ * @DoctrineAssert\UniqueEntity("codigo_barra")
  */
 class LoteDetalle
 {
@@ -218,4 +220,5 @@ class LoteDetalle
     {
         return $this->comprobante;
     }
+
 }

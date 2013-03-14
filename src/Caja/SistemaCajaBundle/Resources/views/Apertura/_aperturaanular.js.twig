@@ -52,14 +52,14 @@ $(document).ready(function (e) {
 
             //Verificar que no este ya agregado en la tabla de comprobantes
 
-            if (!existeComprobante(cb)) {
+            if (existeComprobanteEnBD(cb)) {
                 /***
                  * Peticion ajax
                  */
                 $.ajax({
-                    url:"{{ path('apertura_barra') }}",
+                    url:"{{ path('apertura_existe_comprobante') }}",
                     data:{ cb:cb  },
-                    dataType:"json",
+                    dataType:"html",
                     success:actDesdeCB,
                     error:function (jqXHR, status, error) {
                         alert('Disculpe, existio un problema: ' + error);
@@ -107,16 +107,28 @@ $(document).ready(function (e) {
     /**
      * existeComprobante
      *
-     * Comprueba si el codigo de barra ingresado ya existe.
+     * Comprueba si el codigo de barra ingresado ya existe en la base de datos, o sea ya fue cobrado
      *
      * @param $cdbarra
      * @return {Boolean}
      */
-    existeComprobante = function ($cdbarra) {
+    existeComprobanteEnBD = function ($cdbarra) {
         var existe = false;
-        $('input.cbarra', 'div#caja_sistemacajabundle_aperturatype_detalle').each(function () {
-            if ($cdbarra == this.value) {
-                existe = true;
+        /***
+         * Peticion ajax
+         */
+        $.ajax({
+            url:"{{ path('apertura_existe_comprobante') }}",
+            data:{ cb:cb  },
+            dataType:"json",
+            success: function(data) {
+            if (data.ok == 1) {
+                $('#detalle').html(data.detalle);
+            } else {
+                alert(data.msg);
+            }},
+            error:function (jqXHR, status, error) {
+                alert('Disculpe, hubo un problema en la llamada al metodo de validacion de comprobante: ' + error);
             }
         });
 

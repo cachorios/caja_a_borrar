@@ -131,7 +131,6 @@ class RegistroController extends Controller
 		return $msgError;
 	}
 
-
 	public function barraDetalleAction()
 	{
 		$response = new Response();
@@ -143,8 +142,6 @@ class RegistroController extends Controller
 
 		//Codigo de barra recibido
 		$cb = trim($cb);
-
-
 
 		$apertura = $this->container->get("caja.manager")->getApertura();
 
