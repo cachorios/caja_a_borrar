@@ -8,10 +8,10 @@
 
     {% for detalle in elementos %}
     <tr>
-        <td style="width: 3%;"><input type="checkbox" id="caja_sistemacajabundle_aperturaanulartype_detalle_id" name="caja_sistemacajabundle_aperturaanulartype[detalle_id]"> </td>
-        <td style="width: 3%;">{{ detalle.codigoBarra  }}</td>
-        <td style="width: 28%;">{{ detalle.comprobante  }}</td>
-        <td style="width: 28%;">{{ detalle.importe  }}</td>
+        <td style="width: 3%;" align="center"><input type="checkbox" id="caja_sistemacajabundle_aperturaanulartype_detalle_id" name="caja_sistemacajabundle_aperturaanulartype[detalle_id]"> </td>
+        <td style="width: 3%;" align="center">{{ detalle.codigoBarra  }}</td>
+        <td style="width: 28%;" align="center">{{ detalle.comprobante  }}</td>
+        <td style="width: 28%;" align="center">{{ detalle.importe  }}</td>
     </tr>
     {% endfor %}
 </table>

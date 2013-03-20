@@ -58,7 +58,11 @@ class CajaManager
 	 */
 	public function getApertura()
 	{
-		$caja_id = $this->getCaja()->getId();
+		$caja_id = null; //caja por defecto
+        if ($this->getCaja()) {
+            $caja_id = $this->getCaja()->getId();
+        }
+
 		$apertura = $this->contenedor->get("doctrine.orm.entity_manager")->getRepository("SistemaCajaBundle:Apertura")->findOneBy(array("caja" => $caja_id, 'fecha_cierre' => null));
 
 		return $apertura;

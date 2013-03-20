@@ -480,6 +480,16 @@ class AperturaController extends Controller
 
         $apertura = $this->container->get("caja.manager")->getApertura();
 
+        //Preguntar si la caja esta abierta: SE SUPONE QUE SOLO SE PUEDE ANULAR ALGO COBRADO EN LA FECHA DE HOY
+        // CONFIRMAR SI SOLO SE PUEDE ANULAR ALGO COBRADO HOY
+        if (!$apertura) {
+            $rJson = json_encode(array(
+                'ok' => 0,
+                'msg' => 'La caja de hoy se encuentra cerrada.'
+            ));
+            return $response->setContent($rJson);
+        }
+
         //Servicio de codigo de barra, para interpretarlo
         $bm = $this->container->get("caja.barra");
 
@@ -487,7 +497,7 @@ class AperturaController extends Controller
         $imp = $bm->getImporte();
         //Se verifica si existe en la base:
         $em = $this->getDoctrine()->getManager();
-        $lotes = $em->getRepository('SistemaCajaBundle:Lote')->getLote($cb);
+        $lotes = $em->getRepository('SistemaCajaBundle:Lote')->getLote($cb, $apertura->getId());
         //ld($lotes->getDetalle());
         if ($lotes <> null) {
             $rJson = json_encode(array('ok' => 1,
@@ -497,7 +507,7 @@ class AperturaController extends Controller
         } else {
             $rJson = json_encode(array(
                 'ok' => 0,
-                'msg' => 'No existe el comprobante ingresado'
+                'msg' => 'No existe el comprobante ingresado, o fue cobrado en otra caja.'
             ));
         }
         return $response->setContent($rJson);

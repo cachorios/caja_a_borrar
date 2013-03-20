@@ -49,59 +49,14 @@ $(document).ready(function (e) {
             setTimeout("$barra.focus()", 100);
             $.unblockUI();
         } else {
-
             //Verificar que no este ya agregado en la tabla de comprobantes
-
-            if (existeComprobanteEnBD(cb)) {
-                /***
-                 * Peticion ajax
-                 */
-                $.ajax({
-                    url:"{{ path('apertura_existe_comprobante') }}",
-                    data:{ cb:cb  },
-                    dataType:"html",
-                    success:actDesdeCB,
-                    error:function (jqXHR, status, error) {
-                        alert('Disculpe, existio un problema: ' + error);
-                    }
-                });
-            } else {
-                $barra.val('');
-                $msgBarra.text("El codigo de barra no existe o no fue ingresado."); //.show();
-                setTimeout("$barra.focus()", 100);
-                $.unblockUI();
+            resultado = existeComprobanteEnBD(cb);
+            if (resultado) {
+                $("#AnularComprobantes").show();
             }
+            $.unblockUI();
         }
-
-
     });
-
-
-    /**
-     * Si se proceso correctamente la peticion ajax
-     * del codigo de barra
-     * @param data
-     */
-    actDesdeCB = function (data) {
-        $barra.val('');
-        $barra.focus();
-        if (data.ok == 1) {
-            /**
-             * guardo data en databarra para acceder desde otros eventos
-             */
-            dataBarra = data;
-            $btn = $('[data-coleccion-add-btn-det]', '#caja_sistemacajabundle_aperturaanulartype_detalle');
-            postBorrarDetalle();
-
-            /**
-             * Disparo el boton add para agregar el registro nuevo con los
-             * datos del codigo de barra.
-             */
-            $btn.trigger("click");
-        } else {
-            $("#msgBarra").text(data.msg);
-        }
-    };
 
 
     /**
@@ -121,17 +76,20 @@ $(document).ready(function (e) {
             url:"{{ path('apertura_existe_comprobante') }}",
             data:{ cb:cb  },
             dataType:"json",
+            async: false,
             success: function(data) {
-            if (data.ok == 1) {
-                $('#detalle').html(data.detalle);
-            } else {
-                alert(data.msg);
-            }},
+                if (data.ok == 1) {
+                    $('#detalle').html(data.detalle);
+                    existe = true;
+                } else {
+                    alert(data.msg);
+                }
+            },
             error:function (jqXHR, status, error) {
                 alert('Disculpe, hubo un problema en la llamada al metodo de validacion de comprobante: ' + error);
+                //return existe;
             }
         });
-
         return existe;
 
     }
