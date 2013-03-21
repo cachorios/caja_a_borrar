@@ -203,18 +203,11 @@ $(document).ready(function (e) {
             buttons: [{ value: "Si" },  { value: "Cancelar"}],
             success: function (result) {
                 if (result == "Si") {
-                    $("#apago_importe").text(formato_numero(totalComprobante, 2));
+                    //$("#apago_importe").text(formato_numero(totalComprobante, 2));
 
-                    /* quitar las lineas actuales para que iniciar */
-                    $pagmod = $("#PagoModal");
-                    $("table tbody", $pagmod).remove();
-                    $("table", $pagmod).append("<tbody></tbody>");
-
-                    btnAdd = $("[data-coleccion-add-btn]", $pagmod);
-
-                    btnAdd.trigger('click');
-
-                    $pagmod.modal();
+                    //$("form","#form_CodigoBarra").submit();
+                    //$("form","#formulario_anulacion").submit();
+                    $("#formulario_anulacion").submit();
                 }
             }
         });
@@ -308,15 +301,17 @@ $(document).ready(function (e) {
 
     };
 
-    $("#pago_save").click(function(e){
+    //se cambia pago_save por anulacion_save
+    $("#anulacion_save").click(function(e){
 
         $.msgBox({
-            title: "Registración de Pago",
-            content: "Si esta todo correcto,<br> procede a almacenar el pago?",
+            title: "Anulación de Pago",
+            content: "Si esta todo correcto,<br> procede a anular el pago?",
             type: "confirm",
             buttons: [{ value: "Si" },  { value: "Cancelar"}],
             success: function (result) {
                 if (result == "Si") {
+                   //Cambiar el formulario....
                    $("form","#form_CodigoBarra").submit();
                 }
                 if (result == "Cancelar") {

@@ -42,9 +42,9 @@ apertura_anulado:
     pattern: /anular
     defaults: { _controller: "SistemaCajaBundle:Apertura:anular" }
 
-apertura_anulado_create:
-    pattern: /anular
-    defaults: { _controller: "SistemaCajaBundle:Apertura:anularCreate" }
+anulacion_comprobante:
+    pattern: /registrarAnulacion
+    defaults: { _controller: "SistemaCajaBundle:Apertura:anularComprobante" }
 
 apertura_existe_comprobante:
       pattern:  /barra

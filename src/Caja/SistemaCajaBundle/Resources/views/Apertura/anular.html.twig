@@ -6,7 +6,7 @@
 
 {% block page %}
 
-    <section id="form_Apertura">
+    <section id="form_Anulacion">
 
         <header>
             <h1>Anular {{ 'views.edit.edit'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</h1>
@@ -43,7 +43,7 @@
         <div class="sub-header">
             <h2 style="font-size: 16px;">Comprobantes</h2>
         </div>
-        <form class="form-horizontal" action="{{ path('apertura_anulado_create' ) }}"
+        <form id="formulario_anulacion" class="form-horizontal" action="{{ path('anulacion_comprobante' ) }}"
               method="post" {{ form_enctype(form) }}>
 
             <ul class="errorMessages"></ul>

@@ -10,6 +10,7 @@ use Pagerfanta\View\TwitterBootstrapView;
 
 use Caja\SistemaCajaBundle\Entity\Apertura;
 use Caja\SistemaCajaBundle\Entity\Lote;
+use Caja\SistemaCajaBundle\Entity\LoteDetalle;
 use Caja\SistemaCajaBundle\Entity\LotePago;
 
 use Caja\SistemaCajaBundle\Form\AperturaAnularType;
@@ -413,53 +414,67 @@ class AperturaController extends Controller
             'apertura' => $apertura));
     }
 
-    public function anularCreateAction()
+    public function anularComprobanteAction()
     {
 
-        $lote = new Lote();
+        //$lote = new Lote();
+        //En vez de crear un nuevo lote, recupero el actual:
         $request = $this->getRequest();
-        $form = $this->createForm(new AperturaAnularType(), $lote);
-
-        $form->bind($request);
-
+        //$variable = get->('caja_sistemacajabundle_aperturaanulartype');
+        $comprobantes =  $request->get('comprobantes_anular');
+        if (count($comprobantes) > 0) {
+            $primer_comprobante = $comprobantes[1];
+        } else {
+            $this->get('session')->getFlashBag()->add('error', 'No se ingresaron comprobantes para anular.');
+            return $this->redirect($this->generateUrl('apertura_anulado'));
+        }
 
         $caja = $this->container->get("caja.manager")->getCaja();
         $apertura = $this->container->get('caja.manager')->getApertura();
 
         if (!$apertura) {
             $this->get('session')->getFlashBag()->add('error', 'flash.create.error');
-            return $this->redirect($this->generateUrl('apertura'));
+            return $this->redirect($this->generateUrl('apertura_anulado'));
         }
 
-        $lote->setApertura($apertura);
+        //Servicio de codigo de barra, para interpretarlo
+        $bm = $this->container->get("caja.barra");
 
-        if ($form->isValid()) {
+        $bm->setCodigo($primer_comprobante, $apertura->getFecha());
+        $imp = $bm->getImporte();
+        //Se verifica si existe en la base:
+        $em = $this->getDoctrine()->getManager();
+        $lote = $em->getRepository('SistemaCajaBundle:Lote')->getLote($primer_comprobante, $apertura->getId());
+        if ($lote <> null) {
 
+            $lote_id = $lote->getId();
 
-            if (strlen($msg = $this->validarDetallesPagos($lote)) == 0) {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($lote);
-                $em->flush();
+            //Se procede a anular el lote detalle:
+            //UPDATE SistemaCajaBundle:LoteDetalle l SET l.anulado = true;
+            //$lotesdetalles = $em->createQuery("update SistemaCajaBundle:LoteDetalle l set l.anulado = true where l.codigo_barra = :primer_comprobante")
+            $lotesdetalles = $em->createQuery("update SistemaCajaBundle:LoteDetalle l set l.anulado = true where l.lote = :lote_id")
+            //->setParameter("primer_comprobante", $primer_comprobante);
+                ->setParameter("lote_id", $lote_id);
 
-                //Aqui debe retornar al timbrado de cada comprobante
-                $this->get('session')->getFlashBag()->add('success', 'flash.create.success');
-                return $this->redirect($this->generateUrl('registro'));
-            } else {
-                $this->get('session')->getFlashBag()->add('error', $msg);
-            }
+            $lotes_actualizados = $lotesdetalles->execute();
+
+           //Se procede a anular el lote de pago:
+            //UPDATE SistemaCajaBundle:LotePago p SET p.anulado = true;
+            $lotespagos = $em->createQuery("update SistemaCajaBundle:LotePago p set p.anulado = true where p.lote = :lote_id")
+                ->setParameter("lote_id", $lote_id);
+            $pagos_actualizados = $lotespagos->execute();
+
+            //$em->persist($lotesdetalles);
+            //$em->persist($lotespagos);
+            $em->flush();
         } else {
-
-            $this->get('session')->getFlashBag()->add('error', 'flash.create.error');
+            $this->get('session')->getFlashBag()->add('error', 'Alguno de los comprobantes seleccionados es incorrecto.');
+            return $this->redirect($this->generateUrl('apertura_anulado'));
         }
 
-
-        return $this->render("SistemaCajaBundle:Apertura:registro.html.twig", array(
-                "lote" => $lote,
-                "form" => $form->createView(),
-                "caja" => $caja,
-                "apertura" => $apertura
-            )
-        );
+        //Esta ultima parte hay que reemplazar / adaptar...
+        $this->get('session')->getFlashBag()->add('success', 'Los comprobantes han sido anulados');
+        return $this->redirect($this->generateUrl('apertura_anulado'));
 
     }
 
@@ -482,6 +497,8 @@ class AperturaController extends Controller
 
         //Preguntar si la caja esta abierta: SE SUPONE QUE SOLO SE PUEDE ANULAR ALGO COBRADO EN LA FECHA DE HOY
         // CONFIRMAR SI SOLO SE PUEDE ANULAR ALGO COBRADO HOY
+
+        //AGREGAR LOGICA QUE VERIFIQUE QUE EL COMPROBANTE YA NO ESTE ANULADO !!!!!!!!!!!!!!!!!
         if (!$apertura) {
             $rJson = json_encode(array(
                 'ok' => 0,
@@ -498,7 +515,6 @@ class AperturaController extends Controller
         //Se verifica si existe en la base:
         $em = $this->getDoctrine()->getManager();
         $lotes = $em->getRepository('SistemaCajaBundle:Lote')->getLote($cb, $apertura->getId());
-        //ld($lotes->getDetalle());
         if ($lotes <> null) {
             $rJson = json_encode(array('ok' => 1,
                 //'datos' => $lotes->getDetalle(),

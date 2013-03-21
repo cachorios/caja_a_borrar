@@ -28,8 +28,6 @@ class LoteRepository extends EntityRepository
                   ld.codigo_barra = :codigo_barra
                   and l.apertura = :apertura_id
               ");
-            //->setParameter("codigo_barra", $codigo_barra);
-            //->setParameter("apertura_id", $apertura_id);
         $q->setParameter('codigo_barra', $codigo_barra);
         $q->setParameter('apertura_id', $apertura_id);
 
