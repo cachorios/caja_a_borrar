@@ -1,14 +1,18 @@
 <table class="registro_detalle_barra">
     <tr>
     <th style="width: 3%;">##</th>
-    <th style="width: 3%;">C&oacute;digo Barra</th>
+    <th style="width: 3%;">C&oacute;digo de Barra</th>
     <th style="width: 28%;">Comprobante </th>
     <th style="width: 28%;">Importe </th>
     </tr>
 
     {% for detalle in elementos %}
     <tr>
-        <td style="width: 3%;" align="center"><input type="checkbox" name="comprobantes_anular[]" value="{{detalle.codigoBarra}}"> </td>
+        <td style="width: 3%;" align="center">
+            <input type="checkbox" name="comprobantes_anular[]" value={{detalle.codigoBarra}}
+                {% if (detalle.codigoBarra == ingresado)  %} checked="checked"  {% endif %}
+             >
+        </td>
         <td style="width: 3%;" align="center">{{ detalle.codigoBarra  }}</td>
         <td style="width: 28%;" align="center">{{ detalle.comprobante  }}</td>
         <td style="width: 28%;" align="center">{{ detalle.importe  }}</td>

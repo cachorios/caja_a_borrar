@@ -2,7 +2,7 @@
 {% block id 'mod_codigobarra' %}
 {% form_theme edit_form _self %}
 {% block title %}
-{{ parent() }} - Codigo Barra {{ 'views.edit.edit'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+{{ parent() }} - Codigo de Barra {{ 'views.edit.edit'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
 {% endblock %}
 
 {% block page %}
@@ -10,7 +10,7 @@
 <section id="form_CodigoBarra">
 
     <header>
-        <h1>Codigo de Barra - <span  style="color: #0064cd">{{ entity.nombre }}</span></h1>
+        <h1>C&oacute;digo de Barra - <span  style="color: #0064cd">{{ entity.nombre }}</span></h1>
     </header>
     {{ wo_render_breadcrumbs() }}
     {% for type, flashMessages in app.session.flashbag.all() %}
