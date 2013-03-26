@@ -445,15 +445,35 @@ class AperturaController extends Controller
 
             $lote_id = $lote->getId();
 
-            //Se procede a anular el lote detalle:
+            //Se procede a anular el o los lotes detalles:
             $lotesdetalles = $em->createQuery("update SistemaCajaBundle:LoteDetalle l set l.anulado = true where l.lote = :lote_id and l.codigo_barra in (:comprobantes)")
                 ->setParameter("lote_id", $lote_id)
                 ->setParameter("comprobantes", $comprobantes);
 
             $lotes_actualizados = $lotesdetalles->execute();
 
-            //SI SE ANULARON TODOS LOS COMPROBANTES QUE COMPONEN EL LOTE, TAMBIEN SE ANULA EL LOTE DE PAGO:
 
+            //Recupero el tipo de pago:
+            $tipo_pago = $em->find('SistemaCajaBundle:TipoPago', 1); //Efectivo
+            if (!$tipo_pago) {
+                $this->get('session')->getFlashBag()->add('error', 'No se pudo recuperar el tipo de pago.');
+                return $this->redirect($this->generateUrl('apertura_anulado'));
+            }
+
+            //Por cada comprobante anulado, se mete un registro "negativo" en el lote de pago
+            foreach ($comprobantes as $comprobantes) {
+                $registro_lote_pago = new LotePago();
+                $registro_lote_pago->setLote($lote);
+                // ESTO QUE VIENE ESTA MAL ----------------------------------------------------------------
+                $registro_lote_pago->setTipoPago($tipo_pago); //Se asume que siempre se cancela en efectivo
+                $registro_lote_pago->setFecha(new \DateTime());
+                $registro_lote_pago->setImporte(- $imp); //Se inserta el importe en negativo
+                $registro_lote_pago->setAnulado(1); //El campo anulado no ira mas en esta clase, sino en lote
+                //Falta setear un campo nuevo, que va a representar si el registro es positivo o negativo
+                $em->persist($registro_lote_pago);
+            }
+
+            //SI SE ANULARON TODOS LOS COMPROBANTES QUE COMPONEN EL LOTE, TAMBIEN SE ANULA EL LOTE DE PAGO:
             $comprobantes_lote = count($lote->getDetalle());
             if ($lotes_actualizados == $comprobantes_lote) {
                 //Se procede a anular el lote de pago:
