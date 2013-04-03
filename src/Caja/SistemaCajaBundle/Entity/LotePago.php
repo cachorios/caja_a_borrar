@@ -38,14 +38,6 @@ class LotePago
     private $importe;
 
     /**
-     * @var boolean
-     * @ORM\Column(name="anulado", nullable=true, type="boolean")
-     *
-     */
-    private $anulado;
-
-
-    /**
      * @ORM\ManyToOne(targetEntity="Lote", inversedBy="pagos" )
      */
     private $lote;
@@ -56,11 +48,11 @@ class LotePago
     private $tipo_pago;
 
     /**
-     * Set fecha
-     *
-     * @param \DateTime $fecha
-     * @return LotesPago
+     * @var string
+     * @ORM\Column(name="tipo_operacion", type="string", length=1)
+     * Assert\Choice(choices = {"C", "D"} message = "Seleccione un tipo de operacion valido") ****FALTA EL @ AL PRINCIPIO*****
      */
+    private $tipo_operacion;
 
     public function __construct()
     {
@@ -77,6 +69,13 @@ class LotePago
     {
         return $this->id;
     }
+
+    /**
+     * Set fecha
+     *
+     * @param \DateTime $fecha
+     * @return LotesPago
+     */
 
     public function setFecha($fecha)
     {
@@ -194,4 +193,27 @@ class LotePago
     }
 
 
+
+    /**
+     * Set tipo_operacion
+     *
+     * @param string $tipoOperacion
+     * @return LotePago
+     */
+    public function setTipoOperacion($tipoOperacion)
+    {
+        $this->tipo_operacion = $tipoOperacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get tipo_operacion
+     *
+     * @return string 
+     */
+    public function getTipoOperacion()
+    {
+        return $this->tipo_operacion;
+    }
 }
