@@ -441,62 +441,74 @@ class AperturaController extends Controller
         $lote = $em->getRepository('SistemaCajaBundle:Lote')->getLote($comprobantes[0], $apertura->getId());
         if ($lote <> null) {
 
-            $lote_id = $lote->getId();
+            $em->getConnection()->beginTransaction(); // suspende la consignación automática
+            try {
+                $lote_id = $lote->getId();
 
-            //Se procede a anular el o los lotes detalles:
-            $lotesdetalles = $em->createQuery("update SistemaCajaBundle:LoteDetalle ld set ld.anulado = true where ld.lote = :lote_id and ld.codigo_barra in (:comprobantes)")
-                ->setParameter("lote_id", $lote_id)
-                ->setParameter("comprobantes", $comprobantes);
+                //Se procede a anular el o los lotes detalles:
 
-            $lotes_actualizados = $lotesdetalles->execute();
+                $lotesdetalles = $em->createQuery("update SistemaCajaBundle:LoteDetalle ld set ld.anulado = true where ld.lote = :lote_id and ld.codigo_barra in (:comprobantes)")
+                    ->setParameter("lote_id", $lote_id)
+                    ->setParameter("comprobantes", $comprobantes);
+                $lotes_actualizados = $lotesdetalles->execute();
 
-            //Si no actualizo nada, devuelvo un error:
-            if ($lotes_actualizados == 0) {
-                $this->get('session')->getFlashBag()->add('error', 'No se pudo anular el/los comprobantes/s seleccionado/s.');
+                //Si no actualizo nada, devuelvo un error:
+                if ($lotes_actualizados == 0) {
+                    $this->get('session')->getFlashBag()->add('error', 'No se pudo anular el/los comprobantes/s seleccionado/s.');
+                    return $this->redirect($this->generateUrl('apertura_anulado'));
+                }
+
+                //Recupero el tipo de pago:
+                $tipo_pago = $em->find('SistemaCajaBundle:TipoPago', 1); //Efectivo
+                if (!$tipo_pago) {
+                    $this->get('session')->getFlashBag()->add('error', 'No se pudo recuperar el tipo de pago.');
+                    return $this->redirect($this->generateUrl('apertura_anulado'));
+                }
+
+                //Por cada comprobante anulado, se mete un registro "negativo" en el lote de pago
+                foreach ($comprobantes as $comprobante) {
+                    $registro_lote_pago = new LotePago();
+                    $registro_lote_pago->setLote($lote);
+                    // ESTO QUE VIENE ESTA MAL ----------------------------------------------------------------
+                    $registro_lote_pago->setTipoPago($tipo_pago); //Se asume que siempre se cancela en efectivo
+                    $registro_lote_pago->setFecha(new \DateTime());
+
+                    $bm->setCodigo($comprobante, $apertura->getFecha());
+
+                    //Por cada comprobante, recupero el importe:
+                    $registro_lote_pago->setImporte(- $bm->getImporte()); //Se inserta el importe en negativo
+                    $registro_lote_pago->setAnulado(1); //El campo anulado no ira mas en esta clase, sino en lote
+                    $registro_lote_pago->setTipoOperacion("D");
+                    $em->persist($registro_lote_pago);
+                }
+
+                //SI SE ANULARON TODOS LOS COMPROBANTES QUE COMPONEN EL LOTE, TAMBIEN SE ANULA EL LOTE:
+                $comprobantes_lote = count($lote->getDetalle());
+                $lote_cabecera_actualizado = 0; //valor por defecto
+                if ($lotes_actualizados == $comprobantes_lote) {
+                    //Se procede a anular el lote de pago:
+                    $lote = $em->createQuery("update SistemaCajaBundle:Lote l set l.anulado = true where l.id = :lote_id")
+                        ->setParameter("lote_id", $lote_id);
+                    $lote_cabecera_actualizado = $lote->execute();
+                }
+
+                //Si no actualizo ninguna cabecera, devuelvo un error:
+                if ($lote_cabecera_actualizado == 0) {
+                    $this->get('session')->getFlashBag()->add('error', 'No se pudo actualizar la cabecera del lote.');
+                    return $this->redirect($this->generateUrl('apertura_anulado'));
+                }
+
+                $em->flush();
+                $em->getConnection()->commit();
+
+            } catch (Exception $e) {
+                $em->getConnection()->rollback();
+                $em->close();
+                //throw $e;
+                $this->get('session')->getFlashBag()->add('error', 'Hubo un fallo al guardar los datos: ' . $e);
                 return $this->redirect($this->generateUrl('apertura_anulado'));
             }
 
-            //Recupero el tipo de pago:
-            $tipo_pago = $em->find('SistemaCajaBundle:TipoPago', 1); //Efectivo
-            if (!$tipo_pago) {
-                $this->get('session')->getFlashBag()->add('error', 'No se pudo recuperar el tipo de pago.');
-                return $this->redirect($this->generateUrl('apertura_anulado'));
-            }
-
-            //Por cada comprobante anulado, se mete un registro "negativo" en el lote de pago
-            foreach ($comprobantes as $comprobante) {
-                $registro_lote_pago = new LotePago();
-                $registro_lote_pago->setLote($lote);
-                // ESTO QUE VIENE ESTA MAL ----------------------------------------------------------------
-                $registro_lote_pago->setTipoPago($tipo_pago); //Se asume que siempre se cancela en efectivo
-                $registro_lote_pago->setFecha(new \DateTime());
-
-                $bm->setCodigo($comprobante, $apertura->getFecha());
-
-                //Por cada comprobante, recupero el importe:
-                $registro_lote_pago->setImporte(- $bm->getImporte()); //Se inserta el importe en negativo
-                $registro_lote_pago->setAnulado(1); //El campo anulado no ira mas en esta clase, sino en lote
-                $registro_lote_pago->setTipoOperacion("D");
-                $em->persist($registro_lote_pago);
-            }
-
-            //SI SE ANULARON TODOS LOS COMPROBANTES QUE COMPONEN EL LOTE, TAMBIEN SE ANULA EL LOTE:
-            $comprobantes_lote = count($lote->getDetalle());
-            $lote_cabecera_actualizado = 0; //valor por defecto
-            if ($lotes_actualizados == $comprobantes_lote) {
-                //Se procede a anular el lote de pago:
-                $lote = $em->createQuery("update SistemaCajaBundle:Lote l set l.anulado = true where l.id = :lote_id")
-                    ->setParameter("lote_id", $lote_id);
-                $lote_cabecera_actualizado = $lote->execute();
-            }
-
-            //Si no actualizo ninguna cabecera, devuelvo un error:
-            if ($lote_cabecera_actualizado == 0) {
-                $this->get('session')->getFlashBag()->add('error', 'No se pudo actualizar la cabecera del lote.');
-                return $this->redirect($this->generateUrl('apertura_anulado'));
-            }
-
-            $em->flush();
         } else {
             $this->get('session')->getFlashBag()->add('error', 'Alguno de los comprobantes seleccionados es incorrecto.');
             return $this->redirect($this->generateUrl('apertura_anulado'));
