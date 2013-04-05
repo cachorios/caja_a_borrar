@@ -30,13 +30,13 @@ class AperturaRepository extends EntityRepository
 
         $q = $em->createQuery("
               SELECT
-                  t.id,t.descripcion,p.anulado,sum(p.importe)
+                  t.id,t.descripcion, sum(p.importe)
               FROM
                   SistemaCajaBundle:LotePago p JOIN p.tipo_pago t JOIN p.lote l
               WHERE
                   l.apertura = :apertura_id
               GROUP BY
-                  t.descripcion, p.anulado
+                  t.descripcion
               ORDER BY
                   t.id ")
             ->setParameter("apertura_id", $apertura_id)
@@ -62,7 +62,7 @@ class AperturaRepository extends EntityRepository
               FROM
                   SistemaCajaBundle:LotePago p JOIN p.lote l
               WHERE
-                  l.apertura = :apertura_id and p.anulado = 0
+                  l.apertura = :apertura_id
               ")
             ->setParameter("apertura_id", $apertura_id)
         ;
@@ -87,7 +87,7 @@ class AperturaRepository extends EntityRepository
               FROM
                   SistemaCajaBundle:LotePago p JOIN p.lote l
               WHERE
-                  l.apertura = :apertura_id and p.anulado = 1
+                  l.apertura = :apertura_id
               ")
             ->setParameter("apertura_id", $apertura_id)
         ;

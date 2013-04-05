@@ -388,12 +388,14 @@ class AperturaController extends Controller
             if (!array_key_exists($tipo['id'], $tipoPago)) {
                 $tipoPago[$tipo['id']] = array($tipo['descripcion'], 0, 0);
             }
+            $tipoPago[$tipo['id']][1] = $tipo['1'];
+            /*
             if ($tipo['anulado'] == 1) {
                 $tipoPago[$tipo['id']][2] = $tipo['1'];
             } else {
                 $tipoPago[$tipo['id']][1] = $tipo['1'];
             }
-
+            */
         }
         return $tipoPago;
     }
@@ -452,9 +454,9 @@ class AperturaController extends Controller
                     ->setParameter("comprobantes", $comprobantes);
                 $lotes_actualizados = $lotesdetalles->execute();
 
-                //Si no actualizo nada, devuelvo un error:
-                if ($lotes_actualizados == 0) {
-                    $this->get('session')->getFlashBag()->add('error', 'No se pudo anular el/los comprobantes/s seleccionado/s.');
+                // Verifico que haya anulado la totalidad de los comprobantes ingresados:
+                if ($lotes_actualizados == count($comprobantes)) {
+                    $this->get('session')->getFlashBag()->add('error', 'No se pudieron anular los comprobantes seleccionados.');
                     return $this->redirect($this->generateUrl('apertura_anulado'));
                 }
 
@@ -477,25 +479,7 @@ class AperturaController extends Controller
 
                     //Por cada comprobante, recupero el importe:
                     $registro_lote_pago->setImporte(- $bm->getImporte()); //Se inserta el importe en negativo
-                    $registro_lote_pago->setAnulado(1); //El campo anulado no ira mas en esta clase, sino en lote
-                    $registro_lote_pago->setTipoOperacion("D");
                     $em->persist($registro_lote_pago);
-                }
-
-                //SI SE ANULARON TODOS LOS COMPROBANTES QUE COMPONEN EL LOTE, TAMBIEN SE ANULA EL LOTE:
-                $comprobantes_lote = count($lote->getDetalle());
-                $lote_cabecera_actualizado = 0; //valor por defecto
-                if ($lotes_actualizados == $comprobantes_lote) {
-                    //Se procede a anular el lote de pago:
-                    $lote = $em->createQuery("update SistemaCajaBundle:Lote l set l.anulado = true where l.id = :lote_id")
-                        ->setParameter("lote_id", $lote_id);
-                    $lote_cabecera_actualizado = $lote->execute();
-                }
-
-                //Si no actualizo ninguna cabecera, devuelvo un error:
-                if ($lote_cabecera_actualizado == 0) {
-                    $this->get('session')->getFlashBag()->add('error', 'No se pudo actualizar la cabecera del lote.');
-                    return $this->redirect($this->generateUrl('apertura_anulado'));
                 }
 
                 $em->flush();
@@ -514,7 +498,7 @@ class AperturaController extends Controller
             return $this->redirect($this->generateUrl('apertura_anulado'));
         }
 
-        $this->get('session')->getFlashBag()->add('success', 'El/los comprobante/s han sido anulados');
+        $this->get('session')->getFlashBag()->add('success', 'Los comprobantes seleccionados han sido anulados');
         return $this->redirect($this->generateUrl('apertura_anulado'));
 
     }

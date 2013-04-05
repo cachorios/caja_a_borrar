@@ -43,12 +43,6 @@ class Lote
     private $pagos;
 
     /**
-     * @var boolean
-     * @ORM\Column(name="anulado", nullable=true, type="boolean")
-     */
-    private $anulado;
-
-    /**
      * Get id
      *
      * @return integer 
@@ -212,26 +206,4 @@ class Lote
         return $n;
     }
 
-    /**
-     * Set anulado
-     *
-     * @param boolean $anulado
-     * @return Lote
-     */
-    public function setAnulado($anulado)
-    {
-        $this->anulado = $anulado;
-    
-        return $this;
-    }
-
-    /**
-     * Get anulado
-     *
-     * @return boolean 
-     */
-    public function getAnulado()
-    {
-        return $this->anulado;
-    }
 }

@@ -114,7 +114,6 @@ class RegistroController extends Controller
 
 		foreach($lote->getPagos() as $pago) {
 			$pago->setFecha(new \DateTime());
-			//$pago->setAnulado(0);
 			$pago->setLote($lote);
 
 			if($pago->getImporte() == null || $pago->getImporte() <= 0) {
