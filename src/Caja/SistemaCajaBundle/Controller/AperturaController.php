@@ -455,7 +455,7 @@ class AperturaController extends Controller
                 $lotes_actualizados = $lotesdetalles->execute();
 
                 // Verifico que haya anulado la totalidad de los comprobantes ingresados:
-                if ($lotes_actualizados == count($comprobantes)) {
+                if ($lotes_actualizados != count($comprobantes)) {
                     $this->get('session')->getFlashBag()->add('error', 'No se pudieron anular los comprobantes seleccionados.');
                     return $this->redirect($this->generateUrl('apertura_anulado'));
                 }
@@ -473,6 +473,7 @@ class AperturaController extends Controller
                     $registro_lote_pago->setLote($lote);
                     // ESTO QUE VIENE ESTA MAL ----------------------------------------------------------------
                     $registro_lote_pago->setTipoPago($tipo_pago); //Se asume que siempre se cancela en efectivo
+                    //-----------------------------------------------------------------------------------------
                     $registro_lote_pago->setFecha(new \DateTime());
 
                     $bm->setCodigo($comprobante, $apertura->getFecha());
