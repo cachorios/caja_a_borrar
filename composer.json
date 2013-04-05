@@ -19,19 +19,20 @@
         "jms/security-extra-bundle": "1.4.*",
         "jms/di-extra-bundle": "1.3.*",
 
-        "mopa/bootstrap-bundle": "dev-master",
-
-        "khepin/yaml-fixtures-bundle": "0.7.*",
-
-        "raulfraile/ladybug-bundle": "dev-master",
-
-        "avalanche123/imagine-bundle": "dev-master",
-
-        "pagerfanta/pagerfanta": "dev-master",
-        "lexik/form-filter-bundle": "dev-master",
+		"khepin/yaml-fixtures-bundle": "0.7.*",
+		"raulfraile/ladybug-bundle": "dev-master",
+		"avalanche123/imagine-bundle": "dev-master",
+		
+		"mopa/bootstrap-bundle": "dev-master",
+		
+		"pagerfanta/pagerfanta": "dev-master",
+		"lexik/form-filter-bundle": "1.2.*",
         "jordillonch/crud-generator": "dev-master",
         "whiteoctober/breadcrumbs-bundle": "dev-master",
 
+		"willdurand/expose-translation-bundle": "dev-master",
+        "apy/jsfv-bundle":"dev-master",
+		
         "lar/utiles-bundle": "dev-master",
         "lar/lar-parametro-bundle": "dev-master"
 
