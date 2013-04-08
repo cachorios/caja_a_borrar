@@ -493,7 +493,7 @@ class AperturaController extends Controller
                     $monto_a_anular += $bm->getImporte();
                 }
                 //Se verifica que se hayan seleccionado todos los comprobantes que componen el lote:
-                if ($efectivo < $monto_a_anular) {
+                if ($efectivo <= $monto_a_anular) {
                     $this->get('session')->getFlashBag()->add('error', 'El monto de los comprobantes seleccionados es menor al importe abonado en efectivo.');
                     return $this->redirect($this->generateUrl('apertura_anulado'));
                 }
