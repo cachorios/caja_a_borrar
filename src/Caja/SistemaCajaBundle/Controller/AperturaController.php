@@ -441,12 +441,66 @@ class AperturaController extends Controller
         //Se verifica si existe en la base:
         $em = $this->getDoctrine()->getManager();
         $lote = $em->getRepository('SistemaCajaBundle:Lote')->getLote($comprobantes[0], $apertura->getId());
+
         if ($lote <> null) {
+
+            $lote_id = $lote->getId();
+            $total_comprobantes_lote = $lote->getDetalle()->count();
+            // La anulación parcial solo es posible si el pago de todo el lote fue en efectivo
+            // Si el pago fue por ej con efectivo y tarjeta, el lote solo puede ser anulado de manera total:
+
+            //Pregunto cuantos tipos de pagos se hicieron en ese lote:
+            $consulta_cantidad_pagos = $em->createQuery("
+            SELECT COUNT(p.tipo_pago)
+            FROM SistemaCajaBundle:LotePago p
+            WHERE p.lote = :lote_id ")
+            ->setParameter("lote_id", $lote_id);
+
+            $cantidad_pagos = $consulta_cantidad_pagos->getSingleResult();
+
+            if ($cantidad_pagos == 1) {
+                //Se hizo en un solo tipo de pago, hay que ver cual fue ese tipo:
+                $consulta_tipo_pago= $em->createQuery("
+                SELECT tp.id
+                FROM SistemaCajaBundle:LotePago p JOIN p.tipo_pago tp
+                WHERE p.lote = :lote_id ")
+                 ->setParameter("lote_id", $lote_id);
+
+                $consulta_tipo_pago->setMaxResults(1);
+                $resultado = $consulta_tipo_pago->getSingleResult();
+                $tipo_pago = $resultado['id'];
+
+                //Si el pago no fue en efectivo, solo se puede anular el lote completo:
+                if (($tipo_pago != 1) && (count($comprobantes) < $total_comprobantes_lote)) {
+                    $this->get('session')->getFlashBag()->add('error', 'El lote no fue abonado en efectivo, solo se puede anular de manera total.');
+                    return $this->redirect($this->generateUrl('apertura_anulado'));
+                }
+
+            } else { //Se pago con mas un tipo de pago, se anula hasta donde le alcance el efectivo:
+                //Comparo el monto abonado en efectivo para ese lote con el monto de lo/s comprobante/s a anular
+                $consulta_efectivo = $em->createQuery("SELECT sum(p.importe)
+                FROM SistemaCajaBundle:LotePago p JOIN p.tipo_pago tp
+                WHERE p.tipo_pago = 1 and p.lote = :lote_id ")
+                 ->setParameter("lote_id", $lote_id);
+
+                $consulta_efectivo->setMaxResults(1);
+                $efectivo = $consulta_efectivo->getSingleResult();
+
+                //Calculo el monto de los comprobantes seleccionados para anular:
+                $monto_a_anular = 0;
+                foreach ($comprobantes as $comprobante) {
+                    $bm->setCodigo($comprobante, $apertura->getFecha());
+                    $monto_a_anular += $bm->getImporte();
+                }
+                //Se verifica que se hayan seleccionado todos los comprobantes que componen el lote:
+                if ($efectivo < $monto_a_anular) {
+                    $this->get('session')->getFlashBag()->add('error', 'El monto de los comprobantes seleccionados es menor al importe abonado en efectivo.');
+                    return $this->redirect($this->generateUrl('apertura_anulado'));
+                }
+            }
 
             $em->getConnection()->beginTransaction(); // suspende la consignación automática
             try {
-                $lote_id = $lote->getId();
-
                 //Se procede a anular el o los lotes detalles:
 
                 $lotesdetalles = $em->createQuery("update SistemaCajaBundle:LoteDetalle ld set ld.anulado = true where ld.lote = :lote_id and ld.codigo_barra in (:comprobantes)")
