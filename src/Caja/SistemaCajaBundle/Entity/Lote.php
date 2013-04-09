@@ -138,6 +138,7 @@ class Lote
      */
     public function getDetalle()
     {
+
         return $this->detalle;
     }
 
@@ -204,6 +205,22 @@ class Lote
         }
 
         return $n;
+    }
+
+    /**
+     * Get detalle de comprobantes no anulados
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDetalleNoAnulados()
+    {
+        $todos = array();
+        foreach($this->detalle as $detalle){
+            if ($detalle->getAnulado() == 0) {
+                $todos[] = $detalle;
+            }
+        }
+        return $todos;
     }
 
 }
