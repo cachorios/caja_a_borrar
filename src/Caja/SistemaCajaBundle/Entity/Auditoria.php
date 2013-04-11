@@ -24,21 +24,18 @@ class Auditoria {
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="fecha", type="date")
      */
     private $fecha;
-
     /**
      * @var string
      *
      * @ORM\Column(name="usuario", type="string", length=255)
      */
     private $usuario;
-
     /**
      * @var string
      *
@@ -49,10 +46,9 @@ class Auditoria {
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -62,20 +58,18 @@ class Auditoria {
      * @param \DateTime $fecha
      * @return Auditoria
      */
-    public function setFecha($fecha)
-    {
+    public function setFecha($fecha) {
         $this->fecha = $fecha;
-    
+
         return $this;
     }
 
     /**
      * Get fecha
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
-    public function getFecha()
-    {
+    public function getFecha() {
         return $this->fecha;
     }
 
@@ -85,20 +79,18 @@ class Auditoria {
      * @param string $usuario
      * @return Auditoria
      */
-    public function setUsuario($usuario)
-    {
+    public function setUsuario($usuario) {
         $this->usuario = $usuario;
-    
+
         return $this;
     }
 
     /**
      * Get usuario
      *
-     * @return string 
+     * @return string
      */
-    public function getUsuario()
-    {
+    public function getUsuario() {
         return $this->usuario;
     }
 
@@ -108,20 +100,33 @@ class Auditoria {
      * @param string $accion
      * @return Auditoria
      */
-    public function setAccion($accion)
-    {
+    public function setAccion($accion) {
         $this->accion = $accion;
-    
+
         return $this;
     }
 
     /**
      * Get accion
      *
-     * @return string 
+     * @return string
      */
-    public function getAccion()
-    {
+    public function getAccion() {
         return $this->accion;
+    }
+
+    /**
+     * Genera un registro de auditoria como debe ser.
+     *
+     * @param $usuario
+     * @param $accion
+     * @return $this
+     */
+    public function auditar($usuario, $accion) {
+        $this->setFecha(new \DateTime());
+        $this->setUsuario($usuario);
+        $this->setAccion($accion);
+
+        return $this;
     }
 }

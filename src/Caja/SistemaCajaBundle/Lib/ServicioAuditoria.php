@@ -12,8 +12,12 @@ use Caja\SistemaCajaBundle\Entity\Auditoria;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
 class ServicioAuditoria {
-    public function __construct($contenedor) {
+    public $contenedor;
+    public $entityManager;
+
+    public function __construct($contenedor, $entityManager) {
         $this->contenedor = $contenedor;
+        $this->entityManager = $entityManager;
     }
 
     public function onKernelController(FilterControllerEvent $event) {
@@ -37,13 +41,8 @@ class ServicioAuditoria {
             $obj = new $clase();
             if (!in_array($action, $obj->getNoAuditables())) {
                 $audit = new Auditoria();
-                $audit->setFecha(new \DateTime());
-                $audit->setAccion($action);
-                $audit->setUsuario($this->contenedor->get("security.context")->getToken()->getUser()->getUsername());
-
-                $em = $this->contenedor->get("doctrine.orm.entity_manager");
-                $em->persist($audit);
-                $em->flush();
+                $this->entityManager->persist($audit->auditar($action, $this->contenedor->get("security.context")->getToken()->getUser()->getUsername()));
+                $this->entityManager->flush();
             }
         }
     }
