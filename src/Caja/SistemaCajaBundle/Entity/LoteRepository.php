@@ -13,7 +13,8 @@ use Caja\SistemaCajaBundle\Entity\LoteDetalle;
 class LoteRepository extends EntityRepository
 {
     /**
-     * A partir de un numero de comprobante, se recupera el lote correspondiente
+     * A partir de un numero de comprobante, se recuperan los comprobantes
+     *pertenecientes al lote correspondiente, que no esten anulados
      * @param $codigo_barra
      * @return mixed
      */
@@ -27,6 +28,7 @@ class LoteRepository extends EntityRepository
               WHERE
                   ld.codigo_barra = :codigo_barra
                   and l.apertura = :apertura_id
+                  and ld.anulado = 0
               ");
         $q->setParameter('codigo_barra', $codigo_barra);
         $q->setParameter('apertura_id', $apertura_id);
