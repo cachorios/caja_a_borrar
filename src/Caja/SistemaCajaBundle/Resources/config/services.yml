@@ -2,6 +2,7 @@ parameters:
     caja.listener.class: Caja\SistemaCajaBundle\Listener\CajaListener
     caja.cajamanager:    Caja\SistemaCajaBundle\Lib\CajaManager
     caja.barra:          Caja\SistemaCajaBundle\Lib\CodigoBarraLive
+
 services:
 #    caja.example:
 #        class: %caja.example.class%
@@ -26,15 +27,21 @@ services:
         class: %caja.barra%
         arguments: [@doctrine.orm.entity_manager, @lar.parametro.tabla,@logger]
 
-
     caja.manager:
         alias:  sistemacaja.caja_manager
 
     caja.barra:
         alias: sistemacaja.codigobarra
 
+    caja.auditoria.action_listener:
+        class: Caja\SistemaCajaBundle\Lib\ServicioAuditoria
+        arguments: [@service_container]
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
     twig.extension.caja.manager:
         class:  Caja\SistemaCajaBundle\Twig\Extension\CajaExtension
         arguments: [@service_container]
         tags:
             - { name: twig.extension}
+
