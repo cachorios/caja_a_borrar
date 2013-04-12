@@ -12,11 +12,11 @@ use Caja\SistemaCajaBundle\Entity\Auditoria;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
 class ServicioAuditoria {
-    public $contenedor;
-    public $entityManager;
+    private $contexto;
+    private $entityManager;
 
-    public function __construct($contenedor, $entityManager) {
-        $this->contenedor = $contenedor;
+    public function __construct($contexto, $entityManager) {
+        $this->contexto = $contexto;
         $this->entityManager = $entityManager;
     }
 
@@ -37,11 +37,10 @@ class ServicioAuditoria {
          */
         if ($controller[0] instanceof IModuloAuditable) {
             $clase = new $controller[0];
-            $action = $controller[1];
             $obj = new $clase();
-            if (!in_array($action, $obj->getNoAuditables())) {
+            if (!in_array($controller[1], $obj->getNoAuditables())) {
                 $audit = new Auditoria();
-                $this->entityManager->persist($audit->auditar($action, $this->contenedor->get("security.context")->getToken()->getUser()->getUsername()));
+                $this->entityManager->persist($audit->auditar($this->contexto->getToken()->getUser()->getUsername(), $controller[1]));
                 $this->entityManager->flush();
             }
         }

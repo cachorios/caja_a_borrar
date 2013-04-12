@@ -35,7 +35,7 @@ services:
 
     caja.auditoria.action_listener:
         class: Caja\SistemaCajaBundle\Lib\ServicioAuditoria
-        arguments: [@service_container, @doctrine.orm.entity_manager]
+        arguments: [@security.context, @doctrine.orm.entity_manager]
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
 
