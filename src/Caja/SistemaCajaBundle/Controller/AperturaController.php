@@ -365,13 +365,25 @@ class AperturaController extends Controller implements IModuloAuditable {
         $caja     = $this->container->get('caja.manager')->getCaja();
         $apertura = $this->container->get('caja.manager')->getApertura();
 
-        return $this->render('SistemaCajaBundle:Apertura:anular.html.twig',
-                             array('caja' => $caja, "form" => $form->createView(), 'apertura' => $apertura));
+        //Si no hay apertura activa, no dejo hacer nada:
+        if (!$apertura) {
+            $this->get('session')->getFlashBag()->add('error', 'No existe una apertura activa.');
+            return $this->redirect($this->generateUrl('apertura_new'));
+        }
+
+        return $this->render('SistemaCajaBundle:Apertura:anular.html.twig', array(
+            'caja' => $caja,
+            "form" => $form->createView(),
+            'apertura' => $apertura));
     }
 
     public function anularComprobanteAction() {
 
         //En vez de crear un nuevo lote, recupero el actual:
+
+        //CONTROLAR QUE EL METODO SEA SIEMPRE POST !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+        // A partir del comprobante ingresado, recupero el lote al cual pertenece:
         $request = $this->getRequest();
         //Recupero los comprobantes que fueron seleccionados para anular:
         $comprobantes = $request->get('comprobantes_anular');
@@ -384,17 +396,80 @@ class AperturaController extends Controller implements IModuloAuditable {
         $apertura = $this->container->get('caja.manager')->getApertura();
 
         if (!$apertura) {
-            $this->get('session')->getFlashBag()->add('error', 'flash.create.error');
-            return $this->redirect($this->generateUrl('apertura_anulado'));
+            $this->get('session')->getFlashBag()->add('error', 'No existe una apertura activa.');
+            return $this->redirect($this->generateUrl('apertura_new '));
         }
 
         //Servicio de codigo de barra, para interpretarlo
         $bm = $this->container->get("caja.barra");
 
-        //Se verifica si existe en la base:
-        $em   = $this->getDoctrine()->getManager();
-        $lote = $em->getRepository('SistemaCajaBundle:Lote')->getLote($comprobantes[0], $apertura->getId());
-        if ($lote <> null) {
+        //Se verifica si existe en la base el comprobante ingresado:
+        $em = $this->getDoctrine()->getManager();
+        $lote = $em->getRepository('SistemaCajaBundle:Lote')->getLote($apertura->getId(), $comprobantes[0] );
+
+        if ($lote != null) {
+
+            $lote_id = $lote->getId();
+            $total_comprobantes_lote = $lote->getDetalle()->count();
+
+            //Pregunto cuantos tipos de pagos se hicieron en ese lote:
+            $consulta_cantidad_pagos = $em->createQuery("
+            SELECT COUNT(p.tipo_pago)
+            FROM SistemaCajaBundle:LotePago p
+            WHERE p.lote = :lote_id ")
+            ->setParameter("lote_id", $lote_id);
+            $cantidad_pagos = $consulta_cantidad_pagos->getSingleResult();
+            $cantidad_pagos = $cantidad_pagos[1];
+
+            if ($cantidad_pagos == 1) {
+                //Se hizo en un solo tipo de pago, hay que ver cual fue ese tipo:
+                ///////////////////////////////////////////////////////////////////////////////////////////////////
+                $consulta_tipo_pago= $em->createQuery("
+                SELECT tp.id
+                FROM SistemaCajaBundle:LotePago p JOIN p.tipo_pago tp
+                WHERE p.lote = :lote_id ")
+                 ->setParameter("lote_id", $lote_id);
+
+
+                $consulta_tipo_pago->setMaxResults(1);
+                $resultado = $consulta_tipo_pago->getSingleResult();
+                $tipo_pago = $resultado['id'];
+                ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+                //el tipo de pago en el registro negativo sera el obtenido en la linea anterior ($tipo_pago)
+
+                //Si el pago no fue en efectivo, solo se puede anular el lote completo:
+                if (($tipo_pago != 1) && (count($comprobantes) < $total_comprobantes_lote)) {
+                    $this->get('session')->getFlashBag()->add('error', 'El lote no fue abonado en efectivo, solo se puede anular de manera total.');
+                    return $this->redirect($this->generateUrl('apertura_anulado'));
+                }
+
+            } else { //Se pago con mas un tipo de pago, se anula hasta donde le alcance el efectivo:
+                //Comparo el monto abonado en efectivo para ese lote con el monto del comprobante/s a anular
+                ///////////////////////////////////////////////////////////////////////////////////////////////////
+                $consulta_efectivo = $em->createQuery("SELECT sum(p.importe)
+                FROM SistemaCajaBundle:LotePago p JOIN p.tipo_pago tp
+                WHERE p.tipo_pago = 1 and p.lote = :lote_id ")
+                 ->setParameter("lote_id", $lote_id);
+                $consulta_efectivo->setMaxResults(1);
+                $efectivo = $consulta_efectivo->getSingleResult();
+                $efectivo = $efectivo[1];
+                ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+                //Calculo el monto de los comprobantes seleccionados para anular:
+                $monto_a_anular = 0;
+                foreach ($comprobantes as $comprobante) {
+                    $bm->setCodigo($comprobante, $apertura->getFecha());
+                    $monto_a_anular += $bm->getImporte();
+                }
+                //Se verifica que se hayan seleccionado todos los comprobantes que componen el lote:
+                if ($monto_a_anular > $efectivo) {
+                    $this->get('session')->getFlashBag()->add('error', 'El monto de los comprobantes seleccionados es mayor al importe abonado en efectivo.');
+                    return $this->redirect($this->generateUrl('apertura_anulado'));
+                }
+                $tipo_pago = 1; //Se asume que se va a cancelar hasta donde le alcance el efectivo,
+                // por lo cual el tipo de pago en el registro negativo sera 1 (efectivo)
+            }
 
             $em->getConnection()->beginTransaction(); // suspende la consignación automática
             try {
@@ -484,13 +559,18 @@ class AperturaController extends Controller implements IModuloAuditable {
         $bm->setCodigo($cb, $apertura->getFecha());
         $imp = $bm->getImporte();
         //Se verifica si existe en la base:
-        $em    = $this->getDoctrine()->getManager();
-        $lotes = $em->getRepository('SistemaCajaBundle:Lote')->getLote($cb, $apertura->getId());
-        if ($lotes <> null) {
-            $rJson = json_encode(array('ok' => 1, 'detalle' => $this->renderView("SistemaCajaBundle:Apertura:_loteDetalle.html.twig",
-                                                                                 array('elementos' => $lotes->getDetalle(), 'ingresado' => $cb))));
+
+        $em = $this->getDoctrine()->getManager();
+        $lotes = $em->getRepository('SistemaCajaBundle:Lote')->getLote($apertura->getId(), $cb);
+        if ($lotes) {
+            $rJson = json_encode(array('ok' => 1,
+                'detalle' => $this->renderView("SistemaCajaBundle:Apertura:_loteDetalle.html.twig", array('elementos' => $lotes->getDetalleNoAnulados(), 'ingresado' => $cb))
+            ));
         } else {
-            $rJson = json_encode(array('ok' => 0, 'msg' => 'No existe el comprobante ingresado, o fue cobrado en otra caja.'));
+            $rJson = json_encode(array(
+                'ok' => 0,
+                'msg' => 'No existe el comprobante ingresado, o fue cobrado en otra caja. Error: ' . $lotes
+            ));
         }
         return $response->setContent($rJson);
     }

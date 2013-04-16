@@ -18,7 +18,7 @@ class LoteRepository extends EntityRepository
      * @param $codigo_barra
      * @return mixed
      */
-    public function getLote($codigo_barra, $apertura_id)
+    public function getLote($apertura_id, $codigo_barra)
     {
         $em = $this->getEntityManager();
         $q = $em->createQuery("
@@ -37,6 +37,11 @@ class LoteRepository extends EntityRepository
             $res = $q->getSingleResult();
             return $res->getLote();
         } catch (\Doctrine\Orm\NoResultException $e) {
+            //No trajo resultados:
+            return null;
+        }  catch (\Doctrine\Orm\NonUniqueResultException $e) {
+            //Si devolvio una excepcion es porque trajo mas de un resultado,
+            // o sea es un error grave haber cobrado mas de una vez un comprobante
             return null;
         }
     }
