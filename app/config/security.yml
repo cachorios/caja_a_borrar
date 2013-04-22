@@ -46,7 +46,7 @@ security:
 #            chain:
 #                providers: ["usuarios", "clientes"]
         usuarios:
-            entity: { class: Lar\UsuarioBundle\Entity\Usuario,  property:    email }
+            entity: { class: Lar\UsuarioBundle\Entity\Usuario,  property:    username }
 
 
 

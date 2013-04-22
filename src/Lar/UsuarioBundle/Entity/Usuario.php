@@ -68,7 +68,17 @@ class Usuario implements AdvancedUserInterface
 	 * @ORM\Column(name="password", type="string", length=255)
 	 * @Assert\Length(min = 6)
 	 */
-	private $password;
+
+    private $password;
+
+    /**
+     * @var string $username
+     *
+     * @ORM\Column(name="username", type="string", length=128)
+     * @Assert\Length(min = 6)
+     */
+
+    private $username;
 
 	/**
 	 * @var string $salt

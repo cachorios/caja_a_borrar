@@ -15,6 +15,7 @@ fixtures:
         is_deleted: 0
         foto: user-511a905a4d1de-foto1.jpg
         fecha_nacimiento: 05-11-1968
+        username: cachorios
         grupos:
             - gr1
             - gr2
@@ -31,6 +32,7 @@ fixtures:
         is_deleted: 0
         foto: user-511a8ef7b8377-foto1.jpg
         fecha_nacimiento: 15-01-1980
+        username: Alberto2000
         grupos:
             - gr1
             - gr2
@@ -48,6 +50,7 @@ fixtures:
         is_deleted: 0
         foto: user-511970d001595-foto1.jpg
         fecha_nacimiento: 15-01-1951
+        username: ruben
         grupos:
             - gr1
 
