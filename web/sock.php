@@ -1,21 +1,28 @@
 <?php
 
-$fp = fsockopen ("192.168.1.5", 5331, $errno, $errstr, 30);
+$remip = $HTTP_SERVER_VARS['REMOTE_ADDR'];
+$remport = $HTTP_SERVER_VARS['REMOTE_PORT'];
+
+echo $remip;
+echo $remport;
+
+
+$fp = fsockopen ("192.0.4.183", 5331, $errno, $errstr, 30);
 if (!$fp) {
 	echo "$errstr ($errno)";
 } else {
 	$e = chr(27);
 	//fputs ($fp, chr(149) );
-	echo "Inicio";
+	echo "Inicio: $fp";
 	fputs ($fp, chr(hexdec ('H1B')) . "a"  . chr(1) );
 	fputs ($fp, chr(hexdec ('H1B')) . "c0" . chr(2) );
 	fputs ($fp, chr(hexdec ('H1B')) . "U"  . chr(0) );
-	fputs ($fp, chr(hexdec ('H1B')) . "!"  . chr(2) ); //tamaño
+	fputs ($fp, chr(hexdec ('H1B')) . "!"  . chr(2) ); //tamaï¿½o
 	fputs ($fp, chr(hexdec ('H1B')) . "M"  . chr(2) );
 	
 	fputs ($fp, "PRUEBA de IMPRESION"  . chr(hexdec ('HA')) );
 	
-	fputs ($fp, chr(hexdec ('H1B')) . "!"  . chr(1) ); //Tamaño normal
+	fputs ($fp, chr(hexdec ('H1B')) . "!"  . chr(1) ); //Tamaï¿½o normal
 	fputs ($fp, chr(hexdec ('H1B')) . "M"  . chr(1) );
 	
 	

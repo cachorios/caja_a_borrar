@@ -49,3 +49,7 @@ anulacion_comprobante:
 apertura_existe_comprobante:
       pattern:  /barra
       defaults: { _controller: "SistemaCajaBundle:Apertura:existeComprobante" }
+
+apertura_sock:
+      pattern:  /sock
+      defaults: { _controller: "SistemaCajaBundle:Apertura:sock" }
