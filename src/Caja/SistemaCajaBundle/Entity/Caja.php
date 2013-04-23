@@ -48,6 +48,13 @@ class Caja
     protected  $cajero;
 
     /**
+    * @var string
+    *
+    * @ORM\Column(name="puerto", type="string", length=10)
+    */
+    private $puerto;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -131,5 +138,28 @@ class Caja
     public function getNumero()
     {
         return $this->numero;
+    }
+
+    /**
+     * Set puerto
+     *
+     * @param string $puerto
+     * @return Caja
+     */
+    public function setPuerto($puerto)
+    {
+        $this->puerto = $puerto;
+    
+        return $this;
+    }
+
+    /**
+     * Get puerto
+     *
+     * @return string 
+     */
+    public function getPuerto()
+    {
+        return $this->puerto;
     }
 }
