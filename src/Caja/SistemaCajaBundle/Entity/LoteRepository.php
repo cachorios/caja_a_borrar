@@ -45,4 +45,64 @@ class LoteRepository extends EntityRepository
             return null;
         }
     }
+
+    /**
+     * Consulta de cantidad de pagos de un lote determinado
+     * @param $lote_id
+     * @return int
+     */
+    public function getConsultaCantidadPagos($lote_id){
+        $em = $this->getEntityManager();
+
+        $consulta_cantidad_pagos = $em->createQuery("
+            SELECT COUNT(p.tipo_pago)
+            FROM SistemaCajaBundle:LotePago p
+            WHERE p.lote = :lote_id ")
+            ->setParameter("lote_id", $lote_id);
+        $cantidad_pagos = $consulta_cantidad_pagos->getSingleResult();
+        $cantidad_pagos = $cantidad_pagos[1];
+
+        return $cantidad_pagos;
+    }
+
+    /**
+     * Consulta el tipo de pago cuando el lote se pago en un solo pago
+     * @param $lote_id
+     * @return int
+     */
+    public function getConsultaTipoPago($lote_id){
+        $em = $this->getEntityManager();
+
+        $consulta_tipo_pago= $em->createQuery("
+                SELECT tp.id
+                FROM SistemaCajaBundle:LotePago p JOIN p.tipo_pago tp
+                WHERE p.lote = :lote_id ")
+            ->setParameter("lote_id", $lote_id);
+
+        $consulta_tipo_pago->setMaxResults(1);
+        $resultado = $consulta_tipo_pago->getSingleResult();
+        $tipo_pago = $resultado['id'];
+
+        return $tipo_pago;
+    }
+
+    /**
+     * Consulta el monto pagado en efectivo de un lote
+     * @param $lote_id
+     * @return $float
+     */
+    public function getMontoEfectivo($lote_id){
+        $em = $this->getEntityManager();
+
+        $consulta_efectivo = $em->createQuery("SELECT sum(p.importe)
+                FROM SistemaCajaBundle:LotePago p JOIN p.tipo_pago tp
+                WHERE p.tipo_pago = 1 and p.lote = :lote_id ")
+            ->setParameter("lote_id", $lote_id);
+        $consulta_efectivo->setMaxResults(1);
+        $efectivo = $consulta_efectivo->getSingleResult();
+        $efectivo = $efectivo[1];
+
+        return $efectivo;
+    }
+
 }

@@ -401,7 +401,7 @@ class AperturaController extends Controller implements IModuloAuditable {
         }
 
         //Servicio de codigo de barra, para interpretarlo
-        $bm = $this->container->get("caja.barra");
+        $bm = $this->container->get( "caja.barra");
 
         //Se verifica si existe en la base el comprobante ingresado:
         $em = $this->getDoctrine()->getManager();
@@ -413,18 +413,19 @@ class AperturaController extends Controller implements IModuloAuditable {
             $total_comprobantes_lote = $lote->getDetalle()->count();
 
             //Pregunto cuantos tipos de pagos se hicieron en ese lote:
-            $consulta_cantidad_pagos = $em->createQuery("
+            /*$consulta_cantidad_pagos = $em->createQuery("
             SELECT COUNT(p.tipo_pago)
             FROM SistemaCajaBundle:LotePago p
             WHERE p.lote = :lote_id ")
             ->setParameter("lote_id", $lote_id);
             $cantidad_pagos = $consulta_cantidad_pagos->getSingleResult();
-            $cantidad_pagos = $cantidad_pagos[1];
+            $cantidad_pagos = $cantidad_pagos[1];*/
+            $cantidad_pagos = $em->getRepository('SistemaCajaBundle:Lote')->getConsultaCantidadPagos($lote_id);
 
             if ($cantidad_pagos == 1) {
                 //Se hizo en un solo tipo de pago, hay que ver cual fue ese tipo:
                 ///////////////////////////////////////////////////////////////////////////////////////////////////
-                $consulta_tipo_pago= $em->createQuery("
+                /*$consulta_tipo_pago= $em->createQuery("
                 SELECT tp.id
                 FROM SistemaCajaBundle:LotePago p JOIN p.tipo_pago tp
                 WHERE p.lote = :lote_id ")
@@ -433,7 +434,8 @@ class AperturaController extends Controller implements IModuloAuditable {
 
                 $consulta_tipo_pago->setMaxResults(1);
                 $resultado = $consulta_tipo_pago->getSingleResult();
-                $tipo_pago = $resultado['id'];
+                $tipo_pago = $resultado['id'];*/
+                $tipo_pago = $em->getRepository('SistemaCajaBundle:Lote')->getConsultaTipoPago($lote_id);
                 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
                 //el tipo de pago en el registro negativo sera el obtenido en la linea anterior ($tipo_pago)
@@ -447,13 +449,15 @@ class AperturaController extends Controller implements IModuloAuditable {
             } else { //Se pago con mas un tipo de pago, se anula hasta donde le alcance el efectivo:
                 //Comparo el monto abonado en efectivo para ese lote con el monto del comprobante/s a anular
                 ///////////////////////////////////////////////////////////////////////////////////////////////////
-                $consulta_efectivo = $em->createQuery("SELECT sum(p.importe)
+                /*$consulta_efectivo = $em->createQuery("SELECT sum(p.importe)
                 FROM SistemaCajaBundle:LotePago p JOIN p.tipo_pago tp
                 WHERE p.tipo_pago = 1 and p.lote = :lote_id ")
                  ->setParameter("lote_id", $lote_id);
                 $consulta_efectivo->setMaxResults(1);
                 $efectivo = $consulta_efectivo->getSingleResult();
-                $efectivo = $efectivo[1];
+                $efectivo = $efectivo[1];*/
+
+                $efectivo = $em->getRepository('SistemaCajaBundle:Lote')->getMontoEfectivo($lote_id);
                 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
                 //Calculo el monto de los comprobantes seleccionados para anular:
