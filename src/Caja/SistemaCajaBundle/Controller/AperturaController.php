@@ -449,14 +449,6 @@ class AperturaController extends Controller implements IModuloAuditable {
             } else { //Se pago con mas un tipo de pago, se anula hasta donde le alcance el efectivo:
                 //Comparo el monto abonado en efectivo para ese lote con el monto del comprobante/s a anular
                 ///////////////////////////////////////////////////////////////////////////////////////////////////
-                /*$consulta_efectivo = $em->createQuery("SELECT sum(p.importe)
-                FROM SistemaCajaBundle:LotePago p JOIN p.tipo_pago tp
-                WHERE p.tipo_pago = 1 and p.lote = :lote_id ")
-                 ->setParameter("lote_id", $lote_id);
-                $consulta_efectivo->setMaxResults(1);
-                $efectivo = $consulta_efectivo->getSingleResult();
-                $efectivo = $efectivo[1];*/
-
                 $efectivo = $em->getRepository('SistemaCajaBundle:Lote')->getMontoEfectivo($lote_id);
                 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -487,7 +479,7 @@ class AperturaController extends Controller implements IModuloAuditable {
                 $lotes_actualizados = $lotesdetalles->execute();
 
                 // Verifico que haya anulado la totalidad de los comprobantes ingresados:
-                if ($lotes_actualizados == count($comprobantes)) {
+                if ($lotes_actualizados != count($comprobantes)) {
                     $this->get('session')->getFlashBag()->add('error', 'No se pudieron anular los comprobantes seleccionados.');
                     return $this->redirect($this->generateUrl('apertura_anulado'));
                 }
