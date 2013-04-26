@@ -149,4 +149,14 @@ class Grupo implements RoleInterface
     public function __toString(){
         return $this->getNombre();
     }
+
+    /**
+     * Remove usuarios
+     *
+     * @param \Lar\UsuarioBundle\Entity\Usuario $usuarios
+     */
+    public function removeUsuario(\Lar\UsuarioBundle\Entity\Usuario $usuarios)
+    {
+        $this->usuarios->removeElement($usuarios);
+    }
 }

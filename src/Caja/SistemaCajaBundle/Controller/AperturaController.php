@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Apertura controller.
  *
  */
-class AperturaController extends Controller implements IModuloAuditable {
+class AperturaController extends Controller {
     /**
      * Lists all Apertura entities.
      *
@@ -371,10 +371,8 @@ class AperturaController extends Controller implements IModuloAuditable {
             return $this->redirect($this->generateUrl('apertura_new'));
         }
 
-        return $this->render('SistemaCajaBundle:Apertura:anular.html.twig', array(
-            'caja' => $caja,
-            "form" => $form->createView(),
-            'apertura' => $apertura));
+        return $this->render('SistemaCajaBundle:Apertura:anular.html.twig',
+                             array('caja' => $caja, "form" => $form->createView(), 'apertura' => $apertura));
     }
 
     public function anularComprobanteAction() {
@@ -401,15 +399,15 @@ class AperturaController extends Controller implements IModuloAuditable {
         }
 
         //Servicio de codigo de barra, para interpretarlo
-        $bm = $this->container->get( "caja.barra");
+        $bm = $this->container->get("caja.barra");
 
         //Se verifica si existe en la base el comprobante ingresado:
-        $em = $this->getDoctrine()->getManager();
-        $lote = $em->getRepository('SistemaCajaBundle:Lote')->getLote($apertura->getId(), $comprobantes[0] );
+        $em   = $this->getDoctrine()->getManager();
+        $lote = $em->getRepository('SistemaCajaBundle:Lote')->getLote($apertura->getId(), $comprobantes[0]);
 
         if ($lote != null) {
 
-            $lote_id = $lote->getId();
+            $lote_id                 = $lote->getId();
             $total_comprobantes_lote = $lote->getDetalle()->count();
 
             //Pregunto cuantos tipos de pagos se hicieron en ese lote:
@@ -445,7 +443,6 @@ class AperturaController extends Controller implements IModuloAuditable {
                     $this->get('session')->getFlashBag()->add('error', 'El lote no fue abonado en efectivo, solo se puede anular de manera total.');
                     return $this->redirect($this->generateUrl('apertura_anulado'));
                 }
-
             } else { //Se pago con mas un tipo de pago, se anula hasta donde le alcance el efectivo:
                 //Comparo el monto abonado en efectivo para ese lote con el monto del comprobante/s a anular
                 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -460,7 +457,8 @@ class AperturaController extends Controller implements IModuloAuditable {
                 }
                 //Se verifica que se hayan seleccionado todos los comprobantes que componen el lote:
                 if ($monto_a_anular > $efectivo) {
-                    $this->get('session')->getFlashBag()->add('error', 'El monto de los comprobantes seleccionados es mayor al importe abonado en efectivo.');
+                    $this->get('session')->getFlashBag()
+                        ->add('error', 'El monto de los comprobantes seleccionados es mayor al importe abonado en efectivo.');
                     return $this->redirect($this->generateUrl('apertura_anulado'));
                 }
                 $tipo_pago = 1; //Se asume que se va a cancelar hasta donde le alcance el efectivo,
@@ -556,60 +554,46 @@ class AperturaController extends Controller implements IModuloAuditable {
         $imp = $bm->getImporte();
         //Se verifica si existe en la base:
 
-        $em = $this->getDoctrine()->getManager();
+        $em    = $this->getDoctrine()->getManager();
         $lotes = $em->getRepository('SistemaCajaBundle:Lote')->getLote($apertura->getId(), $cb);
         if ($lotes) {
-            $rJson = json_encode(array('ok' => 1,
-                'detalle' => $this->renderView("SistemaCajaBundle:Apertura:_loteDetalle.html.twig", array('elementos' => $lotes->getDetalleNoAnulados(), 'ingresado' => $cb))
-            ));
+            $rJson = json_encode(array('ok' => 1, 'detalle' => $this->renderView("SistemaCajaBundle:Apertura:_loteDetalle.html.twig",
+                                                                                 array('elementos' => $lotes->getDetalleNoAnulados(),
+                                                                                       'ingresado' => $cb))));
         } else {
-            $rJson = json_encode(array(
-                'ok' => 0,
-                'msg' => 'No existe el comprobante ingresado, o fue cobrado en otra caja. Error: ' . $lotes
-            ));
+            $rJson = json_encode(array('ok' => 0, 'msg' => 'No existe el comprobante ingresado, o fue cobrado en otra caja. Error: '.$lotes));
         }
         return $response->setContent($rJson);
     }
 
+    public function sockAction() {
 
-    /**
-     * @return Array, un array con los nombres de los actions excluidos
-     */
-    function getNoAuditables() {
-        return Array('deleteAction', 'editAction');
-    }
-
-    public function sockAction()
-    {
-
-        $fp = fsockopen ("192.0.4.183", 5331, $errno, $errstr, 30);
+        $fp = fsockopen("192.0.4.183", 5331, $errno, $errstr, 30);
         if (!$fp) {
             echo "$errstr ($errno)";
         } else {
             $e = chr(27);
             //fputs ($fp, chr(149) );
             echo "Inicio: $fp";
-            fputs ($fp, chr(hexdec ('H1B')) . "a"  . chr(1) );
-            fputs ($fp, chr(hexdec ('H1B')) . "c0" . chr(2) );
-            fputs ($fp, chr(hexdec ('H1B')) . "U"  . chr(0) );
-            fputs ($fp, chr(hexdec ('H1B')) . "!"  . chr(2) ); //tama�o
-            fputs ($fp, chr(hexdec ('H1B')) . "M"  . chr(2) );
+            fputs($fp, chr(hexdec('H1B'))."a".chr(1));
+            fputs($fp, chr(hexdec('H1B'))."c0".chr(2));
+            fputs($fp, chr(hexdec('H1B'))."U".chr(0));
+            fputs($fp, chr(hexdec('H1B'))."!".chr(2)); //tama�o
+            fputs($fp, chr(hexdec('H1B'))."M".chr(2));
 
-            fputs ($fp, "PRUEBA de IMPRESION"  . chr(hexdec ('HA')) );
+            fputs($fp, "PRUEBA de IMPRESION".chr(hexdec('HA')));
 
-            fputs ($fp, chr(hexdec ('H1B')) . "!"  . chr(1) ); //Tama�o normal
-            fputs ($fp, chr(hexdec ('H1B')) . "M"  . chr(1) );
+            fputs($fp, chr(hexdec('H1B'))."!".chr(1)); //Tama�o normal
+            fputs($fp, chr(hexdec('H1B'))."M".chr(1));
 
+            fputs($fp, chr(hexdec('H1B'))."c0".chr(3)); //Enviar al journal
+            fputs($fp, chr(hexdec('H1B'))."z".chr(1));
+            fputs($fp, chr(hexdec('H1B'))."!".chr(1));
 
-            fputs ($fp, chr(hexdec ('H1B')) . "c0" . chr(3) ); //Enviar al journal
-            fputs ($fp, chr(hexdec ('H1B')) . "z" . chr(1) );
-            fputs ($fp, chr(hexdec ('H1B')) . "!" . chr(1) );
+            fputs($fp, "TIKET: 121545 ".chr(hexdec('HA')));
+            fputs($fp, "****************************************".chr(hexdec('HA')));
 
-            fputs ($fp, "TIKET: 121545 "  . chr(hexdec ('HA')) );
-            fputs ($fp, "****************************************"  . chr(hexdec ('HA')) );
-
-            fputs ($fp, chr(hexdec ('H1B')) . "a" . chr(0) );
-
+            fputs($fp, chr(hexdec('H1B'))."a".chr(0));
 
             /*
             for($i=1; $i<10; $i++){
@@ -618,14 +602,12 @@ class AperturaController extends Controller implements IModuloAuditable {
                 fputs ($fp, $string );
             }		*/
 
-            fclose ($fp);
+            fclose($fp);
 
             $resp = new Response();
 
             $resp->setContent("Ver");
             return $resp;
-
         }
-
     }
 }

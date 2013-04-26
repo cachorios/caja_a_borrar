@@ -5,7 +5,7 @@
  *
  */
 
-namespace Caja\SistemaCajaBundle\Entity;
+namespace Common\AuditorBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Auditoria
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="Caja\SistemaCajaBundle\Entity\AuditoriaRepository")
+ * @ORM\Entity(repositoryClass="Common\AuditorBundle\Entity\AuditoriaRepository")
  */
 class Auditoria {
     /**

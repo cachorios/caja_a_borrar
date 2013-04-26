@@ -1,3 +1,7 @@
+common_auditor:
+    resource: "@CommonAuditorBundle/Resources/config/routing.yml"
+    prefix:   /
+
 caja:
     resource: "@SistemaCajaBundle/Resources/config/routing.yml"
     prefix:   /

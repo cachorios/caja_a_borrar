@@ -35,7 +35,8 @@ class AppKernel extends Kernel
             new Lar\LarParametroBundle\LarParametroBundle(),
             new Lar\UsuarioBundle\UsuarioBundle(),
 
-            new Caja\SistemaCajaBundle\SistemaCajaBundle()
+            new Caja\SistemaCajaBundle\SistemaCajaBundle(),
+            new Common\AuditorBundle\CommonAuditorBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

@@ -157,6 +157,7 @@ class Usuario implements AdvancedUserInterface
 
 	/**
 	 * @var /datetime()
+     *
 	 * @orm\Column(type="datetime", nullable=true)
 	 */
 	protected $ultimo_ingreso;
@@ -694,4 +695,17 @@ class Usuario implements AdvancedUserInterface
 		$this->setFoto($nombreArchivoFoto);
 	}
 
+
+    /**
+     * Set username
+     *
+     * @param string $username
+     * @return Usuario
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    
+        return $this;
+    }
 }

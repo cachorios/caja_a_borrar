@@ -6,7 +6,7 @@
  * Esta clase representa el servicio de auditoria.
  */
 
-namespace Caja\SistemaCajaBundle\Lib;
+namespace Common\AuditorBundle\Lib;
 
 use Caja\SistemaCajaBundle\Entity\Auditoria;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;

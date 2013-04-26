@@ -1,6 +1,6 @@
 <?php
 
-namespace Caja\SistemaCajaBundle\Entity;
+namespace Common\AuditorBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 

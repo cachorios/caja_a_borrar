@@ -8,7 +8,7 @@
  * 2-Representar el comportamiento deseado de una clase que pueda ser auditada
  */
 
-namespace Caja\SistemaCajaBundle\Lib;
+namespace Common\AuditorBundle\Lib;
 
 
 interface IModuloAuditable {

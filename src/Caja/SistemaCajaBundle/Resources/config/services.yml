@@ -33,12 +33,6 @@ services:
     caja.barra:
         alias: sistemacaja.codigobarra
 
-    caja.auditoria.action_listener:
-        class: Caja\SistemaCajaBundle\Lib\ServicioAuditoria
-        arguments: [@security.context, @doctrine.orm.entity_manager]
-        tags:
-            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
-
     twig.extension.caja.manager:
         class:  Caja\SistemaCajaBundle\Twig\Extension\CajaExtension
         arguments: [@service_container]
