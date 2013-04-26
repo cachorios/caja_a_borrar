@@ -1,0 +1,13 @@
+parameters:
+#    common_auditor.example.class: Common\AuditorBundle\Example
+
+services:
+#    common_auditor.example:
+#        class: %common_auditor.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+
+    common.auditor.action_listener:
+        class: Common\AuditorBundle\Lib\ServicioAuditoria
+        arguments: [@security.context, @doctrine.orm.entity_manager]
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
