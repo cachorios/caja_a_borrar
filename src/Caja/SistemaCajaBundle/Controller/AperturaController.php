@@ -376,9 +376,7 @@ class AperturaController extends Controller {
     }
 
     public function anularComprobanteAction() {
-
         //En vez de crear un nuevo lote, recupero el actual:
-
         //CONTROLAR QUE EL METODO SEA SIEMPRE POST !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         // A partir del comprobante ingresado, recupero el lote al cual pertenece:
@@ -406,35 +404,15 @@ class AperturaController extends Controller {
         $lote = $em->getRepository('SistemaCajaBundle:Lote')->getLote($apertura->getId(), $comprobantes[0]);
 
         if ($lote != null) {
-
             $lote_id                 = $lote->getId();
             $total_comprobantes_lote = $lote->getDetalle()->count();
 
             //Pregunto cuantos tipos de pagos se hicieron en ese lote:
-            /*$consulta_cantidad_pagos = $em->createQuery("
-            SELECT COUNT(p.tipo_pago)
-            FROM SistemaCajaBundle:LotePago p
-            WHERE p.lote = :lote_id ")
-            ->setParameter("lote_id", $lote_id);
-            $cantidad_pagos = $consulta_cantidad_pagos->getSingleResult();
-            $cantidad_pagos = $cantidad_pagos[1];*/
             $cantidad_pagos = $em->getRepository('SistemaCajaBundle:Lote')->getConsultaCantidadPagos($lote_id);
 
             if ($cantidad_pagos == 1) {
                 //Se hizo en un solo tipo de pago, hay que ver cual fue ese tipo:
-                ///////////////////////////////////////////////////////////////////////////////////////////////////
-                /*$consulta_tipo_pago= $em->createQuery("
-                SELECT tp.id
-                FROM SistemaCajaBundle:LotePago p JOIN p.tipo_pago tp
-                WHERE p.lote = :lote_id ")
-                 ->setParameter("lote_id", $lote_id);
-
-
-                $consulta_tipo_pago->setMaxResults(1);
-                $resultado = $consulta_tipo_pago->getSingleResult();
-                $tipo_pago = $resultado['id'];*/
                 $tipo_pago = $em->getRepository('SistemaCajaBundle:Lote')->getConsultaTipoPago($lote_id);
-                ///////////////////////////////////////////////////////////////////////////////////////////////////
 
                 //el tipo de pago en el registro negativo sera el obtenido en la linea anterior ($tipo_pago)
 
@@ -445,9 +423,7 @@ class AperturaController extends Controller {
                 }
             } else { //Se pago con mas un tipo de pago, se anula hasta donde le alcance el efectivo:
                 //Comparo el monto abonado en efectivo para ese lote con el monto del comprobante/s a anular
-                ///////////////////////////////////////////////////////////////////////////////////////////////////
                 $efectivo = $em->getRepository('SistemaCajaBundle:Lote')->getMontoEfectivo($lote_id);
-                ///////////////////////////////////////////////////////////////////////////////////////////////////
 
                 //Calculo el monto de los comprobantes seleccionados para anular:
                 $monto_a_anular = 0;
@@ -470,7 +446,6 @@ class AperturaController extends Controller {
                 $lote_id = $lote->getId();
 
                 //Se procede a anular el o los lotes detalles:
-
                 $lotesdetalles      = $em
                     ->createQuery("update SistemaCajaBundle:LoteDetalle ld set ld.anulado = true where ld.lote = :lote_id and ld.codigo_barra in (:comprobantes)")
                     ->setParameter("lote_id", $lote_id)->setParameter("comprobantes", $comprobantes);
@@ -527,35 +502,20 @@ class AperturaController extends Controller {
      */
     public function existeComprobanteAction() {
         $response = new Response();
-        $log      = $this->get('logger');
-
         $cb = $this->getRequest()->get('cb');
-
-        $log->info("---> Codigo de barra: $cb");
-
-        //Codigo de barra recibido
-        $cb = trim($cb);
 
         $apertura = $this->container->get("caja.manager")->getApertura();
 
-        //Preguntar si la caja esta abierta: SE SUPONE QUE SOLO SE PUEDE ANULAR ALGO COBRADO EN LA FECHA DE HOY
-        // CONFIRMAR SI SOLO SE PUEDE ANULAR ALGO COBRADO HOY
-
+        //Preguntar si la caja esta abierta: SE SUPONE QUE SOLO SE PUEDE ANULAR ALGO COBRADO EN LA FECHA DE HOY. CONFIRMAR SI SOLO SE PUEDE ANULAR ALGO COBRADO HOY
         //AGREGAR LOGICA QUE VERIFIQUE QUE EL COMPROBANTE YA NO ESTE ANULADO !!!!!!!!!!!!!!!!!
         if (!$apertura) {
             $rJson = json_encode(array('ok' => 0, 'msg' => 'La caja se encuentra cerrada.'));
             return $response->setContent($rJson);
         }
 
-        //Servicio de codigo de barra, para interpretarlo
-        $bm = $this->container->get("caja.barra");
+        $em   = $this->getDoctrine()->getManager();
+        $lotes = $em->getRepository('SistemaCajaBundle:Lote')->getExisteComprobante($cb);
 
-        $bm->setCodigo($cb, $apertura->getFecha());
-        $imp = $bm->getImporte();
-        //Se verifica si existe en la base:
-
-        $em    = $this->getDoctrine()->getManager();
-        $lotes = $em->getRepository('SistemaCajaBundle:Lote')->getLote($apertura->getId(), $cb);
         if ($lotes) {
             $rJson = json_encode(array('ok' => 1, 'detalle' => $this->renderView("SistemaCajaBundle:Apertura:_loteDetalle.html.twig",
                                                                                  array('elementos' => $lotes->getDetalleNoAnulados(),
