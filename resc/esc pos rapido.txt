@@ -1,0 +1,17 @@
+ESC . "=".chr(1); //Activar la impresora
+ESC .'@'; //Inicializa
+ESC .'J'.chr(10);  line feed, avanza el papel 10 puntos de pulgadas
+ESC .'d'.chr(2);  imprime y salta 2 lineas
+ESC . 'a' .chr(1);  //aliniacio al centro
+ESC . 'a' .chr(0);  //aliniacion a la izquierda
+ESC . 'a' .chr(2);  //aliniacion a la derecha
+
+ESC . '!' .chr(1);  //Selecciona fuente B
+ESC . "U". chr(1); //modo unidireccional
+ESC . "U". chr(0); //cancelar unidireccional
+ESC . "!". chr(17); //doble alto
+ESC . "!". chr(1); //caracter normal
+
+
+
+ 
