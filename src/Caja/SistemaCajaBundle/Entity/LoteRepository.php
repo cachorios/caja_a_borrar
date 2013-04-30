@@ -105,25 +105,5 @@ class LoteRepository extends EntityRepository
         return $efectivo;
     }
 
-    /**
-     * Método usado para verificar la existencia de un comprobante
-     * @param $cb
-     * @return
-     */
-    public function getExisteComprobante($cb){
-        //Codigo de barra recibido
-        $cb = trim($cb);
 
-        //Servicio de codigo de barra, para interpretarlo
-        $bm = $this->container->get("caja.barra");
-
-        $bm->setCodigo($cb, $apertura->getFecha());
-        $imp = $bm->getImporte();
-        //Se verifica si existe en la base:
-
-        $em    = $this->getDoctrine()->getManager();
-        $lotes = $em->getRepository('SistemaCajaBundle:Lote')->getLote($apertura->getId(), $cb);
-
-        return $lotes;
-    }
 }

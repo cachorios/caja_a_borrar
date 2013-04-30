@@ -36,7 +36,7 @@ class AperturaRepository extends EntityRepository
               WHERE
                   l.apertura = :apertura_id
               GROUP BY
-                  t.descripcion
+                  t.id, t.descripcion
               ORDER BY
                   t.id ")
             ->setParameter("apertura_id", $apertura_id)

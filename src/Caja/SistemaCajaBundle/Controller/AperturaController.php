@@ -504,6 +504,9 @@ class AperturaController extends Controller {
         $response = new Response();
         $cb = $this->getRequest()->get('cb');
 
+        //Codigo de barra recibido
+        $cb = trim($cb);
+
         $apertura = $this->container->get("caja.manager")->getApertura();
 
         //Preguntar si la caja esta abierta: SE SUPONE QUE SOLO SE PUEDE ANULAR ALGO COBRADO EN LA FECHA DE HOY. CONFIRMAR SI SOLO SE PUEDE ANULAR ALGO COBRADO HOY
@@ -513,15 +516,24 @@ class AperturaController extends Controller {
             return $response->setContent($rJson);
         }
 
-        $em   = $this->getDoctrine()->getManager();
-        $lotes = $em->getRepository('SistemaCajaBundle:Lote')->getExisteComprobante($cb);
+        //Servicio de codigo de barra, para interpretarlo
+        $bm = $this->container->get("caja.barra");
+
+        //Codigo de barra recibido
+        $cb = trim($cb);
+
+        $bm->setCodigo($cb, $apertura->getFecha());
+        $imp = $bm->getImporte();
+        //Se verifica si existe en la base:
+        $em    = $this->getDoctrine()->getManager();
+        $lotes = $em->getRepository('SistemaCajaBundle:Lote')->getLote($apertura->getId(), $cb);
 
         if ($lotes) {
             $rJson = json_encode(array('ok' => 1, 'detalle' => $this->renderView("SistemaCajaBundle:Apertura:_loteDetalle.html.twig",
                                                                                  array('elementos' => $lotes->getDetalleNoAnulados(),
                                                                                        'ingresado' => $cb))));
         } else {
-            $rJson = json_encode(array('ok' => 0, 'msg' => 'No existe el comprobante ingresado, o fue cobrado en otra caja. Error: '.$lotes));
+            $rJson = json_encode(array('ok' => 0, 'msg' => 'No existe el comprobante ingresado, o fue cobrado en otra caja.'));
         }
         return $response->setContent($rJson);
     }
