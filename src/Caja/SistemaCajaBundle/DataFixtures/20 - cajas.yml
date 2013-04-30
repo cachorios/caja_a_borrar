@@ -4,7 +4,11 @@ fixtures:
         numero: 1
         nombre: Caja 1
         cajero: Beto
+        puerto: 1
+        ubicacion: 'direccion del cementerio'
     c2:
         numero: 2
         nombre: Caja 2
         cajero: Usr1
+        puerto: 2
+        ubicacion: 'direccion de la caja numero 2'

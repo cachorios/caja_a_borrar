@@ -44,6 +44,7 @@ services:
         tags:
             - { name: twig.extension}
 
-    class: Doctrine\DBAL\Event\Listeners\OracleSessionInit
+    caja.oracleInit:
+        class: Doctrine\DBAL\Event\Listeners\OracleSessionInit
         tags:
             - { name: doctrine.event_listener, event: postConnect }
