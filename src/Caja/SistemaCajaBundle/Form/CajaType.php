@@ -14,8 +14,22 @@ class CajaType extends AbstractType
         $builder
 			->add('numero','integer')
             ->add('nombre')
-            ->add('cajero'
-        )
+            ->add('cajero')
+            ->add('ubicacion','textarea')
+            ->add('puerto','choice',array("choices" =>
+                array(
+                    'COM1'  =>  'COM1',
+                    'COM2'  => 'COM2',
+                    'COM3'  => 'COM3',
+                    'COM4'  => 'COM4',
+                    'COM5'  => 'COM5',
+                    'COM6'  => 'COM6',
+                    'COM7'  => 'COM7',
+                    'COM8'  => 'COM8',
+                    'COM9'  => 'COM9',
+                    'COM10' => 'COM10'
+                )))
+
         ;
     }
 
