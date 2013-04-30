@@ -28,7 +28,6 @@ class Ticket
     public function __construct(CajaManager $cajaman)
     {
         $this->cajamanager = $cajaman;
-
     }
 
     public function setContenido($contenido)
@@ -143,9 +142,8 @@ class Ticket
             $str .= str_pad("CAJERO: ". $caja->getCajero()->getUsername()  , 40, " ", STR_PAD_BOTH) . ESC . "d" . chr(2);
             $str .= str_pad("visite: www.posadas.gov.ar", 40, " ", STR_PAD_BOTH) . ESC . "d" . chr(1);
             $str .= str_pad("***", 40, " ", STR_PAD_BOTH) . ESC . "d" . chr(11); //posicion de corte
-
-
         }
+
         return $str;
     }
 
