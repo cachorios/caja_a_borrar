@@ -171,5 +171,9 @@ class RegistroController extends Controller
 		return $response->setContent($rJson);
 	}
 
+    public function getTicket($tipo = 0)
+    {
+
+    }
 
 }
