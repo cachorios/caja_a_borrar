@@ -171,8 +171,16 @@ class RegistroController extends Controller
 		return $response->setContent($rJson);
 	}
 
-    public function getTicket($tipo = 0)
+    public function getTicketAction($tipo = 0)
     {
+        $tk  = "Hola";
+        $ticket = $this->get("sistemacaja.ticket");
+        $ticket->setContenido("Item!!!!");
+        $tk = $ticket->getTicketFull();
+
+
+        $response = new Response();
+        return $response->setContent($tk);
 
     }
 

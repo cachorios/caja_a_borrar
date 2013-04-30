@@ -23,11 +23,15 @@
     <link href="{{ asset('bundles/sistemacaja/css/main.css') }}" rel="stylesheet">
 
     <script src="{{  asset('js/jquery.min.js') }}"></script>
+
+    {% block javascriptshead %}{% endblock %}
+
+    </body>
 </head>
 
 {% block body %}
     <body id="{% block id '' %}">
-
+    {% block javascriptstop %}{% endblock %}
     {% include '::includes/navbar.html.twig' ignore missing %}
 
 

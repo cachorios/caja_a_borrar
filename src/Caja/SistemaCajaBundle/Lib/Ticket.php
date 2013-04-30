@@ -41,6 +41,7 @@ class Ticket
         // tipo = 0
         $sticket = $this->getCabecera(0);
         $sticket .= $this->getContenido(0);
+        $sticket .= $this->getPie(0);
 
         return $sticket;
 
@@ -72,7 +73,7 @@ class Ticket
             $str .= ESC . "=" . chr(1); //Activar la impresora
             $str .= ESC . '@'; //Inicializa
             $str .= ESC . 'a' . chr(1); //centro
-            $str .= "MUNICIPALIDAD DE POSADAS" . ESC . 'J' . chr(10);
+            $str .= "MUNICIPALIDAD DE POSADAS" . ESC . 'J' . chr(30);
             $str .= "***" . ESC . 'J' . chr(30);
 
             $str .= ESC . 'a' . chr(0); //izquierda
@@ -81,7 +82,7 @@ class Ticket
             $str .= str_pad("", 40, "-");
 
             $str .= "CAJA: " . $caja->getNumero() . NL;
-            $str .= ESC . 'p' . chr(0) . chr(10) . chr(100); //envia pulso?? esto copie, voy a verificarlo
+         //   $str .= ESC . 'p' . chr(0) . chr(10) . chr(100); //envia pulso?? esto copie, voy a verificarlo
 
         }
 

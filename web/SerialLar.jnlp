@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jnlp href="SerialLar.jnlp" spec="1.0+">
+    <information>
+        <title>SerialLar</title>
+        <vendor>Luis Rios</vendor>
+        <homepage href="riossoft.com.ar"/>
+        <description>Manejo de Puerto Serie</description>
+        <description kind="short">SerialLar</description>
+    </information>
+	
+	<update check="background"/>
+	<security>
+		<all-permissions/>
+	</security>
+    <resources>
+		<j2se version="1.6+"/>
+		<jar href="SerialLar.jar" main="true"/>
+		<jar href="lib/jssc.jar"/>
+	</resources>
+    <applet-desc height="500" main-class="applet.Main" name="SerialLar" width="700">
+		<param name="separate_jvm" value="true"/>
+		<param name="draggable" value="true"/>
+	</applet-desc>
+</jnlp>

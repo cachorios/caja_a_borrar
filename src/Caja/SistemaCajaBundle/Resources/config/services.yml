@@ -2,7 +2,7 @@ parameters:
     caja.listener.class: Caja\SistemaCajaBundle\Listener\CajaListener
     caja.cajamanager:    Caja\SistemaCajaBundle\Lib\CajaManager
     caja.barra:          Caja\SistemaCajaBundle\Lib\CodigoBarraLive
-    caja.ticket:         Caja\SistemaCajaBundle\Lib\Ticket
+    #caja.ticket.class:   Caja\SistemaCajaBundle\Lib\Ticket
 
 services:
 #    caja.example:
@@ -29,7 +29,7 @@ services:
         arguments: [@doctrine.orm.entity_manager, @lar.parametro.tabla,@logger]
 
     sistemacaja.ticket:
-        class:  %caja.ticket%
+        class:  Caja\SistemaCajaBundle\Lib\Ticket
         arguments: [@caja.manager]
 
     caja.manager:
@@ -44,7 +44,11 @@ services:
         tags:
             - { name: twig.extension}
 
-    caja.oracleInit:
-        class: Doctrine\DBAL\Event\Listeners\OracleSessionInit
-        tags:
-            - { name: doctrine.event_listener, event: postConnect }
+#    caja.oracleInit:
+#        class: Doctrine\DBAL\Event\Listeners\OracleSessionInit
+#        tags:
+#            - { name: doctrine.event_listener, event: postConnect }
+
+#
+#    caja.ticket:
+#        sistemacaja.ticket

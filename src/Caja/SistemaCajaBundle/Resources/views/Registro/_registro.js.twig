@@ -36,7 +36,7 @@ $(document).ready(function (e) {
         $barra = $(this);
         dataBarra = "";
 
-        $.blockUI({ message:null });
+        $.blockUI({ message: null });
 
         cb = $barra.val().replace(/^\s*|\s*$/g, "");
 
@@ -63,11 +63,11 @@ $(document).ready(function (e) {
                  * Peticion ajax
                  */
                 $.ajax({
-                    url:"{{ path('registro_barra') }}",
-                    data:{ cb:cb  },
-                    dataType:"json",
-                    success:actDesdeCB,
-                    error:function (jqXHR, status, error) {
+                    url: "{{ path('registro_barra') }}",
+                    data: { cb: cb  },
+                    dataType: "json",
+                    success: actDesdeCB,
+                    error: function (jqXHR, status, error) {
                         alert('Disculpe, existió un problema: ' + error);
                     }
                 });
@@ -138,8 +138,8 @@ $(document).ready(function (e) {
             $btn = $btn.closest('.btn');
         }
         $btn.coleccion({
-            opcion:'add',
-            addpostfunc:postAddDetalle
+            opcion: 'add',
+            addpostfunc: postAddDetalle
         });
         e.preventDefault();
     });
@@ -164,7 +164,7 @@ $(document).ready(function (e) {
 
         $('a.info-barra', row).attr('data-content', dataBarra.detalle);
         $("#masDetalleTemp").html(dataBarra.detalle);
-        $('a.info-barra', row).popover({trigger:'hover', html:true})
+        $('a.info-barra', row).popover({trigger: 'hover', html: true})
     };
 
     /**
@@ -179,8 +179,8 @@ $(document).ready(function (e) {
         }
 
         $btn.coleccion({
-            opcion:'remove',
-            rempostfunc:postBorrarDetalle
+            opcion: 'remove',
+            rempostfunc: postBorrarDetalle
         });
         e.preventDefault();
     });
@@ -208,11 +208,11 @@ $(document).ready(function (e) {
         $('input.importe', 'div#caja_sistemacajabundle_registrotype_detalle').each(function () {
             total = total + parseFloat(this.value);
         });
-        totalComprobante = Math.round(total*100)/100;
+        totalComprobante = Math.round(total * 100) / 100;
         $("#lote_detalle_total").text(formato_numero(total, 2));
-        if(totalComprobante>0){
+        if (totalComprobante > 0) {
             $("#PagarComprobantes").show();
-        }else{
+        } else {
             $("#PagarComprobantes").hide();
         }
         $.unblockUI();
@@ -221,8 +221,8 @@ $(document).ready(function (e) {
     //boton que abre la ventana modal de pago
     $("#PagarComprobantes").click(function () {
         var $pagmod,
-             btnAdd,
-             data;
+                btnAdd,
+                data;
 
         totalPago = 0;
 
@@ -230,7 +230,10 @@ $(document).ready(function (e) {
             title: "Confirmación",
             content: "Realiza el pago de estos comprobantes?",
             type: "confirm",
-            buttons: [{ value: "Si" },  { value: "Cancelar"}],
+            buttons: [
+                { value: "Si" },
+                { value: "Cancelar"}
+            ],
             success: function (result) {
                 if (result == "Si") {
                     $("#apago_importe").text(formato_numero(totalComprobante, 2));
@@ -258,8 +261,8 @@ $(document).ready(function (e) {
             $btn = $btn.closest('.btn');
         }
         $btn.coleccion({
-            opcion:'add',
-            addpostfunc:postAddPago
+            opcion: 'add',
+            addpostfunc: postAddPago
         });
         e.preventDefault();
         return false;
@@ -286,8 +289,8 @@ $(document).ready(function (e) {
         }
 
         $btn.coleccion({
-            opcion:'remove',
-            rempostfunc:postBorrarPago
+            opcion: 'remove',
+            rempostfunc: postBorrarPago
         });
         e.preventDefault();
         return false;
@@ -320,7 +323,7 @@ $(document).ready(function (e) {
             } else {
                 total = Math.round((total + parseFloat(this.value)) * 100) / 100;
                 if (total >= totalComprobante) {
-                    $(this).val(formato_numero(totalComprobante - total + parseFloat(this.value)  , 2,"."));
+                    $(this).val(formato_numero(totalComprobante - total + parseFloat(this.value), 2, "."));
                     total = totalComprobante
                     n = 1;
                 }
@@ -332,22 +335,25 @@ $(document).ready(function (e) {
         $("#totalpago").text(formato_numero(totalPago, 2));
         $("#totalSaldo").text(formato_numero(totalComprobante - totalPago, 2));
 
-        if( Math.round((totalComprobante - totalPago)*100 )/100 >0 ){
+        if (Math.round((totalComprobante - totalPago) * 100) / 100 > 0) {
             $("[data-coleccion-add-btn]", "#PagoModal").trigger('click');
         }
 
     };
 
-    $("#pago_save").click(function(e){
+    $("#pago_save").click(function (e) {
 
         $.msgBox({
             title: "Registración de Pago",
             content: "Si esta todo correcto,<br> procede a almacenar el pago?",
             type: "confirm",
-            buttons: [{ value: "Si" },  { value: "Cancelar"}],
+            buttons: [
+                { value: "Si" },
+                { value: "Cancelar"}
+            ],
             success: function (result) {
                 if (result == "Si") {
-                   $("form","#form_CodigoBarra").submit();
+                    $("form", "#form_CodigoBarra").submit();
                 }
                 if (result == "Cancelar") {
 
@@ -360,8 +366,20 @@ $(document).ready(function (e) {
 
     })
 
+    $("#tk").click(function () {
+        var pser = document.SerialLar;
+        var msg = "";
 
+        try {
+            $.get("{{ path('registro_ticket', {'tipo': 0}) }}", function(data){
+                alert(data);
+                pser.escribir(data);
+            } );
 
+        } catch (e) {
+            alert(e);
+        }
+    });
 }); //fin document ready
 
 

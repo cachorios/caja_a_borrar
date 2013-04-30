@@ -57,9 +57,25 @@
                 {% include 'SistemaCajaBundle:Registro:_form.html.twig' %}
 
             </form>
-
+            <button id="tk">Ticket Prueba</button>
             {% include 'SistemaCajaBundle:Registro:_registro.js.twig' %}
         </section>
-
+        <script src="{{  asset('js/deployJava.js') }}"></script>
+        <script>
+            var attributes = {
+                code:       "applet.Main",
+                archive:    "{{  asset('SerialLar.jar')}}",
+                width:      100,
+                height:     100,
+                id:			'SerialLar',
+                visible: false
+            };
+            var parameters = {separate_jvm:"true", draggable:"true", jnlp_href:"{{  asset('SerialLar.jnlp') }}", puerto: "{{ caja.puerto }}"}; <!-- Applet Parameters -->
+            var version = "1.5"; <!-- Required Java Version -->
+            deployJava.runApplet(attributes, parameters, version);
+        </script>
 
     {% endblock %}
+
+
+
