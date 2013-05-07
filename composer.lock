@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "489a2c0535eea899ab0579f247f655d1",
+    "hash": "0a8206453a485f9bb33b6c33f69a2547",
     "packages": [
         {
             "name": "apy/jsfv-bundle",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Abhoryo/APYJsFormValidationBundle.git",
-                "reference": "439d49f5fbdb79c253f0957df1de7f755b552988"
+                "reference": "d8961b782b046616a80444414070fbf4ee924d31"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Abhoryo/APYJsFormValidationBundle/zipball/439d49f5fbdb79c253f0957df1de7f755b552988",
-                "reference": "439d49f5fbdb79c253f0957df1de7f755b552988",
+                "url": "https://api.github.com/repos/Abhoryo/APYJsFormValidationBundle/zipball/d8961b782b046616a80444414070fbf4ee924d31",
+                "reference": "d8961b782b046616a80444414070fbf4ee924d31",
                 "shasum": ""
             },
             "require": {
@@ -80,7 +80,7 @@
                 "symfony",
                 "validation"
             ],
-            "time": "2013-04-21 09:42:03"
+            "time": "2013-05-03 14:09:11"
         },
         {
             "name": "avalanche123/imagine-bundle",
@@ -250,9 +250,9 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -316,9 +316,9 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -388,9 +388,9 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -678,9 +678,9 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -732,9 +732,9 @@
                     "email": "roman@code-factory.org"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -1104,7 +1104,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -1594,17 +1594,17 @@
         },
         {
             "name": "mopa/bootstrap-bundle",
-            "version": "dev-master",
+            "version": "v2.2.0-alpha1",
             "target-dir": "Mopa/Bundle/BootstrapBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phiamo/MopaBootstrapBundle.git",
-                "reference": "1a91bd5ffb216a9b7fbd7936599671871790d944"
+                "reference": "v2.2.0-alpha1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phiamo/MopaBootstrapBundle/zipball/1a91bd5ffb216a9b7fbd7936599671871790d944",
-                "reference": "1a91bd5ffb216a9b7fbd7936599671871790d944",
+                "url": "https://api.github.com/repos/phiamo/MopaBootstrapBundle/zipball/v2.2.0-alpha1",
+                "reference": "v2.2.0-alpha1",
                 "shasum": ""
             },
             "require": {
@@ -1614,15 +1614,14 @@
             "suggest": {
                 "craue/formflow-bundle": "dev-master",
                 "jlong/sass-twitter-bootstrap": "dev-master",
-                "knplabs/knp-menu-bundle": "2.0.*",
+                "knplabs/knp-menu-bundle": "1.1.*",
                 "knplabs/knp-paginator-bundle": "dev-master",
-                "mopa/bootstrap-sandbox-bundle": "~2.3",
-                "twitter/bootstrap": "2.*"
+                "twitter/bootstrap": "2.0.*"
             },
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.3.x-dev"
+                    "dev-master": "2.1.x-dev"
                 }
             },
             "autoload": {
@@ -1653,7 +1652,7 @@
                 "form",
                 "template"
             ],
-            "time": "2013-04-30 09:57:19"
+            "time": "2013-04-21 11:26:50"
         },
         {
             "name": "mopa/composer-bridge",
@@ -1799,7 +1798,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -2614,7 +2613,6 @@
     "stability-flags": {
         "raulfraile/ladybug-bundle": 20,
         "avalanche123/imagine-bundle": 20,
-        "mopa/bootstrap-bundle": 20,
         "pagerfanta/pagerfanta": 20,
         "jordillonch/crud-generator": 20,
         "whiteoctober/breadcrumbs-bundle": 20,

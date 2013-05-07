@@ -186,8 +186,19 @@ class RegistroController extends Controller
         //$ticket->setContenido("Item!!!!");
         $ticket->setContenido($contenido);
 
-        $tk = $ticket->getTicketFull();
-        //$tk = $ticket->getTicketTestigo();
+        if($tipo == 0)
+            $tk = $ticket->getTicketFull();
+
+        if($tipo == 1)
+            $tk = $ticket->getTicketTestigo();
+        if($tipo == 3){
+
+        }
+
+
+
+
+
 
 
 

@@ -372,10 +372,14 @@ $(document).ready(function (e) {
 
         try {
             $.get("{{ path('registro_ticket', {'tipo': 0}) }}", function(data){
-                alert(data);
+                //alert(data);
                 pser.escribir(data);
             } );
 
+            $.get("{{ path('registro_ticket', {'tipo': 1}) }}", function(data){
+                //alert(data);
+                pser.escribir(data);
+            } );
         } catch (e) {
             alert(e);
         }

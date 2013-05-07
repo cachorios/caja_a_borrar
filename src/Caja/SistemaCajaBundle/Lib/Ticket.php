@@ -75,7 +75,7 @@ class Ticket
         $str .= ESC . "=" . chr(1); //Activar la impresora
         $str .= ESC . '@'; //Inicializa
         if ($tipo == 0) {
-            $str .= ESC ."c0" .chr(4); // jornal
+            $str .= ESC ."c0" .chr(2); // jornal
             $str .= ESC . '!' . chr(8);
             $str .= str_pad("MUNICIPALIDAD DE POSADAS",30," ",STR_PAD_BOTH).NL. ESC . 'J' . chr(20);
             $str .= str_pad("***",30," ",STR_PAD_BOTH).NL . ESC . 'J' . chr(30);
@@ -90,11 +90,9 @@ class Ticket
          //   $str .= ESC . 'p' . chr(0) . chr(10) . chr(100); //envia pulso?? esto copie, voy a verificarlo
 
         }elseif ($tipo == 1) {
-            $str .= ESC ." c0" .chr(3); // recipét
+            $str .= ESC ."c0" .chr(1); // jornal
             $str .= str_pad("FECHA: $fecha", 20, " ", STR_PAD_RIGHT) . str_pad("HORA: $hora", 19, " ", STR_PAD_LEFT) . NL;
-
         }
-
 
         return $str;
     }
