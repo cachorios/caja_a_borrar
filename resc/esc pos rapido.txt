@@ -13,5 +13,7 @@ ESC . "!". chr(17); //doble alto
 ESC . "!". chr(1); //caracter normal
 
 
+ESC ." c0" .chr(1); // jornal
+ESC ." c0" .chr(2); // recipet
+ESC ." c0" .chr(3); // jornal + recipet
 
- 

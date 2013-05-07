@@ -175,8 +175,20 @@ class RegistroController extends Controller
     {
         $tk  = "Hola";
         $ticket = $this->get("sistemacaja.ticket");
-        $ticket->setContenido("Item!!!!");
+
+        $contenido = array(
+            array("TGI-4545 02/13", 36.45),
+            //array("TGI-4546 02/13, 4547 02/13, 4548 02/13, 4549 02/13", 185.99),
+            //array("Otro item", 100.00),
+        );
+
+
+        //$ticket->setContenido("Item!!!!");
+        $ticket->setContenido($contenido);
+
         $tk = $ticket->getTicketFull();
+        //$tk = $ticket->getTicketTestigo();
+
 
 
         $response = new Response();
