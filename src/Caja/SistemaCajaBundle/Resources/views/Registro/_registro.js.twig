@@ -353,7 +353,22 @@ $(document).ready(function (e) {
             ],
             success: function (result) {
                 if (result == "Si") {
-                    $("form", "#form_CodigoBarra").submit();
+                    miForm = $("form", "#form_CodigoBarra"); //.submit();
+
+                    $.ajax({
+                        type: 'POST',
+                        url: $(miForm).attr('action'),
+                        data: $(miForm).serialize(),
+                        success: function(data) {
+                            $('#result').html(data);
+
+                        }
+                    })
+
+                    return false;
+
+
+
                 }
                 if (result == "Cancelar") {
 

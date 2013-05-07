@@ -10,6 +10,7 @@ namespace Caja\SistemaCajaBundle\Controller;
  */
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Caja\SistemaCajaBundle\Entity\Lote;
 use Caja\SistemaCajaBundle\Entity\LotePago;
@@ -46,7 +47,6 @@ class RegistroController extends Controller
 
 		$form->bind($request);
 
-
 		$caja = $this->container->get("caja.manager")->getCaja();
 		$apertura = $this->container->get('caja.manager')->getApertura();
 
@@ -57,8 +57,9 @@ class RegistroController extends Controller
 
 		$lote->setApertura($apertura);
 
-		if($form->isValid()) {
+        $request = new Request();
 
+		if($form->isValid()) {
 
 			if(strlen($msg = $this->validarDetallesPagos($lote)) == 0) {
 				$em = $this->getDoctrine()->getManager();
@@ -66,8 +67,13 @@ class RegistroController extends Controller
 				$em->flush();
 
 				//Aqui debe retornar al timbrado de cada comprobante
-				$this->get('session')->getFlashBag()->add('success', 'flash.create.success');
-				return $this->redirect($this->generateUrl('registro'));
+
+                //Esto ya no va por la llamada ajax!!
+//				$this->get('session')->getFlashBag()->add('success', 'flash.create.success');
+//				return $this->redirect($this->generateUrl('registro'));
+
+
+
 			} else {
 				$this->get('session')->getFlashBag()->add('error', $msg );
 			}
@@ -183,22 +189,23 @@ class RegistroController extends Controller
         );
 
 
+
         //$ticket->setContenido("Item!!!!");
         $ticket->setContenido($contenido);
+        $ticket->setValores(array(
+                'ticket' => "121212",
+                'codigobarra' => '93390001416013105162030070012011000000000088'
+        ));
 
-        if($tipo == 0)
+
+        //if($tipo == 0)
             $tk = $ticket->getTicketFull();
 
-        if($tipo == 1)
-            $tk = $ticket->getTicketTestigo();
-        if($tipo == 3){
-
-        }
-
-
-
-
-
+        //if($tipo == 1)
+            $tk .= $ticket->getTicketTestigo();
+//        if($tipo == 3){
+//
+//        }
 
 
 
