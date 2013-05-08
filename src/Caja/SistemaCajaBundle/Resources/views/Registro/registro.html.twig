@@ -57,7 +57,7 @@
                 {% include 'SistemaCajaBundle:Registro:_form.html.twig' %}
 
             </form>
-            <button id="tk">Ticket Prueba</button>
+
             {% include 'SistemaCajaBundle:Registro:_registro.js.twig' %}
         </section>
         <script src="{{  asset('js/deployJava.js') }}"></script>
@@ -65,8 +65,8 @@
             var attributes = {
                 code:       "applet.Main",
                 archive:    "{{  asset('SerialLar.jar')}}",
-                width:      100,
-                height:     100,
+                width:      5,
+                height:     5,
                 id:			'SerialLar',
                 visible: false
             };

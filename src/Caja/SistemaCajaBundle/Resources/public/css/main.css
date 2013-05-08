@@ -336,3 +336,7 @@ div#caja_sistemacajabundle_registrotype_detalle tfoot h2{
 
 }
 
+/*-----------Appler serial-----------------*/
+#SerialLar{
+visibility: hidden;
+}

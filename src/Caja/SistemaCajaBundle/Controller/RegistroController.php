@@ -57,8 +57,8 @@ class RegistroController extends Controller
 
 		$lote->setApertura($apertura);
 
-        $request = new Request();
 
+        $response = new Response();
 		if($form->isValid()) {
 
 			if(strlen($msg = $this->validarDetallesPagos($lote)) == 0) {
@@ -72,17 +72,47 @@ class RegistroController extends Controller
 //				$this->get('session')->getFlashBag()->add('success', 'flash.create.success');
 //				return $this->redirect($this->generateUrl('registro'));
 
+                $tk ="";
+                foreach($lote->getDetalle() as $detalle){
+                    $ticket = $this->get("sistemacaja.ticket");
+                    $ticket->setContenido( array(
+                            array("Comprobante ".$detalle->getComprobante(), $detalle->getImporte()),
+                        )
+
+                    );
+                    $ticket->setValores(array(
+                        'ticket' => $detalle->getId(),
+                        'codigobarra' => $detalle->getCodigoBarra()
+                    ));
+                    $tk .= $ticket->getTicketFull();
+                    $tk .= $ticket->getTicketTestigo();
+
+                }
+                $response->setContent( json_encode( array(
+                    "ok"     =>1,
+                    "ticket" => $tk
+                )));
 
 
 			} else {
-				$this->get('session')->getFlashBag()->add('error', $msg );
+				//$this->get('session')->getFlashBag()->add('error', $msg );
+                $response->setContent( json_encode( array(
+                    "ok"    =>  0,
+                    "error" =>  $msg
+                )));
 			}
 		} else {
+            $this->get('session')->getFlashBag()->add('error', 'flash.create.error');
+            $response->setContent( json_encode( array(
+                "ok"    =>  false,
+                "error" =>  'Error de creacion'
+            )));
 
-			$this->get('session')->getFlashBag()->add('error', 'flash.create.error');
 		}
 
+        return $response;
 
+        /*
 		return $this->render("SistemaCajaBundle:Registro:registro.html.twig", array(
 				"lote" => $lote,
 				"form" => $form->createView(),
@@ -90,7 +120,7 @@ class RegistroController extends Controller
 				"apertura" => $apertura
 			)
 		);
-
+        */
 	}
 
 	private function validarDetallesPagos(Lote $lote)
@@ -202,7 +232,7 @@ class RegistroController extends Controller
             $tk = $ticket->getTicketFull();
 
         //if($tipo == 1)
-            $tk .= $ticket->getTicketTestigo();
+        $tk .= $ticket->getTicketTestigo();
 //        if($tipo == 3){
 //
 //        }

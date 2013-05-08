@@ -341,11 +341,14 @@ $(document).ready(function (e) {
 
     };
 
+    /**
+     * Evento click del boton REGISTRAR PAGO
+     */
     $("#pago_save").click(function (e) {
 
         $.msgBox({
             title: "Registración de Pago",
-            content: "Si esta todo correcto,<br> procede a almacenar el pago?",
+            content: "Si esta todo correcto,<br> proceda a almacenar el pago e imprime ticket!",
             type: "confirm",
             buttons: [
                 { value: "Si" },
@@ -359,16 +362,20 @@ $(document).ready(function (e) {
                         type: 'POST',
                         url: $(miForm).attr('action'),
                         data: $(miForm).serialize(),
+                        dataType: "json",
                         success: function(data) {
-                            $('#result').html(data);
-
+                            //$('#result').html(data);
+                            if(data.ok == 1){
+                                imprimirSerial(data.ticket);
+                                //redirigir
+                                window.location = "{{ path('registro') }}";
+                            }
+                            else if(data.ok != 1){
+                                alert(data.error);
+                            }
                         }
                     })
-
                     return false;
-
-
-
                 }
                 if (result == "Cancelar") {
 
@@ -381,24 +388,20 @@ $(document).ready(function (e) {
 
     })
 
-    $("#tk").click(function () {
+    /**
+     * Manda a la impresora fiscal.
+     * @param data
+     */
+    imprimirSerial = function(data){
         var pser = document.SerialLar;
-        var msg = "";
-
         try {
-            $.get("{{ path('registro_ticket', {'tipo': 0}) }}", function(data){
-                //alert(data);
-                pser.escribir(data);
-            } );
-
-            $.get("{{ path('registro_ticket', {'tipo': 1}) }}", function(data){
-                //alert(data);
-                pser.escribir(data);
-            } );
+            pser.escribir(data);
         } catch (e) {
             alert(e);
         }
-    });
+    }
+
+
 }); //fin document ready
 
 
