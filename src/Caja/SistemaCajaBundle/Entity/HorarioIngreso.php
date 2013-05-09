@@ -29,9 +29,16 @@ class HorarioIngreso
     /**
      * @var string
      *
-     * @ORM\Column(name="mascara", type="string", length=32)
+     * @ORM\Column(name="desde", type="string", length=8)
      */
-    private $mascara;
+    private $desde;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="hasta", type="string", length=8)
+     */
+    private $hasta;
 
 
     /**
@@ -68,25 +75,48 @@ class HorarioIngreso
     }
 
     /**
-     * Set mascara
+     * Set desde
      *
-     * @param string $mascara
+     * @param string $desde
      * @return HorarioIngreso
      */
-    public function setMascara($mascara)
+    public function setDesde($desde)
     {
-        $this->mascara = $mascara;
+        $this->desde = $desde;
     
         return $this;
     }
 
     /**
-     * Get mascara
+     * Get desde
      *
      * @return string 
      */
-    public function getMascara()
+    public function getDesde()
     {
-        return $this->mascara;
+        return $this->desde;
+    }
+
+    /**
+     * Set hasta
+     *
+     * @param string $hasta
+     * @return HorarioIngreso
+     */
+    public function setHasta($hasta)
+    {
+        $this->hasta = $hasta;
+    
+        return $this;
+    }
+
+    /**
+     * Get hasta
+     *
+     * @return string 
+     */
+    public function getHasta()
+    {
+        return $this->hasta;
     }
 }

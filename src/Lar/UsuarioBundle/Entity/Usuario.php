@@ -606,9 +606,15 @@ class Usuario implements AdvancedUserInterface
 	{
 	}
 
-	function getUsername()
+    /**
+     * Get UserName
+     *
+     * @return \String
+     */
+
+    public function getUsername()
 	{
-		return $this->getEmail();
+		return $this->username;
 	}
 
 	public function __toString()
@@ -705,7 +711,7 @@ class Usuario implements AdvancedUserInterface
     public function setUsername($username)
     {
         $this->username = $username;
-    
+
         return $this;
     }
 }

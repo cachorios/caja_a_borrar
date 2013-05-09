@@ -36,8 +36,7 @@ $(document).ready(function (e) {
         var $msgBarra = $("#msgBarra");
         $barra = $(this);
         dataBarra = "";
-
-        $.blockUI({ message:null });
+        $.blockUI({ message: null });
 
         cb = $barra.val().replace(/^\s*|\s*$/g, "");
 
@@ -55,7 +54,7 @@ $(document).ready(function (e) {
             if (resultado) {
                 $("#AnularComprobantes").show();
             }
-            $.unblockUI();
+
         }
     });
 

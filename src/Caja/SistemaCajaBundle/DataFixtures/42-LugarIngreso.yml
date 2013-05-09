@@ -1,0 +1,14 @@
+model: Caja\SistemaCajaBundle\Entity\LugarIngreso
+fixtures:
+    l1:
+        descripcion: 'Red Local'
+        mascara: '192.0'
+    l2:
+        descripcion: 'localhost'
+        mascara: '127.0'
+    l3:
+        descripcion: 'Red Local Proxy'
+        mascara: '190.226.43.190'
+    l4:
+        descripcion: 'Red Local Proxy'
+        mascara: '190.226.43.186'

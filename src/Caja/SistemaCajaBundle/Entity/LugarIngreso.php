@@ -22,16 +22,17 @@ class LugarIngreso
     /**
      * @var string
      *
-     * @ORM\Column(name="descripcion", type="string", length=256)
+     * @ORM\Column(name="descripcion", type="string", length=64)
      */
     private $descripcion;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="desde", type="string", length=8)
+     * @ORM\Column(name="mascara", type="string", length=32)
      */
-    private $desde;
+    private $mascara;
+
 
     /**
      * Get id
@@ -67,25 +68,25 @@ class LugarIngreso
     }
 
     /**
-     * Set desde
+     * Set mascara
      *
-     * @param string $desde
+     * @param string $mascara
      * @return LugarIngreso
      */
-    public function setDesde($desde)
+    public function setMascara($mascara)
     {
-        $this->desde = $desde;
+        $this->mascara = $mascara;
     
         return $this;
     }
 
     /**
-     * Get desde
+     * Get mascara
      *
      * @return string 
      */
-    public function getDesde()
+    public function getMascara()
     {
-        return $this->desde;
+        return $this->mascara;
     }
 }
