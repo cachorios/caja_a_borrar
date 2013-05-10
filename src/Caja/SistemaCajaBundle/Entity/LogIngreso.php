@@ -34,6 +34,14 @@ class LogIngreso
 
 
     /**
+     * @var datetime
+     *
+     * @ORM\Column(name="fecha", type="datetime")
+     *
+     */
+    private $fecha;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -87,5 +95,28 @@ class LogIngreso
     public function getUsuario()
     {
         return $this->usuario;
+    }
+
+    /**
+     * Set fecha
+     *
+     * @param \DateTime $fecha
+     * @return LogIngreso
+     */
+    public function setFecha($fecha)
+    {
+        $this->fecha = $fecha;
+    
+        return $this;
+    }
+
+    /**
+     * Get fecha
+     *
+     * @return \DateTime 
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
     }
 }

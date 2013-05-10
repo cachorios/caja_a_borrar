@@ -8,10 +8,166 @@
  */
 namespace Lar\UsuarioBundle\Listener;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 class LoginListener {
+
+    protected $contenedor;
+    public function __construct($cnt = null)
+    {
+        $this->contenedor = $cnt;
+    }
+
     public function onSecurityInteractiveLogin(InteractiveLoginEvent $event) {
+        $em = $this->contenedor->get('doctrine.orm.entity_manager');
+        //$em = $this->getEntityManager();
         $usuario = $event->getAuthenticationToken()->getUser();
-        $algo = $usuario;
+        // Me fijo si el usuario pertenece al grupo de Administradores:
+        $grupos = $usuario->getGrupos();
+        $es_administrador = false;
+        foreach ($grupos as $grupo) {
+            if ($grupo->getNombre() == 'Administradores') {
+                $es_administrador = true;
+            }
+        }
+        if ($es_administrador) {
+            // es un administrador, esta todo bien
+            $valido = true;
+        } else { // Pregunto si es un dia permitido:
+            $valido = false;
+            /*
+            $usuario = DbFinder::from('sfGuardUserIngreso')
+                ->where('SfGuardUserId', $values['user']->getId())
+                ->findOne();
+            if ($usuario) {
+                $dia = date("w");
+                if ($dia == 0) {//domingo
+                    $domingo = $usuario->getDomingo();
+                    if ($domingo) {
+                        $valido = true;
+                    } else {
+                        $valido = false;
+                    }
+                } else if ($dia == 1) {//lunes
+                    $lunes = $usuario->getLunes();
+                    if ($lunes) {
+                        $valido = true;
+                    } else {
+                        $valido = false;
+                    }
+                } else if ($dia == 2) {//martes
+                    $martes = $usuario->getMartes();
+                    if ($martes) {
+                        $valido = true;
+                    } else {
+                        $valido = false;
+                    }
+                } else if ($dia == 3) {//miercoles
+                    $miercoles = $usuario->getMiercoles();
+                    if ($miercoles) {
+                        $valido = true;
+                    } else {
+                        $valido = false;
+                    }
+                } else if ($dia == 4) {//jueves
+                    $jueves = $usuario->getJueves();
+                    if ($jueves) {
+                        $valido = true;
+                    } else {
+                        $valido = false;
+                    }
+                } else if ($dia == 5) {//viernes
+                    $viernes = $usuario->getViernes();
+                    if ($viernes) {
+                        $valido = true;
+                    } else {
+                        $valido = false;
+                    }
+                } else if ($dia == 6) {//sabado
+                    $sabado = $usuario->getSabado();
+                    if ($sabado) {
+                        $valido = true;
+                    } else {
+                        $valido = false;
+                    }
+                }
+                // Si el dia es valido, sigo el control, ahora el horario:
+                if ($valido) {
+                    // Pregunto si tiene control de horario:
+
+                    if ($usuario->getsfGuardUserHorario()) {
+                        $hora_actual = strtotime(date('H:i:s'));
+                        $horario_permitido_desde = strtotime($usuario->getsfGuardUserHorario()->getDesde());
+                        $horario_permitido_hasta = strtotime($usuario->getsfGuardUserHorario()->getHasta());
+                        if ($hora_actual >= $horario_permitido_desde && $hora_actual <= $horario_permitido_hasta) {
+                            // esta todo ok
+                        } else {
+                            $valido = false;//esta fuera del horario comprendido
+                        }
+                    }
+
+                }
+
+                // Si paso el control de horario, verifico el lugar desde donde accede:
+                if ($valido) {
+                    /*
+                    // Pregunto si el lugar desde donde accede se corresponde con lo que tiene asignado:
+                    if ($usuario->getControlLugar()) { // Tiene control de lugar
+                        // Traigo la lista de lugares permitidos:
+                        $lugares = DbFinder::from('sfGuardUserLugar')->find();
+                        if ($lugares) {
+                            $ip_usuario = $_SERVER['REMOTE_ADDR'];
+                            //$ip_usuario = '190.226.43.186'; -- se puso fijo para probar, en su momento
+                            $encontro = false;
+                            foreach ($lugares as $lugar) {
+                                $mascara_valida = $lugar->getMascara();
+                                $largo_mascara = strlen($mascara_valida);
+                                // Obtengo los primeros n caracteres de la ip que intenta ingresar:
+                                $mascara_ip_origen = substr($ip_usuario, 0, $largo_mascara);
+                                if ($mascara_valida == $mascara_ip_origen) {
+                                    // esta todo bien
+                                    $encontro = true;
+                                }
+                            }
+                            // Si no pudo validar despues de haber recorrido los lugares:
+                            if (!$encontro) {
+                                $valido = false; // no es una ip habilitada para ingresar
+                            }
+                        } else {
+                            $valido = false;// No se pudo recuperar la lista de lugares:
+                        }
+                    }
+                }
+
+            } else {
+                // No se pudo recuperar las reglas de ingreso asociadas al usuario:
+                $valido = false;
+            }
+            */
+        }
+
+        // Despues de haber hecho todos los controles, pregunto si paso o no los mismos:
+        if (!$valido) {
+            // No se puede loguear, esta fuera de los dias y horarios permitidos
+            // Registro el ingreso rechazado antes de salir:
+
+            $logaudit = new \Caja\SistemaCajaBundle\Entity\LogIngreso();
+            $logaudit->setUsuario($usuario);
+            $logaudit->setDescripcion('INGRESO RECHAZADO:'.$usuario->getNombre().":".$_SERVER['HTTP_HOST'].":".$_SERVER['REMOTE_ADDR']);
+            $logaudit->setFecha(new \DateTime());
+            $em->persist($logaudit);
+            $em->flush();
+            throw new BadCredentialsException('Ingreso rechazado. Lugar de acceso u horario no permitidos.', 0);
+            $event->stopPropagation();
+
+        }
+        if ($valido) {
+            $logaudit = new \Caja\SistemaCajaBundle\Entity\LogIngreso();
+            $logaudit->setUsuario($usuario);
+            $logaudit->setDescripcion('INGRESO VALIDO:'.$usuario->getNombre().":".$_SERVER['HTTP_HOST'].":".$_SERVER['REMOTE_ADDR']);
+            $logaudit->setFecha(new \DateTime());
+            $em->persist($logaudit);
+            $em->flush();
+        }
 
     }
 }
