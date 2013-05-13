@@ -37,7 +37,38 @@
 //            e.preventDefault()
 //        })
 
+    //Evitar el enter
+    var keyStop = {
+        8: ":not(input:text, textarea, input:file, input:password)", // stop backspace = back
+        13: "input", // stop enter = submit
+        //13: "input:number,input:text, input:password", // stop enter = submit
+
+        end: null
+    };
+    $(document).bind("keypress", function(event){
+        var selector = keyStop[event.which];
+
+
+        if(selector !== undefined && $(event.target).is(selector)) {
+            event.preventDefault(); //stop event
+            //return false;
+        }
+        return true;
+    });
+
+//    $("form").keypress(function(e) {
+//        if (e.which == 13) {
+//            return false;
+//        }
+//    });
+
 })(window.jQuery);
+
+
+
+
+
+
 
 /*
  * Da formato a un número para su visualización
