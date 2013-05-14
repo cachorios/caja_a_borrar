@@ -1,4 +1,4 @@
-model: Caja\SistemaCajaBundle\Entity\LugarIngreso
+model: Lar\UsuarioBundle\Entity\LugarIngreso
 fixtures:
     l1:
         descripcion: 'Red Local'

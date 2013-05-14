@@ -1,4 +1,4 @@
-model: Caja\SistemaCajaBundle\Entity\HorarioIngreso
+model: Lar\UsuarioBundle\Entity\HorarioIngreso
 fixtures:
     h1:
         descripcion: 'Horario Normal'

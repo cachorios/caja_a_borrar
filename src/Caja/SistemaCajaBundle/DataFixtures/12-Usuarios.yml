@@ -20,7 +20,7 @@ fixtures:
             - gr1
             - gr2
 
-    Beto:
+    beto:
         nombre: Alberto
         apellido: Voefray
         email: Alberto2000@hotmail.com
@@ -38,7 +38,7 @@ fixtures:
             - gr2
 
 
-    Usr1:
+    ruben:
         nombre: Ruben
         apellido: Cardozo
         email: ruben@hotmail.com
