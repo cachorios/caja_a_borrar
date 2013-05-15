@@ -31,7 +31,7 @@ class LoginListener {
             }
         }
         if ($es_administrador) {
-            // es un administrador, esta todo bien
+            // es un administrador, esta todo bien:
             $valido = true;
         } else { // Pregunto si es un dia permitido:
             $valido = false;
