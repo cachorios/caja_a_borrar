@@ -185,7 +185,7 @@ class RegistroController extends Controller
         $res = $em->getRepository("SistemaCajaBundle:LoteDetalle")->findBy(array('codigo_barra' =>$cb));
 
         if (count($res) > 0) {
-            ld($res);
+            //ld($res);
             $rJson = json_encode(array(
                 'ok' => 0,
                 'msg' => "Este comprobante ya se ha pagado, el dia " . $res[0]->getFecha()
