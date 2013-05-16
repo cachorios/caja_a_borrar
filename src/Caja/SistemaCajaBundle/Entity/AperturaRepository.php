@@ -69,7 +69,11 @@ class AperturaRepository extends EntityRepository
 
         $res = $q->getSingleResult();
 
-        return $res[1];
+        if ($res[1] > 0) {
+            return $res[1];
+        } else {
+            return 0;
+        }
 
     }
 
@@ -88,13 +92,18 @@ class AperturaRepository extends EntityRepository
                   SistemaCajaBundle:LotePago p JOIN p.lote l
               WHERE
                   l.apertura = :apertura_id
+                  AND p.importe < 0
               ")
             ->setParameter("apertura_id", $apertura_id)
         ;
 
         $res = $q->getSingleResult();
 
-        return $res[1];
+        if ($res[1] < 0) {
+            return - $res[1];
+        } else {
+            return 0;
+        }
 
     }
 

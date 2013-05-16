@@ -74,14 +74,14 @@ class LoteRepository extends EntityRepository
         $em = $this->getEntityManager();
 
         $consulta_tipo_pago= $em->createQuery("
-                SELECT tp.id
+                SELECT tp.divisible
                 FROM SistemaCajaBundle:LotePago p JOIN p.tipo_pago tp
                 WHERE p.lote = :lote_id ")
             ->setParameter("lote_id", $lote_id);
 
         $consulta_tipo_pago->setMaxResults(1);
         $resultado = $consulta_tipo_pago->getSingleResult();
-        $tipo_pago = $resultado['id'];
+        $tipo_pago = $resultado['divisible'];
 
         return $tipo_pago;
     }

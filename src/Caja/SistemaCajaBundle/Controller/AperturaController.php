@@ -423,38 +423,44 @@ class AperturaController extends Controller {
         if ($lote != null) {
             $lote_id                 = $lote->getId();
             $total_comprobantes_lote = $lote->getDetalle()->count();
+            $total_comprobantes_seleccionados = count($comprobantes);
 
             //Pregunto cuantos tipos de pagos se hicieron en ese lote:
             $cantidad_pagos = $em->getRepository('SistemaCajaBundle:Lote')->getConsultaCantidadPagos($lote_id);
 
             if ($cantidad_pagos == 1) {
                 //Se hizo en un solo tipo de pago, hay que ver cual fue ese tipo:
-                $tipo_pago = $em->getRepository('SistemaCajaBundle:Lote')->getConsultaTipoPago($lote_id);
+                $tipo_pago_divisible = $em->getRepository('SistemaCajaBundle:Lote')->getConsultaTipoPago($lote_id);
 
-                //el tipo de pago en el registro negativo sera el obtenido en la linea anterior ($tipo_pago)
+                //el tipo de pago en el registro negativo sera el obtenido en la linea anterior ($tipo_pago_divisible)
 
                 //Si el pago no fue en efectivo, solo se puede anular el lote completo:
-                if (($tipo_pago != 1) && (count($comprobantes) < $total_comprobantes_lote)) {
+                if (($tipo_pago_divisible != 1) && (count($comprobantes) < $total_comprobantes_lote)) {
                     $this->get('session')->getFlashBag()->add('error', 'El lote no fue abonado en efectivo, solo se puede anular de manera total.');
                     return $this->redirect($this->generateUrl('apertura_anulado'));
                 }
-            } else { //Se pago con mas un tipo de pago, se anula hasta donde le alcance el efectivo:
-                //Comparo el monto abonado en efectivo para ese lote con el monto del comprobante/s a anular
-                $efectivo = $em->getRepository('SistemaCajaBundle:Lote')->getMontoEfectivo($lote_id);
+            } else { //Se pago con mas un tipo de pago, entonces:
+                // se anula todo el lote, o se anula hasta donde le alcance el efectivo
 
-                //Calculo el monto de los comprobantes seleccionados para anular:
-                $monto_a_anular = 0;
-                foreach ($comprobantes as $comprobante) {
-                    $bm->setCodigo($comprobante, $apertura->getFecha());
-                    $monto_a_anular += $bm->getImporte();
+                if ($total_comprobantes_seleccionados < $total_comprobantes_lote ) { //SE ANULA PARTE DEL LOTE:
+                     //Se selecciono parte del lote, se anula hasta donde le alcance el efectivo:
+                    //Comparo el monto abonado en efectivo para ese lote con el monto del comprobante/s a anular
+                    $efectivo = $em->getRepository('SistemaCajaBundle:Lote')->getMontoEfectivo($lote_id);
+
+                    //Calculo el monto de los comprobantes seleccionados para anular:
+                    $monto_a_anular = 0;
+                    foreach ($comprobantes as $comprobante) {
+                        $bm->setCodigo($comprobante, $apertura->getFecha());
+                        $monto_a_anular += $bm->getImporte();
+                    }
+                    //Se verifica que se hayan seleccionado todos los comprobantes que componen el lote:
+                    if ($monto_a_anular > $efectivo) {
+                        $this->get('session')->getFlashBag()
+                            ->add('error', 'El monto de los comprobantes seleccionados ($' . $monto_a_anular . ') es mayor al importe abonado en efectivo ($' . $efectivo . ')' );
+                        return $this->redirect($this->generateUrl('apertura_anulado'));
+                    }
                 }
-                //Se verifica que se hayan seleccionado todos los comprobantes que componen el lote:
-                if ($monto_a_anular > $efectivo) {
-                    $this->get('session')->getFlashBag()
-                        ->add('error', 'El monto de los comprobantes seleccionados ($' . $monto_a_anular . ') es mayor al importe abonado en efectivo ($' . $efectivo . ')' );
-                    return $this->redirect($this->generateUrl('apertura_anulado'));
-                }
-                $tipo_pago = 'Efectivo'; //Se asume que se va a cancelar hasta donde le alcance el efectivo,
+                $tipo_pago_divisible = 1; //Se asume que se va a cancelar hasta donde le alcance el efectivo,
                 // por lo cual el tipo de pago en el registro negativo sera 1 (efectivo)
             }
 
@@ -476,7 +482,7 @@ class AperturaController extends Controller {
 
                 //Recupero el tipo de pago:
                 $tipo_pago = $em->getRepository('SistemaCajaBundle:TipoPago') ->findOneBy(array(
-                    'descripcion' => $tipo_pago
+                    'divisible' => $tipo_pago_divisible
                 ));
 
                 if (!$tipo_pago) {

@@ -200,7 +200,11 @@ class Apertura
     {
         $n = 0;
         foreach ($this->getLotes() as $lote) {
-            $n += $lote->getDetalle()->count();
+            foreach ($lote->getDetalle() as $detalle) {
+                if (!$detalle->getAnulado()) {
+                    $n++;
+                }
+            }
         }
 
         return $n;
