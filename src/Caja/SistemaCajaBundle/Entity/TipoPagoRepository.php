@@ -3,6 +3,7 @@
 namespace Caja\SistemaCajaBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NoResultException;
 
 /**
  * TipoPagoRepository
@@ -12,4 +13,20 @@ use Doctrine\ORM\EntityRepository;
  */
 class TipoPagoRepository extends EntityRepository
 {
+    public function getDefaulPago(){
+
+        $em = $this->getEntityManager();
+        $q = $em->createQuery('
+        	SELECT t
+              FROM SistemaCajaBundle:TipoPago t
+             WHERE t.divisible = 1');
+        try{
+            $res = $q->getSingleResult();
+        }catch(NoResultException $e){
+            throw($e);
+        }
+
+        return $res->getId();
+
+    }
 }

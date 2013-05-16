@@ -62,6 +62,10 @@
         </section>
         <script src="{{  asset('js/deployJava.js') }}"></script>
         <script>
+            var tipoPagoDefault = {{ tipoPagoDefault }};
+
+            console.log("tipo Pago " + tipoPagoDefault);
+
             var attributes = {
                 code:       "applet.Main",
                 archive:    "{{  asset('SerialLar.jar')}}",

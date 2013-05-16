@@ -1,6 +1,7 @@
 <script type="text/javascript">
 
 
+
 $('#load_indicador')
         .ajaxStart(function () {
             //$('body').append('"<div class="ajax_block"></div>');
@@ -26,8 +27,6 @@ $(document).ready(function (e) {
     var $txtcodigoBarra = $("#txtcodigobarra");
     $txtcodigoBarra.focus();
     totalComprobante = 0;
-
-
     /**
      * Evento para cambio de codigo de barra
      */
@@ -76,7 +75,6 @@ $(document).ready(function (e) {
 
 
     });
-
 
     /**
      * Si se proceso correctamente la peticion ajax
@@ -218,6 +216,7 @@ $(document).ready(function (e) {
         $.unblockUI();
     };
 
+    /*---------------------------- PAGO ------------------------------------------------------------ */
     //boton que abre la ventana modal de pago
     $("#PagarComprobantes").click(function () {
         var $pagmod,
@@ -237,16 +236,13 @@ $(document).ready(function (e) {
             success: function (result) {
                 if (result == "Si") {
                     $("#apago_importe").text(formato_numero(totalComprobante, 2));
-
                     /* quitar las lineas actuales para que iniciar */
                     $pagmod = $("#PagoModal");
                     $("table tbody", $pagmod).remove();
                     $("table", $pagmod).append("<tbody></tbody>");
 
                     btnAdd = $("[data-coleccion-add-btn]", $pagmod);
-
                     btnAdd.trigger('click');
-
                     $pagmod.modal();
                 }
             }
@@ -269,8 +265,11 @@ $(document).ready(function (e) {
     });
 
     postAddPago = function (row, i) {
+        /**El pago por defecto, como es fijo en la primer carga de la pagina se pasa como parametro
+         * al renderview, asi no lo tenemos que esta pidiendo
+          */
 
-        $("#caja_sistemacajabundle_registrotype_pagos_" + i + "_tipo_pago").val(1);
+        $("#caja_sistemacajabundle_registrotype_pagos_" + i + "_tipo_pago").val(tipoPagoDefault);
         $("#caja_sistemacajabundle_registrotype_pagos_" + i + "_importe").val(formato_numero(totalComprobante - totalPago, 2, "."));
         totalizaPagos();
         $("#caja_sistemacajabundle_registrotype_pagos_" + i + "_tipo_pago").focus();
@@ -324,7 +323,7 @@ $(document).ready(function (e) {
                 total = Math.round((total + parseFloat(this.value)) * 100) / 100;
                 if (total >= totalComprobante) {
                     $(this).val(formato_numero(totalComprobante - total + parseFloat(this.value), 2, "."));
-                    total = totalComprobante
+                    total = totalComprobante;
                     n = 1;
                 }
             }
