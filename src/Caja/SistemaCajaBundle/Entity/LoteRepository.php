@@ -95,8 +95,10 @@ class LoteRepository extends EntityRepository
         $em = $this->getEntityManager();
 
         $consulta_efectivo = $em->createQuery("SELECT sum(p.importe)
-                FROM SistemaCajaBundle:LotePago p JOIN p.tipo_pago tp
-                WHERE p.tipo_pago = 1 and p.lote = :lote_id ")
+                FROM SistemaCajaBundle:LotePago p
+                JOIN p.tipo_pago tp
+                WHERE tp.descripcion = 'Efectivo'
+                 and p.lote = :lote_id ")
             ->setParameter("lote_id", $lote_id);
         $consulta_efectivo->setMaxResults(1);
         $efectivo = $consulta_efectivo->getSingleResult();

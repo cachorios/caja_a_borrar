@@ -27,7 +27,7 @@ class UsuarioIngreso
 
 
     /**
-     * @ORM\OneToOne(targetEntity="\Lar\UsuarioBundle\Entity\HorarioIngreso")
+     * @ORM\ManyToOne(targetEntity="\Lar\UsuarioBundle\Entity\HorarioIngreso")
      * @ORM\JoinColumn(name="horario_id", referencedColumnName="id")
      */
     private $horario;

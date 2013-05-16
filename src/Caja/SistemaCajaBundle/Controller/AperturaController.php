@@ -13,7 +13,7 @@ use Caja\SistemaCajaBundle\Entity\Apertura;
 use Caja\SistemaCajaBundle\Entity\Lote;
 use Caja\SistemaCajaBundle\Entity\LoteDetalle;
 use Caja\SistemaCajaBundle\Entity\LotePago;
-
+use Caja\SistemaCajaBundle\Entity\CierreCaja;
 use Caja\SistemaCajaBundle\Form\AperturaAnularType;
 use Caja\SistemaCajaBundle\Form\AperturaType;
 use Caja\SistemaCajaBundle\Form\AperturaCierreType;
@@ -175,7 +175,7 @@ class AperturaController extends Controller {
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($entity);
                 $em->flush();
-                $this->get('session')->getFlashBag()->add('success', 'flash.create.success');
+                $this->get('session')->getFlashBag()->add('success', 'Apertura creada exitosamente');
 
                 return $this->redirect($this->generateUrl('apertura'));
             } else {
@@ -264,6 +264,23 @@ class AperturaController extends Controller {
             $editForm->bind($request);
             if ($editForm->isValid()) {
                 $em = $this->getDoctrine()->getManager();
+
+                $caja   = $this->container->get('caja.manager')->getCaja();
+                $apertura = $this->container->get('caja.manager')->getApertura();
+
+                $pagos  = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagos($apertura->getId());
+                //Guardo un registro de cierre, a modo de auditoria:
+                $cierre_caja = new CierreCaja();
+                $cierre_caja->setFecha($entity->getFecha());//Es la fecha a la cual corresponde el cierre
+                $cierre_caja->setImporte($pagos);/////////////////////////////////////////////////////////////
+                $cierre_caja->setFechaCierre(new \DateTime()); //Es la fecha en la cual se efectua el cierre
+                $cierre_caja->setDireccionIp($_SERVER['REMOTE_ADDR']);
+                $cierre_caja->setHost($_SERVER['HTTP_HOST']);
+                $cierre_caja->setCajero($caja->getCajero()->getUsername());
+                $cierre_caja->setNroCaja( $caja->getNumero());
+                $em->persist($cierre_caja);
+                //Guardo un registro de cierre, a modo de auditoria
+
                 $em->persist($entity);
                 $em->flush();
                 $this->get('session')->getFlashBag()->add('success', 'La caja se cerro correctamente');
@@ -434,10 +451,10 @@ class AperturaController extends Controller {
                 //Se verifica que se hayan seleccionado todos los comprobantes que componen el lote:
                 if ($monto_a_anular > $efectivo) {
                     $this->get('session')->getFlashBag()
-                        ->add('error', 'El monto de los comprobantes seleccionados es mayor al importe abonado en efectivo.');
+                        ->add('error', 'El monto de los comprobantes seleccionados ($' . $monto_a_anular . ') es mayor al importe abonado en efectivo ($' . $efectivo . ')' );
                     return $this->redirect($this->generateUrl('apertura_anulado'));
                 }
-                $tipo_pago = 1; //Se asume que se va a cancelar hasta donde le alcance el efectivo,
+                $tipo_pago = 'Efectivo'; //Se asume que se va a cancelar hasta donde le alcance el efectivo,
                 // por lo cual el tipo de pago en el registro negativo sera 1 (efectivo)
             }
 
@@ -458,7 +475,10 @@ class AperturaController extends Controller {
                 }
 
                 //Recupero el tipo de pago:
-                $tipo_pago = $em->find('SistemaCajaBundle:TipoPago', 1); //Efectivo
+                $tipo_pago = $em->getRepository('SistemaCajaBundle:TipoPago') ->findOneBy(array(
+                    'descripcion' => $tipo_pago
+                ));
+
                 if (!$tipo_pago) {
                     $this->get('session')->getFlashBag()->add('error', 'No se pudo recuperar el tipo de pago.');
                     return $this->redirect($this->generateUrl('apertura_anulado'));
