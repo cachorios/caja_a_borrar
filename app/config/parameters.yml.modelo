@@ -1,4 +1,12 @@
 parameters:
+
+   #database_driver:   oci8
+   # database_host:     192.0.4.248
+   # database_port:     1521
+   # database_name:     oramp
+   # database_user:     municaja
+   # database_password: caja
+
     database_driver:   pdo_mysql
     database_host:     localhost
     database_port:     ~

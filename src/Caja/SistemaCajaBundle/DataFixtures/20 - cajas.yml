@@ -3,8 +3,12 @@ fixtures:
     c1:
         numero: 1
         nombre: Caja 1
-        cajero: Beto
+        cajero: beto
+        puerto: 1
+        ubicacion: 'direccion del cementerio'
     c2:
         numero: 2
         nombre: Caja 2
-        cajero: Usr1
+        cajero: ruben
+        puerto: 2
+        ubicacion: 'direccion de la caja numero 2'

@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>{% block title %} Bienvenido!{% endblock %}</title>
+    <title>{% block title %} Municipalidad de Posadas{% endblock %}</title>
     {% block stylesheets %}{% endblock %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -23,11 +23,15 @@
     <link href="{{ asset('bundles/sistemacaja/css/main.css') }}" rel="stylesheet">
 
     <script src="{{  asset('js/jquery.min.js') }}"></script>
+
+    {% block javascriptshead %}{% endblock %}
+
+    </body>
 </head>
 
 {% block body %}
     <body id="{% block id '' %}">
-
+    {% block javascriptstop %}{% endblock %}
     {% include '::includes/navbar.html.twig' ignore missing %}
 
 

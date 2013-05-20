@@ -76,4 +76,9 @@ class CajaManager
 	}
 
 
+    public function getEntityManager()
+    {
+        return $this->contenedor->get("doctrine.orm.entity_manager");
+    }
+
 }

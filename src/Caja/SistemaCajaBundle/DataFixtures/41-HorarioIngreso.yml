@@ -1,0 +1,6 @@
+model: Lar\UsuarioBundle\Entity\HorarioIngreso
+fixtures:
+    h1:
+        descripcion: 'Horario Normal'
+        desde: '06:00:00'
+        hasta: '20:30:00'

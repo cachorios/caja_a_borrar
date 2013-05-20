@@ -23,6 +23,7 @@ var totalComprobante;
 var totalPago;
 
 $(document).ready(function (e) {
+
     var $txtcodigoBarra = $("#txtcodigobarra");
     $txtcodigoBarra.focus();
     totalComprobante = 0;
@@ -35,8 +36,7 @@ $(document).ready(function (e) {
         var $msgBarra = $("#msgBarra");
         $barra = $(this);
         dataBarra = "";
-
-        $.blockUI({ message:null });
+        $.blockUI({ message: null });
 
         cb = $barra.val().replace(/^\s*|\s*$/g, "");
 

@@ -17,7 +17,3 @@ SistemaCajaBundle_registro:
 SistemaCajaBundle_tipopago:
     resource: "@SistemaCajaBundle/Resources/config/routing/tipopago.yml"
     prefix:   /tipopago
-
-SistemaCajaBundle_diego:
-    resource: "@SistemaCajaBundle/Resources/config/routing/diego.yml"
-    prefix:   /diego

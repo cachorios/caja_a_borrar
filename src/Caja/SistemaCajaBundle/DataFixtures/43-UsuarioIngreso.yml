@@ -1,0 +1,37 @@
+model: Lar\UsuarioBundle\Entity\UsuarioIngreso
+save_in_reverse: false # optional parameter
+persistence: orm
+fixtures:
+    ui1:
+        lunes:	true
+        martes:	true
+        miercoles:	true
+        jueves:	true
+        viernes: true
+        sabado:	true
+        domingo: true
+        control_lugar: false
+        usuario: cacho
+        horario: h1
+    ui2:
+        lunes:	true
+        martes:	true
+        miercoles:	true
+        jueves:	true
+        viernes: true
+        sabado:	true
+        domingo: true
+        control_lugar: false
+        usuario: beto
+        horario: h1
+
+    ui3:
+        lunes:	false
+        martes:	false
+        miercoles:	false
+        jueves:	false
+        viernes: true
+        sabado:	true
+        domingo: true
+        control_lugar: true
+        usuario: ruben

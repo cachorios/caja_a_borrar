@@ -15,11 +15,12 @@ fixtures:
         is_deleted: 0
         foto: user-511a905a4d1de-foto1.jpg
         username: cachorios
+        fecha_nacimiento: 1950-01-01
         grupos:
             - gr1
             - gr2
 
-    Beto:
+    beto:
         nombre: Alberto
         apellido: Voefray
         email: Alberto2000@hotmail.com
@@ -31,12 +32,13 @@ fixtures:
         is_deleted: 0
         foto: user-511a8ef7b8377-foto1.jpg
         username: Alberto2000
+        fecha_nacimiento: 1950-01-01
         grupos:
             - gr1
             - gr2
 
 
-    Usr1:
+    ruben:
         nombre: Ruben
         apellido: Cardozo
         email: ruben@hotmail.com
@@ -48,6 +50,7 @@ fixtures:
         is_deleted: 0
         foto: user-511970d001595-foto1.jpg
         username: ruben
+        fecha_nacimiento: 1950-01-01
         grupos:
             - gr1
 

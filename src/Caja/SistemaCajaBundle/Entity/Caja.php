@@ -34,6 +34,7 @@ class Caja
 	 * @Assert\Length(min = 1, max = 2)
 	 */
 	private $numero;
+
     /**
      * @var string
      *
@@ -48,9 +49,18 @@ class Caja
     protected  $cajero;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="ubicacion", type="string", length=39)
+     * @Assert\Length(min = 5, max = 39)
+     */
+    protected $ubicacion;
+
+    /**
     * @var string
     *
     * @ORM\Column(name="puerto", type="string", length=10)
+
     */
     private $puerto;
 
@@ -161,5 +171,28 @@ class Caja
     public function getPuerto()
     {
         return $this->puerto;
+    }
+
+    /**
+     * Set ubicacion
+     *
+     * @param string $ubicacion
+     * @return Caja
+     */
+    public function setUbicacion($ubicacion)
+    {
+        $this->ubicacion = $ubicacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get ubicacion
+     *
+     * @return string 
+     */
+    public function getUbicacion()
+    {
+        return $this->ubicacion;
     }
 }

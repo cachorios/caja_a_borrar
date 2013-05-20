@@ -23,7 +23,7 @@
 		"raulfraile/ladybug-bundle": "dev-master",
 		"avalanche123/imagine-bundle": "dev-master",
 		
-		"mopa/bootstrap-bundle": "dev-master",
+		"mopa/bootstrap-bundle": "2.2.*",
 		
 		"pagerfanta/pagerfanta": "dev-master",
 		"lexik/form-filter-bundle": "1.2.*",
