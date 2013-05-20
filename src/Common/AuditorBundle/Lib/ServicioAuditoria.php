@@ -8,7 +8,7 @@
 
 namespace Common\AuditorBundle\Lib;
 
-use Caja\SistemaCajaBundle\Entity\Auditoria;
+use Common\AuditorBundle\Entity\Auditoria;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
 class ServicioAuditoria {
