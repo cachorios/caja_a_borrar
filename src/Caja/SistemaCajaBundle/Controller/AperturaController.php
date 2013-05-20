@@ -256,6 +256,9 @@ class AperturaController extends Controller {
             throw $this->createNotFoundException('Unable to find Apertura entity.');
         }
         $entity->setFechaCierre(new \DateTime());
+        $entity->setDireccionIp($_SERVER['REMOTE_ADDR']);
+        $entity->setHost($_SERVER['HTTP_HOST']);
+
         $editForm = $this->createForm(new AperturaCierreType(), $entity);
 
         $request = $this->getRequest();
@@ -265,6 +268,7 @@ class AperturaController extends Controller {
             if ($editForm->isValid()) {
                 $em = $this->getDoctrine()->getManager();
 
+                /*
                 $caja   = $this->container->get('caja.manager')->getCaja();
                 $apertura = $this->container->get('caja.manager')->getApertura();
 
@@ -280,6 +284,7 @@ class AperturaController extends Controller {
                 $cierre_caja->setNroCaja( $caja->getNumero());
                 $em->persist($cierre_caja);
                 //Guardo un registro de cierre, a modo de auditoria
+                */
 
                 $em->persist($entity);
                 $em->flush();

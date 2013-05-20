@@ -5,7 +5,7 @@
             <ul class="nav">
                 {% if esCajero() %}
                     <li class="monitor">
-                        <a href="{{ path('apertura_monitor') }}"><i class="icon-play"></i>Monitor</a>
+                        <a href="{{ path('apertura_monitor') }}"><i class="icon-eye-open icon-white"></i>Monitor</a>
                     </li>
                 {% endif %}
 
@@ -23,13 +23,13 @@
 
                 {% if esCajero() and tieneApertura() %}
                     <li class="cierre">
-                        <a href="{{ path('apertura_cierre') }}"><i class="icon-user icon-white"></i>Cierre</a>
+                        <a href="{{ path('apertura_cierre') }}"><i class="icon-pencil icon-white"></i>Cierre</a>
                     </li>
                 {% endif %}
 
                 {% if esCajero() and tieneApertura() %}
                     <li class="anular">
-                        <a href="{{ path("apertura_anulado") }}"><i class="icon-user icon-white"></i>Anular Comp.</a>
+                        <a href="{{ path("apertura_anulado") }}"><i class="icon-trash  icon-white"></i>Anular Comp.</a>
                     </li>
                 {% endif %}
 
@@ -41,12 +41,12 @@
 
                 {% if is_granted('ROLE_ADMIN') %}
                     <li class="tipopago">
-                        <a href="{{ path("tipopago") }}"><i class="icon-retweet icon-white"></i>Tipos de Pago</a>
+                        <a href="{{ path("tipopago") }}"><i class="icon-text-width icon-white"></i>Tipos de Pago</a>
                     </li>
                 {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}
                     <li class="larparametro">
-                        <a href="{{ path("larparametro") }}"><i class="icon-retweet icon-white"></i>Tablas</a>
+                        <a href="{{ path("larparametro") }}"><i class="icon-tasks icon-white"></i>Tablas</a>
                     </li>
                 {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}

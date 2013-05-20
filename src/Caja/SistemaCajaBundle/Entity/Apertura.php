@@ -24,7 +24,7 @@ class Apertura
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="fecha", type="date")
+     * @ORM\Column(name="fecha", type="datetime")
      */
     private $fecha;
 
@@ -38,9 +38,21 @@ class Apertura
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="fecha_cierre", type="date", nullable=true)
+     * @ORM\Column(name="fecha_cierre", type="datetime", nullable=true)
      */
     private $fecha_cierre;
+
+    /**
+     * @var string
+     * @ORM\Column(name="direccion_ip", type="string", length=15, nullable=true)
+     */
+    private $direccion_ip;
+
+    /**
+     * @var string
+     * @ORM\Column(name="host", type="string", length=32, nullable=true)
+     */
+    private $host;
 
     /**
      * @ORM\ManyToOne(targetEntity="Caja\SistemaCajaBundle\Entity\Caja")
@@ -212,9 +224,10 @@ class Apertura
 
     public function getComprobanteAnulado()
     {
+
         $n = 0;
         foreach ($this->getLotes() as $lote) {
-            foreach ($lote->getDetalle() as $detalle) {
+           foreach ($lote->getDetalle() as $detalle) {
                 if ($detalle->getAnulado()) {
                     $n++;
                 }
@@ -229,16 +242,11 @@ class Apertura
         try {
             foreach ($this->getLotes() as $lote) {
                 $pagos = $lote->getPagos();
-
-                /*
                 foreach ($pagos as $pago) {
-
-                    if(!$pago->getAnulado()){
+                    //if(!$pago->getAnulado()){
                         $n += $pago->getImporte() ;
-                    }
+                    //}
                 }
-                  */
-
             }
         } catch (\Symfony\Component\Config\Definition\Exception\Exception $e) {
 
@@ -248,12 +256,67 @@ class Apertura
 
     public function getImporteAnulado()
     {
-        $n=0;
-        foreach ($this->getLotes() as $lote) {
-           $n += $lote->getImportePagosAnulado();
+        $n = 0;
+        try {
+            foreach ($this->getLotes() as $lote) {
+                $pagos = $lote->getPagos();
+                foreach ($pagos as $pago) {
+                    if($pago->getImporte() < 0){
+                        $n += $pago->getImporte() ;
+                    }
+                }
+            }
+        } catch (\Symfony\Component\Config\Definition\Exception\Exception $e) {
+
         }
-        return ($n == null ? 0 : $n);
+        return ($n == null ? 0 : -$n);
     }
 
 
+
+    /**
+     * Set direccion_ip
+     *
+     * @param string $direccionIp
+     * @return Apertura
+     */
+    public function setDireccionIp($direccionIp)
+    {
+        $this->direccion_ip = $direccionIp;
+    
+        return $this;
+    }
+
+    /**
+     * Get direccion_ip
+     *
+     * @return string 
+     */
+    public function getDireccionIp()
+    {
+        return $this->direccion_ip;
+    }
+
+    /**
+     * Set host
+     *
+     * @param string $host
+     * @return Apertura
+     */
+    public function setHost($host)
+    {
+        $this->host = $host;
+    
+        return $this;
+    }
+
+    /**
+     * Get host
+     *
+     * @return string 
+     */
+    public function getHost()
+    {
+        return $this->host;
+    }
 }
