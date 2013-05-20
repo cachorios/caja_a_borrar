@@ -11,7 +11,7 @@
 namespace Common\AuditorBundle\Lib;
 
 
-interface IModuloAuditable {
+interface IControllerAuditable {
     /**
      * @return Array, un array con los nombres de los actions excluidos
      */
