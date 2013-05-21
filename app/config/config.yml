@@ -108,6 +108,7 @@ khepin_yaml_fixtures:
 
 parameters:
     lar.usuario.imagenes: %kernel.root_dir%/../web/uploads/users/
+    caja.apertura.dir_files: %kernel.root_dir%/../envios/
 
 
 
@@ -115,8 +116,8 @@ lar_parametro:
     tabla_agregable: true
 
 avalanche_imagine:
-    source_root: C:/web
-#    source_root: %kernel.root_dir%/../web
+    source_root: C:/Vertrigo\www
+    #source_root: %kernel.root_dir%/../web
     web_root:     %kernel.root_dir%/../web
 
     cache_prefix: media/cache

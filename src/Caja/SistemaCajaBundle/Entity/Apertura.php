@@ -319,4 +319,44 @@ class Apertura
     {
         return $this->host;
     }
+
+    /**
+     * Genera el archivo de texto que se envia por mail al cerrar una caja
+     *
+     * @return string
+     */
+    public function generaArchivoTexto()
+    {
+        $nombreArchivo = $this->generaNombreArchivo();
+        $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
+
+        $fp = fopen($path_archivos.$nombreArchivo.".txt", "w+");
+        if ($fp) {//fopen devuelve un recurso de puntero a fichero si tiene éxito, o FALSE si se produjo un error.
+            //Recorro los comprobantes cobrados en esa caja, no anulados:
+
+            $write = fputs($fp, $datos);
+            fclose($fp);
+        } else {
+            //Hubo un error al abrir/escribir el archivo
+
+        }
+        //$nombreArchivo .= ".txt";
+        //$this->formatoArchivo = "csv";
+        //$this->archivoOrigenDatos = $nombreArchivo;
+
+        return $nombreArchivo;
+    }
+
+     public function generaNombreArchivo() {
+         //El nombre de archivo siempre empieza con EP
+         $nombre_archivo = "EP";
+         //Despues va la fecha:
+         $nombre_archivo .= date("d");//dia
+         $nombre_archivo .= date("m");//mes
+         $nombre_archivo .= date("y");//año
+         $nombre_archivo .= '_' . $this->getCaja()->getId();//numero de caja
+         $nombre_archivo .= $this->getId();//id de caja
+
+         return $nombre_archivo;
+    }
 }

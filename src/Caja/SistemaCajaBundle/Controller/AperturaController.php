@@ -286,6 +286,25 @@ class AperturaController extends Controller {
                 //Guardo un registro de cierre, a modo de auditoria
                 */
 
+                //Genero el archivo de texto que se envia por mail. CONSIDERACIONES GENERALES:
+//                El archivo con el detalle de las cobranzas debería tener  la siguiente estructura.
+//                Solicito que el nombre comience con EP seguido de la fecha de cobro en formado DDMMAA. EJ:
+//                Cobranzas del Día 18 de Marzo del 2013, EP180313.TXT – Cobranzas del Día 2 de Mayo del 2013, EP020513.TXT,
+//                dado que la incorporación de datos a nuestros sistema esta automatizada
+//                y espera un archivo con esa estructura de nombres.
+//                Cabe mencionar que este formato es igual y único para cualquier tasa municipal que se cobra
+
+                //Por cada comprobante generado:
+//                Desde	Hasta	Longitud	Descripción
+//                1	    44	    44	        Código de Barras de la Municipalidad Utilizado para la Cobranza.  Sin modificaciones
+//                45	50	    6	        Valor Entero del  Importe Cobrado
+//                51	52	    2	        Valor Decimales del Importe Cobrado
+//                53	60	    8	        Fecha de Pago – Formato AAAAMMDD
+//                61	61	    1	        Código Fijo de empresa. Uso interno de la Municipalidad de Posadas. Usar siempre un Valor Fijo = 1 (Uno)
+//                62	65	    4	        Numero de Caja Rellenados con ceros a la izquierda
+                // Direccion de correo: cobros@posadas.gov.ar
+
+
                 $em->persist($entity);
                 $em->flush();
                 $this->get('session')->getFlashBag()->add('success', 'La caja se cerro correctamente');
