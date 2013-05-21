@@ -8,7 +8,7 @@
 
 namespace Common\AuditorBundle\Lib;
 
-use Caja\SistemaCajaBundle\Entity\Auditoria;
+use Common\AuditorBundle\Entity\Auditoria;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
 class ServicioAuditoria {
@@ -35,7 +35,7 @@ class ServicioAuditoria {
         /*
          * verifica si el controller esta marcado para ser auditado
          */
-        if ($controller[0] instanceof IModuloAuditable) {
+        if ($controller[0] instanceof IControllerAuditable) {
             $clase = new $controller[0];
             $obj = new $clase();
             if (!in_array($controller[1], $obj->getNoAuditables())) {
