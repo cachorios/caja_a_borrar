@@ -188,7 +188,7 @@ class RegistroController extends Controller
             //ld($res);
             $rJson = json_encode(array(
                 'ok' => 0,
-                'msg' => "Este comprobante ya se ha pagado, el dia " . $res[0]->getFecha()
+                'msg' => "Este comprobante ya se ha pagado, el dia " . $res[0]->getFecha()->format('d-m-Y H:i:s')
             ));
             return $response->setContent($rJson);
         }
