@@ -16,7 +16,9 @@ use Caja\SistemaCajaBundle\Entity\Lote;
 use Caja\SistemaCajaBundle\Entity\LotePago;
 use Caja\SistemaCajaBundle\Form\RegistroType;
 
-class RegistroController extends Controller
+use Common\AuditorBundle\Lib\IControllerAuditable;
+
+class RegistroController extends Controller implements IControllerAuditable
 {
     public function registroAction()
     {
@@ -254,4 +256,10 @@ class RegistroController extends Controller
 
     }
 
+    /**
+     * @return Array, un array con los nombres de los actions excluidos
+     */
+    function getNoAuditables() {
+        return array();
+    }
 }

@@ -108,4 +108,22 @@ class LoteRepository extends EntityRepository
     }
 
 
+    /**
+     * Anula registros del lote detalle que se anularon. Marca los comprobantes como anulados
+     * @param $comprobantes
+     * @param $lote_id
+     * @return $integer
+     */
+    public function anularLoteDetallePorComprobantes($comprobantes, $lote_id){
+        $em = $this->getEntityManager();
+
+        $lotesdetalles      = $em->createQuery("update SistemaCajaBundle:LoteDetalle ld set ld.anulado = true where ld.lote = :lote_id and ld.codigo_barra in (:comprobantes)")
+            ->setParameter("lote_id", $lote_id)->setParameter("comprobantes", $comprobantes);
+        $lotes_actualizados = $lotesdetalles->execute();
+
+        return $lotes_actualizados;
+    }
+
+
+
 }
