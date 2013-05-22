@@ -303,13 +303,39 @@ class AperturaController extends Controller {
 //                61	61	    1	        Código Fijo de empresa. Uso interno de la Municipalidad de Posadas. Usar siempre un Valor Fijo = 1 (Uno)
 //                62	65	    4	        Numero de Caja Rellenados con ceros a la izquierda
                 // Direccion de correo: cobros@posadas.gov.ar
+                $apertura_id = $entity->getId();
+                $numero_caja = $entity->getCaja()->getId();
+                $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
+                $archivo_generado = $em->getRepository('SistemaCajaBundle:Apertura')->generaArchivoTexto($apertura_id, $numero_caja, $path_archivos);
 
+                if ($archivo_generado) {
+                    $this->get('session')->getFlashBag()->add('error', '¡¡¡ Error al generar el archivo de texto que se envia por mail !!!!!');
+                    return $this->render('SistemaCajaBundle:Apertura:cierre.html.twig', array('entity' => $entity, 'edit_form' => $editForm->createView(),));
+                }
+                $path_documento = $path_archivos.$archivo_generado.'.txt';
+
+                $contenido = 'Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado;
+                // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
+                $mensaje = \Swift_Message::newInstance()
+                    ->setSubject('Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado)
+                    ->setFrom('administrador@posadas.gov.ar')
+                    ->setBody($contenido)
+                    ->attach(\Swift_Attachment::fromPath($path_documento));
+                $mensaje->setTo(array(
+                    "luis_schw@hotmail.com" => "Luis",
+                    "eduardo4979@gmail.com" => "Edu",
+                    "cachorios@gmail.com" => "Cacho",
+                    "diegoakrein@gmail.com" => "Diego"
+                ));
+                $this->container->get('mailer')->send($mensaje);
 
                 $em->persist($entity);
                 $em->flush();
+
                 $this->get('session')->getFlashBag()->add('success', 'La caja se cerro correctamente');
 
                 return $this->redirect($this->generateUrl('home_page'));
+
             } else {
                 $this->get('session')->getFlashBag()->add('error', 'flash.update.error');
             }

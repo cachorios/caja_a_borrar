@@ -1,18 +1,14 @@
 <?php
-
-namespace Caja\SistemaCajaBundle\Entity;
+namespace Lar\UsuarioBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
-use Symfony\Component\Validator\Constraints as Assert;
-
 /**
- * Diego
+ * HorarioIngreso
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="Caja\SistemaCajaBundle\Entity\DiegoRepository")
+ * @ORM\Entity()
  */
-class Diego
+class HorarioIngreso
 {
     /**
      * @var integer
@@ -26,24 +22,23 @@ class Diego
     /**
      * @var string
      *
-     * @ORM\Column(name="descripcion", type="string", length=255)
-     * @Assert\Length(min = 10, max = 255)
+     * @ORM\Column(name="descripcion", type="string", length=32)
      */
     private $descripcion;
 
     /**
-     * @var \DateTime
+     * @var string
      *
-     * @ORM\Column(name="fecha", type="datetime")
+     * @ORM\Column(name="desde", type="string", length=8)
      */
-    private $fecha;
+    private $desde;
 
     /**
-     * @var float
+     * @var string
      *
-     * @ORM\Column(name="precio", type="float")
+     * @ORM\Column(name="hasta", type="string", length=8)
      */
-    private $precio;
+    private $hasta;
 
 
     /**
@@ -60,7 +55,7 @@ class Diego
      * Set descripcion
      *
      * @param string $descripcion
-     * @return Diego
+     * @return HorarioIngreso
      */
     public function setDescripcion($descripcion)
     {
@@ -80,48 +75,48 @@ class Diego
     }
 
     /**
-     * Set fecha
+     * Set desde
      *
-     * @param \DateTime $fecha
-     * @return Diego
+     * @param string $desde
+     * @return HorarioIngreso
      */
-    public function setFecha($fecha)
+    public function setDesde($desde)
     {
-        $this->fecha = $fecha;
+        $this->desde = $desde;
     
         return $this;
     }
 
     /**
-     * Get fecha
+     * Get desde
      *
-     * @return \DateTime 
+     * @return string 
      */
-    public function getFecha()
+    public function getDesde()
     {
-        return $this->fecha;
+        return $this->desde;
     }
 
     /**
-     * Set precio
+     * Set hasta
      *
-     * @param float $precio
-     * @return Diego
+     * @param string $hasta
+     * @return HorarioIngreso
      */
-    public function setPrecio($precio)
+    public function setHasta($hasta)
     {
-        $this->precio = $precio;
+        $this->hasta = $hasta;
     
         return $this;
     }
 
     /**
-     * Get precio
+     * Get hasta
      *
-     * @return float 
+     * @return string 
      */
-    public function getPrecio()
+    public function getHasta()
     {
-        return $this->precio;
+        return $this->hasta;
     }
 }

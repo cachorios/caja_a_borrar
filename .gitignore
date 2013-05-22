@@ -5,16 +5,21 @@ app/config/parameters.ini
 app/config/parameters.yml
 app/cache/*
 app/logs/*
+app/SymfonyRequirements.php
+app/check.php
+envios/*
 vendor/*
 web/bundles/*
 #web/css/*
 #web/js/*
 web/uploads/php*
 web/media/*
+web/config.php
 
 # -- Composer -----------------------------------------
 composer.phar
-
+composer.bat
+*.phar
 # -- PHPUnit ------------------------------------------
 app/phpunit.xml  
 
@@ -89,3 +94,4 @@ Icon
 *.zip
 *.lock
 parameters.yml
+instalador.php
