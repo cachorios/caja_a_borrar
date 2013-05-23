@@ -29,4 +29,20 @@ class TipoPagoRepository extends EntityRepository
         return $res->getId();
 
     }
+
+    /**
+     * Devuelve el tipo de pago Divisible
+     * @return object
+     */
+    public function getTipoPagoDivisible($tipo_pago_divisible){
+        $em = $this->getEntityManager();
+
+        $tipo_pago = $this->findOneBy(array('divisible' => $tipo_pago_divisible));
+
+        return $tipo_pago;
+        /*$tipo_pago = $em->getRepository('SistemaCajaBundle:TipoPago') ->findOneBy(array(
+            'divisible' => $tipo_pago_divisible
+        ));*/
+
+    }
 }

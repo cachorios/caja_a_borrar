@@ -91,11 +91,17 @@
                                 {% endif %}</td>
                             <td>
                                 <a class="btn btn-mini" href="{{ path('apertura_show', { 'id': entity.id }) }}">
-                                    {{ 'views.actions.show'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                                    {{ 'Ver'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
                                 </a>
                                 <a class="btn btn-mini" href="{{ path('apertura_edit', { 'id': entity.id }) }}">
-                                    {{ 'views.actions.edit'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
-                                </a></td>
+                                    {{ 'Modificar'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                                </a>
+                                {%if entity.fechacierre %}
+                                    <a class="btn btn-mini" href="{{ path('apertura_preparar_envio', { 'id': entity.id }) }}">
+                                        {{ 'Reenviar Archivo'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                                    </a>
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>

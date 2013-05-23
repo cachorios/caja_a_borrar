@@ -108,7 +108,64 @@ class AperturaRepository extends EntityRepository
     }
 
 
+    /**
+     * Genera el archivo de texto que se envia por mail al cerrar una caja
+     *
+     * @return string
+     */
+    public function generaArchivoTexto($apertura_id, $numero_caja, $path_archivos)
+    {
 
+        $em = $this->getEntityManager();
+        $q = $em->createQuery("
+        	SELECT a
+              FROM SistemaCajaBundle:Apertura a
+             WHERE a.id = :id")
+            ->setParameter("id", $apertura_id);
+        $res = $q->getResult();
+        $apertura = $res[0];
 
+        //Genero el nombre del archivo:
+        //El nombre de archivo siempre empieza con EP
+        $nombre_archivo = "EP";
+        //Despues va la fecha:
+        $nombre_archivo .= $apertura->getFecha()->format('d');//dia
+        $nombre_archivo .= $apertura->getFecha()->format('m');//mes
+        $nombre_archivo .= $apertura->getFecha()->format('y');//año
+        $nombre_archivo .= '_' . $numero_caja;//numero de caja
+        $nombre_archivo .= $apertura_id;//id de caja
+
+        $fp = fopen($path_archivos.$nombre_archivo.".txt", "w+");
+        if ($fp) {//fopen devuelve un recurso de puntero a fichero si tiene éxito, o FALSE si se produjo un error.
+            //Recorro los comprobantes cobrados en esa caja, no anulados:
+            foreach ($apertura->getLotes() as $lote) {
+                foreach ($lote->getDetalle() as $detalle) {
+                    if (!$detalle->getAnulado()) {
+                        //Desde	Hasta	Longitud	Descripción
+                        //1	    44	    44	        Código de Barras de la Municipalidad Utilizado para la Cobranza.  Sin modificaciones
+                        //45	50	    6	        Valor Entero del  Importe Cobrado
+                        //51	52	    2	        Valor Decimales del Importe Cobrado
+                        //53	60	    8	        Fecha de Pago – Formato AAAAMMDD
+                        //61	61	    1	        Código Fijo de empresa. Uso interno de la Municipalidad de Posadas. Usar siempre un Valor Fijo = 1 (Uno)
+                        //62	65	    4	        Numero de Caja Rellenados con ceros a la izquierda
+                        $datos = $detalle->getCodigoBarra();
+                        $decimales = explode(".",$detalle->getImporte());
+                        $datos .= str_pad($decimales[0] , 6, "0", STR_PAD_LEFT); //parte entera, rellenada con ceros -> 6 posiciones
+                        $datos .= $decimales[1]  ; //parte decimal, 2 digitos
+                        $datos .= $detalle->getFecha()->format('Ymd'); //fecha de pago
+                        $datos .= 1; //Código Fijo de empresa. Uso interno. Usar siempre un Valor Fijo = 1 (Uno)
+                        $datos .= $apertura->getCaja()->getNumero(). "\n"; //Numero de Caja Rellenados con ceros a la izquierda
+                        $write = fputs($fp, $datos);
+                    }
+                }
+            }
+            fclose($fp);
+        } else {
+            //Hubo un error al abrir/escribir el archivo
+            return false;
+        }
+
+        return $nombre_archivo;
+    }
 
 }

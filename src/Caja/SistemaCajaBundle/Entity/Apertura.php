@@ -55,6 +55,12 @@ class Apertura
     private $host;
 
     /**
+     * @var string
+     * @ORM\Column(name="archivo_cierre", type="string", length=32, nullable=true)
+     */
+    private $archivo_cierre;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Caja\SistemaCajaBundle\Entity\Caja")
      * @ORM\JoinColumn(name="caja_id", referencedColumnName="id")
      */
@@ -320,43 +326,27 @@ class Apertura
         return $this->host;
     }
 
+
     /**
-     * Genera el archivo de texto que se envia por mail al cerrar una caja
+     * Set archivo_cierre
      *
-     * @return string
+     * @param string $archivoCierre
+     * @return Apertura
      */
-    public function generaArchivoTexto()
+    public function setArchivoCierre($archivoCierre)
     {
-        $nombreArchivo = $this->generaNombreArchivo();
-        $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
-
-        $fp = fopen($path_archivos.$nombreArchivo.".txt", "w+");
-        if ($fp) {//fopen devuelve un recurso de puntero a fichero si tiene éxito, o FALSE si se produjo un error.
-            //Recorro los comprobantes cobrados en esa caja, no anulados:
-
-            $write = fputs($fp, $datos);
-            fclose($fp);
-        } else {
-            //Hubo un error al abrir/escribir el archivo
-
-        }
-        //$nombreArchivo .= ".txt";
-        //$this->formatoArchivo = "csv";
-        //$this->archivoOrigenDatos = $nombreArchivo;
-
-        return $nombreArchivo;
+        $this->archivo_cierre = $archivoCierre;
+    
+        return $this;
     }
 
-     public function generaNombreArchivo() {
-         //El nombre de archivo siempre empieza con EP
-         $nombre_archivo = "EP";
-         //Despues va la fecha:
-         $nombre_archivo .= date("d");//dia
-         $nombre_archivo .= date("m");//mes
-         $nombre_archivo .= date("y");//año
-         $nombre_archivo .= '_' . $this->getCaja()->getId();//numero de caja
-         $nombre_archivo .= $this->getId();//id de caja
-
-         return $nombre_archivo;
+    /**
+     * Get archivo_cierre
+     *
+     * @return string 
+     */
+    public function getArchivoCierre()
+    {
+        return $this->archivo_cierre;
     }
 }
