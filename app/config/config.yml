@@ -60,13 +60,9 @@ doctrine:
         dbname:   "%database_name%"
         user:     "%database_user%"
         password: "%database_password%"
-<<<<<<< HEAD
         charset: "AL32UTF8"
 #        charset:  "UTF8"
-=======
-        #charset:  "UTF8"
-        charset:    "AL32UTF8"
->>>>>>> 01bb2ce87afe4f02be23312225a68b4bf4c331fb
+
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
