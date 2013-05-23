@@ -55,6 +55,12 @@ class Apertura
     private $host;
 
     /**
+     * @var string
+     * @ORM\Column(name="archivo_cierre", type="string", length=32, nullable=true)
+     */
+    private $archivo_cierre;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Caja\SistemaCajaBundle\Entity\Caja")
      * @ORM\JoinColumn(name="caja_id", referencedColumnName="id")
      */
@@ -320,4 +326,27 @@ class Apertura
         return $this->host;
     }
 
+
+    /**
+     * Set archivo_cierre
+     *
+     * @param string $archivoCierre
+     * @return Apertura
+     */
+    public function setArchivoCierre($archivoCierre)
+    {
+        $this->archivo_cierre = $archivoCierre;
+    
+        return $this;
+    }
+
+    /**
+     * Get archivo_cierre
+     *
+     * @return string 
+     */
+    public function getArchivoCierre()
+    {
+        return $this->archivo_cierre;
+    }
 }

@@ -21,17 +21,14 @@ class UsuarioIngreso
 
     /**
      * @ORM\OneToOne(targetEntity="\Lar\UsuarioBundle\Entity\Usuario")
-    * @ORM\JoinColumn(name="usuario_id", referencedColumnName="id")
-    */
+     * @ORM\JoinColumn(name="usuario_id", referencedColumnName="id")
+     */
     private $usuario;
 
 
     /**
-<<<<<<< HEAD
-     * @ORM\OneToOne(targetEntity="\Lar\UsuarioBundle\Entity\HorarioIngreso")
-=======
      * @ORM\ManyToOne(targetEntity="\Lar\UsuarioBundle\Entity\HorarioIngreso")
->>>>>>> a07076fa7dee18f197b1638fa2f314c2c8136613
+
      * @ORM\JoinColumn(name="horario_id", referencedColumnName="id")
      */
     private $horario;
@@ -95,7 +92,7 @@ class UsuarioIngreso
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -111,14 +108,14 @@ class UsuarioIngreso
     public function setLunes($lunes)
     {
         $this->lunes = $lunes;
-    
+
         return $this;
     }
 
     /**
      * Get lunes
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getLunes()
     {
@@ -134,14 +131,14 @@ class UsuarioIngreso
     public function setMartes($martes)
     {
         $this->martes = $martes;
-    
+
         return $this;
     }
 
     /**
      * Get martes
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getMartes()
     {
@@ -157,14 +154,14 @@ class UsuarioIngreso
     public function setMiercoles($miercoles)
     {
         $this->miercoles = $miercoles;
-    
+
         return $this;
     }
 
     /**
      * Get miercoles
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getMiercoles()
     {
@@ -180,14 +177,14 @@ class UsuarioIngreso
     public function setJueves($jueves)
     {
         $this->jueves = $jueves;
-    
+
         return $this;
     }
 
     /**
      * Get jueves
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getJueves()
     {
@@ -203,14 +200,14 @@ class UsuarioIngreso
     public function setViernes($viernes)
     {
         $this->viernes = $viernes;
-    
+
         return $this;
     }
 
     /**
      * Get viernes
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getViernes()
     {
@@ -226,14 +223,14 @@ class UsuarioIngreso
     public function setSabado($sabado)
     {
         $this->sabado = $sabado;
-    
+
         return $this;
     }
 
     /**
      * Get sabado
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getSabado()
     {
@@ -249,14 +246,14 @@ class UsuarioIngreso
     public function setDomingo($domingo)
     {
         $this->domingo = $domingo;
-    
+
         return $this;
     }
 
     /**
      * Get domingo
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getDomingo()
     {
@@ -272,14 +269,14 @@ class UsuarioIngreso
     public function setControlLugar($controlLugar)
     {
         $this->control_lugar = $controlLugar;
-    
+
         return $this;
     }
 
     /**
      * Get control_lugar
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getControlLugar()
     {
@@ -295,14 +292,14 @@ class UsuarioIngreso
     public function setUsuario(\Lar\UsuarioBundle\Entity\Usuario $usuario = null)
     {
         $this->usuario = $usuario;
-    
+
         return $this;
     }
 
     /**
      * Get usuario
      *
-     * @return \Lar\UsuarioBundle\Entity\Usuario 
+     * @return \Lar\UsuarioBundle\Entity\Usuario
      */
     public function getUsuario()
     {
@@ -318,7 +315,7 @@ class UsuarioIngreso
     public function setHorario(\Lar\UsuarioBundle\Entity\HorarioIngreso $horario = null)
     {
         $this->horario = $horario;
-    
+
         return $this;
     }
 

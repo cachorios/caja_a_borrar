@@ -53,3 +53,12 @@ apertura_existe_comprobante:
 apertura_sock:
       pattern:  /sock
       defaults: { _controller: "SistemaCajaBundle:Apertura:sock" }
+
+apertura_preparar_envio:
+    pattern:  /{id}/prepararEnvio
+    defaults: { _controller: "SistemaCajaBundle:Apertura:prepararEnvio" }
+
+
+apertura_enviar_mail:
+    pattern:  /{id}/enviarMail
+    defaults: { _controller: "SistemaCajaBundle:Apertura:enviarMail" }

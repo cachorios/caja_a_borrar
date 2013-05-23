@@ -115,9 +115,8 @@ class AperturaRepository extends EntityRepository
      */
     public function generaArchivoTexto($apertura_id, $numero_caja, $path_archivos)
     {
-        $nombreArchivo = $this->generaNombreArchivo($apertura_id, $numero_caja);
-        $em = $this->getEntityManager();
 
+        $em = $this->getEntityManager();
         $q = $em->createQuery("
         	SELECT a
               FROM SistemaCajaBundle:Apertura a
@@ -125,7 +124,18 @@ class AperturaRepository extends EntityRepository
             ->setParameter("id", $apertura_id);
         $res = $q->getResult();
         $apertura = $res[0];
-        $fp = fopen($path_archivos.$nombreArchivo.".txt", "w+");
+
+        //Genero el nombre del archivo:
+        //El nombre de archivo siempre empieza con EP
+        $nombre_archivo = "EP";
+        //Despues va la fecha:
+        $nombre_archivo .= $apertura->getFecha()->format('d');//dia
+        $nombre_archivo .= $apertura->getFecha()->format('m');//mes
+        $nombre_archivo .= $apertura->getFecha()->format('y');//año
+        $nombre_archivo .= '_' . $numero_caja;//numero de caja
+        $nombre_archivo .= $apertura_id;//id de caja
+
+        $fp = fopen($path_archivos.$nombre_archivo.".txt", "w+");
         if ($fp) {//fopen devuelve un recurso de puntero a fichero si tiene éxito, o FALSE si se produjo un error.
             //Recorro los comprobantes cobrados en esa caja, no anulados:
             foreach ($apertura->getLotes() as $lote) {
@@ -155,21 +165,7 @@ class AperturaRepository extends EntityRepository
             return false;
         }
 
-        return $nombreArchivo;
-    }
-
-    public function generaNombreArchivo($apertura_id, $numero_caja) {
-        //El nombre de archivo siempre empieza con EP
-        $nombre_archivo = "EP";
-        //Despues va la fecha:
-        $nombre_archivo .= date("d");//dia
-        $nombre_archivo .= date("m");//mes
-        $nombre_archivo .= date("y");//año
-        $nombre_archivo .= '_' . $numero_caja;//numero de caja
-        $nombre_archivo .= $apertura_id;//id de caja
-
         return $nombre_archivo;
     }
-
 
 }

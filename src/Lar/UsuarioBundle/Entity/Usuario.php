@@ -141,12 +141,7 @@ class Usuario implements AdvancedUserInterface
 	 */
 	protected $grupos;
 
-<<<<<<< HEAD
-
     /**
-=======
-	/**
->>>>>>> a07076fa7dee18f197b1638fa2f314c2c8136613
 	 * @ORM\Column(type="string", nullable=true)
 	 *
 	 */

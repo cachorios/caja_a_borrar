@@ -308,7 +308,7 @@ class AperturaController extends Controller {
                 $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
                 $archivo_generado = $em->getRepository('SistemaCajaBundle:Apertura')->generaArchivoTexto($apertura_id, $numero_caja, $path_archivos);
 
-                if ($archivo_generado) {
+                if (!$archivo_generado) {
                     $this->get('session')->getFlashBag()->add('error', '¡¡¡ Error al generar el archivo de texto que se envia por mail !!!!!');
                     return $this->render('SistemaCajaBundle:Apertura:cierre.html.twig', array('entity' => $entity, 'edit_form' => $editForm->createView(),));
                 }
@@ -319,22 +319,29 @@ class AperturaController extends Controller {
                 $mensaje = \Swift_Message::newInstance()
                     ->setSubject('Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado)
                     ->setFrom('administrador@posadas.gov.ar')
+                    ->setTo('eduardo4979@gmail.com')
                     ->setBody($contenido)
                     ->attach(\Swift_Attachment::fromPath($path_documento));
+
+                /*
                 $mensaje->setTo(array(
                     "luis_schw@hotmail.com" => "Luis",
                     "eduardo4979@gmail.com" => "Edu",
                     "cachorios@gmail.com" => "Cacho",
                     "diegoakrein@gmail.com" => "Diego"
                 ));
+                */
                 $this->container->get('mailer')->send($mensaje);
 
+                //Por ultimo: guardo en la tabla Apertura el nombre del archivo generado:
+                $entity->setArchivoCierre($archivo_generado.'.txt');
                 $em->persist($entity);
                 $em->flush();
 
                 $this->get('session')->getFlashBag()->add('success', 'La caja se cerro correctamente');
 
-                return $this->redirect($this->generateUrl('home_page'));
+                return $this->redirect($this->generateUrl('apertura'));
+                //return $this->redirect($this->generateUrl('home_page'));
 
             } else {
                 $this->get('session')->getFlashBag()->add('error', 'flash.update.error');
@@ -612,6 +619,114 @@ class AperturaController extends Controller {
             $rJson = json_encode(array('ok' => 0, 'msg' => 'No existe el comprobante ingresado, o fue cobrado en otra caja.'));
         }
         return $response->setContent($rJson);
+    }
+
+    /**
+     * Prepara la ventana desde la cual se puede reenviar un archivo de cobranza que no se haya enviado al cerrar la caja, por algun motivo
+     *
+     */
+    public function prepararEnvioAction($id) {
+        $breadcrumbs = $this->get("white_october_breadcrumbs");
+        $breadcrumbs->addItem("Inicio", $this->get("router")->generate("home_page"));
+        $breadcrumbs->addItem("Apertura", $this->get("router")->generate("apertura"));
+        $breadcrumbs->addItem("Ver");
+
+        $em = $this->getDoctrine()->getManager();
+
+        $caja   = $this->container->get('caja.manager')->getCaja();
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id, "caja" => $caja->getId()));
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Apertura entity.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+
+        return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
+    }
+
+    /**
+     * Permite reenviar un archivo de cobranza que no se haya enviado al cerrar la caja, por algun motivo
+     *
+     */
+    public function enviarMailAction($id) {
+        $em = $this->getDoctrine()->getManager();
+
+        $caja   = $this->container->get('caja.manager')->getCaja();
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id, "caja" => $caja->getId()));
+        $deleteForm = $this->createDeleteForm($id);
+
+        if ($entity) {
+            try {
+                $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
+                if ($entity->getArchivoCierre()) {
+                    $archivo_generado = $entity->getArchivoCierre();
+                } else {
+                    $this->get('session')->getFlashBag()->add('error', 'No se pudo recuperar el archivo de cobranza');
+                    //Se deberia enviar un mail de todas formas, avisando del error....
+                    return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
+                }
+                $path_documento = $path_archivos.$archivo_generado;
+
+                $fp = fopen($path_documento, "w+");
+                if (!$fp) {//fopen devuelve un recurso de puntero a fichero si tiene éxito, o FALSE si se produjo un error.
+                    $this->get('session')->getFlashBag()->add('error', 'No se pudo recuperar el archivo de cobranza');
+                    //Se deberia enviar un mail de todas formas, avisando del error....
+                    return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
+                } else {
+                    fclose($fp);
+                }
+                $contenido = 'REENVIO - Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado;
+                // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
+                $mensaje = \Swift_Message::newInstance()
+                    ->setSubject('REENVIO - Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado)
+                    ->setFrom('administrador@posadas.gov.ar')
+                    ->setTo('eduardo4979@gmail.com')
+                    ->setBody($contenido)
+                    ->attach(\Swift_Attachment::fromPath($path_documento));
+
+                /*
+                $mensaje->setTo(array(
+                    "luis_schw@hotmail.com" => "Luis",
+                    "eduardo4979@gmail.com" => "Edu",
+                    "cachorios@gmail.com" => "Cacho",
+                    "diegoakrein@gmail.com" => "Diego"
+                ));
+                */
+                //$resultado = $this->container->get('mailer')->send($mensaje);
+                if (!$this->container->get('mailer')->send($mensaje, $failures)) {
+                    echo "Failures:";
+                    print_r($failures);
+                    $this->get('session')->getFlashBag()->add('error', 'No se pudo enviar el archivo');
+                }
+                if ($resultado != 0) {
+                    $this->get('session')->getFlashBag()->add('success', 'El archivo fue enviado exitosamente.');
+                } else {
+                    $this->get('session')->getFlashBag()->add('error', 'No se pudo enviar el archivo');
+                    //Se deberia enviar un mail de todas formas, avisando del error....
+                    return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
+                }
+            } catch (Swift_TransportException $e) {
+                $em->getConnection()->rollback();
+                $em->close();
+                //throw $e;
+                $this->get('session')->getFlashBag()->add('error', 'No se pudo enviar el archivo: '.$e);
+                return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
+            } catch (Exception $e) {
+                $em->getConnection()->rollback();
+                $em->close();
+                //throw $e;
+                $this->get('session')->getFlashBag()->add('error', 'No se pudo enviar el archivo: '.$e);
+                return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
+            }
+            $deleteForm = $this->createDeleteForm($id);
+            return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
+        } else {
+            $this->get('session')->getFlashBag()->add('error', 'No se pudieron recuperar los datos de la apertura.');
+        }
+
+        return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig',
+            array('entity' => $entity, 'edit_form' => $editForm->createView(), 'delete_form' => $deleteForm->createView(),));
     }
 
 }
