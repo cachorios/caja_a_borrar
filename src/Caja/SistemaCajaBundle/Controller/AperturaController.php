@@ -314,10 +314,10 @@ class AperturaController extends Controller {
                 }
                 $path_documento = $path_archivos.$archivo_generado.'.txt';
 
-                $contenido = 'Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado;
+                $contenido = 'Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado . '.txt';
                 // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
                 $mensaje = \Swift_Message::newInstance()
-                    ->setSubject('Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado)
+                    ->setSubject('Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado . '.txt')
                     ->setFrom('administrador@posadas.gov.ar')
                     ->setTo('eduardo4979@gmail.com')
                     ->setBody($contenido)
@@ -668,7 +668,7 @@ class AperturaController extends Controller {
                 }
                 $path_documento = $path_archivos.$archivo_generado;
 
-                $fp = fopen($path_documento, "w+");
+                $fp = fopen($path_documento, "r"); //Apertura para sólo lectura; coloca el puntero al fichero al principio del fichero.
                 if (!$fp) {//fopen devuelve un recurso de puntero a fichero si tiene éxito, o FALSE si se produjo un error.
                     $this->get('session')->getFlashBag()->add('error', 'No se pudo recuperar el archivo de cobranza');
                     //Se deberia enviar un mail de todas formas, avisando del error....
@@ -681,24 +681,26 @@ class AperturaController extends Controller {
                 $mensaje = \Swift_Message::newInstance()
                     ->setSubject('REENVIO - Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado)
                     ->setFrom('administrador@posadas.gov.ar')
-                    ->setTo('eduardo4979@gmail.com')
+                    //->setTo('eduardo4979@gmail.com')
                     ->setBody($contenido)
                     ->attach(\Swift_Attachment::fromPath($path_documento));
 
-                /*
+
                 $mensaje->setTo(array(
                     "luis_schw@hotmail.com" => "Luis",
                     "eduardo4979@gmail.com" => "Edu",
                     "cachorios@gmail.com" => "Cacho",
                     "diegoakrein@gmail.com" => "Diego"
                 ));
-                */
-                //$resultado = $this->container->get('mailer')->send($mensaje);
+
+                $resultado = $this->container->get('mailer')->send($mensaje);
+                /*
                 if (!$this->container->get('mailer')->send($mensaje, $failures)) {
                     echo "Failures:";
                     print_r($failures);
                     $this->get('session')->getFlashBag()->add('error', 'No se pudo enviar el archivo');
                 }
+                */
                 if ($resultado != 0) {
                     $this->get('session')->getFlashBag()->add('success', 'El archivo fue enviado exitosamente.');
                 } else {
