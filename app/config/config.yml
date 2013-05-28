@@ -60,8 +60,8 @@ doctrine:
         dbname:   "%database_name%"
         user:     "%database_user%"
         password: "%database_password%"
-        #charset:  "UTF8"
-        charset:    "AL32UTF8"
+        charset:  "UTF8"
+        #charset:    "AL32UTF8"
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
@@ -69,14 +69,11 @@ doctrine:
 
 # Swiftmailer Configuration
 swiftmailer:
-     transport:  gmail
-     username:           administrador@posadas.gov.ar
-     password:           qwrtyp
-#    transport: "%mailer_transport%"
-#    host:      "%mailer_host%"
-#    username:  "%mailer_user%"
-#    password:  "%mailer_password%"
-#    spool:     { type: memory }
+    transport: "%mailer_transport%"
+    host:      "%mailer_host%"
+    username:  "%mailer_user%"
+    password:  "%mailer_password%"
+    spool:     { type: memory }
 
 mopa_bootstrap:
     navbar: ~
@@ -112,8 +109,7 @@ khepin_yaml_fixtures:
 
 parameters:
     lar.usuario.imagenes: %kernel.root_dir%/../web/uploads/users/
-    #caja.apertura.dir_files: %kernel.root_dir%/envios/
-    caja.apertura.dir_files: C:/Vertrigo\www\caja\envios\
+    caja.apertura.dir_files: %kernel.root_dir%/../envios/
 
 
 

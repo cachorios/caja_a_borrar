@@ -31,7 +31,7 @@ class Apertura
     /**
      * @var float
      *
-     * @ORM\Column(name="importe_inicial", type="decimal")
+     * @ORM\Column(name="importe_inicial", type="decimal", nullable=false)
      */
     private $importe_inicial;
 

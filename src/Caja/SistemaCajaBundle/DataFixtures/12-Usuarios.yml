@@ -10,9 +10,9 @@ fixtures:
         dni: 20489453
         password: 113049
         direccion: ch.113 Sec. 120 Casa 99
-        permite_email: 1
-        is_active: 1
-        is_deleted: 0
+        permite_email: true
+        is_active: true
+        is_deleted: false
         foto: user-511a905a4d1de-foto1.jpg
         username: cachorios
         fecha_nacimiento: 1950-01-01
@@ -27,9 +27,9 @@ fixtures:
         dni: 26610243
         password: 111111
         direccion: Av. Eva Peron y Centenario
-        permite_email: 1
-        is_active: 1
-        is_deleted: 0
+        permite_email: true
+        is_active: true
+        is_deleted: false
         foto: user-511a8ef7b8377-foto1.jpg
         username: Alberto2000
         fecha_nacimiento: 1950-01-01
@@ -45,9 +45,9 @@ fixtures:
         dni: 3
         password: 111111
         direccion: Av. 1
-        permite_email: 1
-        is_active: 1
-        is_deleted: 0
+        permite_email: true
+        is_active: true
+        is_deleted: false
         foto: user-511970d001595-foto1.jpg
         username: ruben
         fecha_nacimiento: 1950-01-01

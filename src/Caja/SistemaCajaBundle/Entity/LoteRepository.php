@@ -109,7 +109,7 @@ class LoteRepository extends EntityRepository
 
 
     /**
-     * Anula registros del lote detalle que se anularon. Marca los comprobantes como anulados
+     * Anula un registro de lote de pago
      * @param $comprobantes
      * @param $lote_id
      * @return $integer

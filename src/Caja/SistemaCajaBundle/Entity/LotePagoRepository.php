@@ -12,4 +12,22 @@ use Doctrine\ORM\EntityRepository;
  */
 class LotePagoRepository extends EntityRepository
 {
+
+    /**
+     * Anula registros del lote detalle que se anularon. Marca los comprobantes como anulados
+     * @param $lote
+     * @param $tipo_pago
+     * @param $importe
+     */
+    public function anularLotePagoPorComprobantes($lote, $tipo_pago, $importe){
+        $em = $this->getEntityManager();
+
+        $registro_lote_pago = new LotePago();
+        $registro_lote_pago->setLote($lote);
+        $registro_lote_pago->setTipoPago($tipo_pago);
+        $registro_lote_pago->setFecha(new \DateTime());
+        $registro_lote_pago->setImporte($importe); //Se inserta el importe en negativo
+        $em->persist($registro_lote_pago);
+    }
+
 }
