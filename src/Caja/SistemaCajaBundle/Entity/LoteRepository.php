@@ -125,5 +125,116 @@ class LoteRepository extends EntityRepository
     }
 
 
+    public function getMontoComprobantesSeleccionados($comprobantes){
+        $em = $this->getEntityManager();
+
+        $consulta_monto = $em->createQuery("SELECT sum(ld.importe)
+                FROM SistemaCajaBundle:LoteDetalle ld
+                WHERE ld.codigo_barra in (:comprobantes)")
+            ->setParameter("comprobantes", $comprobantes);
+        $consulta_monto->setMaxResults(1);
+        $monto_a_anular = $consulta_monto->getSingleResult();
+        $monto_a_anular = $monto_a_anular[1];
+
+        return $monto_a_anular;
+    }
+
+
+    /**
+     * Verifica si el lote se puede anular parcialmente
+     * @param
+     * @return $boolean
+     */
+    public function verificaAnulacionParcial($lote, $comprobantes){
+        $em = $this->getEntityManager();
+
+        $puede_anular_parcialmente = "OK";
+        $lote_id = $lote->getId();
+        $total_comprobantes_lote = $lote->getDetalle()->count();
+        $total_comprobantes_seleccionados = count($comprobantes);
+
+        $cantidad_pagos = $this->getConsultaCantidadPagos($lote_id); //Pregunto cuantos tipos de pagos se hicieron en ese lote:
+
+        if ($cantidad_pagos == 1) {
+            // si es un solo pago se puede anular el comprobante, independientemente del tipo de pago
+            $tipo_pago_divisible = $this->getConsultaTipoPago($lote_id); //recupero el tipo de pago
+
+            //el tipo de pago en el registro negativo sera el obtenido en la linea anterior ($tipo_pago_divisible). Si el pago no fue en efectivo, solo se puede anular el lote completo:
+            if (($tipo_pago_divisible != 1) && (count($comprobantes) < $total_comprobantes_lote)) {
+                $puede_anular_parcialmente ="'El lote no fue abonado en efectivo, solo se puede anular de manera total.";
+            }
+        } else { //Se pago con mas un tipo de pago, entonces:
+            // se anula todo el lote, o se anula hasta donde le alcance el efectivo
+            if ($total_comprobantes_seleccionados < $total_comprobantes_lote ) { //SE ANULA PARTE DEL LOTE: se anula hasta donde le alcance el efectivo:
+                //Comparo el monto abonado en efectivo para ese lote con el monto del comprobante/s a anular
+                $efectivo = $this->getMontoEfectivo($lote_id);
+
+                //Calculo el monto de los comprobantes seleccionados para anular:
+                $monto_a_anular = $this->getMontoComprobantesSeleccionados($comprobantes);
+
+                //Se verifica que se hayan seleccionado todos los comprobantes que componen el lote:
+                if ($monto_a_anular > $efectivo) {
+                   $puede_anular_parcialmente = 'El monto de los comprobantes seleccionados ($' . $monto_a_anular . ') es mayor al importe abonado en efectivo ($' . $efectivo . ')';
+                }
+            }
+        }
+
+        return $puede_anular_parcialmente;
+
+    }
+
+    /**
+     *
+     */
+    public function anularComprobantesLote($lote, $comprobantes){
+        $em = $this->getEntityManager();
+
+        $total_comprobantes_lote = $lote->getDetalle()->count();
+        $total_comprobantes_seleccionados = count($comprobantes);
+
+        $em->getConnection()->beginTransaction(); // suspende la consignación automática
+        try {
+            //Se procede a anular el o los lotes detalles:
+            $lotes_actualizados = $this->anularLoteDetallePorComprobantes($comprobantes, $lote->getId());
+
+            // Verifico que haya anulado la totalidad de los comprobantes ingresados:
+            if ($lotes_actualizados != count($comprobantes)) {
+                throw new \Exception('No se pudieron anular los comprobantes seleccionados.');
+            }
+
+            $tipo_pago = $em->getRepository('SistemaCajaBundle:TipoPago')->getTipoPagoDivisible(1); //Recupero el tipo de pago:
+            if (!$tipo_pago) {
+                throw new \Exception('No se pudo recuperar el tipo de pago.');
+            }
+
+            //FALTA PREGUNTAR SI LA ANULACION ES TOTAL O NO PARA MARCAR LOS LOTE DE PAGO
+            if ($total_comprobantes_seleccionados < $total_comprobantes_lote ) { //SE ANULA PARTE DEL LOTE:
+                //Por cada comprobante anulado, se mete un registro "negativo" en el lote de pago
+                $comprobantes = $em->getRepository('SistemaCajaBundle:LoteDetalle')->findBy(array('codigo_barra' => $comprobantes));
+
+                foreach ($comprobantes as $comprobante) {
+                    $em->getRepository('SistemaCajaBundle:LotePago')->anularLotePagoPorComprobantes($lote, $tipo_pago, -$comprobante->getImporte());
+                }
+            }else{ //se anula lote completo
+                $lotePagos = $em->getRepository('SistemaCajaBundle:LotePago')->findBy(array('lote' => $lote->getId()));
+
+                foreach ($lotePagos as $lp) {
+                    $em->getRepository('SistemaCajaBundle:LotePago')->anularLotePagoPorComprobantes($lote, $lp->getTipoPago(), -$lp->getImporte());
+                }
+            }
+
+            $em->flush();
+            $em->getConnection()->commit();
+        } catch (Exception $e) {
+            $em->getConnection()->rollback();
+            $em->close();
+            throw new \Exception($e->getMessage());
+            //throw $e;
+            //$this->get('session')->getFlashBag()->add('error', 'Hubo un fallo al guardar los datos: '.$e);
+
+        }
+    }
+
+
 
 }
