@@ -151,7 +151,11 @@ class AperturaRepository extends EntityRepository
                         $datos = $detalle->getCodigoBarra();
                         $decimales = explode(".",$detalle->getImporte());
                         $datos .= str_pad($decimales[0] , 6, "0", STR_PAD_LEFT); //parte entera, rellenada con ceros -> 6 posiciones
-                        $datos .= $decimales[1]  ; //parte decimal, 2 digitos
+                        if (count($decimales) > 1) {
+                            $datos .= $decimales[1]  ; //parte decimal, 2 digitos
+                        } else {
+                            $datos .= '00';//El importe original era redondo, no tenia decimales
+                        }
                         $datos .= $detalle->getFecha()->format('Ymd'); //fecha de pago
                         $datos .= 1; //Código Fijo de empresa. Uso interno. Usar siempre un Valor Fijo = 1 (Uno)
                         $datos .= $apertura->getCaja()->getNumero(). "\n"; //Numero de Caja Rellenados con ceros a la izquierda
