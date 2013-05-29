@@ -66,6 +66,7 @@
         <script>
             $(function() {
                 $("#form_apertura").submit(function(e){
+                    e.isDefaultPrevented();
                     $(this).ajaxSubmit({
                         dataType: 'json',
                         success: function(data, statusText, xhr, $form){
@@ -81,7 +82,8 @@
                             }
                         }});
 
-                    e.isDefaultPrevented();
+
+                    return false;
                 });
 
             });
