@@ -491,7 +491,7 @@ class AperturaController extends Controller {
                 $this->get('session')->getFlashBag()->add('error', 'Hubo un fallo al guardar los datos: '.$e->getMessage());
                 return $this->redirect($this->generateUrl('apertura_anulado'));
             }
-            
+
         } else {
             $this->get('session')->getFlashBag()->add('error', 'Alguno de los comprobantes seleccionados es incorrecto.');
             return $this->redirect($this->generateUrl('apertura_anulado'));
