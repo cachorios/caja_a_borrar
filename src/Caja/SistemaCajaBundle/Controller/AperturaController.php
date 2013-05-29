@@ -163,9 +163,10 @@ class AperturaController extends Controller {
         $form    = $this->createForm(new AperturaType(), $entity);
 
         $form->bind($request);
-
+        $msg=false;
         if (!$this->container->get("caja.manager")->getApertura() == null) {
-            $this->get('session')->getFlashBag()->add('error', 'No puede haber mas de una apertura activa para cada caja');
+            //$this->get('session')->getFlashBag()->add('error', 'No puede haber mas de una apertura activa para cada caja');
+            $msg = 'No puede haber mas de una apertura activa para cada caja';
         } else {
 
             $caja = $this->container->get("caja.manager")->getCaja();
@@ -175,16 +176,31 @@ class AperturaController extends Controller {
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($entity);
                 $em->flush();
-                $this->get('session')->getFlashBag()->add('success', 'Apertura creada exitosamente');
+                // no hace falta por uso de ajax//$this->get('session')->getFlashBag()->add('success', 'Apertura creada exitosamente');
 
-                return $this->redirect($this->generateUrl('apertura'));
+                $ticket = $this->get("sistemacaja.ticket");
+                $ticket->setContenido("");
+                $tk = $ticket->getTicketTestigo();
+                ////return $this->redirect($this->generateUrl('apertura'));
             } else {
-
-                $this->get('session')->getFlashBag()->add('error', 'flash.create.error');
+                $msg="No se pudo crear";
+                ///$this->get('session')->getFlashBag()->add('error', 'flash.create.error');
             }
         }
-        $breadcrumbs = $this->get("white_october_breadcrumbs");
-        return $this->render('SistemaCajaBundle:Apertura:new.html.twig', array('entity' => $entity, 'form' => $form->createView(),));
+        //$breadcrumbs = $this->get("white_october_breadcrumbs");
+        //return $this->render('SistemaCajaBundle:Apertura:new.html.twig', array('entity' => $entity, 'form' => $form->createView(),));
+
+        if(!$msg){
+            $ret  =  array("ok" =>1, "tk"=> $tk);
+        }else{
+            $ret  =  array("ok" =>0, "msg"=> $msg);
+        }
+
+        $response = new Response();
+        $response->setContent(json_encode($ret));
+        return $response;
+
+
     }
 
     /**
