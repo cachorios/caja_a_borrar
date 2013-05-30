@@ -95,3 +95,4 @@ Icon
 *.lock
 parameters.yml
 instalador.php
+conf
