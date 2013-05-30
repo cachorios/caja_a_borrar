@@ -4,7 +4,7 @@ Apertura de la Caja Municipal
 
 
 Las aperturas, son los contenedores de las transacciones de los pagos, o sea,
-cada pago está asociado a una apertura, y cada apaertura esta asociada a la caja
+cada pago está asociado a una apertura, y cada apaertura está asociada a la caja
 activa.
 
 Solo puede haber una apertura habilitada por caja. Una apertura habilitada, no
@@ -14,16 +14,16 @@ No se podrá crear otra apertura hasta que se cierre la que se encuentra activa.
 
 
 
-![](<apertura.jpg>)
-
-
+![](<aperturappal.jpg>)
 
 En la pantalla principal de la "Apertura", se indica un listado de las mismas,
 detallando el **numero**, **fecha y hora de inicio y cierre **de las aperturas,
 y el **monto** con la que se inicia.
 
- Pasos para realizar la Apertura
---------------------------------
+
+
+Pasos para realizar la Apertura
+-------------------------------
 
 
 
@@ -32,9 +32,9 @@ apertura"**, donde se desplegará una pantalla  en la que se muestra la fecha y
 hora (tomadas automaticamente) y el importe o monto con que se inicia dicha
 apertura, que por defecto siempre es 0.
 
+![]()
 
-
-![](<apertura nuevo.jpg>)
+![](<aperturanuevo.jpg>)
 
 
 
@@ -43,7 +43,7 @@ lista de las aperturas existentes y la actual marcada como **"Activa".**
 
 
 
-![](<nueva apertura.jpg>)
+![](<aperuralistado.jpg>)
 
 
 
@@ -71,9 +71,9 @@ configurada.
 En el caso de ser necesario, se puede reenviar el mismo, haciendo click en el
 botón **"Enviar Archivo"**
 
+![]()
 
-
-![](<reenvio archivo cobranza.jpg>)
+![](<aperturareenvio.jpg>)
 
 
 

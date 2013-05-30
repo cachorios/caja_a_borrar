@@ -3,7 +3,7 @@ REGISTRO DE PAGO
 
 
 
-![](<registro ppal.jpg>)
+![](<registroppal.jpg>)
 
 
 
@@ -16,17 +16,15 @@ PASOS PARA REALIZAR EL REGISTRO DE PAGO
 manera manual (introduciendo los digitos del código de barra y apretando la
 tecla "Tab").
 
-Cada tipeo o lectura, generará una nueva línea al detalle de comprobantes, a lo
-que denominaremos "lote de pago".
+    Cada tipeo o lectura, generará una nueva línea al detalle de comprobantes, a
+    lo que denominaremos "lote de pago".
 
-El o los comprobantes ingresados, se los visualizara en una lista.
+    El o los comprobantes ingresados, se los visualizará en una lista.
 
-En el caso de querer eliminar algun comprobante (antes de registrar el pago) se
-debe hacer click en el botón **"Quitar"**.
+    En el caso de querer eliminar algun comprobante (antes de registrar el pago)
+    se debe hacer click en el botón **"Quitar"**.
 
-
-
-![](<registro comprobante.jpg>)
+![](<registrocomprobante.jpg>)
 
 
 
@@ -36,9 +34,7 @@ debe hacer click en el botón **"Quitar"**.
 
 3.- Se solicita una confirmación para la realizacion del pago
 
-
-
-![](<confirmacion pago.jpg>)
+![](<registroconfirmacionpago.jpg>)
 
 
 
@@ -47,16 +43,24 @@ seleccionar el tipo de pago (efectivo, cheque, visa, etc) y el importe o monto
 abonado con ese tipo de pago, pudiendose realizar varios tipos de pagos para
 cancelar un "lote de pago".
 
+![](<registroformapago1.jpg>)
 
 
-![](<forma pago1.jpg>)
 
-5.- Se debe hacer click en el botón "Registrar Pago", y se imprimirá el ticket y
-el sistema procederá a almacenar el pago.
+5.- Se debe hacer click en el botón "Registrar Pago", y se imprimirán los
+tickets para cada comprobante y el sistema procederá a almacenar el pago.
 
 
 
 6.- El sistema volverá a la pantalla principal de Registro de Pago.
+
+
+
+
+
+
+
+
 
 
 
