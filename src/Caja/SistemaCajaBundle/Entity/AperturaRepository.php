@@ -27,8 +27,31 @@ class AperturaRepository extends EntityRepository
     public function getPagosByTipoPago($apertura_id)
     {
         $em = $this->getEntityManager();
+       $q = $em->createQuery("SELECT  t.id, t.descripcion,
+                                (select sum(pp.importe) FROM SistemaCajaBundle:LotePago pp JOIN pp.lote ll
+                                WHERE
+                                  ll.apertura = l.apertura
+                                  and pp.tipo_pago = t.id
+                                   and pp.importe > 0
+                                ) as importe,
+                                (select sum(ppp.importe) FROM SistemaCajaBundle:LotePago ppp JOIN ppp.lote lll
+                                WHERE
+                                  lll.apertura = l.apertura
+                                  and ppp.tipo_pago = t.id
+                                  and ppp.importe < 0
+                                ) as anulado
+              FROM
+                  SistemaCajaBundle:LotePago p JOIN p.tipo_pago t JOIN p.lote l
+              WHERE
+                  l.apertura = :apertura_id
+              GROUP BY
+                  t.id, t.descripcion
+              ORDER BY
+                  t.id")
+            ->setParameter("apertura_id", $apertura_id)
+        ;
 
-        $q = $em->createQuery("
+        /*$q = $em->createQuery("
               SELECT
                   t.id,t.descripcion, sum(p.importe)
               FROM
@@ -40,7 +63,7 @@ class AperturaRepository extends EntityRepository
               ORDER BY
                   t.id ")
             ->setParameter("apertura_id", $apertura_id)
-        ;
+        ;*/
 
         $res = $q->getResult();
 
