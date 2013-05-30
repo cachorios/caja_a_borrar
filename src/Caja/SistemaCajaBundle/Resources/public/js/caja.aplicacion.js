@@ -56,6 +56,18 @@
         return true;
     });
 
+    $(".ayuda a").click(function(e){
+        var ayuda,contenido="<div></div>";
+        e.preventDefault();
+        ayuda = $(this).data("ayuda");
+
+       // $("#form_CodigoBarra").load(ayuda);
+       // alert(contenido);
+
+
+
+
+    })
 //    $("form").keypress(function(e) {
 //        if (e.which == 13) {
 //            return false;
