@@ -434,7 +434,10 @@ class AperturaController extends Controller {
             if (!array_key_exists($tipo['id'], $tipoPago)) {
                 $tipoPago[$tipo['id']] = array($tipo['descripcion'], 0, 0);
             }
-            $tipoPago[$tipo['id']][1] = $tipo['1'];
+
+            $tipoPago[$tipo['id']][1] = $tipo['importe'] + $tipo['anulado'];
+            $tipoPago[$tipo['id']][2] = $tipo['anulado'];
+
             /*
             if ($tipo['anulado'] == 1) {
                 $tipoPago[$tipo['id']][2] = $tipo['1'];
