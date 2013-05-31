@@ -284,6 +284,9 @@ class AperturaController extends Controller {
             if ($editForm->isValid()) {
                 $em = $this->getDoctrine()->getManager();
 
+                // Hago el "commit" del cierre, entonces si falla la generacion del archivo, no interfiere con esto
+                $em->persist($entity);
+                $em->flush();
                 /*
                 $caja   = $this->container->get('caja.manager')->getCaja();
                 $apertura = $this->container->get('caja.manager')->getApertura();

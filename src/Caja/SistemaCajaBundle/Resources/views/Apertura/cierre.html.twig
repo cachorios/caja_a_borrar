@@ -10,7 +10,13 @@
     <section id="form_Apertura">
 
         <header>
-            <h1>Cierre de Caja</h1>
+            <h1>Cierre de Caja
+                <div class="auth pull-right">
+                    <span class="links">
+                        <a href="../sitio/cierre" target="_blank">Ayuda</a>
+                     </span>
+                </div>
+            </h1>
         </header>
         {{ wo_render_breadcrumbs() }}
         {% for type, flashMessages in app.session.flashbag.all() %}

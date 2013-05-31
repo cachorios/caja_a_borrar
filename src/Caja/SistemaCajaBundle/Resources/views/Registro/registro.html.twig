@@ -12,11 +12,15 @@
 
             <header>
                     <h1>
-
                         Registro de Comprobantes - {{ caja.nombre }}
-                        <div id="load_indicador" class="pull-right" style="display: none;" ><img src="{{ asset("img/ajax_ind_40x40.gif") }}" /></div>
+                        <div id="load_indicador" class="pull-right" style="display: none;" ><img src="{{ asset("img/ajax_ind_40x40.gif") }}" />
+                        </div>
+                    <div class="auth pull-right">
+                            <span class="links">
+                                <a href="../sitio/registro" target="_blank">Ayuda</a>
+                             </span>
+                    </div>
                     </h1>
-
             </header>
 
             {#{{ wo_render_breadcrumbs() }}#}
