@@ -1060,3 +1060,10 @@ body>.container{background:url('images/sidebar_bg.png') repeat #353c3e;-webkit-b
 .progress.no-margin{margin-bottom:0;}
 .progress-striped .bar{background-color:#e1632b;background-image:-webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.25, rgba(255, 255, 255, 0.15)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(255, 255, 255, 0.15)), color-stop(0.75, rgba(255, 255, 255, 0.15)), color-stop(0.75, transparent), to(transparent));background-image:-webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);background-image:-moz-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);background-image:-o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);background-image:linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);-webkit-box-shadow:inset 0 1px 0px #fba559;-moz-box-shadow:inset 0 1px 0px #fba559;box-shadow:inset 0 1px 0px #fba559;-webkit-border-radius:10px;-moz-border-radius:10px;border-radius:10px;border:1px solid #bd6c49;border-bottom:1px solid #98350a;}
 
+#myHelp h1{
+    font-size: 20px;
+}
+
+#myHelp h2{
+    font-size: 16px;
+}
