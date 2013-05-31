@@ -325,6 +325,14 @@ class AperturaController extends Controller {
                 $apertura_id = $entity->getId();
                 $numero_caja = $entity->getCaja()->getId();
                 $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
+                if (!file_exists($path_archivos)) {
+                    //Si no existe el directorio donde se guardan los archivos de cierre, lo creo;
+                    if(!mkdir($path_archivos, '0644')) { // 0644 es lectura y escritura para el propietario, lectura para los demás
+                        $this->get('session')->getFlashBag()->add('error', '¡¡¡ Error al crear el directorio que va a contener los archivos de cierre !!!!!');
+                        return $this->render('SistemaCajaBundle:Apertura:cierre.html.twig', array('entity' => $entity, 'edit_form' => $editForm->createView(),));
+                    }
+                }
+
                 $archivo_generado = $em->getRepository('SistemaCajaBundle:Apertura')->generaArchivoTexto($apertura_id, $numero_caja, $path_archivos);
 
                 if (!$archivo_generado) {
