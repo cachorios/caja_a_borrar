@@ -149,7 +149,11 @@ class AperturaController extends Controller {
         $entity = new Apertura();
         $form   = $this->createForm(new AperturaType(), $entity);
 
-        return $this->render('SistemaCajaBundle:Apertura:new.html.twig', array('entity' => $entity, 'form' => $form->createView(),));
+        return $this->render('SistemaCajaBundle:Apertura:new.html.twig', array(
+            'entity' => $entity,
+            'form' => $form->createView(),
+            'caja' => $this->container->get("caja.manager")->getCaja()
+        ));
     }
 
     /**
@@ -179,7 +183,11 @@ class AperturaController extends Controller {
                 // no hace falta por uso de ajax//$this->get('session')->getFlashBag()->add('success', 'Apertura creada exitosamente');
 
                 $ticket = $this->get("sistemacaja.ticket");
-                $ticket->setContenido("");
+                $ticket->setContenido(
+                    str_pad("Apertura de Caja", 40, " ", STR_PAD_BOTH).
+                    str_pad("-", 40, "-", STR_PAD_BOTH).
+                    str_pad("Apertura nro. ". $entity->getId(), 40, "-", STR_PAD_BOTH)
+                );
                 $tk = $ticket->getTicketTestigo();
                 ////return $this->redirect($this->generateUrl('apertura'));
             } else {
@@ -367,8 +375,8 @@ class AperturaController extends Controller {
 
                 $this->get('session')->getFlashBag()->add('success', 'La caja se cerro correctamente');
 
-                return $this->redirect($this->generateUrl('apertura'));
-                //return $this->redirect($this->generateUrl('home_page'));
+                return $this->redirect($this->generateUrl('apertura_new'));
+
 
             } else {
                 $this->get('session')->getFlashBag()->add('error', 'flash.update.error');
@@ -407,7 +415,7 @@ class AperturaController extends Controller {
             $this->get('session')->getFlashBag()->add('error', 'flash.delete.error');
         }
 
-        return $this->redirect($this->generateUrl('apertura'));
+        return $this->redirect($this->generateUrl('apertura_new'));
     }
 
     private function createDeleteForm($id) {
