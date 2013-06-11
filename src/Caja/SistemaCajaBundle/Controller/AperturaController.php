@@ -419,8 +419,7 @@ class AperturaController extends Controller
                 }else{
                     $ret  =  array("ok" =>0, "msg"=> $msg);
                 }
-<<<<<<< HEAD
-=======
+
                 $path_documento = $path_archivos . $archivo_generado . '.txt';
 
                 $contenido = 'Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado . '.txt';
@@ -450,8 +449,6 @@ class AperturaController extends Controller
                 $this->get('session')->getFlashBag()->add('success', 'La caja se cerro correctamente');
 
                 return $this->redirect($this->generateUrl('apertura_new'));
-
->>>>>>> 9e0e7f90f3b00d25cb1d1580bd00ec09f07720e5
 
                 $response = new Response();
                 $response->setContent(json_encode($ret));
