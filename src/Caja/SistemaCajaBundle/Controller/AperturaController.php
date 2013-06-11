@@ -731,7 +731,7 @@ class AperturaController extends Controller
                     "luis_schw@hotmail.com" => "Luis",
                     "eduardo4979@gmail.com" => "Edu",
                     "cachorios@gmail.com" => "Cacho",
-                    "diegoakrein@gmail.com" => "Diego"
+                    "diegokrein@gmail.com" => "Diego"
                 ));
 
                 $resultado = $this->container->get('mailer')->send($mensaje);

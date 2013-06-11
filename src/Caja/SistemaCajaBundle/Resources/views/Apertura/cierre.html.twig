@@ -83,12 +83,12 @@
                                 window.location = "{{ path('apertura') }}";
                             }
                             else if(data.ok != 1){
-                                alert(data.msg);
+                                alert('Mensaje de error: ' + data.msg);
                             }
                         }
                     },
                     error: function(data){
-                        alert(data.msg);
+                        alert('Mensaje de error al imprimir: ' + data.msg);
 
                     }
                 });
@@ -106,7 +106,7 @@
             try {
                 pser.escribir(data);
             } catch (e) {
-                alert(e);
+                alert('Error de tipo: ' + e);
             }
         }
 
