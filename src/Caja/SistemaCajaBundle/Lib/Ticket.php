@@ -21,6 +21,7 @@ class Ticket
      */
     private $contenido;
     private $valores;
+    //private $isValores;
     /**
      * @var CajaManager
      */
@@ -30,6 +31,7 @@ class Ticket
     {
         $this->cajamanager = $cajaman;
         $this->valores = Array();
+        //$this->isValores = false;
     }
 
     public function setContenido($contenido)
@@ -45,6 +47,7 @@ class Ticket
          * codigobarra: xxxxxxxxxxxxxxxxxxxxx
          */
         $this->valores = $valores;
+        //$this->isValores = true;
     }
 
 
@@ -100,7 +103,8 @@ class Ticket
             $str .= str_pad("", 40, "-") .NL;
 
             $str .= "CAJA: " . $caja->getNumero() . NL;
-            $str .= "NRO. RECIBO: " . $this->valores['ticket'] . NL;
+            if($this->valores)
+                $str .= "NRO. RECIBO: " . $this->valores['ticket'] . NL;
 
          //   $str .= ESC . 'p' . chr(0) . chr(10) . chr(100); //envia pulso?? esto copie, voy a verificarlo
 
@@ -108,7 +112,8 @@ class Ticket
             $str .= ESC ."c0" .chr(1); // jornal
             $str .= "CAJA: " . $caja->getNumero() . NL;
             $str .= str_pad("FECHA: $fecha", 20, " ", STR_PAD_RIGHT) . str_pad("HORA: $hora", 19, " ", STR_PAD_LEFT) . NL;
-            $str .= "NRO. RECIBO: " . $this->valores['ticket'] . NL;
+            if($this->valores)
+                $str .= "NRO. RECIBO: " . $this->valores['ticket'] . NL;
         }
 
         return $str;
@@ -187,7 +192,8 @@ class Ticket
         $str .= ESC . "!" . chr(1); //caracter normal
         $caja = $this->cajamanager->getCaja();
         if ($tipo == 0) {
-            $str .= "COD.BARRA: " . $this->valores['codigobarra'] . NL;
+            if($this->valores)
+                $str .= "COD.BARRA: " . $this->valores['codigobarra'] . NL;
             $str .= str_pad("", 40, "-") . NL;
             $str .= str_pad("*** GRACIAS ***", 40, " ", STR_PAD_BOTH) . ESC . "d" . chr(2);
             $str .= str_pad("CAJERO: ". $caja->getCajero()->getUsername()  , 40, " ", STR_PAD_BOTH) . ESC . "d" . chr(2);
@@ -196,7 +202,11 @@ class Ticket
             $str .= ESC . 'i';
         }
         if($tipo == 1 ){
-            $str .= "COD.BARRA: " . $this->valores['codigobarra'] . NL;
+            if($this->valores)
+                $str .= "COD.BARRA: " . $this->valores['codigobarra'] . NL;
+            else
+                $str .= str_pad("", 40, "-"). NL;
+
         }
 
         return $str;

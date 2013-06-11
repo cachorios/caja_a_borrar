@@ -44,11 +44,12 @@
                 </div>
             </div>
         </section>
-        <script src="{{  asset('js/deployJava.js') }}"></script>
-        <script>
-            var tipoPagoDefault = {{ tipoPagoDefault }};
+        {% block javascriptshead %}
+            <script src="{{  asset('js/jquery.form.min.js') }}"></script>
+            <script src="{{  asset('js/deployJava.js') }}"></script>
+        {% endblock %}
 
-            console.log("tipo Pago " + tipoPagoDefault);
+        <script>
 
             var attributes = {
                 code:       "applet.Main",
@@ -66,9 +67,11 @@
         <script>
             $(function() {
                 $("#form_apertura").submit(function(e){
-                    $(this).ajaxSubmit({
+                    e.preventDefault();
+                    $("#form_apertura").ajaxSubmit({
                         dataType: 'json',
                         success: function(data, statusText, xhr, $form){
+
                             if(statusText == 'success'){
                                 if(data.ok == 1){
                                     imprimirSerial(data.tk);
@@ -79,9 +82,14 @@
                                     alert(data.msg);
                                 }
                             }
-                        }});
+                        },
+                        error: function(a,b,c){
+                            alert("2");
 
-                    e.isDefaultPrevented();
+                        }
+                    });
+
+                    return false;
                 });
 
             });

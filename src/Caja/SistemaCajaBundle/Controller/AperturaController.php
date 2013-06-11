@@ -155,7 +155,11 @@ class AperturaController extends Controller
         $entity = new Apertura();
         $form = $this->createForm(new AperturaType(), $entity);
 
-        return $this->render('SistemaCajaBundle:Apertura:new.html.twig', array('entity' => $entity, 'form' => $form->createView(),));
+        return $this->render('SistemaCajaBundle:Apertura:new.html.twig', array(
+            'entity' => $entity,
+            'form' => $form->createView(),
+            'caja' => $this->container->get("caja.manager")->getCaja()
+        ));
     }
 
     /**
@@ -186,7 +190,11 @@ class AperturaController extends Controller
                 // no hace falta por uso de ajax//$this->get('session')->getFlashBag()->add('success', 'Apertura creada exitosamente');
 
                 $ticket = $this->get("sistemacaja.ticket");
-                $ticket->setContenido("");
+                $ticket->setContenido(
+                    str_pad("Apertura de Caja", 40, " ", STR_PAD_BOTH).
+                    str_pad("-", 40, "-", STR_PAD_BOTH).
+                    str_pad("Apertura nro. ". $entity->getId(), 40, "-", STR_PAD_BOTH)
+                );
                 $tk = $ticket->getTicketTestigo();
                 ////return $this->redirect($this->generateUrl('apertura'));
             } else {
@@ -294,6 +302,9 @@ class AperturaController extends Controller
             if ($editForm->isValid()) {
                 $em = $this->getDoctrine()->getManager();
 
+                // Hago el "commit" del cierre, entonces si falla la generacion del archivo, no interfiere con esto
+                $em->persist($entity);
+                $em->flush();
                 /*
                 $caja   = $this->container->get('caja.manager')->getCaja();
                 $apertura = $this->container->get('caja.manager')->getApertura();
@@ -332,6 +343,14 @@ class AperturaController extends Controller
                 $apertura_id = $entity->getId();
                 $numero_caja = $entity->getCaja()->getId();
                 $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
+                if (!file_exists($path_archivos)) {
+                    //Si no existe el directorio donde se guardan los archivos de cierre, lo creo;
+                    if(!mkdir($path_archivos, '0644')) { // 0644 es lectura y escritura para el propietario, lectura para los demás
+                        $this->get('session')->getFlashBag()->add('error', '¡¡¡ Error al crear el directorio que va a contener los archivos de cierre !!!!!');
+                        return $this->render('SistemaCajaBundle:Apertura:cierre.html.twig', array('entity' => $entity, 'edit_form' => $editForm->createView(),));
+                    }
+                }
+
                 $archivo_generado = $em->getRepository('SistemaCajaBundle:Apertura')->generaArchivoTexto($apertura_id, $numero_caja, $path_archivos);
 
                 if (!$archivo_generado) {
@@ -366,8 +385,8 @@ class AperturaController extends Controller
 
                 $this->get('session')->getFlashBag()->add('success', 'La caja se cerro correctamente');
 
-                return $this->redirect($this->generateUrl('apertura'));
-                //return $this->redirect($this->generateUrl('home_page'));
+                return $this->redirect($this->generateUrl('apertura_new'));
+
 
             } else {
                 $this->get('session')->getFlashBag()->add('error', 'flash.update.error');
@@ -407,7 +426,7 @@ class AperturaController extends Controller
             $this->get('session')->getFlashBag()->add('error', 'flash.delete.error');
         }
 
-        return $this->redirect($this->generateUrl('apertura'));
+        return $this->redirect($this->generateUrl('apertura_new'));
     }
 
     private function createDeleteForm($id)

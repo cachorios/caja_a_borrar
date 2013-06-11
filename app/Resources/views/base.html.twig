@@ -50,7 +50,7 @@
     <script src="{{ asset('js/highcharts.js') }}"></script>
     <script src="{{ asset('js/inspiritas.js') }} "></script>
     <script src="{{ asset('bootstrap/js/bootstrap-dropdown.js') }}"></script>
-    <script src="{{ asset('bootstrap/js/bootstrap-collapse.js') }}"></script>
+    <script src="{{ asset('bootstrap/js/bootstrap-cocreateAllapse.js') }}"></script>
     <script src="{{ asset('bootstrap/js/bootstrap-tab.js') }}"></script>
     <script src="{{ asset('bootstrap/js/bootstrap-modal.js') }}"></script>
     <script src="{{ asset('bootstrap/js/bootstrap-tooltip.js') }}"></script>
@@ -67,6 +67,19 @@
 
 
     {% block javascripts %}{% endblock %}
+
+    <div id="myHelp" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Ayuda</h3>
+        </div>
+        <div class="modal-body">
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn pull-right" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+        </div>
+    </div>
 
     </body>
 {% endblock body %}
