@@ -132,7 +132,7 @@ class Ticket
                 $str .= $this->armaDetalle( $total);
                 $str .= ESC . "U" . chr(1); //unidireccional
                 $str .= ESC . "!" . chr(17);
-                $str .= str_pad("TOTAL:", 20, " ", STR_PAD_RIGHT) . str_pad($total, 20, " ", STR_PAD_LEFT) . NL;
+                $str .= str_pad("TOTAL:", 20, " ", STR_PAD_RIGHT) . str_pad(sprintf('%9.2f',$total), 20, " ", STR_PAD_LEFT) . NL;
             } else {
                 $str .= $this->contenido.NL;
             }

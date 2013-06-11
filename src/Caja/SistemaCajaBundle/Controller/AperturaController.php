@@ -275,115 +275,148 @@ class AperturaController extends Controller {
 
     public function cierreAction() {
         $entity = $this->container->get('caja.manager')->getApertura();
-
+        $msg=false;
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Apertura entity.');
-        }
-        $entity->setFechaCierre(new \DateTime());
-        $entity->setDireccionIp($_SERVER['REMOTE_ADDR']);
-        $entity->setHost($_SERVER['HTTP_HOST']);
+            //throw $this->createNotFoundException('Unable to find Apertura entity.');
+            $msg='No se pudo recuperar la apertura';
+        } else {
+            $entity->setFechaCierre(new \DateTime());
+            $entity->setDireccionIp($_SERVER['REMOTE_ADDR']);
+            $entity->setHost($_SERVER['HTTP_HOST']);
 
-        $editForm = $this->createForm(new AperturaCierreType(), $entity);
+            $editForm = $this->createForm(new AperturaCierreType(), $entity);
 
-        $request = $this->getRequest();
+            $request = $this->getRequest();
 
-        if ($request->getMethod() == 'POST') {
-            $editForm->bind($request);
-            if ($editForm->isValid()) {
-                $em = $this->getDoctrine()->getManager();
+            //////////////////////////////////////////
+            $caja = $this->container->get("caja.manager")->getCaja();
+            $entity->setCaja($caja);
+            /////////////////////////////////////////
 
-                // Hago el "commit" del cierre, entonces si falla la generacion del archivo, no interfiere con esto
-                $em->persist($entity);
-                $em->flush();
-                /*
-                $caja   = $this->container->get('caja.manager')->getCaja();
-                $apertura = $this->container->get('caja.manager')->getApertura();
+            if ($request->getMethod() == 'POST') {
+                $editForm->bind($request);
+                if ($editForm->isValid()) {
+                    $em = $this->getDoctrine()->getManager();
 
-                $pagos  = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagos($apertura->getId());
-                //Guardo un registro de cierre, a modo de auditoria:
-                $cierre_caja = new CierreCaja();
-                $cierre_caja->setFecha($entity->getFecha());//Es la fecha a la cual corresponde el cierre
-                $cierre_caja->setImporte($pagos);/////////////////////////////////////////////////////////////
-                $cierre_caja->setFechaCierre(new \DateTime()); //Es la fecha en la cual se efectua el cierre
-                $cierre_caja->setDireccionIp($_SERVER['REMOTE_ADDR']);
-                $cierre_caja->setHost($_SERVER['HTTP_HOST']);
-                $cierre_caja->setCajero($caja->getCajero()->getUsername());
-                $cierre_caja->setNroCaja( $caja->getNumero());
-                $em->persist($cierre_caja);
-                //Guardo un registro de cierre, a modo de auditoria
-                */
+                    // Hago el "commit" del cierre, entonces si falla la generacion del archivo, no interfiere con esto
+                    $em->persist($entity);
+                    $em->flush();
 
-                //Genero el archivo de texto que se envia por mail. CONSIDERACIONES GENERALES:
-//                El archivo con el detalle de las cobranzas debería tener  la siguiente estructura.
-//                Solicito que el nombre comience con EP seguido de la fecha de cobro en formado DDMMAA. EJ:
-//                Cobranzas del Día 18 de Marzo del 2013, EP180313.TXT – Cobranzas del Día 2 de Mayo del 2013, EP020513.TXT,
-//                dado que la incorporación de datos a nuestros sistema esta automatizada
-//                y espera un archivo con esa estructura de nombres.
-//                Cabe mencionar que este formato es igual y único para cualquier tasa municipal que se cobra
+                    $ticket = $this->get("sistemacaja.ticket");
+                    $ticket->setContenido(
+                        str_pad("Cierre de Caja", 40, " ", STR_PAD_BOTH).
+                            str_pad("-", 40, "-", STR_PAD_BOTH).
+                            str_pad("Apertura nro. ". $entity->getId(), 40, "-", STR_PAD_BOTH)
+                    );
+                    $tk = $ticket->getTicketTestigo();
+                    /*
+                    $caja   = $this->container->get('caja.manager')->getCaja();
+                    $apertura = $this->container->get('caja.manager')->getApertura();
 
-                //Por cada comprobante generado:
-//                Desde	Hasta	Longitud	Descripción
-//                1	    44	    44	        Código de Barras de la Municipalidad Utilizado para la Cobranza.  Sin modificaciones
-//                45	50	    6	        Valor Entero del  Importe Cobrado
-//                51	52	    2	        Valor Decimales del Importe Cobrado
-//                53	60	    8	        Fecha de Pago – Formato AAAAMMDD
-//                61	61	    1	        Código Fijo de empresa. Uso interno de la Municipalidad de Posadas. Usar siempre un Valor Fijo = 1 (Uno)
-//                62	65	    4	        Numero de Caja Rellenados con ceros a la izquierda
-                // Direccion de correo: cobros@posadas.gov.ar
-                $apertura_id = $entity->getId();
-                $numero_caja = $entity->getCaja()->getId();
-                $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
-                if (!file_exists($path_archivos)) {
-                    //Si no existe el directorio donde se guardan los archivos de cierre, lo creo;
-                    if(!mkdir($path_archivos, '0644')) { // 0644 es lectura y escritura para el propietario, lectura para los demás
-                        $this->get('session')->getFlashBag()->add('error', '¡¡¡ Error al crear el directorio que va a contener los archivos de cierre !!!!!');
-                        return $this->render('SistemaCajaBundle:Apertura:cierre.html.twig', array('entity' => $entity, 'edit_form' => $editForm->createView(),));
+                    $pagos  = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagos($apertura->getId());
+                    //Guardo un registro de cierre, a modo de auditoria:
+                    $cierre_caja = new CierreCaja();
+                    $cierre_caja->setFecha($entity->getFecha());//Es la fecha a la cual corresponde el cierre
+                    $cierre_caja->setImporte($pagos);/////////////////////////////////////////////////////////////
+                    $cierre_caja->setFechaCierre(new \DateTime()); //Es la fecha en la cual se efectua el cierre
+                    $cierre_caja->setDireccionIp($_SERVER['REMOTE_ADDR']);
+                    $cierre_caja->setHost($_SERVER['HTTP_HOST']);
+                    $cierre_caja->setCajero($caja->getCajero()->getUsername());
+                    $cierre_caja->setNroCaja( $caja->getNumero());
+                    $em->persist($cierre_caja);
+                    //Guardo un registro de cierre, a modo de auditoria
+                    */
+
+                    //Genero el archivo de texto que se envia por mail. CONSIDERACIONES GENERALES:
+    //                El archivo con el detalle de las cobranzas debería tener  la siguiente estructura.
+    //                Solicito que el nombre comience con EP seguido de la fecha de cobro en formado DDMMAA. EJ:
+    //                Cobranzas del Día 18 de Marzo del 2013, EP180313.TXT – Cobranzas del Día 2 de Mayo del 2013, EP020513.TXT,
+    //                dado que la incorporación de datos a nuestros sistema esta automatizada
+    //                y espera un archivo con esa estructura de nombres.
+    //                Cabe mencionar que este formato es igual y único para cualquier tasa municipal que se cobra
+
+                    //Por cada comprobante generado:
+    //                Desde	Hasta	Longitud	Descripción
+    //                1	    44	    44	        Código de Barras de la Municipalidad Utilizado para la Cobranza.  Sin modificaciones
+    //                45	50	    6	        Valor Entero del  Importe Cobrado
+    //                51	52	    2	        Valor Decimales del Importe Cobrado
+    //                53	60	    8	        Fecha de Pago – Formato AAAAMMDD
+    //                61	61	    1	        Código Fijo de empresa. Uso interno de la Municipalidad de Posadas. Usar siempre un Valor Fijo = 1 (Uno)
+    //                62	65	    4	        Numero de Caja Rellenados con ceros a la izquierda
+                    // Direccion de correo: cobros@posadas.gov.ar
+                    $apertura_id = $entity->getId();
+                    $numero_caja = $entity->getCaja()->getId();
+                    $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
+                    if (!file_exists($path_archivos)) {
+                        //Si no existe el directorio donde se guardan los archivos de cierre, lo creo;
+                        if(!mkdir($path_archivos, '0644')) { // 0644 es lectura y escritura para el propietario, lectura para los demás
+                            //$this->get('session')->getFlashBag()->add('error', '¡¡¡ Error al crear el directorio que va a contener los archivos de cierre !!!!!');
+                            $msg='¡¡¡ Error al crear el directorio que va a contener los archivos de cierre !!!!!';
+                            //return $this->render('SistemaCajaBundle:Apertura:cierre.html.twig', array('entity' => $entity, 'edit_form' => $editForm->createView(),));
+                        }
                     }
+
+                    //Si esta todo bien, sigo:
+                    if(!$msg){
+                        $archivo_generado = $em->getRepository('SistemaCajaBundle:Apertura')->generaArchivoTexto($apertura_id, $numero_caja, $path_archivos);
+
+                        if (!$archivo_generado) {
+                            $msg='¡¡¡ Error al generar el archivo de texto que se envia por mail !!!!!';
+                            //$this->get('session')->getFlashBag()->add('error', '¡¡¡ Error al generar el archivo de texto que se envia por mail !!!!!');
+                            //return $this->render('SistemaCajaBundle:Apertura:cierre.html.twig', array('entity' => $entity, 'edit_form' => $editForm->createView(),));
+                        }
+                        //Si esta todo bien, sigo:
+                        if(!$msg){
+                            $path_documento = $path_archivos.$archivo_generado.'.txt';
+
+                            $contenido = 'Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado . '.txt';
+                            // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
+                            $mensaje = \Swift_Message::newInstance()
+                                ->setSubject('Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado . '.txt')
+                                ->setFrom('administrador@posadas.gov.ar')
+                                //->setTo('eduardo4979@gmail.com')
+                                ->setBody($contenido)
+                                ->attach(\Swift_Attachment::fromPath($path_documento));
+
+
+                            $mensaje->setTo(array(
+                                "luis_schw@hotmail.com" => "Luis",
+                                "eduardo4979@gmail.com" => "Edu",
+                                "cachorios@gmail.com" => "Cacho",
+                                "diegoakrein@gmail.com" => "Diego",
+                                "andreanestor@hotmail.com" => "Diego"
+                            ));
+
+                            $this->container->get('mailer')->send($mensaje);
+
+                            //Por ultimo: guardo en la tabla Apertura el nombre del archivo generado:
+                            $entity->setArchivoCierre($archivo_generado.'.txt');
+                            $em->persist($entity);
+                            $em->flush();
+
+                            //$this->get('session')->getFlashBag()->add('success', 'La caja se cerro correctamente');
+                            //return $this->redirect($this->generateUrl('apertura_new'));
+                        }
+                    }
+
+                } else {
+                    //$this->get('session')->getFlashBag()->add('error', 'flash.update.error');
+                    $msg='Alguno de los datos ingresados es incorrecto';
+                }
+                //Verifico si estuvo todo ok, y devuelvo:
+                if(!$msg){
+                    $ret  =  array("ok" =>1, "tk"=> $tk);
+                }else{
+                    $ret  =  array("ok" =>0, "msg"=> $msg);
                 }
 
-                $archivo_generado = $em->getRepository('SistemaCajaBundle:Apertura')->generaArchivoTexto($apertura_id, $numero_caja, $path_archivos);
-
-                if (!$archivo_generado) {
-                    $this->get('session')->getFlashBag()->add('error', '¡¡¡ Error al generar el archivo de texto que se envia por mail !!!!!');
-                    return $this->render('SistemaCajaBundle:Apertura:cierre.html.twig', array('entity' => $entity, 'edit_form' => $editForm->createView(),));
-                }
-                $path_documento = $path_archivos.$archivo_generado.'.txt';
-
-                $contenido = 'Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado . '.txt';
-                // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
-                $mensaje = \Swift_Message::newInstance()
-                    ->setSubject('Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado . '.txt')
-                    ->setFrom('administrador@posadas.gov.ar')
-                    ->setTo('eduardo4979@gmail.com')
-                    ->setBody($contenido)
-                    ->attach(\Swift_Attachment::fromPath($path_documento));
-
-                /*
-                $mensaje->setTo(array(
-                    "luis_schw@hotmail.com" => "Luis",
-                    "eduardo4979@gmail.com" => "Edu",
-                    "cachorios@gmail.com" => "Cacho",
-                    "diegoakrein@gmail.com" => "Diego"
-                ));
-                */
-                $this->container->get('mailer')->send($mensaje);
-
-                //Por ultimo: guardo en la tabla Apertura el nombre del archivo generado:
-                $entity->setArchivoCierre($archivo_generado.'.txt');
-                $em->persist($entity);
-                $em->flush();
-
-                $this->get('session')->getFlashBag()->add('success', 'La caja se cerro correctamente');
-
-                return $this->redirect($this->generateUrl('apertura_new'));
-
-
-            } else {
-                $this->get('session')->getFlashBag()->add('error', 'flash.update.error');
+                $response = new Response();
+                $response->setContent(json_encode($ret));
+                return $response;
             }
         }
 
-        return $this->render('SistemaCajaBundle:Apertura:cierre.html.twig', array('entity' => $entity, 'edit_form' => $editForm->createView(),));
+        return $this->render('SistemaCajaBundle:Apertura:cierre.html.twig', array('entity' => $entity, 'caja' => $caja, 'edit_form' => $editForm->createView(),));
     }
 
     /**
