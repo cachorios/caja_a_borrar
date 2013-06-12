@@ -150,13 +150,13 @@ class AperturaRepository extends EntityRepository
 
         //Genero el nombre del archivo:
         //El nombre de archivo siempre empieza con EP
-        $nombre_archivo = "EP";
+        $nombre_archivo = "MU";
         //Despues va la fecha:
         $nombre_archivo .= $apertura->getFecha()->format('d');//dia
         $nombre_archivo .= $apertura->getFecha()->format('m');//mes
         $nombre_archivo .= $apertura->getFecha()->format('y');//año
         $nombre_archivo .= '_' . $numero_caja;//numero de caja
-        $nombre_archivo .= $apertura_id;//id de caja
+        $nombre_archivo .= '_' . $apertura_id;//id de caja
 
         $fp = fopen($path_archivos.$nombre_archivo.".txt", "w+");
         if ($fp) {//fopen devuelve un recurso de puntero a fichero si tiene éxito, o FALSE si se produjo un error.

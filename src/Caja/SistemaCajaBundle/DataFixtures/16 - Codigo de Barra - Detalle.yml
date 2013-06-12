@@ -246,7 +246,7 @@ fixtures:
 
     l49:
         codigobarra: c4
-        descripcion: Nro. de Cuoata
+        descripcion: Nro. de Cuota
         posicion:    30
         longitud:    3
         tabla:       0
