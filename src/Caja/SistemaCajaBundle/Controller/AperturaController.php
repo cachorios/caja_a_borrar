@@ -613,30 +613,18 @@ class AperturaController extends Controller
             try {
                 $em->getRepository('SistemaCajaBundle:Lote')->anularComprobantesLote($lote, $comprobantes);
 
-
-
                 $comprobantes = $em->getRepository('SistemaCajaBundle:LoteDetalle')->findBy(array('codigo_barra' => $comprobantes));
-
-                /*$ticket = $this->get("sistemacaja.ticket");
-                $ticket->setContenido(
-                    str_pad("Anulado", 40, " ", STR_PAD_BOTH).
-                    str_pad("-", 40, "-", STR_PAD_BOTH)
-                );
-                $tk .= $ticket->getTicketTestigo();*/
 
                 foreach ($comprobantes as $comprobante) {
                     $ticket = $this->get("sistemacaja.ticket");
                     $ticket->setContenido(
-                        str_pad("Anulado", 40, " ", STR_PAD_BOTH).
-                            str_pad("-", 40, "-", STR_PAD_BOTH)
+                        str_pad(" ", 40, " ", STR_PAD_BOTH).
+                        str_pad("Comprobante " . $comprobante->getComprobante(),25, " " ,STR_PAD_RIGHT).
+                        str_pad(sprintf("%9.2f",$comprobante->getImporte()),15, " ", STR_PAD_LEFT)
                     );
-                    $tk .= $ticket->getTicketTestigo();
 
-                    $ticket->setContenido(array(
-                            array("Comprobante " . $comprobante->getComprobante(), $comprobante->getImporte()),
-                        )
-                    );
                     $ticket->setValores(array(
+                        'titulo' => "ANULACION DE COMPROBANTE",
                         'ticket' => $comprobante->getId(),
                         'codigobarra' => $comprobante->getCodigoBarra()
                     ));

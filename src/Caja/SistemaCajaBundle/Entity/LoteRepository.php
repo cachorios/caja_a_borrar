@@ -208,9 +208,9 @@ class LoteRepository extends EntityRepository
             }
 
             //FALTA PREGUNTAR SI LA ANULACION ES TOTAL O NO PARA MARCAR LOS LOTE DE PAGO
+            $comprobantes = $em->getRepository('SistemaCajaBundle:LoteDetalle')->findBy(array('codigo_barra' => $comprobantes));
             if ($total_comprobantes_seleccionados < $total_comprobantes_lote ) { //SE ANULA PARTE DEL LOTE:
                 //Por cada comprobante anulado, se mete un registro "negativo" en el lote de pago
-                $comprobantes = $em->getRepository('SistemaCajaBundle:LoteDetalle')->findBy(array('codigo_barra' => $comprobantes));
 
                 foreach ($comprobantes as $comprobante) {
                     $em->getRepository('SistemaCajaBundle:LotePago')->anularLotePagoPorComprobantes($lote, $tipo_pago, -$comprobante->getImporte());
