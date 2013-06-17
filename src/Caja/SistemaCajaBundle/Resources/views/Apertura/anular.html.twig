@@ -99,7 +99,7 @@
                             if(data.ok == 1){
                                 imprimirSerial(data.tk);
                                 //redirigir
-                                window.location = "{{ path('anulacion') }}";
+                                window.location = "{{ path('anulacion_comprobante') }}";
                             }
                             else if(data.ok != 1){
                                 alert('Mensaje de error: ' + data.msg);

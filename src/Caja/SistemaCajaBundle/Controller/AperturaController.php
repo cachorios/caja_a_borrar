@@ -614,25 +614,36 @@ class AperturaController extends Controller
                 $em->getRepository('SistemaCajaBundle:Lote')->anularComprobantesLote($lote, $comprobantes);
 
 
-                $ticket = $this->get("sistemacaja.ticket");
-                //$pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagos($entity->getId());
-                //$pagosAnulado = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagosAnulado($entity->getId());
+
+                $comprobantes = $em->getRepository('SistemaCajaBundle:LoteDetalle')->findBy(array('codigo_barra' => $comprobantes));
+
+                /*$ticket = $this->get("sistemacaja.ticket");
                 $ticket->setContenido(
                     str_pad("Anulado", 40, " ", STR_PAD_BOTH).
                     str_pad("-", 40, "-", STR_PAD_BOTH)
                 );
-
-                $tk .= $ticket->getTicketTestigo();
+                $tk .= $ticket->getTicketTestigo();*/
 
                 foreach ($comprobantes as $comprobante) {
+                    $ticket = $this->get("sistemacaja.ticket");
+                    $ticket->setContenido(
+                        str_pad("Anulado", 40, " ", STR_PAD_BOTH).
+                            str_pad("-", 40, "-", STR_PAD_BOTH)
+                    );
+                    $tk .= $ticket->getTicketTestigo();
+
                     $ticket->setContenido(array(
                             array("Comprobante " . $comprobante->getComprobante(), $comprobante->getImporte()),
                         )
                     );
+                    $ticket->setValores(array(
+                        'ticket' => $comprobante->getId(),
+                        'codigobarra' => $comprobante->getCodigoBarra()
+                    ));
                     $tk .= $ticket->getTicketTestigo();
                 }
 
-                //$tk .= $ticket->getTicketTestigo();
+                //$tk .= $ticket->getTicketTestigo();  //si se quiere imprimir ticket deshabilitar esta linea
                 $ret  =  array("ok" =>1, "tk"=> $tk);
 
             } catch (\Exception $e) {
