@@ -47,6 +47,13 @@ class LotePago
      */
     private $tipo_pago;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="LoteDetalle")
+     */
+    private $lote_detalle;
+
+
+
 
     /**
      * Get id

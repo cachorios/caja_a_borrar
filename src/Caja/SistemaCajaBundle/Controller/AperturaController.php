@@ -560,20 +560,33 @@ class AperturaController extends Controller
      */
     public function anularComprobanteAction()
     {
+        $tk = "";
         // A partir del comprobante ingresado, recupero el lote al cual pertenece:
         $request = $this->getRequest();
         $comprobantes = $request->get('comprobantes_anular'); //Recupero los comprobantes que fueron seleccionados para anular:
         if (count($comprobantes) == 0) {
-            $this->get('session')->getFlashBag()->add('error', 'No se ingresaron comprobantes para anular.');
-            return $this->redirect($this->generateUrl('apertura_anulado'));
+            //$this->get('session')->getFlashBag()->add('error', 'No se ingresaron comprobantes para anular.');
+            //return $this->redirect($this->generateUrl('apertura_anulado'));
+            $msg = 'No se ingresaron comprobantes para anular.';
+            $ret  =  array("ok" =>0, "msg"=> $msg);
+
+            $response = new Response();
+            $response->setContent(json_encode($ret));
+            return $response;
         }
 
         $caja = $this->container->get("caja.manager")->getCaja();
         $apertura = $this->container->get('caja.manager')->getApertura();
 
         if (!$apertura) {
-            $this->get('session')->getFlashBag()->add('error', 'No existe una apertura activa.');
-            return $this->redirect($this->generateUrl('apertura_new '));
+            //$this->get('session')->getFlashBag()->add('error', 'No existe una apertura activa.');
+            //return $this->redirect($this->generateUrl('apertura_new '));
+            $msg = 'No existe una apertura activa.';
+            $ret  =  array("ok" =>0, "msg"=> $msg);
+
+            $response = new Response();
+            $response->setContent(json_encode($ret));
+            return $response;
         }
 
         //Servicio de codigo de barra, para interpretarlo
@@ -587,24 +600,66 @@ class AperturaController extends Controller
             $puede_anular_parcialmente = $em->getRepository('SistemaCajaBundle:Lote')->verificaAnulacionParcial($lote, $comprobantes);
 
             if ($puede_anular_parcialmente != "OK") {
-                $this->get('session')->getFlashBag()->add('error', $puede_anular_parcialmente);
-                return $this->redirect($this->generateUrl('apertura_anulado'));
+                //$this->get('session')->getFlashBag()->add('error', $puede_anular_parcialmente);
+                //return $this->redirect($this->generateUrl('apertura_anulado'));
+                $msg = $puede_anular_parcialmente;
+                $ret  =  array("ok" =>0, "msg"=> $msg);
+
+                $response = new Response();
+                $response->setContent(json_encode($ret));
+                return $response;
             }
 
             try {
                 $em->getRepository('SistemaCajaBundle:Lote')->anularComprobantesLote($lote, $comprobantes);
+
+
+                $ticket = $this->get("sistemacaja.ticket");
+                //$pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagos($entity->getId());
+                //$pagosAnulado = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagosAnulado($entity->getId());
+                $ticket->setContenido(
+                    str_pad("Anulado", 40, " ", STR_PAD_BOTH).
+                    str_pad("-", 40, "-", STR_PAD_BOTH)
+                );
+
+                $tk .= $ticket->getTicketTestigo();
+
+                foreach ($comprobantes as $comprobante) {
+                    $ticket->setContenido(array(
+                            array("Comprobante " . $comprobante->getComprobante(), $comprobante->getImporte()),
+                        )
+                    );
+                    $tk .= $ticket->getTicketTestigo();
+                }
+
+                //$tk .= $ticket->getTicketTestigo();
+                $ret  =  array("ok" =>1, "tk"=> $tk);
+
             } catch (\Exception $e) {
-                $this->get('session')->getFlashBag()->add('error', 'Hubo un fallo al guardar los datos: ' . $e->getMessage());
-                return $this->redirect($this->generateUrl('apertura_anulado'));
+                //$this->get('session')->getFlashBag()->add('error', 'Hubo un fallo al guardar los datos: ' . $e->getMessage());
+                //return $this->redirect($this->generateUrl('apertura_anulado'));
+                $msg =  'Hubo un fallo al guardar los datos: ' . $e->getMessage();
+                $ret  =  array("ok" =>0, "msg"=> $msg);
             }
 
         } else {
-            $this->get('session')->getFlashBag()->add('error', 'Alguno de los comprobantes seleccionados es incorrecto.');
-            return $this->redirect($this->generateUrl('apertura_anulado'));
+            //$this->get('session')->getFlashBag()->add('error', 'Alguno de los comprobantes seleccionados es incorrecto.');
+            //return $this->redirect($this->generateUrl('apertura_anulado'));
+            $msg =  'Alguno de los comprobantes seleccionados es incorrecto.';
+            $ret  =  array("ok" =>0, "msg"=> $msg);
         }
 
-        $this->get('session')->getFlashBag()->add('success', 'Los comprobantes seleccionados han sido anulados');
-        return $this->redirect($this->generateUrl('apertura_anulado'));
+        //$this->get('session')->getFlashBag()->add('success', 'Los comprobantes seleccionados han sido anulados');
+        //return $this->redirect($this->generateUrl('apertura_anulado'));
+        /*Verifico si estuvo todo ok, y devuelvo:*/
+
+
+
+        $response = new Response();
+        $response->setContent(json_encode($ret));
+        return $response;
+
+
     }
 
     /**
