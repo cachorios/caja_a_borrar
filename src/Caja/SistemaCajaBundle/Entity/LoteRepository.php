@@ -208,9 +208,9 @@ class LoteRepository extends EntityRepository
             }
 
             //FALTA PREGUNTAR SI LA ANULACION ES TOTAL O NO PARA MARCAR LOS LOTE DE PAGO
+            $comprobantes = $em->getRepository('SistemaCajaBundle:LoteDetalle')->findBy(array('codigo_barra' => $comprobantes));
             if ($total_comprobantes_seleccionados < $total_comprobantes_lote ) { //SE ANULA PARTE DEL LOTE:
                 //Por cada comprobante anulado, se mete un registro "negativo" en el lote de pago
-                $comprobantes = $em->getRepository('SistemaCajaBundle:LoteDetalle')->findBy(array('codigo_barra' => $comprobantes));
 
                 foreach ($comprobantes as $comprobante) {
                     $em->getRepository('SistemaCajaBundle:LotePago')->anularLotePagoPorComprobantes($lote, $tipo_pago, -$comprobante->getImporte());
@@ -223,8 +223,31 @@ class LoteRepository extends EntityRepository
                 }
             }
 
+            //genero cabecera lote anulación
+            $loteAnulacion = new LoteAnulacion();
+            $loteAnulacion->setFecha(new \DateTime());
+            $em->persist($loteAnulacion);
+
+            foreach ($comprobantes as $comprobante) {
+                // consulta por un lote detalle que coincide en el código barra
+                //$detalle =  $em->getRepository('SistemaCajaBundle:LoteDetalle')->findOneBy(array('codigoBarra'  => $comprobante));
+
+                //genero registro de lote detalle anulación
+                $registro_lote_anulacion_detalle = new LoteAnulacionDetalle();
+                $registro_lote_anulacion_detalle->setLote($loteAnulacion);
+                $registro_lote_anulacion_detalle->setDetalle($comprobante);
+                $em->persist($registro_lote_anulacion_detalle);
+            }
+
             $em->flush();
             $em->getConnection()->commit();
+
+            /**/
+            /*Generación*/
+
+            /**/
+
+
         } catch (Exception $e) {
             $em->getConnection()->rollback();
             $em->close();

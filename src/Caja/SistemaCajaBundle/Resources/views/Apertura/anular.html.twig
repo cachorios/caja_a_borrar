@@ -26,7 +26,7 @@
         {#{{ wo_render_breadcrumbs() }}#}
         {% for type, flashMessages in app.session.flashbag.all() %}
             {% for flashMessage in flashMessages %}
-                <div class='alert alert-{{ type }}'>
+                <div id='alert alert-{{ type }}' class='alert alert-{{ type }}'>
                     {{ flashMessage|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
                 </div>
             {% endfor %}
@@ -66,5 +66,71 @@
 
         {% include 'SistemaCajaBundle:Apertura:_aperturaanular.js.twig' %}
     </section>
+
+    {% block javascriptshead %}
+        <script src="{{  asset('js/jquery.form.min.js') }}"></script>
+        <script src="{{  asset('js/deployJava.js') }}"></script>
+    {% endblock %}
+
+    <script>
+
+        var attributes = {
+            code:       "applet.Main",
+            archive:    "{{  asset('SerialLar.jar')}}",
+            width:      5,
+            height:     5,
+            id:			'SerialLar',
+            visible: false
+        };
+        var parameters = {separate_jvm:"true", draggable:"true", jnlp_href:"{{  asset('SerialLar.jnlp') }}", puerto: "{{ caja.puerto }}"}; <!-- Applet Parameters -->
+        var version = "1.5"; <!-- Required Java Version -->
+        deployJava.runApplet(attributes, parameters, version);
+    </script>
+
+    <script>
+        $(function() {
+            $("#formulario_anulacion").submit(function(e){
+                e.preventDefault();
+                $("#formulario_anulacion").ajaxSubmit({
+                    dataType: 'json',
+                    success: function(data, statusText, xhr, $form){
+
+                        if(statusText == 'success'){
+                            if(data.ok == 1){
+                                imprimirSerial(data.tk);
+                                //redirigir
+                                window.location = "{{ path('apertura_anulado') }}";
+                            }
+                            else if(data.ok != 1){
+                                alert('Mensaje de error: ' + data.msg);
+                            }
+                        }
+                    },
+                    error: function(data){
+                        alert('Mensaje de error al imprimir: ' + data.msg );
+
+                    }
+                });
+
+                return false;
+            });
+        });
+
+        /**
+         * Manda a la impresora fiscal.
+         * @param data
+         */
+        imprimirSerial = function(data){
+            var pser = document.SerialLar;
+            try {
+                pser.escribir(data);
+            } catch (e) {
+                alert('Error de tipo: ' + e);
+            }
+        }
+
+    </script>
+
+
 
 {% endblock page %}

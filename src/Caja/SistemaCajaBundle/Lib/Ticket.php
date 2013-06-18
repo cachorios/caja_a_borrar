@@ -109,7 +109,11 @@ class Ticket
          //   $str .= ESC . 'p' . chr(0) . chr(10) . chr(100); //envia pulso?? esto copie, voy a verificarlo
 
         }elseif ($tipo == 1) {
+
             $str .= ESC ."c0" .chr(1); // jornal
+            if (isset($this->valores['titulo'])){
+                $str .= str_pad($this->valores['titulo'], 40, " ", STR_PAD_BOTH);
+            }
             $str .= "CAJA: " . $caja->getNumero() . NL;
             $str .= str_pad("FECHA: $fecha", 20, " ", STR_PAD_RIGHT) . str_pad("HORA: $hora", 19, " ", STR_PAD_LEFT) . NL;
             if($this->valores)
@@ -204,8 +208,8 @@ class Ticket
         if($tipo == 1 ){
             if($this->valores)
                 $str .= "COD.BARRA: " . $this->valores['codigobarra'] . NL;
-            else
-                $str .= str_pad("", 40, "-"). NL;
+
+            $str .= str_pad("", 40, "-"). NL;
 
         }
 

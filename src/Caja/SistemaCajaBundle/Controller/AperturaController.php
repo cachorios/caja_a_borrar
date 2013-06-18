@@ -285,6 +285,7 @@ class AperturaController extends Controller
     public function cierreAction()
     {
         $entity = $this->container->get('caja.manager')->getApertura();
+        $caja = $this->container->get("caja.manager")->getCaja();
         $msg=false;
         if (!$entity) {
             //throw $this->createNotFoundException('Unable to find Apertura entity.');
@@ -297,12 +298,7 @@ class AperturaController extends Controller
             $editForm = $this->createForm(new AperturaCierreType(), $entity);
 
             $request = $this->getRequest();
-
-            //////////////////////////////////////////
-            $caja = $this->container->get("caja.manager")->getCaja();
-            $entity->setCaja($caja);
-            /////////////////////////////////////////
-
+            $tk = "";
             if ($request->getMethod() == 'POST') {
                 $editForm->bind($request);
                 if ($editForm->isValid()) {
@@ -313,29 +309,19 @@ class AperturaController extends Controller
                     $em->flush();
 
                     $ticket = $this->get("sistemacaja.ticket");
+                    $pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagos($entity->getId());
+                    $pagosAnulado = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagosAnulado($entity->getId());
                     $ticket->setContenido(
                         str_pad("Cierre de Caja", 40, " ", STR_PAD_BOTH).
-                            str_pad("-", 40, "-", STR_PAD_BOTH).
-                            str_pad("Apertura nro. ". $entity->getId(), 40, "-", STR_PAD_BOTH)
+                        str_pad("-", 40, "-", STR_PAD_BOTH).
+                        str_pad("Apertura nro. ". $entity->getId(), 40, "-", STR_PAD_BOTH).
+                        str_pad("Comprobantes Validos: ". $entity->getComprobanteCantidad(), 40, "-", STR_PAD_BOTH).
+                        str_pad("Comprobantes Anulados: ". $entity->getComprobanteAnulado(), 40, "-", STR_PAD_BOTH).
+                        str_pad("Importe Cobrado: ". $pagos, 40, "-", STR_PAD_BOTH).
+                        str_pad("Importe Anulado:. ". $pagosAnulado, 40, "-", STR_PAD_BOTH)
                     );
-                    $tk = $ticket->getTicketTestigo();
-                    /*
-                    $caja   = $this->container->get('caja.manager')->getCaja();
-                    $apertura = $this->container->get('caja.manager')->getApertura();
-
-                    $pagos  = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagos($apertura->getId());
-                    //Guardo un registro de cierre, a modo de auditoria:
-                    $cierre_caja = new CierreCaja();
-                    $cierre_caja->setFecha($entity->getFecha());//Es la fecha a la cual corresponde el cierre
-                    $cierre_caja->setImporte($pagos);/////////////////////////////////////////////////////////////
-                    $cierre_caja->setFechaCierre(new \DateTime()); //Es la fecha en la cual se efectua el cierre
-                    $cierre_caja->setDireccionIp($_SERVER['REMOTE_ADDR']);
-                    $cierre_caja->setHost($_SERVER['HTTP_HOST']);
-                    $cierre_caja->setCajero($caja->getCajero()->getUsername());
-                    $cierre_caja->setNroCaja( $caja->getNumero());
-                    $em->persist($cierre_caja);
-                    //Guardo un registro de cierre, a modo de auditoria
-                    */
+                    $tk .= $ticket->getTicketFull();
+                    $tk .= $ticket->getTicketTestigo();
 
                     //Genero el archivo de texto que se envia por mail. CONSIDERACIONES GENERALES:
     //                El archivo con el detalle de las cobranzas debería tener  la siguiente estructura.
@@ -353,60 +339,89 @@ class AperturaController extends Controller
     //                53	60	    8	        Fecha de Pago – Formato AAAAMMDD
     //                61	61	    1	        Código Fijo de empresa. Uso interno de la Municipalidad de Posadas. Usar siempre un Valor Fijo = 1 (Uno)
     //                62	65	    4	        Numero de Caja Rellenados con ceros a la izquierda
-                    // Direccion de correo: cobros@posadas.gov.ar
-                    $apertura_id = $entity->getId();
-                    $numero_caja = $entity->getCaja()->getId();
-                    $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
-                    if (!file_exists($path_archivos)) {
-                        //Si no existe el directorio donde se guardan los archivos de cierre, lo creo;
-                        if(!mkdir($path_archivos, '0644')) { // 0644 es lectura y escritura para el propietario, lectura para los demás
-                            //$this->get('session')->getFlashBag()->add('error', '¡¡¡ Error al crear el directorio que va a contener los archivos de cierre !!!!!');
-                            $msg='¡¡¡ Error al crear el directorio que va a contener los archivos de cierre !!!!!';
-                            //return $this->render('SistemaCajaBundle:Apertura:cierre.html.twig', array('entity' => $entity, 'edit_form' => $editForm->createView(),));
-                        }
-                    }
 
-                    //Si esta todo bien, sigo:
-                    if(!$msg){
-                        $archivo_generado = $em->getRepository('SistemaCajaBundle:Apertura')->generaArchivoTexto($apertura_id, $numero_caja, $path_archivos);
 
-                        if (!$archivo_generado) {
-                            $msg='¡¡¡ Error al generar el archivo de texto que se envia por mail !!!!!';
-                            //$this->get('session')->getFlashBag()->add('error', '¡¡¡ Error al generar el archivo de texto que se envia por mail !!!!!');
-                            //return $this->render('SistemaCajaBundle:Apertura:cierre.html.twig', array('entity' => $entity, 'edit_form' => $editForm->createView(),));
+                    /////////////////////////////////////////////////////////////
+                    ///////SI NO HUBO COBROS, NO GENERO EL ARCHIVO, SOLO ENVIO EL MAIL////////////////
+                    /////////////////////////////////////////////////////////////
+
+                    if ($entity->getComprobanteCantidad() > 0) {
+                        $apertura_id = $entity->getId();
+                        $numero_caja = $entity->getCaja()->getId();
+                        $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
+                        if (!file_exists($path_archivos)) {
+                            //Si no existe el directorio donde se guardan los archivos de cierre, lo creo;
+                            if(!mkdir($path_archivos, '0644')) { // 0644 es lectura y escritura para el propietario, lectura para los demás
+                                //$this->get('session')->getFlashBag()->add('error', '¡¡¡ Error al crear el directorio que va a contener los archivos de cierre !!!!!');
+                                $msg='¡¡¡ Error al crear el directorio que va a contener los archivos de cierre !!!!!';
+                                //return $this->render('SistemaCajaBundle:Apertura:cierre.html.twig', array('entity' => $entity, 'edit_form' => $editForm->createView(),));
+                            }
                         }
+
                         //Si esta todo bien, sigo:
                         if(!$msg){
-                            $path_documento = $path_archivos.$archivo_generado.'.txt';
+                            $archivo_generado = $em->getRepository('SistemaCajaBundle:Apertura')->generaArchivoTexto($apertura_id, $numero_caja, $path_archivos);
 
-                            $contenido = 'Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado . '.txt';
-                            // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
-                            $mensaje = \Swift_Message::newInstance()
-                                ->setSubject('Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado . '.txt')
-                                ->setFrom('administrador@posadas.gov.ar')
-                                //->setTo('eduardo4979@gmail.com')
-                                ->setBody($contenido)
-                                ->attach(\Swift_Attachment::fromPath($path_documento));
+                            if (!$archivo_generado) {
+                                $msg='¡¡¡ Error al generar el archivo de texto que se envia por mail !!!!!';
+                                //$this->get('session')->getFlashBag()->add('error', '¡¡¡ Error al generar el archivo de texto que se envia por mail !!!!!');
+                                //return $this->render('SistemaCajaBundle:Apertura:cierre.html.twig', array('entity' => $entity, 'edit_form' => $editForm->createView(),));
+                            }
+                            //Si esta todo bien, sigo:
+                            if(!$msg){
+                                $path_documento = $path_archivos.$archivo_generado.'.txt';
+
+                                $contenido = 'Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado . '.txt';
+                                // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
+                                $mensaje = \Swift_Message::newInstance()
+                                    ->setSubject('Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado . '.txt')
+                                    ->setFrom('administrador@posadas.gov.ar')
+                                    //->setTo('cobros@posadas.gov.ar')
+                                    ->setBody($contenido)
+                                    ->attach(\Swift_Attachment::fromPath($path_documento));
 
 
-                            $mensaje->setTo(array(
-                                "luis_schw@hotmail.com" => "Luis",
-                                "eduardo4979@gmail.com" => "Edu",
-                                "cachorios@gmail.com" => "Cacho",
-                                "diegoakrein@gmail.com" => "Diego",
-                                "andreanestor@hotmail.com" => "Diego"
-                            ));
+                                $mensaje->setTo(array(
+                                    "luis_schw@hotmail.com" => "Luis",
+                                    "eduardo4979@gmail.com" => "Edu",
+                                    "cachorios@gmail.com" => "Cacho",
+                                    "diegokrein@gmail.com" => "Diego",
+                                    "andreanestor@hotmail.com" => "Diego"
+                                ));
 
-                            $this->container->get('mailer')->send($mensaje);
+                                $this->container->get('mailer')->send($mensaje);
 
-                            //Por ultimo: guardo en la tabla Apertura el nombre del archivo generado:
-                            $entity->setArchivoCierre($archivo_generado.'.txt');
-                            $em->persist($entity);
-                            $em->flush();
-
+                                //Por ultimo: guardo en la tabla Apertura el nombre del archivo generado:
+                                $entity->setArchivoCierre($archivo_generado.'.txt');
+                                $em->persist($entity);
+                                $em->flush();
+                            }
                             //$this->get('session')->getFlashBag()->add('success', 'La caja se cerro correctamente');
                             //return $this->redirect($this->generateUrl('apertura_new'));
                         }
+                    } else {/////////'No hubo cobranza en la presente caja.
+                        $contenido = 'No hubo cobranza en la presente caja.';
+                        $apertura_id = $entity->getId();
+                        $numero_caja = $entity->getCaja()->getId();
+                        $datos_caja = 'Caja: ' . $numero_caja . '- Apertura: ' . $apertura_id . ' - Fecha: ' . $entity->getFechaCierre();
+                        // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
+                        $mensaje = \Swift_Message::newInstance()
+                            ->setSubject('Municipalidad de Posadas - Cierre de Caja - ' . $datos_caja)
+                            ->setFrom('administrador@posadas.gov.ar')
+                        //->setTo('cobros@posadas.gov.ar')
+                            ->setBody($contenido);
+                        //No hay adjunto
+
+
+                        $mensaje->setTo(array(
+                            "luis_schw@hotmail.com" => "Luis",
+                            "eduardo4979@gmail.com" => "Edu",
+                            "cachorios@gmail.com" => "Cacho",
+                            "diegokrein@gmail.com" => "Diego",
+                            "andreanestor@hotmail.com" => "Diego"
+                        ));
+
+                        $this->container->get('mailer')->send($mensaje);
                     }
 
                 } else {
@@ -420,35 +435,7 @@ class AperturaController extends Controller
                     $ret  =  array("ok" =>0, "msg"=> $msg);
                 }
 
-                $path_documento = $path_archivos . $archivo_generado . '.txt';
-
-                $contenido = 'Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado . '.txt';
-                // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
-                $mensaje = \Swift_Message::newInstance()
-                    ->setSubject('Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado . '.txt')
-                    ->setFrom('administrador@posadas.gov.ar')
-                    ->setTo('eduardo4979@gmail.com')
-                    ->setBody($contenido)
-                    ->attach(\Swift_Attachment::fromPath($path_documento));
-
-                /*
-                $mensaje->setTo(array(
-                    "luis_schw@hotmail.com" => "Luis",
-                    "eduardo4979@gmail.com" => "Edu",
-                    "cachorios@gmail.com" => "Cacho",
-                    "diegoakrein@gmail.com" => "Diego"
-                ));
-                */
-                $this->container->get('mailer')->send($mensaje);
-
-                //Por ultimo: guardo en la tabla Apertura el nombre del archivo generado:
-                $entity->setArchivoCierre($archivo_generado . '.txt');
-                $em->persist($entity);
-                $em->flush();
-
-                $this->get('session')->getFlashBag()->add('success', 'La caja se cerro correctamente');
-
-                return $this->redirect($this->generateUrl('apertura_new'));
+                //return $this->redirect($this->generateUrl('apertura_new'));
 
                 $response = new Response();
                 $response->setContent(json_encode($ret));
@@ -458,6 +445,8 @@ class AperturaController extends Controller
 
         return $this->render('SistemaCajaBundle:Apertura:cierre.html.twig', array('entity' => $entity, 'caja' => $caja, 'edit_form' => $editForm->createView(),));
     }
+
+
 
     /**
      * Deletes a Apertura entity.
@@ -571,20 +560,33 @@ class AperturaController extends Controller
      */
     public function anularComprobanteAction()
     {
+        $tk = "";
         // A partir del comprobante ingresado, recupero el lote al cual pertenece:
         $request = $this->getRequest();
         $comprobantes = $request->get('comprobantes_anular'); //Recupero los comprobantes que fueron seleccionados para anular:
         if (count($comprobantes) == 0) {
-            $this->get('session')->getFlashBag()->add('error', 'No se ingresaron comprobantes para anular.');
-            return $this->redirect($this->generateUrl('apertura_anulado'));
+            //$this->get('session')->getFlashBag()->add('error', 'No se ingresaron comprobantes para anular.');
+            //return $this->redirect($this->generateUrl('apertura_anulado'));
+            $msg = 'No se ingresaron comprobantes para anular.';
+            $ret  =  array("ok" =>0, "msg"=> $msg);
+
+            $response = new Response();
+            $response->setContent(json_encode($ret));
+            return $response;
         }
 
         $caja = $this->container->get("caja.manager")->getCaja();
         $apertura = $this->container->get('caja.manager')->getApertura();
 
         if (!$apertura) {
-            $this->get('session')->getFlashBag()->add('error', 'No existe una apertura activa.');
-            return $this->redirect($this->generateUrl('apertura_new '));
+            //$this->get('session')->getFlashBag()->add('error', 'No existe una apertura activa.');
+            //return $this->redirect($this->generateUrl('apertura_new '));
+            $msg = 'No existe una apertura activa.';
+            $ret  =  array("ok" =>0, "msg"=> $msg);
+
+            $response = new Response();
+            $response->setContent(json_encode($ret));
+            return $response;
         }
 
         //Servicio de codigo de barra, para interpretarlo
@@ -598,24 +600,65 @@ class AperturaController extends Controller
             $puede_anular_parcialmente = $em->getRepository('SistemaCajaBundle:Lote')->verificaAnulacionParcial($lote, $comprobantes);
 
             if ($puede_anular_parcialmente != "OK") {
-                $this->get('session')->getFlashBag()->add('error', $puede_anular_parcialmente);
-                return $this->redirect($this->generateUrl('apertura_anulado'));
+                //$this->get('session')->getFlashBag()->add('error', $puede_anular_parcialmente);
+                //return $this->redirect($this->generateUrl('apertura_anulado'));
+                $msg = $puede_anular_parcialmente;
+                $ret  =  array("ok" =>0, "msg"=> $msg);
+
+                $response = new Response();
+                $response->setContent(json_encode($ret));
+                return $response;
             }
 
             try {
                 $em->getRepository('SistemaCajaBundle:Lote')->anularComprobantesLote($lote, $comprobantes);
+
+                $comprobantes = $em->getRepository('SistemaCajaBundle:LoteDetalle')->findBy(array('codigo_barra' => $comprobantes));
+
+                foreach ($comprobantes as $comprobante) {
+                    $ticket = $this->get("sistemacaja.ticket");
+                    $ticket->setContenido(
+                        str_pad(" ", 40, " ", STR_PAD_BOTH).
+                        str_pad("Comprobante " . $comprobante->getComprobante(),25, " " ,STR_PAD_RIGHT).
+                        str_pad(sprintf("%9.2f",$comprobante->getImporte()),15, " ", STR_PAD_LEFT)
+                    );
+
+                    $ticket->setValores(array(
+                        'titulo' => "ANULACION DE COMPROBANTE",
+                        'ticket' => $comprobante->getId(),
+                        'codigobarra' => $comprobante->getCodigoBarra()
+                    ));
+                    $tk .= $ticket->getTicketTestigo();
+                }
+
+                //$tk .= $ticket->getTicketTestigo();  //si se quiere imprimir ticket deshabilitar esta linea
+                $ret  =  array("ok" =>1, "tk"=> $tk);
+
             } catch (\Exception $e) {
-                $this->get('session')->getFlashBag()->add('error', 'Hubo un fallo al guardar los datos: ' . $e->getMessage());
-                return $this->redirect($this->generateUrl('apertura_anulado'));
+                //$this->get('session')->getFlashBag()->add('error', 'Hubo un fallo al guardar los datos: ' . $e->getMessage());
+                //return $this->redirect($this->generateUrl('apertura_anulado'));
+                $msg =  'Hubo un fallo al guardar los datos: ' . $e->getMessage();
+                $ret  =  array("ok" =>0, "msg"=> $msg);
             }
 
         } else {
-            $this->get('session')->getFlashBag()->add('error', 'Alguno de los comprobantes seleccionados es incorrecto.');
-            return $this->redirect($this->generateUrl('apertura_anulado'));
+            //$this->get('session')->getFlashBag()->add('error', 'Alguno de los comprobantes seleccionados es incorrecto.');
+            //return $this->redirect($this->generateUrl('apertura_anulado'));
+            $msg =  'Alguno de los comprobantes seleccionados es incorrecto.';
+            $ret  =  array("ok" =>0, "msg"=> $msg);
         }
 
-        $this->get('session')->getFlashBag()->add('success', 'Los comprobantes seleccionados han sido anulados');
-        return $this->redirect($this->generateUrl('apertura_anulado'));
+        //$this->get('session')->getFlashBag()->add('success', 'Los comprobantes seleccionados han sido anulados');
+        //return $this->redirect($this->generateUrl('apertura_anulado'));
+        /*Verifico si estuvo todo ok, y devuelvo:*/
+
+
+
+        $response = new Response();
+        $response->setContent(json_encode($ret));
+        return $response;
+
+
     }
 
     /**
