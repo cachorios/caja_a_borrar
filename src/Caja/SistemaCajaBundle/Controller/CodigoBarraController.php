@@ -264,6 +264,8 @@ class CodigoBarraController extends Controller
             throw $this->createNotFoundException('Unable to find CodigoBarra entity.');
         }
 
+
+
         $originalPosisiones = array();
         // cargar en el array todas las posiciones
         foreach ($entity->getPosiciones() as $posicion) {
@@ -282,7 +284,9 @@ class CodigoBarraController extends Controller
 
         $request = $this->getRequest();
 
+
         $editForm->bind($request);
+
 
         if ($editForm->isValid()) {
 
@@ -303,6 +307,11 @@ class CodigoBarraController extends Controller
                 $entity->getPosiciones()->removeElement($posicion);
                 $em->remove($posicion);
             }
+
+            /*
+            foreach ($entity->getPosiciones() as $posicion) {
+            }*/
+
             //----------
             // filtrar $originalVencimeintoImp que no estan presente
             foreach ($entity->getVtosImportes() as $vtoimp) {

@@ -53,6 +53,9 @@ class BarraDetalle
      */
     private $estado;
 
+    private $ver;
+    private $seccion;
+    private $comp;
 
     /**
      * Bidireccional - Muchos comentarios fueron redactados por un usuario (Lado propietario)
@@ -66,7 +69,7 @@ class BarraDetalle
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -82,14 +85,14 @@ class BarraDetalle
     public function setDescripcion($descripcion)
     {
         $this->descripcion = $descripcion;
-    
+
         return $this;
     }
 
     /**
      * Get descripcion
      *
-     * @return string 
+     * @return string
      */
     public function getDescripcion()
     {
@@ -105,14 +108,14 @@ class BarraDetalle
     public function setPosicion($posicion)
     {
         $this->posicion = $posicion;
-    
+
         return $this;
     }
 
     /**
      * Get posicion
      *
-     * @return integer 
+     * @return integer
      */
     public function getPosicion()
     {
@@ -128,14 +131,14 @@ class BarraDetalle
     public function setLongitud($longitud)
     {
         $this->longitud = $longitud;
-    
+
         return $this;
     }
 
     /**
      * Get longitud
      *
-     * @return integer 
+     * @return integer
      */
     public function getLongitud()
     {
@@ -151,14 +154,14 @@ class BarraDetalle
     public function setTabla($tabla)
     {
         $this->tabla = $tabla;
-    
+
         return $this;
     }
 
     /**
      * Get tabla
      *
-     * @return integer 
+     * @return integer
      */
     public function getTabla()
     {
@@ -175,21 +178,19 @@ class BarraDetalle
     public function setCodigobarra(\Caja\SistemaCajaBundle\Entity\CodigoBarra $codigobarra = null)
     {
         $this->codigobarra = $codigobarra;
-    
+
         return $this;
     }
 
     /**
      * Get codigobarra
      *
-     * @return \Caja\SistemaCajaBundle\Entity\CodigoBarra 
+     * @return \Caja\SistemaCajaBundle\Entity\CodigoBarra
      */
     public function getCodigobarra()
     {
         return $this->codigobarra;
     }
-
-
 
 
     /**
@@ -201,17 +202,83 @@ class BarraDetalle
     public function setEstado($estado)
     {
         $this->estado = $estado;
-    
+        $this->calcEstado($estado);
         return $this;
     }
+
+
 
     /**
      * Get estado
      *
-     * @return integer 
+     * @return integer
      */
     public function getEstado()
     {
-        return $this->estado;
+        return $this->estado  ;
     }
+
+    public function getVer()
+    {
+        if($this->ver == null ){
+            $this->calcEstado($this->getEstado());
+        }
+        return  $this->ver == 1 ;
+    }
+
+    public function getSeccion()
+    {
+        if($this->seccion == null ){
+            $this->calcEstado($this->getEstado());
+        }
+        return $this->seccion == 1;
+    }
+
+    public function getComp()
+    {
+        if($this->comp == null ){
+            $this->calcEstado($this->getEstado());
+        }
+        return $this->comp == 1;
+    }
+
+    public function setVer( $ver = 0)
+    {
+        $this->ver = $ver;
+        $this->calcEstadoToSet();
+        return $this;
+    }
+
+    public function setSeccion( $s = 0)
+    {
+        $this->seccion = $s;
+        $this->calcEstadoToSet();
+        return $this;
+    }
+
+    public function setComp($comp = 0)
+    {
+        $this->comp = $comp;
+        $this->calcEstadoToSet();
+        return $this;
+    }
+
+    private function calcEstado($estado = 0){
+
+        $this->comp = intval($estado / 100);
+        $this->seccion =  intval(($estado - $this->comp *100) /10);
+        $this->ver = $estado - $this->comp *100 - $this->seccion *10;
+
+    }
+
+    private function calcEstadoToSet(){
+
+        $estado =   ($this->ver == null ? 0 :$this->ver)+
+                    ($this->seccion == null ? 0 :$this->seccion * 10)+
+                    ($this->comp == null ? 0 :$this->comp * 100);
+        $this->estado = $estado;
+
+
+    }
+
 }

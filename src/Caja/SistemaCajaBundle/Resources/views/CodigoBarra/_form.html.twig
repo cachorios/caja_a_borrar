@@ -1,6 +1,5 @@
 {% form_theme edit_form 'SistemaCajaBundle:Form:fields.html.twig' %}
 
-
 <div class="row-fluid">
     <div class="span6">
         {{ form_row(edit_form.nombre) }}
@@ -12,6 +11,7 @@
         {{ form_row(edit_form.longitud) }}
     </div>
 </div>
+
 <div class="row-fluid">
     <div class="span12">
         <div class=" control-group " id="caja_sistemacajabundle_codigobarratype_posiciones_control_group">
@@ -24,20 +24,25 @@
                     <i class="icon-question-sign"></i> Ayuda</a>
                 Posiciones
             </legend>
-            <div class="pull-right" style="width: 95%;">
+            <div class="pull-right" style="width: 98%;">
                 <div id="ayuda-pos" style="display: none;">
-                    <p>Las definicion de posiciones permite leer e interpretar el codigo de barra para el cual esta definido, .
+                    <p>Las definicion de posiciones permite leer e interpretar el codigo de barra para el cual esta
+                        definido, .
                     </p>
 
                     <h5>Descripción de Columnas</h5>
-                    <table width="100%" cellpadding=5 border="1" >
+                    <table width="100%" cellpadding=5 border="1">
                         <tr>
                             <td valign=top style="width: 30%;">Pos.</td>
-                            <td style="width: 70%;">Posicion, posicion de inicio, donde empieza una valor en particaluar</td>
+                            <td style="width: 70%;">Posicion, posicion de inicio, donde empieza una valor en
+                                particaluar
+                            </td>
                         </tr>
                         <tr>
                             <td valign=top>Long.</td>
-                            <td>Logintud, Cantidad de caracteres a leer a partir de posicion, con posicion y logitud queda determinado el valor del dato.</td>
+                            <td>Logintud, Cantidad de caracteres a leer a partir de posicion, con posicion y logitud
+                                queda determinado el valor del dato.
+                            </td>
                         </tr>
                         <tr>
                             <td valign=top>Descripción</td>
@@ -45,13 +50,19 @@
                         </tr>
                         <tr>
                             <td valign=top>Tabla</td>
-                            <td>A partir del valor obtenido, permite la busqueda de este en una tabla, mostrando una descripcion,
-                                por ejemplo, si la valor 101 es el representativo para tasas, se establece en tabla la que corresponde para tasas,y mostrar 'Inmueble' en ves de 101.</td>
+                            <td>A partir del valor obtenido, permite la busqueda de este en una tabla, mostrando una
+                                descripcion,
+                                por ejemplo, si la valor 101 es el representativo para tasas, se establece en tabla la
+                                que corresponde para tasas,y mostrar 'Inmueble' en ves de 101.
+                            </td>
                         </tr>
                         <tr>
                             <td valign=top>Estado</td>
-                            <td>Si el atributo es representativo para orientar al operador, con visible seleccionado o comprobante,
-                                en el momento de leer el codigo, muestra en la pantalla de registro, para vencimientos e  importe se estable por separado.</td>
+                            <td>Si el atributo es representativo para orientar al operador, con visible seleccionado o
+                                comprobante,
+                                en el momento de leer el codigo, muestra en la pantalla de registro, para vencimientos e
+                                importe se estable por separado.
+                            </td>
                         </tr>
 
                     </table>
@@ -65,6 +76,27 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(function () {
+        $(".pos_check_seccion").change(function (e) {
+            $('.pos_check_seccion').each(function () {
+                $(this).prop('checked', false);
+            });
+            $(this).prop('checked', true);
+            e.preventDefault();
+        });
+
+        $(".pos_check_comp").change(function (e) {
+            $('.pos_check_comp').each(function () {
+                $(this).prop('checked', false);
+            });
+            $(this).prop('checked', true);
+            e.preventDefault();
+        });
+    });
+</script>
+
 
 <div class="row-fluid">
     <div class="span12">
@@ -81,20 +113,24 @@
 
             <div class=" controls">
                 <div id="ayuda-vto" style="display: none;">
-                    <p>Vencimientos e importes sirve para determinar de todos los atributos leidos, cuales de estos son vencimientos e importes,
+                    <p>Vencimientos e importes sirve para determinar de todos los atributos leidos, cuales de estos son
+                        vencimientos e importes,
                         pudiendo haber mas de un par de estos.
 
                     </p>
                     <h5>Para obtener valores del codigo de barra</h5>
                     <ul>
                         <li>
-                            <strong>[n]</strong>: donde n es la posicion de la tabla Posiciones, no se debe completar con
+                            <strong>[n]</strong>: donde n es la posicion de la tabla Posiciones, no se debe completar
+                            con
                             cero ni espacios.<br>
                             Ejemplos:
                             <ul>
                                 <li>correctos: [1], [50], [101].</li>
-                                <li>incorrecto [01], [&nbsp; 2], [&nbsp;&nbsp;3&nbsp;&nbsp;  ].</li>
-                                <li>Para indicar que es un numero agregue despues del cierre del corchete, la expresion ".00". Ejempl0: [5].00</li>
+                                <li>incorrecto [01], [&nbsp; 2], [&nbsp;&nbsp;3&nbsp;&nbsp; ].</li>
+                                <li>Para indicar que es un numero agregue despues del cierre del corchete, la expresion
+                                    ".00". Ejempl0: [5].00
+                                </li>
                             </ul>
                         </li>
                     </ul>
@@ -104,31 +140,37 @@
                         <li><strong>aFechaAADDD(valor)</strong> Convierta a fecha el valor pasado tiene
                             que ser año de dos digito y el dia dentro del año. Ej.: aFechaAADDD([5])
                         </li>
-                        <li><strong>aFechaAAMMDD(valor)</strong> Convierta el valor pasado con el formado AAMMDD a fecha</li>
-                        <li><strong>aFechaDDMMAA(valor)</strong> Convierta el valor pasado con el formado DDMMAA a fecha</li>
-                        <li><strong>sumaAFecha(fecha,n)</strong> suma a una fecha el valor n, que indicarian dias a sumar</li>
+                        <li><strong>aFechaAAMMDD(valor)</strong> Convierta el valor pasado con el formado AAMMDD a fecha
+                        </li>
+                        <li><strong>aFechaDDMMAA(valor)</strong> Convierta el valor pasado con el formado DDMMAA a fecha
+                        </li>
+                        <li><strong>sumaAFecha(fecha,n)</strong> suma a una fecha el valor n, que indicarian dias a
+                            sumar
+                        </li>
                     </ul>
                     <h5>Expresiones de ejemplo</h5>
-                        <table width="100%" cellpadding=5 border="1" >
-                            <tr>
-                                <td style="width: 40%;">aFechaAADDD( [13] )</td>
-                                <td style="width: 60%;">Convierte a fecha la expresion de la posicion [13]</td>
-                            </tr>
-                            <tr>
-                                <td>sumarAFecha( aFechaAADDD( [13] ), [41])</td>
-                                <td>Suma a la fecha generada igual al ejemplo anterior, el valor del la expresion [41]</td>
-                            </tr>
-                            <tr>
-                                <td>[5].00/100</td>
-                                <td>Al numero de la expresion de la posicion 5 se le divide por 100 </td>
-                            </tr>
-                            <tr>
-                                <td>([5].00 + [35].00)/100</td>
-                                <td>Se suma el numero de la expresion de la posicion 5 y 35 a estos se le divide por 100 </td>
-                            </tr>
+                    <table width="100%" cellpadding=5 border="1">
+                        <tr>
+                            <td style="width: 40%;">aFechaAADDD( [13] )</td>
+                            <td style="width: 60%;">Convierte a fecha la expresion de la posicion [13]</td>
+                        </tr>
+                        <tr>
+                            <td>sumarAFecha( aFechaAADDD( [13] ), [41])</td>
+                            <td>Suma a la fecha generada igual al ejemplo anterior, el valor del la expresion [41]</td>
+                        </tr>
+                        <tr>
+                            <td>[5].00/100</td>
+                            <td>Al numero de la expresion de la posicion 5 se le divide por 100</td>
+                        </tr>
+                        <tr>
+                            <td>([5].00 + [35].00)/100</td>
+                            <td>Se suma el numero de la expresion de la posicion 5 y 35 a estos se le divide por 100
+                            </td>
+                        </tr>
 
 
-                        </table><br>
+                    </table>
+                    <br>
 
 
                 </div>
@@ -148,8 +190,6 @@
 
     </div>
 </div>
-
-
 
 
 

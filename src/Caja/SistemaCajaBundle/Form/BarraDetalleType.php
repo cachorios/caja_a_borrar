@@ -17,12 +17,16 @@ class BarraDetalleType extends AbstractType
             ->add('descripcion')
             ->add('tabla','parametro_choice',array(
                         'tabla' => 0,'attr' =>array('data-choice' =>'barra-detalle',)))
-            ->add('estado','choice',array(
+            ->add("ver",    "checkbox", array("required"=>false))
+            ->add("seccion","radio",    array("required"=>false, "attr" => array("class" => "pos_check_seccion")))
+            ->add("comp",   "radio",    array("required"=>false, "attr" => array("class" => "pos_check_comp")))
+
+            /*->add('estado','choice',array(
                 'choices' => array(
-                        'empty_value' => "No Visible",
+                        'empty_value' => "Seleccione",
                         1 => 'Ver',
-                        2 => 'Comprobante'
-                )))
+                        2 => 'Comprobante')
+            ))*/
         ;
     }
 
