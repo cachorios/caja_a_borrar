@@ -24,7 +24,7 @@ class LoteAnulacionDetalle
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="LoteAnulacion", inversedBy="detalle_anulucion")
+     * @ORM\ManyToOne(targetEntity="LoteAnulacion", inversedBy="detalle_anulacion")
      */
     private $lote;
 

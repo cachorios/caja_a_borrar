@@ -186,9 +186,8 @@ class LoteRepository extends EntityRepository
     /**
      *
      */
-    public function anularComprobantesLote($lote, $comprobantes){
+    public function anularComprobantesLote($lote, $comprobantes, $user){
         $em = $this->getEntityManager();
-
         $total_comprobantes_lote = $lote->getDetalle()->count();
         $total_comprobantes_seleccionados = count($comprobantes);
 
@@ -226,6 +225,9 @@ class LoteRepository extends EntityRepository
             //genero cabecera lote anulación
             $loteAnulacion = new LoteAnulacion();
             $loteAnulacion->setFecha(new \DateTime());
+            $loteAnulacion->setUsuario($user);
+            ///////////////////////////ANULACION////////////////////////////
+
             $em->persist($loteAnulacion);
 
             foreach ($comprobantes as $comprobante) {

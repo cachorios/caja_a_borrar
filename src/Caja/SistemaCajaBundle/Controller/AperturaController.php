@@ -611,7 +611,8 @@ class AperturaController extends Controller
             }
 
             try {
-                $em->getRepository('SistemaCajaBundle:Lote')->anularComprobantesLote($lote, $comprobantes);
+                $user = $this->getUser();
+                $em->getRepository('SistemaCajaBundle:Lote')->anularComprobantesLote($lote, $comprobantes, $user);
 
                 $comprobantes = $em->getRepository('SistemaCajaBundle:LoteDetalle')->findBy(array('codigo_barra' => $comprobantes));
 

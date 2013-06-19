@@ -34,6 +34,12 @@ class LoteAnulacion
 
 
     /**
+     * @ORM\OneToOne(targetEntity="\Lar\UsuarioBundle\Entity\Usuario")
+     **/
+    protected  $usuario;
+
+
+    /**
      * Get id
      *
      * @return integer
@@ -67,4 +73,67 @@ class LoteAnulacion
     }
 
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->detalle_anulacion = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add detalle_anulacion
+     *
+     * @param \Caja\SistemaCajaBundle\Entity\LoteAnulacionDetalle $detalleAnulacion
+     * @return LoteAnulacion
+     */
+    public function addDetalleAnulacion(\Caja\SistemaCajaBundle\Entity\LoteAnulacionDetalle $detalleAnulacion)
+    {
+        $this->detalle_anulacion[] = $detalleAnulacion;
+
+        return $this;
+    }
+
+    /**
+     * Remove detalle_anulacion
+     *
+     * @param \Caja\SistemaCajaBundle\Entity\LoteAnulacionDetalle $detalleAnulacion
+     */
+    public function removeDetalleAnulacion(\Caja\SistemaCajaBundle\Entity\LoteAnulacionDetalle $detalleAnulacion)
+    {
+        $this->detalle_anulacion->removeElement($detalleAnulacion);
+    }
+
+    /**
+     * Get detalle_anulacion
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDetalleAnulacion()
+    {
+        return $this->detalle_anulacion;
+    }
+
+    /**
+     * Set usuario
+     *
+     * @param \Lar\UsuarioBundle\Entity\Usuario $usuario
+     * @return LoteAnulacion
+     */
+    public function setUsuario(\Lar\UsuarioBundle\Entity\Usuario $usuario = null)
+    {
+        $this->usuario = $usuario;
+
+        return $this;
+    }
+
+    /**
+     * Get usuario
+     *
+     * @return \Lar\UsuarioBundle\Entity\Usuario 
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
 }
