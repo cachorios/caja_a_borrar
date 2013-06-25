@@ -27,6 +27,7 @@ class CodigoBarraLive
 	private $detalleVisible;
 	private $fechaCalculo;
     private $comprobante;
+    private $seccion;
 	private $vtos;
 
 
@@ -143,8 +144,11 @@ class CodigoBarraLive
         $aDet = array();
 
         foreach ($det as $pos) {
-            if ($pos->getEstado() == 2) {
+            if ($pos->getComp()) {
                 $this->comprobante = substr($this->codigo, $pos->getPosicion() - 1, $pos->getLongitud());
+            }
+            if ($pos->getSeccion()) {
+                $this->seccion = substr($this->codigo, $pos->getPosicion() - 1, $pos->getLongitud());
             }
 
             $ls_desc_tab = substr($this->codigo, $pos->getPosicion() - 1, $pos->getLongitud());
@@ -155,7 +159,7 @@ class CodigoBarraLive
                 }
             }
 
-			if ($pos->getEstado() == 1) {
+			if ($pos->getVer()) {
 				$this->detalleVisible[] = array(
 					$pos->getPosicion(),
 					$pos->getDescripcion(),

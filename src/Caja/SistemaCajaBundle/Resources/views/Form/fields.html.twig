@@ -68,12 +68,10 @@
             {% for row in prototype %}
                 <td>
                     <div class="field{{ fieldNum }}">
-
                         {{ form_widget(row) }}
                     </div>
                 </td>
                 {% set fieldNum = fieldNum + 1 %}
-
             {% endfor %}
             <td width="110px" style="text-align: center;">
                 <button class="btn btn-mini btn-danger remove" data-coleccion-remove-btn="">
