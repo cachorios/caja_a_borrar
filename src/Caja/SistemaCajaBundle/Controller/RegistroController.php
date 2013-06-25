@@ -190,7 +190,7 @@ class RegistroController extends Controller implements IControllerAuditable
             //ld($res);
             $rJson = json_encode(array(
                 'ok' => 0,
-                'msg' => "Este comprobante ya se ha pagado, el dia " . $res[0]->getFecha()->format('d-m-Y H:i:s')
+                'msg' => "Este comprobante ya se ha registrado, el dia " . $res[0]->getFecha()->format('d-m-Y H:i:s')
             ));
             return $response->setContent($rJson);
         }
@@ -214,7 +214,7 @@ class RegistroController extends Controller implements IControllerAuditable
 
             $rJson = json_encode(array(
                 'ok' => 0,
-                'msg' => count($bm->getDetalle()) == 0 ? 'Codigo de Barra desconocido' : 'Comprobante vencido'
+                'msg' => count($bm->getDetalle()) == 0 ? 'Codigo de Barra desconocido' : 'El comprobante se encuentra vencido'
             ));
         }
 

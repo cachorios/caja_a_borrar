@@ -11,7 +11,17 @@
             <header>
                 <h1>Monitor -
                     {{ caja }} -
-                    {{ caja.cajero }}</h1>
+                    {{ caja.cajero }}
+                    <div class="auth pull-right">
+                        <span class="links">
+                            <a href="../sitio/monitor" target="_blank">Ayuda</a>
+                         </span>
+                     </div>
+                    <div class="ayuda pull-right">
+                        <a href="#" data-ayuda="{{ path("pagina_estatica", {pagina: "monitor"}) }}"><img src="{{ asset("img/ayuda.png" ) }}" />
+                        </a>
+                    </div>
+                </h1>
             </header>
             {{ wo_render_breadcrumbs() }}
             {% for type, flashMessages in app.session.flashbag.all() %}

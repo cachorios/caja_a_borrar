@@ -45,7 +45,7 @@ class AperturaRepository extends EntityRepository
               WHERE
                   l.apertura = :apertura_id
               GROUP BY
-                  t.id, t.descripcion
+                  t.id, t.descripcion, l.apertura
               ORDER BY
                   t.id")
             ->setParameter("apertura_id", $apertura_id)
@@ -150,13 +150,13 @@ class AperturaRepository extends EntityRepository
 
         //Genero el nombre del archivo:
         //El nombre de archivo siempre empieza con EP
-        $nombre_archivo = "EP";
+        $nombre_archivo = "MU";
         //Despues va la fecha:
         $nombre_archivo .= $apertura->getFecha()->format('d');//dia
         $nombre_archivo .= $apertura->getFecha()->format('m');//mes
         $nombre_archivo .= $apertura->getFecha()->format('y');//año
         $nombre_archivo .= '_' . $numero_caja;//numero de caja
-        $nombre_archivo .= $apertura_id;//id de caja
+        $nombre_archivo .= '_' . $apertura_id;//id de caja
 
         $fp = fopen($path_archivos.$nombre_archivo.".txt", "w+");
         if ($fp) {//fopen devuelve un recurso de puntero a fichero si tiene éxito, o FALSE si se produjo un error.
@@ -173,12 +173,16 @@ class AperturaRepository extends EntityRepository
                         //62	65	    4	        Numero de Caja Rellenados con ceros a la izquierda
                         $datos = $detalle->getCodigoBarra();
                         $decimales = explode(".",$detalle->getImporte());
+                        $datos .= sprintf('%08d', $detalle->getImporte() * 100);//elimino decimales
+
+                        /*
                         $datos .= str_pad($decimales[0] , 6, "0", STR_PAD_LEFT); //parte entera, rellenada con ceros -> 6 posiciones
                         if (count($decimales) > 1) {
                             $datos .= $decimales[1]  ; //parte decimal, 2 digitos
                         } else {
                             $datos .= '00';//El importe original era redondo, no tenia decimales
                         }
+                        */
                         $datos .= $detalle->getFecha()->format('Ymd'); //fecha de pago
                         $datos .= 1; //Código Fijo de empresa. Uso interno. Usar siempre un Valor Fijo = 1 (Uno)
                         $datos .= $apertura->getCaja()->getNumero(). "\n"; //Numero de Caja Rellenados con ceros a la izquierda

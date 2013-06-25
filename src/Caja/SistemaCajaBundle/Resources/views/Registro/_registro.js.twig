@@ -67,6 +67,7 @@ $(document).ready(function (e) {
                     dataType: "json",
                     success: actDesdeCB,
                     error: function (jqXHR, status, error) {
+                        $.unblockUI();
                         alert('Disculpe, existió un problema: ' + error);
                     }
                 });
@@ -99,6 +100,7 @@ $(document).ready(function (e) {
         } else {
             $("#msgBarra").text(data.msg);
         }
+        $.unblockUI();
     };
 
 

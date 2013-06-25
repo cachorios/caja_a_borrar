@@ -32,10 +32,9 @@
                                 {% set fieldNum = fieldNum + 1 %}
                             </td>
                         {% endfor %}
-                        <td width="110px" style="text-align: center;">
+                        <td  style="text-align: center;">
                             <button class="btn btn-mini btn-danger remove" data-coleccion-remove-btn="">
-                                <span class="icon-trash icon-white"></span> Quitar
-                            </button>
+                                <span class="icon-small icon-trash icon-white"></span></button>
                         </td>
 
                     </tr>
@@ -69,17 +68,14 @@
             {% for row in prototype %}
                 <td>
                     <div class="field{{ fieldNum }}">
-
                         {{ form_widget(row) }}
                     </div>
                 </td>
                 {% set fieldNum = fieldNum + 1 %}
-
             {% endfor %}
             <td width="110px" style="text-align: center;">
                 <button class="btn btn-mini btn-danger remove" data-coleccion-remove-btn="">
-                    <span class="icon-trash icon-white"></span> Quitar
-                </button>
+                    <span class="icon-small icon-trash icon-white"></span> </button>
             </td>
         </tr>
 

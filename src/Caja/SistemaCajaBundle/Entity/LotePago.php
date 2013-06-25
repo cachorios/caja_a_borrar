@@ -47,6 +47,13 @@ class LotePago
      */
     private $tipo_pago;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="LoteDetalle")
+     */
+    private $lote_detalle;
+
+
+
 
     /**
      * Get id
@@ -156,5 +163,28 @@ class LotePago
     public function __toString()
     {
         return "Pago ".$this->getId();
+    }
+
+    /**
+     * Set lote_detalle
+     *
+     * @param \Caja\SistemaCajaBundle\Entity\LoteDetalle $loteDetalle
+     * @return LotePago
+     */
+    public function setLoteDetalle(\Caja\SistemaCajaBundle\Entity\LoteDetalle $loteDetalle = null)
+    {
+        $this->lote_detalle = $loteDetalle;
+
+        return $this;
+    }
+
+    /**
+     * Get lote_detalle
+     *
+     * @return \Caja\SistemaCajaBundle\Entity\LoteDetalle 
+     */
+    public function getLoteDetalle()
+    {
+        return $this->lote_detalle;
     }
 }

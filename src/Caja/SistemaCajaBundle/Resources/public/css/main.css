@@ -1,4 +1,5 @@
 
+
 .title_nav{
     font-size: 22px !important;
     /*font-weight: bold;*/
@@ -87,9 +88,9 @@
 }
 .caja_sistemacajabundle_codigobarratype_posiciones-posicion{    width: 5%;}
 .caja_sistemacajabundle_codigobarratype_posiciones-longitud{    width: 6%;}
-.caja_sistemacajabundle_codigobarratype_posiciones-descripcion{ width: 30%;}
-.caja_sistemacajabundle_codigobarratype_posiciones-tabla{       width: 30%;}
-.caja_sistemacajabundle_codigobarratype_posiciones-estado{      width: 18%;}
+.caja_sistemacajabundle_codigobarratype_posiciones-descripcion{ width: 28%;}
+.caja_sistemacajabundle_codigobarratype_posiciones-tabla{       width: 28%;}
+.caja_sistemacajabundle_codigobarratype_posiciones-estado{      width: 12%;}
 
 #caja_sistemacajabundle_codigobarratype_posiciones select{
     width: 87%;

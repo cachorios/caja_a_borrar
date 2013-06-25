@@ -10,7 +10,17 @@
     <section id="form_Apertura">
 
         <header>
-            <h1>Cierre de Caja</h1>
+            <h1>Cierre de Caja  - {{ caja.nombre }}
+                <div class="auth pull-right">
+                    <span class="links">
+                        <a href="../sitio/cierre" target="_blank">Ayuda</a>
+                     </span>
+                </div>
+                <div class="ayuda pull-right">
+                    <a href="#" data-ayuda="{{ path("pagina_estatica", {pagina: "cierre"}) }}"><img src="{{ asset("img/ayuda.png" ) }}" />
+                    </a>
+                </div>
+            </h1>
         </header>
         {{ wo_render_breadcrumbs() }}
         {% for type, flashMessages in app.session.flashbag.all() %}
@@ -23,7 +33,7 @@
 
         <div class="row-fluid">
             <div class="span12">
-                <form class="form-horizontal" action="{{ path('apertura_cierre') }}"
+                <form id="form_cierre" class="form-horizontal" action="{{ path('apertura_cierre') }}"
                       method="post" {{ form_enctype(edit_form) }}>
                     <ul class="errorMessages"></ul>
                     {{ form_widget(edit_form) }}
@@ -36,8 +46,69 @@
             </div>
         </div>
 
-
-
     </section>
 
+    {% block javascriptshead %}
+        <script src="{{  asset('js/jquery.form.min.js') }}"></script>
+        <script src="{{  asset('js/deployJava.js') }}"></script>
+    {% endblock %}
+
+    <script>
+
+        var attributes = {
+            code:       "applet.Main",
+            archive:    "{{  asset('SerialLar.jar')}}",
+            width:      5,
+            height:     5,
+            id:			'SerialLar',
+            visible: false
+        };
+        var parameters = {separate_jvm:"true", draggable:"true", jnlp_href:"{{  asset('SerialLar.jnlp') }}", puerto: "{{ caja.puerto }}"}; <!-- Applet Parameters -->
+        var version = "1.5"; <!-- Required Java Version -->
+        deployJava.runApplet(attributes, parameters, version);
+    </script>
+
+    <script>
+        $(function() {
+            $("#form_cierre").submit(function(e){
+                e.preventDefault();
+                $("#form_cierre").ajaxSubmit({
+                    dataType: 'json',
+                    success: function(data, statusText, xhr, $form){
+
+                        if(statusText == 'success'){
+                            if(data.ok == 1){
+                                imprimirSerial(data.tk);
+                                //redirigir
+                                window.location = "{{ path('apertura') }}";
+                            }
+                            else if(data.ok != 1){
+                                alert('Mensaje de error: ' + data.msg);
+                            }
+                        }
+                    },
+                    error: function(data){
+                        alert('Mensaje de error al imprimir: ' + data.msg + '. Ticket: ' + data.tk);
+
+                    }
+                });
+
+                return false;
+            });
+        });
+
+        /**
+         * Manda a la impresora fiscal.
+         * @param data
+         */
+        imprimirSerial = function(data){
+            var pser = document.SerialLar;
+            try {
+                pser.escribir(data);
+            } catch (e) {
+                alert('Error de tipo: ' + e);
+            }
+        }
+
+    </script>
 {% endblock %}
