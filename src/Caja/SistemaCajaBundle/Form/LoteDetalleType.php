@@ -22,6 +22,8 @@ class LoteDetalleType extends AbstractType
         ->add('fecha',"text")
         ->add('importe','text',array('attr' => array('class' =>'importe')))
 		->add('codigo_barra','hidden')
+        ->add('seccion','hidden')
+
 
     ;
 }

@@ -33,7 +33,7 @@ class LoteDetalle
 	/**
 	 * @var String
 	 *
-	 * @ORM\Column(name="comprobante", type="string", type= "string", length=20  )
+	 * @ORM\Column(name="comprobante", type="string",  length=20  )
 	 */
 	private $comprobante;
 
@@ -63,6 +63,19 @@ class LoteDetalle
      */
     private $lote;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="seccion", type="integer")
+     */
+    private $seccion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="referencia", type="string",length=255)
+     */
+    private $referencia;
 
     public function __construct(){
         $this->anulado = 0;
@@ -221,4 +234,50 @@ class LoteDetalle
         return $this->comprobante;
     }
 
+
+    /**
+     * Set seccion
+     *
+     * @param integer $seccion
+     * @return LoteDetalle
+     */
+    public function setSeccion($seccion)
+    {
+        $this->seccion = $seccion;
+    
+        return $this;
+    }
+
+    /**
+     * Get seccion
+     *
+     * @return integer 
+     */
+    public function getSeccion()
+    {
+        return $this->seccion;
+    }
+
+    /**
+     * Set referencia
+     *
+     * @param string $referencia
+     * @return LoteDetalle
+     */
+    public function setReferencia($referencia)
+    {
+        $this->referencia = $referencia;
+    
+        return $this;
+    }
+
+    /**
+     * Get referencia
+     *
+     * @return string 
+     */
+    public function getReferencia()
+    {
+        return $this->referencia;
+    }
 }

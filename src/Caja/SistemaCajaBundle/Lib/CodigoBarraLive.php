@@ -63,6 +63,10 @@ class CodigoBarraLive
 	  return $this->comprobante;
 	}
 
+    public function getSeccion(){
+        return $this->seccion;
+    }
+
 	public function getImporte()
 	{
 		foreach($this->vtos as $vto){
