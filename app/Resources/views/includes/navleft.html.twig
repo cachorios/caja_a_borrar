@@ -40,6 +40,11 @@
                 {% endif %}
 
                 {% if is_granted('ROLE_ADMIN') %}
+                    <li class="feriado">
+                        <a href="{{ path("feriado") }}"><i class="icon-text-width icon-white"></i>Días Feriados</a>
+                    </li>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
                     <li class="tipopago">
                         <a href="{{ path("tipopago") }}"><i class="icon-text-width icon-white"></i>Tipos de Pago</a>
                     </li>

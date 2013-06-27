@@ -17,3 +17,7 @@ SistemaCajaBundle_registro:
 SistemaCajaBundle_tipopago:
     resource: "@SistemaCajaBundle/Resources/config/routing/tipopago.yml"
     prefix:   /tipopago
+
+SistemaCajaBundle_feriado:
+    resource: "@SistemaCajaBundle/Resources/config/routing/feriado.yml"
+    prefix:   /feriado

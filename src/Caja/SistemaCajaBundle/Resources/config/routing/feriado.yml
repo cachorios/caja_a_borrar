@@ -1,0 +1,30 @@
+feriado:
+    pattern:  /
+    defaults: { _controller: "SistemaCajaBundle:Feriado:index" }
+
+feriado_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "SistemaCajaBundle:Feriado:show" }
+
+feriado_new:
+    pattern:  /new
+    defaults: { _controller: "SistemaCajaBundle:Feriado:new" }
+
+feriado_create:
+    pattern:  /create
+    defaults: { _controller: "SistemaCajaBundle:Feriado:create" }
+    requirements: { _method: post }
+
+feriado_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "SistemaCajaBundle:Feriado:edit" }
+
+feriado_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "SistemaCajaBundle:Feriado:update" }
+    requirements: { _method: post|put }
+
+feriado_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "SistemaCajaBundle:Feriado:delete" }
+    requirements: { _method: post|delete }
