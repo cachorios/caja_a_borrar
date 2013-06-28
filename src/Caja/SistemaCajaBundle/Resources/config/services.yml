@@ -44,12 +44,13 @@ services:
         tags:
             - { name: twig.extension}
 
-#    caja.oracleInit:
-#        class: Doctrine\DBAL\Event\Listeners\OracleSessionInit
-#        tags:
-#            - { name: doctrine.event_listener, event: postConnect }
+    sistemacaja.prorroga:
+        class: 'Caja\SistemaCajaBundle\Lib\ProrrogaService'
+        arguments: [@doctrine.orm.entity_manager]
+
+    caja.oracleInit:
+        class: Doctrine\DBAL\Event\Listeners\OracleSessionInit
+        tags:
+            - { name: doctrine.event_listener, event: postConnect }
 
 
-#
-#    caja.ticket:
-#        sistemacaja.ticket

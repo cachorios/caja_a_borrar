@@ -3,6 +3,8 @@ namespace Caja\SistemaCajaBundle\Lib;
 
 include_once(__DIR__ . '/../Lib/barra_utils.php');
 
+use Caja\SistemaCajaBundle\Lib\ProrrogaService;
+
 /**
  * Created by JetBrains PhpStorm.
  * User: cacho
@@ -67,11 +69,12 @@ class CodigoBarraLive
         return $this->seccion;
     }
 
-	public function getImporte()
+	public function getImporte(ProrrogaService $oProrroga)
 	{
-		foreach($this->vtos as $vto){
 
-			if($this->fechaCalculo <= $vto[0] ){
+		foreach($this->vtos as $vto){
+            $lVto = $oProrroga->getVencimiento($vto[0]);
+			if($this->fechaCalculo <= $lVto ){
 				return $vto[1];
 			}
 		}

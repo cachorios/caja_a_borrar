@@ -1,0 +1,20 @@
+Prorroga
+--------
+
+
+
+1.- Si la fecha esta vencida.
+
+2.- Si es sabado o domigo, o el vto esta en tabla feriado
+
+3.- Llevarlo a dia habil siguiente
+
+4.- Verificar el punto 2, hasta que sea valido
+
+5.- retornar la fecha
+
+
+
+
+
+

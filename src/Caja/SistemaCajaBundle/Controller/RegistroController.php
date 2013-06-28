@@ -201,7 +201,7 @@ class RegistroController extends Controller implements IControllerAuditable
 
         $bm->setCodigo($cb, $apertura->getFecha());
 
-        $imp = $bm->getImporte();
+        $imp = $bm->getImporte($this->container->get("sistemacaja.prorroga") );
 
         if ($imp > 0) {
             $rJson = json_encode(array('ok' => 1,
