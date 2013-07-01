@@ -27,7 +27,7 @@ class AperturaRepository extends EntityRepository
     public function getPagosByTipoPago($apertura_id)
     {
         $em = $this->getEntityManager();
-       $q = $em->createQuery("SELECT  t.id, t.descripcion,
+        $q = $em->createQuery("SELECT  t.id, t.descripcion,
                                 (select sum(pp.importe) FROM SistemaCajaBundle:LotePago pp JOIN pp.lote ll
                                 WHERE
                                   ll.apertura = l.apertura
@@ -50,20 +50,6 @@ class AperturaRepository extends EntityRepository
                   t.id")
             ->setParameter("apertura_id", $apertura_id)
         ;
-
-        /*$q = $em->createQuery("
-              SELECT
-                  t.id,t.descripcion, sum(p.importe)
-              FROM
-                  SistemaCajaBundle:LotePago p JOIN p.tipo_pago t JOIN p.lote l
-              WHERE
-                  l.apertura = :apertura_id
-              GROUP BY
-                  t.id, t.descripcion
-              ORDER BY
-                  t.id ")
-            ->setParameter("apertura_id", $apertura_id)
-        ;*/
 
         $res = $q->getResult();
 
@@ -198,5 +184,60 @@ class AperturaRepository extends EntityRepository
 
         return $nombre_archivo;
     }
+
+
+    /**
+     * Obtiene el detalle de comprobantes validos registrados en la apertura
+     * @param $apertura_id
+     * @return array que contiene cada comprobante registrado
+     */
+    public function getDetallePagos($apertura_id)
+    {
+        $em = $this->getEntityManager();
+
+        $q = $em->createQuery("
+              SELECT ld
+              FROM
+                  SistemaCajaBundle:LoteDetalle ld JOIN ld.lote l
+              WHERE
+                  l.apertura = :apertura_id
+                  AND p.importe > 0
+              ")
+            ->setParameter("apertura_id", $apertura_id)
+        ;
+
+        $res = $q->getResult();
+
+        return $res;
+
+    }
+
+    /**
+     * Obtiene el detalle de cada tipo de pago registrado en la apertura
+     * @param $apertura_id
+     * @return array que contiene el agrupado de cada tipo de pago
+     */
+    public function getDetalleTipoPagos($apertura_id)
+    {
+        $em = $this->getEntityManager();
+
+        $PagoTipoPago = $em->getRepository('SistemaCajaBundle:Apertura')->getPagosByTipoPago($apertura_id);
+
+        $tipoPago = array();
+
+        foreach ($PagoTipoPago as $tipo) {
+            if (!array_key_exists($tipo['id'], $tipoPago)) {
+                $tipoPago[$tipo['id']] = array($tipo['descripcion'], 0, 0);
+            }
+
+            $tipoPago[$tipo['id']][1] = $tipo['importe'] + $tipo['anulado'];
+            $tipoPago[$tipo['id']][2] = $tipo['anulado'];
+
+        }
+        return $tipoPago;
+
+    }
+
+
 
 }

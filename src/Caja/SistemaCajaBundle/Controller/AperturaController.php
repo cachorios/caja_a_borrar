@@ -288,7 +288,6 @@ class AperturaController extends Controller
         $caja = $this->container->get("caja.manager")->getCaja();
         $msg=false;
         if (!$entity) {
-            //throw $this->createNotFoundException('Unable to find Apertura entity.');
             $msg='No se pudo recuperar la apertura';
         } else {
             $entity->setFechaCierre(new \DateTime());
@@ -305,12 +304,38 @@ class AperturaController extends Controller
                     $em = $this->getDoctrine()->getManager();
 
                     // Hago el "commit" del cierre, entonces si falla la generacion del archivo, no interfiere con esto
-                    $em->persist($entity);
-                    $em->flush();
+                    //$em->persist($entity);
+                    //$em->flush();
 
-                    $ticket = $this->get("sistemacaja.ticket");
+
+                    /*
+                    //Primer parte de la impresion: detalle de pagos por tipo de seccion:
+                    $detalle_pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetallePagos($entity->getId());
+                    $seccion_actual = "";
+                    foreach ($detalle_pagos as $detalle) {
+                        $ticket = $this->get("sistemacaja.ticket");
+
+                        //Pregunto si es la misma seccion, o tengo que hacer el "cambio" (corte de control)
+                        if ($seccion_actual = "") {
+
+                        }
+                        $ticket->setContenido(
+                            str_pad("SECCION: ", 40, " ", STR_PAD_BOTH).
+                                str_pad($detalle->getSeccion(), 40, "-", STR_PAD_BOTH)
+                        );
+
+                        $tk .= $ticket->getTicketFull();
+                        $tk .= $ticket->getTicketTestigo();
+                        //$seccion_anterior =
+                    }
+                    */
+                    //Segunda parte de la impresion: detalle de pagos por tipo de pago:
+
+
+                    //Tercer parte de la impresion: cantidad de comprobantes y montos finales:
                     $pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagos($entity->getId());
                     $pagosAnulado = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagosAnulado($entity->getId());
+                    $ticket = $this->get("sistemacaja.ticket");
                     $ticket->setContenido(
                         str_pad("Cierre de Caja", 40, " ", STR_PAD_BOTH).
                         str_pad("-", 40, "-", STR_PAD_BOTH).
@@ -352,9 +377,7 @@ class AperturaController extends Controller
                         if (!file_exists($path_archivos)) {
                             //Si no existe el directorio donde se guardan los archivos de cierre, lo creo;
                             if(!mkdir($path_archivos, '0644')) { // 0644 es lectura y escritura para el propietario, lectura para los demás
-                                //$this->get('session')->getFlashBag()->add('error', '¡¡¡ Error al crear el directorio que va a contener los archivos de cierre !!!!!');
                                 $msg='¡¡¡ Error al crear el directorio que va a contener los archivos de cierre !!!!!';
-                                //return $this->render('SistemaCajaBundle:Apertura:cierre.html.twig', array('entity' => $entity, 'edit_form' => $editForm->createView(),));
                             }
                         }
 
@@ -364,8 +387,6 @@ class AperturaController extends Controller
 
                             if (!$archivo_generado) {
                                 $msg='¡¡¡ Error al generar el archivo de texto que se envia por mail !!!!!';
-                                //$this->get('session')->getFlashBag()->add('error', '¡¡¡ Error al generar el archivo de texto que se envia por mail !!!!!');
-                                //return $this->render('SistemaCajaBundle:Apertura:cierre.html.twig', array('entity' => $entity, 'edit_form' => $editForm->createView(),));
                             }
                             //Si esta todo bien, sigo:
                             if(!$msg){
@@ -393,11 +414,9 @@ class AperturaController extends Controller
 
                                 //Por ultimo: guardo en la tabla Apertura el nombre del archivo generado:
                                 $entity->setArchivoCierre($archivo_generado.'.txt');
-                                $em->persist($entity);
-                                $em->flush();
+                                //$em->persist($entity);
+                                //$em->flush();
                             }
-                            //$this->get('session')->getFlashBag()->add('success', 'La caja se cerro correctamente');
-                            //return $this->redirect($this->generateUrl('apertura_new'));
                         }
                     } else {/////////'No hubo cobranza en la presente caja.
                         $contenido = 'No hubo cobranza en la presente caja.';
@@ -425,7 +444,6 @@ class AperturaController extends Controller
                     }
 
                 } else {
-                    //$this->get('session')->getFlashBag()->add('error', 'flash.update.error');
                     $msg='Alguno de los datos ingresados es incorrecto';
                 }
                 //Verifico si estuvo todo ok, y devuelvo:
@@ -434,8 +452,6 @@ class AperturaController extends Controller
                 }else{
                     $ret  =  array("ok" =>0, "msg"=> $msg);
                 }
-
-                //return $this->redirect($this->generateUrl('apertura_new'));
 
                 $response = new Response();
                 $response->setContent(json_encode($ret));
@@ -523,13 +539,6 @@ class AperturaController extends Controller
             $tipoPago[$tipo['id']][1] = $tipo['importe'] + $tipo['anulado'];
             $tipoPago[$tipo['id']][2] = $tipo['anulado'];
 
-            /*
-            if ($tipo['anulado'] == 1) {
-                $tipoPago[$tipo['id']][2] = $tipo['1'];
-            } else {
-                $tipoPago[$tipo['id']][1] = $tipo['1'];
-            }
-            */
         }
         return $tipoPago;
     }
