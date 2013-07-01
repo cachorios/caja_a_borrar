@@ -78,8 +78,8 @@ class ProrrogaService {
 //            return true;
 //        }
 //
-//        return false;
-        if( $this->em->getRepository("SistemaCajaBundle:Feriado")->findOneByFecha($fecha)){
+        if( $this->em->getRepository("S
+//        return false;istemaCajaBundle:Feriado")->findOneByFecha($fecha)){
             return true;
         }
         return false;
