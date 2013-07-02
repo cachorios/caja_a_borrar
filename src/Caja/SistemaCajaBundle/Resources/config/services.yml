@@ -48,9 +48,6 @@ services:
         class: 'Caja\SistemaCajaBundle\Lib\ProrrogaService'
         arguments: [@doctrine.orm.entity_manager]
 
-    caja.oracleInit:
-        class: Doctrine\DBAL\Event\Listeners\OracleSessionInit
-        tags:
-            - { name: doctrine.event_listener, event: postConnect }
+
 
 

@@ -75,6 +75,11 @@ class CodigoBarra
     protected $vtos_importes;
 
 
+    /**
+     * @var boolean
+     * @ORM\Column(name="conReferencia", type="boolean")
+     */
+    protected $con_referencia;
 
     /**
      * Get id
@@ -320,5 +325,28 @@ class CodigoBarra
 
     public function __toString(){
         return $this->getNombre();
+    }
+
+    /**
+     * Set con_referencia
+     *
+     * @param boolean $conReferencia
+     * @return CodigoBarra
+     */
+    public function setConReferencia($conReferencia)
+    {
+        $this->con_referencia = $conReferencia;
+
+        return $this;
+    }
+
+    /**
+     * Get con_referencia
+     *
+     * @return boolean 
+     */
+    public function getConReferencia()
+    {
+        return $this->con_referencia;
     }
 }
