@@ -153,11 +153,13 @@ $(document).ready(function (e) {
     postAddDetalle = function (row, index) {
         $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_codigo_barra').val(cb);
         $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_comprobante').val(dataBarra.comprobante);
+        $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_referencia').val(dataBarra.referencia);
         $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_seccion').val(dataBarra.seccion);
         $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_fecha').val(dataBarra.vencimiento);
         $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_importe').val(dataBarra.importe);
 
         $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_comprobante').attr('readonly', 'readonly');
+        $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_referencia').attr('readonly', 'readonly');
         $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_fecha').attr('readonly', 'readonly');
         $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_importe').attr('readonly', 'readonly');
 

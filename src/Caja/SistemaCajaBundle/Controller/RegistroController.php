@@ -203,12 +203,22 @@ class RegistroController extends Controller implements IControllerAuditable
 
         $imp = $bm->getImporte($this->container->get("sistemacaja.prorroga") );
 
+
+        $sql = "select REFERENCIA from view_boleta_referencia where comprobante = ".$bm->getComprobante();
+        //$em = $this->getDoctrine()->getEntityManager();
+        $connection = $em->getConnection();
+        $statement = $connection->prepare($sql);
+        $statement->execute();
+        $referencia = $statement->fetchAll();
+        //$referencia = "PI 94146 C03/2002";
+
         if ($imp > 0) {
             $rJson = json_encode(array('ok' => 1,
                 'importe' => number_format($imp, 2, '.', ''),
                 'comprobante' => $bm->getComprobante(),
                 'seccion'   => $bm->getSeccion(),
                 'vencimiento' => $bm->getVto(),
+                'referencia' => $referencia,
                 'detalle' => $this->renderView("SistemaCajaBundle:Registro:_detalle.html.twig", array('elementos' => $bm->getDetalle()))
             ));
         } else {

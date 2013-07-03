@@ -18,8 +18,9 @@ class LoteDetalleType extends AbstractType
 {
     $builder
 
-		->add('comprobante','text')
-        ->add('fecha',"text")
+		->add('comprobante','text',array('attr' => array('class' =>'registro_comprobante')))
+        ->add('referencia',"text",array('attr' => array('class' =>'registro_referencia')))
+        ->add('fecha',"text",array('attr' => array('class' =>'registro_fecha')))
         ->add('importe','text',array('attr' => array('class' =>'importe')))
 		->add('codigo_barra','hidden')
         ->add('seccion','hidden')

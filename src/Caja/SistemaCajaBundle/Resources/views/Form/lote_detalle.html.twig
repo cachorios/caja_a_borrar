@@ -11,7 +11,8 @@
                     <tr>
                         <th style="width: 3%;">##</th>
                         <th style="width: 28%;">Comprobante </th>
-                        <th style="width: 28%;">Vencimiento </th>
+                        <th style="width: 15%;">Referencia </th>
+                        <th style="width: 15%;">Vencimiento </th>
                         <th style="width: 28%;">Importe </th>
                         <th>Acción</th>
 
@@ -64,10 +65,13 @@
                 </div>
             </td>
             <td>
-                {{ form_widget(prototype.comprobante, { 'attr': { 'class': '' }}) }}
+                {{ form_widget(prototype.comprobante, { 'attr': { 'class': 'registro_comprobante' }}) }}
             </td>
             <td>
-                {{ form_widget(prototype.fecha, { 'attr': { 'class': 'test' }}) }}
+                {{ form_widget(prototype.referencia, { 'attr': { 'class': 'registro_referencia' }}) }}
+            </td>
+            <td>
+                {{ form_widget(prototype.fecha, { 'attr': { 'class': 'registro_fecha' }}) }}
             </td>
             <td>
                 {{ form_widget(prototype.importe, { 'attr': { 'class': 'importe' }}) }}

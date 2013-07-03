@@ -140,3 +140,16 @@
 #prov_inicio .container aside nav ul li:first-child a:hover,
 #prov_cliente .container aside nav ul li:nth-child(2) a:hover
 {background-color: transparent  !important;}
+
+.registro_comprobante{
+    width: 120px;
+}
+
+.registro_referencia{
+    width: 180px;
+}
+
+.registro_fecha{
+    width: 80px;
+}
+
