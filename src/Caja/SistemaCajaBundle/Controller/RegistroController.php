@@ -210,7 +210,12 @@ class RegistroController extends Controller implements IControllerAuditable
         $statement = $connection->prepare($sql);
         $statement->execute();
         $referencia = $statement->fetchAll();
-        //$referencia = "PI 94146 C03/2002";
+        $cantidad = count($referencia);
+        if ($cantidad > 0) {
+            $referencia = $referencia[0]['REFERENCIA'].'/'.chr(10).$referencia[1]['REFERENCIA']; //FALTA EL FOR EACH ....
+        } else {
+            $referencia = "";
+        }
 
         if ($imp > 0) {
             $rJson = json_encode(array('ok' => 1,
