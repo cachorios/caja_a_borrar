@@ -307,49 +307,53 @@ class AperturaController extends Controller
                     //$em->persist($entity);
                     //$em->flush();
 
-
+                    $ticket = $this->get("sistemacaja.ticket");
+                    $servicio_tabla = $this->get("lar.parametro.tabla");
 
                     //Primer parte de la impresion: detalle de pagos por tipo de seccion:
                     $detalle_pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetallePagos($entity->getId());
-                    $contenido = "";
+                    $contenido =  str_pad("Cierre de Caja", 40, " ", STR_PAD_BOTH);
                     $seccion_actual = "";
                     $monto_total_seccion = 0;
                     $cantidad_comprobantes_seccion = 0;
                     $monto_total_general = 0;
                     $cantidad_comprobantes_general = 0;
                     foreach ($detalle_pagos as $detalle) {
-                        $ticket = $this->get("sistemacaja.ticket");
+
+                        $nombre_seccion = $servicio_tabla->getParametro( 10, $detalle->getSeccion());
                         //Pregunto si es la misma seccion, o tengo que hacer el "cambio" (corte de control)
                         if ($seccion_actual == "") { //entra la primera vez
                             $contenido = $contenido .
                                 str_pad("-", 40, "-", STR_PAD_BOTH).
-                                str_pad("SECCION: " . $detalle->getSeccion(), 40, " ", STR_PAD_BOTH).
-                                str_pad("Referencia: " . $detalle->getReferencia(), 40, " ", STR_PAD_BOTH).
-                                str_pad("Comprobante: " . $detalle->getComprobante() . " $ " . $detalle->getImporte(), 40, " ", STR_PAD_BOTH)
-                            ;
-                            $seccion_actual = $detalle->getSeccion();
+                                str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH).
+                                //str_pad("Referencia: " . $detalle->getReferencia(), 40, " ", STR_PAD_BOTH).
+                                //str_pad("Comprobante: " . $detalle->getComprobante() . " $ " . $detalle->getImporte(), 40, " ", STR_PAD_BOTH);
+                                str_pad("C " . $detalle->getComprobante() . " " . $detalle->getReferencia() . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH);
+                            $seccion_actual = $nombre_seccion;
                             $monto_total_seccion += $detalle->getImporte();
                             $cantidad_comprobantes_seccion ++;
-                        } else if ($detalle->getSeccion() == $seccion_actual) { //entra si es igual al anterior
+                        } else if ($nombre_seccion == $seccion_actual) { //entra si es igual al anterior
                             $contenido = $contenido .
-                                str_pad("-", 40, "-", STR_PAD_BOTH).
-                                str_pad("Referencia: " . $detalle->getReferencia(), 40, " ", STR_PAD_BOTH).
-                                str_pad("Comprobante: " . $detalle->getComprobante() . " $ " . $detalle->getImporte(), 40, " ", STR_PAD_BOTH)
+                                //str_pad("-", 40, "-", STR_PAD_BOTH).
+                                //str_pad("Referencia: " . $detalle->getReferencia(), 40, " ", STR_PAD_BOTH).
+                                //str_pad("Comprobante: " . $detalle->getComprobante() . " $ " . $detalle->getImporte(), 40, " ", STR_PAD_BOTH)
+                                str_pad("C " . $detalle->getComprobante() . " " . $detalle->getReferencia() . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH);
                             ;
-                            $seccion_actual = $detalle->getSeccion();
+                            $seccion_actual = $servicio_tabla->getParametro( 10, $detalle->getSeccion());;
                             $monto_total_seccion += $detalle->getImporte();
                             $cantidad_comprobantes_seccion ++;
                         } else {//corte de control, immprimo una linea, muestro totales, otra linea y empiezo otra seccion:
                             $contenido = $contenido . str_pad("-", 40, "-", STR_PAD_BOTH).
-                                str_pad("TOTAL " . $seccion_actual . " $ " . $monto_total_seccion . ". Comprobantes: " . $cantidad_comprobantes_seccion, 40, "-", STR_PAD_BOTH);
+                                str_pad($seccion_actual . " $ " . $monto_total_seccion . ". Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH);
                             $monto_total_general += $monto_total_seccion;
                             $cantidad_comprobantes_general += $cantidad_comprobantes_seccion;
 
                             $contenido = $contenido .
-                                    str_pad("-", 40, "-", STR_PAD_BOTH).
-                                    str_pad("SECCION: " . $detalle->getSeccion(), 40, " ", STR_PAD_BOTH).
-                                    str_pad("Referencia: " . $detalle->getReferencia(), 40, " ", STR_PAD_BOTH).
-                                    str_pad("Comprobante: " . $detalle->getComprobante() . " $ " . $detalle->getImporte(), 40, " ", STR_PAD_BOTH)
+                                    //str_pad("-", 40, "-", STR_PAD_BOTH).
+                                    str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH).
+                                    //str_pad("Referencia: " . $detalle->getReferencia(), 40, " ", STR_PAD_BOTH).
+                                    //str_pad("Comprobante: " . $detalle->getComprobante() . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH)
+                                    str_pad("C " . $detalle->getComprobante() . " " . $detalle->getReferencia() . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH);
                             ;
                             //INICIALIZO LOS ACUMULADORES DE SECCION
                             $monto_total_seccion =  $detalle->getImporte();
@@ -360,32 +364,62 @@ class AperturaController extends Controller
                     $monto_total_general += $monto_total_seccion;
                     $cantidad_comprobantes_general += $cantidad_comprobantes_seccion;
                     $contenido = $contenido . str_pad("-", 40, "-", STR_PAD_BOTH).
-                        str_pad("TOTAL " .$seccion_actual . " $ " . $monto_total_seccion . ". Comprobantes: " . $cantidad_comprobantes_seccion, 40, "-", STR_PAD_BOTH).
+                        str_pad($seccion_actual . " $ " . $monto_total_seccion . ". Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH).
                         str_pad("-", 40, "-", STR_PAD_BOTH).
-                        str_pad("TOTAL GENERAL $ " . $monto_total_general . ". Comprobantes: " . $cantidad_comprobantes_general, 40, "-", STR_PAD_BOTH);
+                        str_pad("TOTAL $ " . $monto_total_general . ". Comprobantes: " . $cantidad_comprobantes_general, 40, " ", STR_PAD_BOTH);
 
-                    $ticket->setContenido($contenido);
+                    //$ticket->setContenido($contenido);
                     //$tk .= $ticket->getTicketFull();
-                    $tk .= $ticket->getTicketTestigo();
+                    //$tk .= $ticket->getTicketTestigo();
                     //$seccion_anterior =
 
+
+
+                    ///////////////////////////////////////////////////////////////////////////////////////////
                     //Segunda parte de la impresion: detalle de pagos por tipo de pago:
+                    $PagoTipoPago = $em->getRepository('SistemaCajaBundle:Apertura')->getPagosByTipoPago($entity->getId());
+                    $tipoPagos = array();
+                    foreach ($PagoTipoPago as $tipo) {
+                        if (!array_key_exists($tipo['id'], $tipoPagos)) {
+                            $tipoPagos[$tipo['id']] = array($tipo['descripcion'], 0, 0);
+                        }
+
+                        $tipoPagos[$tipo['id']][1] = $tipo['importe'] + $tipo['anulado'];
+                        $tipoPagos[$tipo['id']][2] = $tipo['anulado'];
+
+                    }
+
+                    $total_cobrado = 0;
+                    $total_anulado = 0;
+                    $contenido = $contenido .str_pad("-", 40, "=", STR_PAD_BOTH);
+                    $contenido = $contenido . str_pad("Formas de Cobro: ", 40, " ", STR_PAD_RIGHT);
+                    foreach ($tipoPagos as $tipoPago) {
+                        $contenido =  $contenido . str_pad($tipoPago[0] . ": ", 40, " ", STR_PAD_RIGHT);
+                        $contenido =  $contenido . str_pad("Cobrado:" . $tipoPago[1] . "-Anulado:" . $tipoPago[2], 40, "-", STR_PAD_LEFT);
+                            $total_cobrado += $tipoPago[1];
+                            $total_anulado += $tipoPago[2];
+                    }
+                    //$contenido = $contenido . str_pad("COBRADO:". sprintf("%9.2f",$total_cobrado) . "-ANULADO: ". sprintf("%9.2f",$total_anulado), 40, "-", STR_PAD_LEFT);
+                    //$ticket = $this->get("sistemacaja.ticket");
+                    //$ticket->setContenido($contenido);
+                    //$tk .= $ticket->getTicketFull();
+                    //$tk .= $ticket->getTicketTestigo();
 
 
+                    ///////////////////////////////////////////////////////////////////////////
                     //Tercer parte de la impresion: cantidad de comprobantes y montos finales:
 
                     $pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagos($entity->getId());
                     $pagosAnulado = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagosAnulado($entity->getId());
                     $ticket = $this->get("sistemacaja.ticket");
-                    $ticket->setContenido(
-                        str_pad("Cierre de Caja", 40, " ", STR_PAD_BOTH).
-                        str_pad("-", 40, "-", STR_PAD_BOTH).
-                        str_pad("Apertura nro. ". $entity->getId(), 40, "-", STR_PAD_BOTH).
-                        str_pad("Comprobantes Validos: ". $entity->getComprobanteCantidad(), 40, "-", STR_PAD_BOTH).
-                        str_pad("Comprobantes Anulados: ". $entity->getComprobanteAnulado(), 40, "-", STR_PAD_BOTH).
-                        str_pad("Importe Cobrado: ". $pagos, 40, "-", STR_PAD_BOTH).
-                        str_pad("Importe Anulado:. ". $pagosAnulado, 40, "-", STR_PAD_BOTH)
-                    );
+                    $contenido = $contenido .
+                        str_pad("-", 40, "=", STR_PAD_BOTH).
+                        str_pad("Apertura nro. ". $entity->getId(), 40, " ", STR_PAD_BOTH).
+                        str_pad("Comprobantes Validos: ". $entity->getComprobanteCantidad(), 40, " ", STR_PAD_RIGHT).
+                        str_pad("Comprobantes Anulados: ". $entity->getComprobanteAnulado(), 40, " ",STR_PAD_RIGHT).
+                        str_pad("Importe Cobrado: $ ". $pagos, 40, " ", STR_PAD_RIGHT).
+                        str_pad("Importe Anulado:. $ ". $pagosAnulado, 40, " ",STR_PAD_RIGHT);
+                    $ticket->setContenido($contenido);
                     $tk .= $ticket->getTicketFull();
                     $tk .= $ticket->getTicketTestigo();
 
