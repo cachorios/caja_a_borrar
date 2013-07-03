@@ -201,7 +201,8 @@ class AperturaRepository extends EntityRepository
                   SistemaCajaBundle:LoteDetalle ld JOIN ld.lote l
               WHERE
                   l.apertura = :apertura_id
-                  AND p.importe > 0
+                  AND ld.importe > 0
+              ORDER BY ld.seccion
               ")
             ->setParameter("apertura_id", $apertura_id)
         ;

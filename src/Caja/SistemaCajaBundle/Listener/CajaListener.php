@@ -40,7 +40,6 @@ class CajaListener
         $em->persist($usuario);
         $em->flush();
 
-
     }
 
 
@@ -68,6 +67,4 @@ class CajaListener
 
     }
 
-
 }
-

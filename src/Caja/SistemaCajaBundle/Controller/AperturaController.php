@@ -308,31 +308,72 @@ class AperturaController extends Controller
                     //$em->flush();
 
 
-                    /*
+
                     //Primer parte de la impresion: detalle de pagos por tipo de seccion:
                     $detalle_pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetallePagos($entity->getId());
+                    $contenido = "";
                     $seccion_actual = "";
+                    $monto_total_seccion = 0;
+                    $cantidad_comprobantes_seccion = 0;
+                    $monto_total_general = 0;
+                    $cantidad_comprobantes_general = 0;
                     foreach ($detalle_pagos as $detalle) {
                         $ticket = $this->get("sistemacaja.ticket");
-
                         //Pregunto si es la misma seccion, o tengo que hacer el "cambio" (corte de control)
-                        if ($seccion_actual = "") {
+                        if ($seccion_actual == "") { //entra la primera vez
+                            $contenido = $contenido .
+                                str_pad("-", 40, "-", STR_PAD_BOTH).
+                                str_pad("SECCION: " . $detalle->getSeccion(), 40, " ", STR_PAD_BOTH).
+                                str_pad("Referencia: " . $detalle->getReferencia(), 40, " ", STR_PAD_BOTH).
+                                str_pad("Comprobante: " . $detalle->getComprobante() . " $ " . $detalle->getImporte(), 40, " ", STR_PAD_BOTH)
+                            ;
+                            $seccion_actual = $detalle->getSeccion();
+                            $monto_total_seccion += $detalle->getImporte();
+                            $cantidad_comprobantes_seccion ++;
+                        } else if ($detalle->getSeccion() == $seccion_actual) { //entra si es igual al anterior
+                            $contenido = $contenido .
+                                str_pad("-", 40, "-", STR_PAD_BOTH).
+                                str_pad("Referencia: " . $detalle->getReferencia(), 40, " ", STR_PAD_BOTH).
+                                str_pad("Comprobante: " . $detalle->getComprobante() . " $ " . $detalle->getImporte(), 40, " ", STR_PAD_BOTH)
+                            ;
+                            $seccion_actual = $detalle->getSeccion();
+                            $monto_total_seccion += $detalle->getImporte();
+                            $cantidad_comprobantes_seccion ++;
+                        } else {//corte de control, immprimo una linea, muestro totales, otra linea y empiezo otra seccion:
+                            $contenido = $contenido . str_pad("-", 40, "-", STR_PAD_BOTH).
+                                str_pad("TOTAL " . $seccion_actual . " $ " . $monto_total_seccion . ". Comprobantes: " . $cantidad_comprobantes_seccion, 40, "-", STR_PAD_BOTH);
+                            $monto_total_general += $monto_total_seccion;
+                            $cantidad_comprobantes_general += $cantidad_comprobantes_seccion;
 
+                            $contenido = $contenido .
+                                    str_pad("-", 40, "-", STR_PAD_BOTH).
+                                    str_pad("SECCION: " . $detalle->getSeccion(), 40, " ", STR_PAD_BOTH).
+                                    str_pad("Referencia: " . $detalle->getReferencia(), 40, " ", STR_PAD_BOTH).
+                                    str_pad("Comprobante: " . $detalle->getComprobante() . " $ " . $detalle->getImporte(), 40, " ", STR_PAD_BOTH)
+                            ;
+                            //INICIALIZO LOS ACUMULADORES DE SECCION
+                            $monto_total_seccion =  $detalle->getImporte();
+                            $cantidad_comprobantes_seccion = 1;
+                            $seccion_actual = $detalle->getSeccion();
                         }
-                        $ticket->setContenido(
-                            str_pad("SECCION: ", 40, " ", STR_PAD_BOTH).
-                                str_pad($detalle->getSeccion(), 40, "-", STR_PAD_BOTH)
-                        );
-
-                        $tk .= $ticket->getTicketFull();
-                        $tk .= $ticket->getTicketTestigo();
-                        //$seccion_anterior =
                     }
-                    */
+                    $monto_total_general += $monto_total_seccion;
+                    $cantidad_comprobantes_general += $cantidad_comprobantes_seccion;
+                    $contenido = $contenido . str_pad("-", 40, "-", STR_PAD_BOTH).
+                        str_pad("TOTAL " .$seccion_actual . " $ " . $monto_total_seccion . ". Comprobantes: " . $cantidad_comprobantes_seccion, 40, "-", STR_PAD_BOTH).
+                        str_pad("-", 40, "-", STR_PAD_BOTH).
+                        str_pad("TOTAL GENERAL $ " . $monto_total_general . ". Comprobantes: " . $cantidad_comprobantes_general, 40, "-", STR_PAD_BOTH);
+
+                    $ticket->setContenido($contenido);
+                    //$tk .= $ticket->getTicketFull();
+                    $tk .= $ticket->getTicketTestigo();
+                    //$seccion_anterior =
+
                     //Segunda parte de la impresion: detalle de pagos por tipo de pago:
 
 
                     //Tercer parte de la impresion: cantidad de comprobantes y montos finales:
+
                     $pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagos($entity->getId());
                     $pagosAnulado = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagosAnulado($entity->getId());
                     $ticket = $this->get("sistemacaja.ticket");
@@ -370,6 +411,8 @@ class AperturaController extends Controller
                     ///////SI NO HUBO COBROS, NO GENERO EL ARCHIVO, SOLO ENVIO EL MAIL////////////////
                     /////////////////////////////////////////////////////////////
 
+
+                    /*
                     if ($entity->getComprobanteCantidad() > 0) {
                         $apertura_id = $entity->getId();
                         $numero_caja = $entity->getCaja()->getId();
@@ -443,6 +486,7 @@ class AperturaController extends Controller
                         $this->container->get('mailer')->send($mensaje);
                     }
 
+                    */
                 } else {
                     $msg='Alguno de los datos ingresados es incorrecto';
                 }
