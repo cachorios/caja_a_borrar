@@ -198,6 +198,9 @@ class Ticket
         if ($tipo == 0) {
             if($this->valores)
                 $str .= "COD.BARRA: " . $this->valores['codigobarra'] . NL;
+            if (array_key_exists('referencia', $this->valores)) {
+                $str .= "REF: " . $this->valores['referencia'] . NL;
+            }
             $str .= str_pad("", 40, "-") . NL;
             $str .= str_pad("*** GRACIAS ***", 40, " ", STR_PAD_BOTH) . ESC . "d" . chr(2);
             $str .= str_pad("CAJERO: ". $caja->getCajero()->getUsername()  , 40, " ", STR_PAD_BOTH) . ESC . "d" . chr(2);

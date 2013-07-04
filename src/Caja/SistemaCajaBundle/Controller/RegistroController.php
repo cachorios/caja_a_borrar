@@ -81,13 +81,14 @@ class RegistroController extends Controller implements IControllerAuditable
                 foreach ($lote->getDetalle() as $detalle) {
                     $ticket = $this->get("sistemacaja.ticket");
                     $ticket->setContenido(array(
-                            array("Comprobante " . $detalle->getComprobante(), $detalle->getImporte()),
+                            array("Comprobante " . $detalle->getComprobante(), $detalle->getImporte() ),
                         )
 
                     );
                     $ticket->setValores(array(
                         'ticket' => $detalle->getId(),
-                        'codigobarra' => $detalle->getCodigoBarra()
+                        'codigobarra' => $detalle->getCodigoBarra(),
+                        'referencia' => $detalle->getReferencia()
                     ));
                     $tk .= $ticket->getTicketFull();
                     $tk .= $ticket->getTicketTestigo();
@@ -203,18 +204,24 @@ class RegistroController extends Controller implements IControllerAuditable
 
         $imp = $bm->getImporte($this->container->get("sistemacaja.prorroga") );
 
-
-        $sql = "select REFERENCIA from view_boleta_referencia where comprobante = ".$bm->getComprobante();
-        //$em = $this->getDoctrine()->getEntityManager();
-        $connection = $em->getConnection();
-        $statement = $connection->prepare($sql);
-        $statement->execute();
-        $referencia = $statement->fetchAll();
-        $cantidad = count($referencia);
-        if ($cantidad > 0) {
-            $referencia = $referencia[0]['REFERENCIA'].'/'.chr(10).$referencia[1]['REFERENCIA']; //FALTA EL FOR EACH ....
-        } else {
-            $referencia = "";
+        $identificador = $bm->getDetalle();
+        if (count($identificador) > 0){
+            if ($identificador[0][2]=="2"){ //solo se aplica para el código de barra del sistema nuevo
+                $sql = "select REFERENCIA from view_boleta_referencia where comprobante = ".$bm->getComprobante();
+                //$em = $this->getDoctrine()->getEntityManager();
+                $connection = $em->getConnection();
+                $statement = $connection->prepare($sql);
+                $statement->execute();
+                $referencia = $statement->fetchAll();
+                $cantidad = count($referencia);
+                if ($cantidad > 0) {
+                    $referencia = $referencia[0]['REFERENCIA'].'/'.chr(10).$referencia[1]['REFERENCIA']; //FALTA EL FOR EACH ....
+                } else {
+                    $referencia = "";
+                }
+            }else{
+                $referencia = "";
+            }
         }
 
         if ($imp > 0) {
