@@ -714,7 +714,8 @@ class AperturaController extends Controller
                     $ticket->setValores(array(
                         'titulo' => "ANULACION DE COMPROBANTE",
                         'ticket' => $comprobante->getId(),
-                        'codigobarra' => $comprobante->getCodigoBarra()
+                        'codigobarra' => $comprobante->getCodigoBarra(),
+                        'referencia' => $comprobante->getReferencia()
                     ));
                     $tk .= $ticket->getTicketTestigo();
                 }

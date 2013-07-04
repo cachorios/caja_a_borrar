@@ -211,7 +211,9 @@ class Ticket
         if($tipo == 1 ){
             if($this->valores)
                 $str .= "COD.BARRA: " . $this->valores['codigobarra'] . NL;
-
+                if (array_key_exists('referencia', $this->valores)) {
+                    $str .= "REF: " . $this->valores['referencia'] . NL;
+                }
             $str .= str_pad("", 40, "-"). NL;
 
         }
