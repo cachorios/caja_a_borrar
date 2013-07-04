@@ -776,7 +776,7 @@ class AperturaController extends Controller
         $cb = trim($cb);
 
         $bm->setCodigo($cb, $apertura->getFecha());
-        $imp = $bm->getImporte();
+        $imp = $bm->getImporte($this->container->get("sistemacaja.prorroga"));
         //Se verifica si existe en la base:
         $em = $this->getDoctrine()->getManager();
         $lotes = $em->getRepository('SistemaCajaBundle:Lote')->getLote($apertura->getId(), $cb);

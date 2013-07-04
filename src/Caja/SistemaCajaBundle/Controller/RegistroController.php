@@ -207,15 +207,17 @@ class RegistroController extends Controller implements IControllerAuditable
         $identificador = $bm->getDetalle();
         if (count($identificador) > 0){
             if ($identificador[0][2]=="2"){ //solo se aplica para el código de barra del sistema nuevo
-                $sql = "select REFERENCIA from view_boleta_referencia where comprobante = ".$bm->getComprobante();
-                //$em = $this->getDoctrine()->getEntityManager();
+                $sql = "select REFERENCIA from view_boleta_referencia where comprobante = 1"; //.$bm->getComprobante();
                 $connection = $em->getConnection();
                 $statement = $connection->prepare($sql);
                 $statement->execute();
-                $referencia = $statement->fetchAll();
-                $cantidad = count($referencia);
+                $referencias = $statement->fetchAll();
+                $cantidad = count($referencias);
+                $referencia = "";
                 if ($cantidad > 0) {
-                    $referencia = $referencia[0]['REFERENCIA'].'/'.chr(10).$referencia[1]['REFERENCIA']; //FALTA EL FOR EACH ....
+                    foreach($referencias as $ref){
+                        $referencia .= $ref['REFERENCIA'].' - '; //FALTA EL FOR EACH ....
+                    }
                 } else {
                     $referencia = "";
                 }
