@@ -81,7 +81,7 @@ class RegistroController extends Controller implements IControllerAuditable
                 foreach ($lote->getDetalle() as $detalle) {
                     $ticket = $this->get("sistemacaja.ticket");
                     $ticket->setContenido(array(
-                            array("Comprobante " . $detalle->getComprobante(), $detalle->getImporte() ),
+                            array("Comprobante " . $detalle->getComprobante(), $detalle->getImporte()),
                         )
 
                     );
@@ -185,7 +185,7 @@ class RegistroController extends Controller implements IControllerAuditable
 
         //Verificar si ya no se cobro
         $em = $this->getDoctrine()->getManager();
-        $res = $em->getRepository("SistemaCajaBundle:LoteDetalle")->findBy(array('codigo_barra' =>$cb));
+        $res = $em->getRepository("SistemaCajaBundle:LoteDetalle")->findBy(array('codigo_barra' => $cb));
 
         if (count($res) > 0) {
             //ld($res);
@@ -202,35 +202,34 @@ class RegistroController extends Controller implements IControllerAuditable
 
         $bm->setCodigo($cb, $apertura->getFecha());
 
-        $imp = $bm->getImporte($this->container->get("sistemacaja.prorroga") );
+        $imp = $bm->getImporte($this->container->get("sistemacaja.prorroga"));
 
-        $identificador = $bm->getDetalle();
-        if (count($identificador) > 0){
-            if ($identificador[0][2]=="2"){ //solo se aplica para el código de barra del sistema nuevo
-                $sql = "select REFERENCIA from view_boleta_referencia where comprobante = 1"; //.$bm->getComprobante();
-                $connection = $em->getConnection();
-                $statement = $connection->prepare($sql);
-                $statement->execute();
-                $referencias = $statement->fetchAll();
-                $cantidad = count($referencias);
-                $referencia = "";
-                if ($cantidad > 0) {
-                    foreach($referencias as $ref){
-                        $referencia .= $ref['REFERENCIA'].' - '; //FALTA EL FOR EACH ....
-                    }
-                } else {
-                    $referencia = "";
+        $a = $bm->getConReferencia();
+        if ($bm->getConReferencia() == 1) { //solo se aplica para el código de barra del sistema nuevo
+            $sql = "select REFERENCIA from view_boleta_referencia where comprobante = " . $bm->getComprobante();
+            $connection = $em->getConnection();
+            $statement = $connection->prepare($sql);
+            $statement->execute();
+            $referencias = $statement->fetchAll();
+            $cantidad = count($referencias);
+            $referencia = "";
+            if ($cantidad > 0) {
+                foreach ($referencias as $ref) {
+                    $referencia .= $ref['REFERENCIA'] . ' * '; //FALTA EL FOR EACH ....
                 }
-            }else{
+            } else {
                 $referencia = "";
             }
+        } else {
+            $referencia = "";
         }
+
 
         if ($imp > 0) {
             $rJson = json_encode(array('ok' => 1,
                 'importe' => number_format($imp, 2, '.', ''),
                 'comprobante' => $bm->getComprobante(),
-                'seccion'   => $bm->getSeccion(),
+                'seccion' => $bm->getSeccion(),
                 'vencimiento' => $bm->getVto(),
                 'referencia' => $referencia,
                 'detalle' => $this->renderView("SistemaCajaBundle:Registro:_detalle.html.twig", array('elementos' => $bm->getDetalle()))
@@ -284,7 +283,8 @@ class RegistroController extends Controller implements IControllerAuditable
     /**
      * @return Array, un array con los nombres de los actions excluidos
      */
-    function getNoAuditables() {
+    function getNoAuditables()
+    {
         return array();
     }
 }

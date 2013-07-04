@@ -31,6 +31,7 @@ class CodigoBarraLive
     private $comprobante;
     private $seccion;
 	private $vtos;
+    private $conReferencia;
 
 
     public function __construct($em, $tabla_man, $logger = null)
@@ -67,6 +68,10 @@ class CodigoBarraLive
 
     public function getSeccion(){
         return $this->seccion;
+    }
+
+    public function getConReferencia(){
+        return $this->conReferencia;
     }
 
 	public function getImporte(ProrrogaService $oProrroga)
@@ -118,6 +123,7 @@ class CodigoBarraLive
             if ($this->obtenerIdentificador($reg->getIdentificador()) == $reg->getValor()) {
                 $this->cbReg = $reg;
 
+                $this->conReferencia = $this->cbReg->getConReferencia();
                 $this->detalle = $this->def2Array($reg);
                 return true;
             }
