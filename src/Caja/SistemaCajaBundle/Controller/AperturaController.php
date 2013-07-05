@@ -310,6 +310,7 @@ class AperturaController extends Controller
                     $ticket = $this->get("sistemacaja.ticket");
                     $servicio_tabla = $this->get("lar.parametro.tabla");
 
+
                     //Primer parte de la impresion: detalle de pagos por tipo de seccion:
                     $detalle_pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetallePagos($entity->getId());
                     $contenido =  str_pad("Cierre de Caja", 40, " ", STR_PAD_BOTH);
@@ -325,36 +326,25 @@ class AperturaController extends Controller
                         if ($seccion_actual == "") { //entra la primera vez
                             $contenido = $contenido .
                                 str_pad("-", 40, "-", STR_PAD_BOTH).
-                                str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH).
-                                //str_pad("Referencia: " . $detalle->getReferencia(), 40, " ", STR_PAD_BOTH).
-                                //str_pad("Comprobante: " . $detalle->getComprobante() . " $ " . $detalle->getImporte(), 40, " ", STR_PAD_BOTH);
-                                str_pad("C " . $detalle->getComprobante() . " " . $detalle->getReferencia() . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH);
+                                str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL;
+                                str_pad("C " . $detalle->getComprobante() . " " . $detalle->getReferencia() . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
                             $seccion_actual = $nombre_seccion;
                             $monto_total_seccion += $detalle->getImporte();
                             $cantidad_comprobantes_seccion ++;
                         } else if ($nombre_seccion == $seccion_actual) { //entra si es igual al anterior
-                            $contenido = $contenido .
-                                //str_pad("-", 40, "-", STR_PAD_BOTH).
-                                //str_pad("Referencia: " . $detalle->getReferencia(), 40, " ", STR_PAD_BOTH).
-                                //str_pad("Comprobante: " . $detalle->getComprobante() . " $ " . $detalle->getImporte(), 40, " ", STR_PAD_BOTH)
-                                str_pad("C " . $detalle->getComprobante() . " " . $detalle->getReferencia() . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH);
-                            ;
+                            $contenido = $contenido . str_pad("C " . $detalle->getComprobante() . " " . $detalle->getReferencia() . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
                             $seccion_actual = $servicio_tabla->getParametro( 10, $detalle->getSeccion());;
                             $monto_total_seccion += $detalle->getImporte();
                             $cantidad_comprobantes_seccion ++;
                         } else {//corte de control, immprimo una linea, muestro totales, otra linea y empiezo otra seccion:
                             $contenido = $contenido . str_pad("-", 40, "-", STR_PAD_BOTH).
-                                str_pad($seccion_actual . " $ " . $monto_total_seccion . ". Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH);
+                                str_pad($seccion_actual . " $ " . $monto_total_seccion . ". Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH) . NL;
                             $monto_total_general += $monto_total_seccion;
                             $cantidad_comprobantes_general += $cantidad_comprobantes_seccion;
 
                             $contenido = $contenido .
-                                    //str_pad("-", 40, "-", STR_PAD_BOTH).
-                                    str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH).
-                                    //str_pad("Referencia: " . $detalle->getReferencia(), 40, " ", STR_PAD_BOTH).
-                                    //str_pad("Comprobante: " . $detalle->getComprobante() . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH)
-                                    str_pad("C " . $detalle->getComprobante() . " " . $detalle->getReferencia() . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH);
-                            ;
+                                    str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL;
+                                    str_pad("C " . $detalle->getComprobante() . " " . $detalle->getReferencia() . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
                             //INICIALIZO LOS ACUMULADORES DE SECCION
                             $monto_total_seccion =  $detalle->getImporte();
                             $cantidad_comprobantes_seccion = 1;
@@ -364,16 +354,10 @@ class AperturaController extends Controller
                     $monto_total_general += $monto_total_seccion;
                     $cantidad_comprobantes_general += $cantidad_comprobantes_seccion;
                     $contenido = $contenido . str_pad("-", 40, "-", STR_PAD_BOTH).
-                        str_pad($seccion_actual . " $ " . $monto_total_seccion . ". Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH).
+                        str_pad($seccion_actual . " $ " . $monto_total_seccion . ". Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH) . NL .
                         str_pad("-", 40, "-", STR_PAD_BOTH).
-                        str_pad("TOTAL $ " . $monto_total_general . ". Comprobantes: " . $cantidad_comprobantes_general, 40, " ", STR_PAD_BOTH);
-
-                    //$ticket->setContenido($contenido);
-                    //$tk .= $ticket->getTicketFull();
-                    //$tk .= $ticket->getTicketTestigo();
-                    //$seccion_anterior =
-
-
+                        str_pad("TOTAL COBRADO: $ " . $monto_total_general , 40, " ", STR_PAD_BOTH) . NL .
+                        str_pad("CANTIDAD DE COMPROBANTES: " . $cantidad_comprobantes_general, 40, " ", STR_PAD_BOTH) . NL;
 
                     ///////////////////////////////////////////////////////////////////////////////////////////
                     //Segunda parte de la impresion: detalle de pagos por tipo de pago:
@@ -383,7 +367,6 @@ class AperturaController extends Controller
                         if (!array_key_exists($tipo['id'], $tipoPagos)) {
                             $tipoPagos[$tipo['id']] = array($tipo['descripcion'], 0, 0);
                         }
-
                         $tipoPagos[$tipo['id']][1] = $tipo['importe'] + $tipo['anulado'];
                         $tipoPagos[$tipo['id']][2] = $tipo['anulado'];
 
@@ -392,19 +375,13 @@ class AperturaController extends Controller
                     $total_cobrado = 0;
                     $total_anulado = 0;
                     $contenido = $contenido .str_pad("-", 40, "=", STR_PAD_BOTH);
-                    $contenido = $contenido . str_pad("Formas de Cobro: ", 40, " ", STR_PAD_RIGHT);
+                    $contenido = $contenido . str_pad("Formas de Cobro: ", 40, " ", STR_PAD_RIGHT) . NL;
                     foreach ($tipoPagos as $tipoPago) {
-                        $contenido =  $contenido . str_pad($tipoPago[0] . ": ", 40, " ", STR_PAD_RIGHT);
-                        $contenido =  $contenido . str_pad("Cobrado:" . $tipoPago[1] . "-Anulado:" . $tipoPago[2], 40, "-", STR_PAD_LEFT);
+                        $contenido =  $contenido . str_pad($tipoPago[0] . ": ", 40, " ", STR_PAD_RIGHT) . NL;
+                        $contenido =  $contenido . str_pad("Cobrado: $" . $tipoPago[1] . "-Anulado: $ " . $tipoPago[2], 40, "-", STR_PAD_LEFT) . NL;
                             $total_cobrado += $tipoPago[1];
                             $total_anulado += $tipoPago[2];
                     }
-                    //$contenido = $contenido . str_pad("COBRADO:". sprintf("%9.2f",$total_cobrado) . "-ANULADO: ". sprintf("%9.2f",$total_anulado), 40, "-", STR_PAD_LEFT);
-                    //$ticket = $this->get("sistemacaja.ticket");
-                    //$ticket->setContenido($contenido);
-                    //$tk .= $ticket->getTicketFull();
-                    //$tk .= $ticket->getTicketTestigo();
-
 
                     ///////////////////////////////////////////////////////////////////////////
                     //Tercer parte de la impresion: cantidad de comprobantes y montos finales:
@@ -413,12 +390,20 @@ class AperturaController extends Controller
                     $pagosAnulado = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagosAnulado($entity->getId());
                     $ticket = $this->get("sistemacaja.ticket");
                     $contenido = $contenido .
-                        str_pad("-", 40, "=", STR_PAD_BOTH).
-                        str_pad("Apertura nro. ". $entity->getId(), 40, " ", STR_PAD_BOTH).
-                        str_pad("Comprobantes Validos: ". $entity->getComprobanteCantidad(), 40, " ", STR_PAD_RIGHT).
-                        str_pad("Comprobantes Anulados: ". $entity->getComprobanteAnulado(), 40, " ",STR_PAD_RIGHT).
-                        str_pad("Importe Cobrado: $ ". $pagos, 40, " ", STR_PAD_RIGHT).
-                        str_pad("Importe Anulado:. $ ". $pagosAnulado, 40, " ",STR_PAD_RIGHT);
+                        str_pad("-", 40, "=", STR_PAD_BOTH). NL .
+                        str_pad("Apertura nro. ". $entity->getId(), 40, " ", STR_PAD_BOTH) . NL .
+                        str_pad("Comprobantes Validos: ". $entity->getComprobanteCantidad(), 40, " ", STR_PAD_RIGHT) . NL.
+                        str_pad("Comprobantes Anulados: ". $entity->getComprobanteAnulado(), 40, " ",STR_PAD_RIGHT) . NL.
+                        str_pad("Importe Cobrado: $ ". $pagos, 40, " ", STR_PAD_RIGHT) . NL.
+                        str_pad("Importe Anulado:. $ ". $pagosAnulado, 40, " ",STR_PAD_RIGHT) . NL;
+
+                    /*
+                    $primer_variable = $this->formateaReferencia("El archivo con el detalle de las cobranzas se llamara banelco", "-", 50);
+                    $segunda_variable = $this->formateaReferencia("El archivo con", "-", 50, STR_PAD_BOTH);
+                    var_dump($primer_variable);
+                    var_dump($segunda_variable);
+                    exit;
+                    */
                     $ticket->setContenido($contenido);
                     $tk .= $ticket->getTicketFull();
                     $tk .= $ticket->getTicketTestigo();
@@ -446,7 +431,7 @@ class AperturaController extends Controller
                     /////////////////////////////////////////////////////////////
 
 
-                    /*
+
                     if ($entity->getComprobanteCantidad() > 0) {
                         $apertura_id = $entity->getId();
                         $numero_caja = $entity->getCaja()->getId();
@@ -520,10 +505,10 @@ class AperturaController extends Controller
                         $this->container->get('mailer')->send($mensaje);
                     }
 
-                    */
                 } else {
                     $msg='Alguno de los datos ingresados es incorrecto';
                 }
+
                 //Verifico si estuvo todo ok, y devuelvo:
                 if(!$msg){
                     $ret  =  array("ok" =>1, "tk"=> $tk);
@@ -534,6 +519,7 @@ class AperturaController extends Controller
                 $response = new Response();
                 $response->setContent(json_encode($ret));
                 return $response;
+
             }
         }
 
@@ -904,4 +890,27 @@ class AperturaController extends Controller
             array('entity' => $entity, 'edit_form' => $editForm->createView(), 'delete_form' => $deleteForm->createView(),));
     }
 
+
+    /**
+     * FUNCION QUE RECIBE UNA REFERENCIA, UN STRING DE RELLENO Y UNA CANTIDAD DE CARACTERES A DEVOLVER
+     *
+     */
+    public function formateaReferencia($referencia, $string_relleno, $largo_total, $orientacion_relleno = null) {
+
+        if ($orientacion_relleno == null) {
+            $orientacion_relleno = STR_PAD_RIGHT;//si no se pidio orientacion, por defecto es derecha
+        }
+        $largo_inicial = strlen(trim($referencia));
+        if ($largo_inicial <= $largo_total) { //se rellena con el string de relleno hasta completar el largo solicitado
+            $referencia_formateada = $referencia;
+            while ( $largo_inicial < $largo_total ){//relleno hasta completar
+                $referencia_formateada = str_pad($referencia_formateada, $largo_total, $string_relleno, $orientacion_relleno);
+                $largo_inicial ++;
+            }
+        } else { //la referencia es mas larga de lo que se debe devolver, se debe truncar y devolver al final puntos suspensivos
+            $referencia_formateada = substr($referencia, 0, $largo_total - 2) . "..";
+        }
+        return $referencia_formateada;
+
+    }
 }
