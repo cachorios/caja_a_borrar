@@ -204,26 +204,8 @@ class RegistroController extends Controller implements IControllerAuditable
 
         $imp = $bm->getImporte($this->container->get("sistemacaja.prorroga"));
 
-        $a = $bm->getConReferencia();
-        if ($bm->getConReferencia() == 1) { //solo se aplica para el código de barra del sistema nuevo
-            $sql = "select REFERENCIA from view_boleta_referencia where comprobante = " . $bm->getComprobante();
-            $connection = $em->getConnection();
-            $statement = $connection->prepare($sql);
-            $statement->execute();
-            $referencias = $statement->fetchAll();
-            $cantidad = count($referencias);
-            $referencia = "";
-            if ($cantidad > 0) {
-                foreach ($referencias as $ref) {
-                    $referencia .= $ref['REFERENCIA'] . ' * '; //FALTA EL FOR EACH ....
-                }
-            } else {
-                $referencia = "";
-            }
-        } else {
-            $referencia = "";
-        }
-
+        //referencia del comprobante
+        $referencia = $bm->getReferencia();
 
         if ($imp > 0) {
             $rJson = json_encode(array('ok' => 1,
