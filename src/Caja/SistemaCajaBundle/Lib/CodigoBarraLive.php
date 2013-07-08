@@ -19,18 +19,18 @@ class CodigoBarraLive
      * @var \Lar\ParametroBundle\Lib\LarParametroService
      */
     private $tabla_man;
-	private $logger;
+    private $logger;
     /**
      * @var string
      */
     private $codigo;
     private $cbReg;
     private $detalle;
-	private $detalleVisible;
-	private $fechaCalculo;
+    private $detalleVisible;
+    private $fechaCalculo;
     private $comprobante;
     private $seccion;
-	private $vtos;
+    private $vtos;
     private $conReferencia;
 
 
@@ -38,21 +38,21 @@ class CodigoBarraLive
     {
         $this->em = $em;
         $this->tabla_man = $tabla_man;
-		$this->logger = $logger;
-		$this->comprobante=0;
+        $this->logger = $logger;
+        $this->comprobante = 0;
 
-		$this->detalleVisible = array();
-		$this->vtos = array();
+        $this->detalleVisible = array();
+        $this->vtos = array();
     }
 
-    public function setCodigo($codigo,$fecha=null)
+    public function setCodigo($codigo, $fecha = null)
     {
         $this->codigo = trim($codigo);
-		$this->fechaCalculo = $fecha == null ?  new \DateTime('now') : $fecha;
+        $this->fechaCalculo = $fecha == null ? new \DateTime('now') : $fecha;
 
-        if($this->identificarCodigo()){
-			$this->vtos = $this->getVtosImportes();
-		}
+        if ($this->identificarCodigo()) {
+            $this->vtos = $this->getVtosImportes();
+        }
 
     }
 
@@ -61,70 +61,98 @@ class CodigoBarraLive
         return $this->detalleVisible;
     }
 
-	public function getComprobante()
-	{
-	  return $this->comprobante;
-	}
+    public function getComprobante()
+    {
+        return $this->comprobante;
+    }
 
-    public function getSeccion(){
+    public function getSeccion()
+    {
         return $this->seccion;
     }
 
-    public function getConReferencia(){
+
+    /**
+     * getTablaSeccion
+     *
+     * Retorna la tabla utilizada en la seccion
+     * @return int
+     */
+    public function getTablaSeccionByCodigoBarra($codigo)
+    {
+        $tabla = null;
+        $this->codigo = trim($codigo);
+        if ($this->identificarCodigo(false)) {
+            foreach ($this->cbReg->getPosiciones() as $pos) {
+                if ($pos->getSeccion())
+                    if ($pos->getTabla() > 0)
+                        $tabla = $pos->getTabla();
+            }
+        }
+
+        return $tabla;
+    }
+
+
+    public function getConReferencia()
+    {
         return $this->conReferencia;
     }
 
-	public function getImporte(ProrrogaService $oProrroga)
-	{
+    public function getImporte(ProrrogaService $oProrroga)
+    {
 
-		foreach($this->vtos as $vto){
+        foreach ($this->vtos as $vto) {
             $lVto = $oProrroga->getVencimiento($vto[0]);
-            $this->logger->info("-->: ".$this->fechaCalculo->format('Y-m-d') .' - ' . $lVto->format('Y-m-d'));
-			if($this->fechaCalculo <= $lVto ){
-				return $vto[1];
-			}
-		}
-		$this->logger->info("No tiene importe: ".$this->codigo);
-		return 0;
+            $this->logger->info("-->: " . $this->fechaCalculo->format('Y-m-d') . ' - ' . $lVto->format('Y-m-d'));
+            if ($this->fechaCalculo <= $lVto) {
+                return $vto[1];
+            }
+        }
+        $this->logger->info("No tiene importe: " . $this->codigo);
+        return 0;
 
-	}
+    }
 
-	public function getVto(){
-		foreach($this->vtos as $vto){
-			if($this->fechaCalculo <= $vto[0] ){
-				return $vto[0]->format('d-m-Y');
-			}
-		}
-		$this->logger->info("No tiene vencimiento: ".$this->codigo);
-		return '';
-	}
+    public function getVto()
+    {
+        foreach ($this->vtos as $vto) {
+            if ($this->fechaCalculo <= $vto[0]) {
+                return $vto[0]->format('d-m-Y');
+            }
+        }
+        $this->logger->info("No tiene vencimiento: " . $this->codigo);
+        return '';
+    }
 
-	public function getVtos(){
-		return $this->vtos;
-	}
+    public function getVtos()
+    {
+        return $this->vtos;
+    }
 
 
-
-
-	/**
-	 * Indentificar cual es el codigo de barra que utiilza
-	 * @return bool
-	 *
-	 * Si identifica el codigo de barra, lo carga en detalle
-	 */
-	private function identificarCodigo()
+    /**
+     * Indentificar cual es el codigo de barra que utiilza
+     * @return bool
+     *
+     * Si identifica el codigo de barra, lo carga en detalle
+     */
+    private function identificarCodigo($soloIndentificar = false)
     {
         //Recorrer los codigo hasta encontrar el que corresponda con la longitud y el identidicador
         // primero recuperar los codigos de la longitud
 
-        $regs = $this->em->getRepository("SistemaCajaBundle:CodigoBarra")->findBy(array("longitud" =>strlen($this->codigo)));
+        $regs = $this->em->getRepository("SistemaCajaBundle:CodigoBarra")->findBy(array("longitud" => strlen($this->codigo)));
 
         foreach ($regs as $reg) {
             if ($this->obtenerIdentificador($reg->getIdentificador()) == $reg->getValor()) {
                 $this->cbReg = $reg;
 
-                $this->conReferencia = $this->cbReg->getConReferencia();
-                $this->detalle = $this->def2Array($reg);
+                if ($soloIndentificar == false) {
+                    $this->conReferencia = $this->cbReg->getConReferencia();
+                    $this->detalle = $this->def2Array($reg);
+                }
+
                 return true;
             }
         }
@@ -132,15 +160,15 @@ class CodigoBarraLive
 
     }
 
-	/**
-	 * obtenerIdentificador
-	 *
-	 * Obtener el identificador del codigo de barra
-	 *
-	 * @param $id
-	 * @return string
-	 */
-	private function obtenerIdentificador($id)
+    /**
+     * obtenerIdentificador
+     *
+     * Obtener el identificador del codigo de barra
+     *
+     * @param $id
+     * @return string
+     */
+    private function obtenerIdentificador($id)
     {
         $pos = preg_split('/\[+(\d+),(\d+)\]/', $id, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
         $ret = "";
@@ -173,13 +201,13 @@ class CodigoBarraLive
                 }
             }
 
-			if ($pos->getVer()) {
-				$this->detalleVisible[] = array(
-					$pos->getPosicion(),
-					$pos->getDescripcion(),
-					$ls_desc_tab,
-				);
-			}
+            if ($pos->getVer()) {
+                $this->detalleVisible[] = array(
+                    $pos->getPosicion(),
+                    $pos->getDescripcion(),
+                    $ls_desc_tab,
+                );
+            }
             $aDet[] = array(
                 $pos->getPosicion(),
                 $pos->getDescripcion(),
@@ -192,9 +220,7 @@ class CodigoBarraLive
     }
 
 
-
-
-    private  function getVtosImportes()
+    private function getVtosImportes()
     {
 
         $vtos = $this->cbReg->getVtosImportes();
@@ -225,10 +251,10 @@ class CodigoBarraLive
         return $ret;
     }
 
-    private  function evalExp($exp)
+    private function evalExp($exp)
     {
 
-       //eval("\$ret=".$exp.";");
+        //eval("\$ret=".$exp.";");
 
         $fn = create_function("", "return ({$exp});");
         $ret = $fn();
