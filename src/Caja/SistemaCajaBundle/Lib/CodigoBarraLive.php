@@ -261,6 +261,29 @@ class CodigoBarraLive
         return $ret;
     }
 
+    public function getReferencia(){
+        if ($this->getConReferencia() == 1) { //solo se aplica para el código de barra del sistema nuevo
+            $sql = "select REFERENCIA from view_boleta_referencia where comprobante = " . $this->getComprobante();
+            $connection = $this->em->getConnection();
+            $statement = $connection->prepare($sql);
+            $statement->execute();
+            $referencias = $statement->fetchAll();
+            $cantidad = count($referencias);
+            $referencia = "";
+            if ($cantidad > 0) {
+                foreach ($referencias as $ref) {
+                    $referencia .= $ref['REFERENCIA'] . ' * '; //FALTA EL FOR EACH ....
+                }
+            } else {
+                $referencia = "";
+            }
+        } else {
+            $referencia = "";
+        }
+
+        return $referencia;
+    }
+
 
 }
 
