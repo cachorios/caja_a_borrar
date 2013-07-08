@@ -34,7 +34,7 @@ class LoteAnulacion
 
 
     /**
-     * @ORM\OneToOne(targetEntity="\Lar\UsuarioBundle\Entity\Usuario")
+     * @ORM\ManyToOne(targetEntity="\Lar\UsuarioBundle\Entity\Usuario")
      *
      * ORM\Column(name="usuario", type="integer", nullable=true)
      **/
