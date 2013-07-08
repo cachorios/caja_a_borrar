@@ -313,49 +313,68 @@ class AperturaController extends Controller
 
                     //Primer parte de la impresion: detalle de pagos por tipo de seccion:
                     $detalle_pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetallePagos($entity->getId());
-                    $contenido =  str_pad("Cierre de Caja", 40, " ", STR_PAD_BOTH);
-                    $seccion_actual = "";
+                    $contenido =  str_pad("Cierre de Caja", 40, " ", STR_PAD_BOTH) . NL;
+                    $nombre_seccion_actual = "";
                     $monto_total_seccion = 0;
                     $cantidad_comprobantes_seccion = 0;
                     $monto_total_general = 0;
                     $cantidad_comprobantes_general = 0;
                     foreach ($detalle_pagos as $detalle) {
 
-                        $nombre_seccion = $servicio_tabla->getParametro( 10, $detalle->getSeccion());
+                        $seccion = $servicio_tabla->getParametro( 10, $detalle->getSeccion());
+                        if ($seccion) {
+                            $nombre_seccion = $seccion->getDescripcion();
+                        } else {
+                            $nombre_seccion = "seccion desconocida";
+                        }
+
                         //Pregunto si es la misma seccion, o tengo que hacer el "cambio" (corte de control)
-                        if ($seccion_actual == "") { //entra la primera vez
+                        if ($nombre_seccion_actual == "") { //entra la primera vez
                             $contenido = $contenido .
-                                str_pad("-", 40, "-", STR_PAD_BOTH).
-                                str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL;
-                                str_pad("C " . $detalle->getComprobante() . " " . $detalle->getReferencia() . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
-                            $seccion_actual = $nombre_seccion;
+                                str_pad("-", 40, "-", STR_PAD_BOTH). NL .
+                                str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL .
+                                str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH) . " $ " . $detalle->getImporte(), 40, " ", STR_PAD_BOTH) . NL;
+                            $nombre_seccion_actual = $nombre_seccion;
                             $monto_total_seccion += $detalle->getImporte();
                             $cantidad_comprobantes_seccion ++;
-                        } else if ($nombre_seccion == $seccion_actual) { //entra si es igual al anterior
-                            $contenido = $contenido . str_pad("C " . $detalle->getComprobante() . " " . $detalle->getReferencia() . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
-                            $seccion_actual = $servicio_tabla->getParametro( 10, $detalle->getSeccion());;
+                        } else if ($nombre_seccion == $nombre_seccion_actual) { //entra si es igual al anterior
+                            $contenido = $contenido . str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH)  . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
+                            $seccion_actual = $servicio_tabla->getParametro( 10, $detalle->getSeccion());
+                            if ($seccion_actual) {
+                                $nombre_seccion_actual = $seccion_actual->getDescripcion();
+                            } else {
+                                $nombre_seccion_actual = "seccion desconocida";
+                            }
                             $monto_total_seccion += $detalle->getImporte();
                             $cantidad_comprobantes_seccion ++;
                         } else {//corte de control, immprimo una linea, muestro totales, otra linea y empiezo otra seccion:
-                            $contenido = $contenido . str_pad("-", 40, "-", STR_PAD_BOTH).
-                                str_pad($seccion_actual . " $ " . $monto_total_seccion . ". Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH) . NL;
+                            $contenido = $contenido . str_pad(" ", 40, " ", STR_PAD_BOTH). NL .
+                                str_pad($nombre_seccion_actual . " $ " . $monto_total_seccion, 40, " ", STR_PAD_BOTH) . NL .
+                                str_pad("Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH) . NL .
+                                str_pad("-", 40, "-", STR_PAD_BOTH). NL;
                             $monto_total_general += $monto_total_seccion;
                             $cantidad_comprobantes_general += $cantidad_comprobantes_seccion;
 
                             $contenido = $contenido .
-                                    str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL;
-                                    str_pad("C " . $detalle->getComprobante() . " " . $detalle->getReferencia() . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
+                                    str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL .
+                                    str_pad($detalle->getComprobante() . " " . $detalle->getReferencia() . " $ " . $detalle->getImporte(), 40, " ", STR_PAD_BOTH) . NL;
                             //INICIALIZO LOS ACUMULADORES DE SECCION
-                            $monto_total_seccion =  $detalle->getImporte();
-                            $cantidad_comprobantes_seccion = 1;
-                            $seccion_actual = $detalle->getSeccion();
+                            $monto_total_seccion =  0;
+                            $cantidad_comprobantes_seccion = 0;
+                            $seccion_actual = $servicio_tabla->getParametro( 10, $detalle->getSeccion());
+                            if ($seccion_actual) {
+                                $nombre_seccion_actual = $seccion_actual->getDescripcion();
+                            } else {
+                                $nombre_seccion_actual = "seccion desconocida";
+                            }
                         }
                     }
                     $monto_total_general += $monto_total_seccion;
                     $cantidad_comprobantes_general += $cantidad_comprobantes_seccion;
-                    $contenido = $contenido . str_pad("-", 40, "-", STR_PAD_BOTH).
-                        str_pad($seccion_actual . " $ " . $monto_total_seccion . ". Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH) . NL .
-                        str_pad("-", 40, "-", STR_PAD_BOTH).
+                    $contenido = $contenido . str_pad(" ", 40, " ", STR_PAD_BOTH).  NL .
+                        str_pad($nombre_seccion_actual . " $ " . $monto_total_seccion , 40, " ", STR_PAD_BOTH) . NL .
+                        str_pad("Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH) . NL .
+                        str_pad("-", 40, "-", STR_PAD_BOTH) . NL .
                         str_pad("TOTAL COBRADO: $ " . $monto_total_general , 40, " ", STR_PAD_BOTH) . NL .
                         str_pad("CANTIDAD DE COMPROBANTES: " . $cantidad_comprobantes_general, 40, " ", STR_PAD_BOTH) . NL;
 
@@ -374,7 +393,7 @@ class AperturaController extends Controller
 
                     $total_cobrado = 0;
                     $total_anulado = 0;
-                    $contenido = $contenido .str_pad("-", 40, "=", STR_PAD_BOTH);
+                    $contenido = $contenido .str_pad("-", 40, "=", STR_PAD_BOTH) . NL.
                     $contenido = $contenido . str_pad("Formas de Cobro: ", 40, " ", STR_PAD_RIGHT) . NL;
                     foreach ($tipoPagos as $tipoPago) {
                         $contenido =  $contenido . str_pad($tipoPago[0] . ": ", 40, " ", STR_PAD_RIGHT) . NL;
@@ -472,7 +491,7 @@ class AperturaController extends Controller
                                     "andreanestor@hotmail.com" => "Diego"
                                 ));
 
-                                $this->container->get('mailer')->send($mensaje);
+                                //$this->container->get('mailer')->send($mensaje);
 
                                 //Por ultimo: guardo en la tabla Apertura el nombre del archivo generado:
                                 $entity->setArchivoCierre($archivo_generado.'.txt');
