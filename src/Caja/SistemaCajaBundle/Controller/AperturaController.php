@@ -309,7 +309,7 @@ class AperturaController extends Controller
 
                     $ticket = $this->get("sistemacaja.ticket");
                     $servicio_tabla = $this->get("lar.parametro.tabla");
-
+                    $bm = $this->container->get("caja.barra");
 
                     //Primer parte de la impresion: detalle de pagos por tipo de seccion:
                     $detalle_pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetallePagos($entity->getId());
@@ -321,7 +321,10 @@ class AperturaController extends Controller
                     $cantidad_comprobantes_general = 0;
                     foreach ($detalle_pagos as $detalle) {
 
-                        $seccion = $servicio_tabla->getParametro( 10, $detalle->getSeccion());
+                        $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
+                        var_dump($tabla);
+                        exit;
+                        $seccion = $servicio_tabla->getParametro( $tabla, $detalle->getSeccion());
                         if ($seccion) {
                             $nombre_seccion = $seccion->getDescripcion();
                         } else {
@@ -338,7 +341,8 @@ class AperturaController extends Controller
                             $cantidad_comprobantes_seccion ++;
                         } else if ($nombre_seccion == $nombre_seccion_actual) { //entra si es igual al anterior
                             $contenido .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH)  . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
-                            $seccion_actual = $servicio_tabla->getParametro( 10, $detalle->getSeccion());
+                            $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
+                            $seccion_actual = $servicio_tabla->getParametro( $tabla, $detalle->getSeccion());
                             if ($seccion_actual) {
                                 $nombre_seccion_actual = $seccion_actual->getDescripcion();
                             } else {
@@ -353,13 +357,14 @@ class AperturaController extends Controller
                             $contenido .= str_pad("-", 40, "-", STR_PAD_BOTH). NL;
                             $monto_total_general += $monto_total_seccion;
                             $cantidad_comprobantes_general += $cantidad_comprobantes_seccion;
-
+                            $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
                             $contenido .= str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL;
                             $contenido .= str_pad($detalle->getComprobante() . " " . $detalle->getReferencia() . " $ " . $detalle->getImporte(), 40, " ", STR_PAD_BOTH) . NL;
                             //INICIALIZO LOS ACUMULADORES DE SECCION
                             $monto_total_seccion =  $detalle->getImporte();;
                             $cantidad_comprobantes_seccion = 1;
-                            $seccion_actual = $servicio_tabla->getParametro( 10, $detalle->getSeccion());
+
+                            $seccion_actual = $servicio_tabla->getParametro( $tabla, $detalle->getSeccion());
                             if ($seccion_actual) {
                                 $nombre_seccion_actual = $seccion_actual->getDescripcion();
                             } else {
