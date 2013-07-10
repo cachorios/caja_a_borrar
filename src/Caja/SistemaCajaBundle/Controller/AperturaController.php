@@ -290,9 +290,9 @@ class AperturaController extends Controller
         if (!$entity) {
             $msg='No se pudo recuperar la apertura';
         } else {
-            $entity->setFechaCierre(new \DateTime());
-            $entity->setDireccionIp($_SERVER['REMOTE_ADDR']);
-            $entity->setHost($_SERVER['HTTP_HOST']);
+            //$entity->setFechaCierre(new \DateTime());
+           // $entity->setDireccionIp($_SERVER['REMOTE_ADDR']);
+            //$entity->setHost($_SERVER['HTTP_HOST']);
 
             $editForm = $this->createForm(new AperturaCierreType(), $entity);
 
@@ -330,15 +330,14 @@ class AperturaController extends Controller
 
                         //Pregunto si es la misma seccion, o tengo que hacer el "cambio" (corte de control)
                         if ($nombre_seccion_actual == "") { //entra la primera vez
-                            $contenido = $contenido .
-                                str_pad("-", 40, "-", STR_PAD_BOTH). NL .
-                                str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL .
-                                str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH) . " $ " . $detalle->getImporte(), 40, " ", STR_PAD_BOTH) . NL;
+                            $contenido .= str_pad("-", 40, "-", STR_PAD_BOTH). NL;
+                            $contenido .= str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL;
+                            $contenido .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH) . " $ " . $detalle->getImporte(), 40, " ", STR_PAD_BOTH) . NL;
                             $nombre_seccion_actual = $nombre_seccion;
                             $monto_total_seccion += $detalle->getImporte();
                             $cantidad_comprobantes_seccion ++;
                         } else if ($nombre_seccion == $nombre_seccion_actual) { //entra si es igual al anterior
-                            $contenido = $contenido . str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH)  . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
+                            $contenido .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH)  . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
                             $seccion_actual = $servicio_tabla->getParametro( 10, $detalle->getSeccion());
                             if ($seccion_actual) {
                                 $nombre_seccion_actual = $seccion_actual->getDescripcion();
@@ -348,19 +347,18 @@ class AperturaController extends Controller
                             $monto_total_seccion += $detalle->getImporte();
                             $cantidad_comprobantes_seccion ++;
                         } else {//corte de control, immprimo una linea, muestro totales, otra linea y empiezo otra seccion:
-                            $contenido = $contenido . str_pad(" ", 40, " ", STR_PAD_BOTH). NL .
-                                str_pad($nombre_seccion_actual . " $ " . $monto_total_seccion, 40, " ", STR_PAD_BOTH) . NL .
-                                str_pad("Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH) . NL .
-                                str_pad("-", 40, "-", STR_PAD_BOTH). NL;
+                            $contenido .= str_pad(" ", 40, " ", STR_PAD_BOTH). NL;
+                            $contenido .= str_pad($nombre_seccion_actual . ": $ " . $monto_total_seccion, 40, " ", STR_PAD_BOTH) . NL;
+                            $contenido .= str_pad("Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH) . NL;
+                            $contenido .= str_pad("-", 40, "-", STR_PAD_BOTH). NL;
                             $monto_total_general += $monto_total_seccion;
                             $cantidad_comprobantes_general += $cantidad_comprobantes_seccion;
 
-                            $contenido = $contenido .
-                                    str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL .
-                                    str_pad($detalle->getComprobante() . " " . $detalle->getReferencia() . " $ " . $detalle->getImporte(), 40, " ", STR_PAD_BOTH) . NL;
+                            $contenido .= str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL;
+                            $contenido .= str_pad($detalle->getComprobante() . " " . $detalle->getReferencia() . " $ " . $detalle->getImporte(), 40, " ", STR_PAD_BOTH) . NL;
                             //INICIALIZO LOS ACUMULADORES DE SECCION
-                            $monto_total_seccion =  0;
-                            $cantidad_comprobantes_seccion = 0;
+                            $monto_total_seccion =  $detalle->getImporte();;
+                            $cantidad_comprobantes_seccion = 1;
                             $seccion_actual = $servicio_tabla->getParametro( 10, $detalle->getSeccion());
                             if ($seccion_actual) {
                                 $nombre_seccion_actual = $seccion_actual->getDescripcion();
@@ -371,12 +369,12 @@ class AperturaController extends Controller
                     }
                     $monto_total_general += $monto_total_seccion;
                     $cantidad_comprobantes_general += $cantidad_comprobantes_seccion;
-                    $contenido = $contenido . str_pad(" ", 40, " ", STR_PAD_BOTH).  NL .
-                        str_pad($nombre_seccion_actual . " $ " . $monto_total_seccion , 40, " ", STR_PAD_BOTH) . NL .
-                        str_pad("Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH) . NL .
-                        str_pad("-", 40, "-", STR_PAD_BOTH) . NL .
-                        str_pad("TOTAL COBRADO: $ " . $monto_total_general , 40, " ", STR_PAD_BOTH) . NL .
-                        str_pad("CANTIDAD DE COMPROBANTES: " . $cantidad_comprobantes_general, 40, " ", STR_PAD_BOTH) . NL;
+                    $contenido .= str_pad(" ", 40, " ", STR_PAD_BOTH).  NL;
+                    $contenido .= str_pad($nombre_seccion_actual . ": $ " . $monto_total_seccion , 40, " ", STR_PAD_BOTH) . NL;
+                    $contenido .= str_pad("Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH) . NL;
+                    $contenido .= str_pad("-", 40, "-", STR_PAD_BOTH) . NL;
+                    $contenido .= str_pad("TOTAL COBRADO: $ " . $monto_total_general , 40, " ", STR_PAD_BOTH) . NL;
+                    $contenido .= str_pad("CANTIDAD DE COMPROBANTES: " . $cantidad_comprobantes_general, 40, " ", STR_PAD_BOTH) . NL;
 
                     ///////////////////////////////////////////////////////////////////////////////////////////
                     //Segunda parte de la impresion: detalle de pagos por tipo de pago:
@@ -393,11 +391,11 @@ class AperturaController extends Controller
 
                     $total_cobrado = 0;
                     $total_anulado = 0;
-                    $contenido = $contenido .str_pad("-", 40, "=", STR_PAD_BOTH) . NL.
-                    $contenido = $contenido . str_pad("Formas de Cobro: ", 40, " ", STR_PAD_RIGHT) . NL;
+                    $contenido .= str_pad("=", 40, "=", STR_PAD_BOTH) . NL;
+                    $contenido .= str_pad("Formas de Cobro: ", 40, " ", STR_PAD_RIGHT) . NL;
                     foreach ($tipoPagos as $tipoPago) {
-                        $contenido =  $contenido . str_pad($tipoPago[0] . ": ", 40, " ", STR_PAD_RIGHT) . NL;
-                        $contenido =  $contenido . str_pad("Cobrado: $" . $tipoPago[1] . "-Anulado: $ " . $tipoPago[2], 40, "-", STR_PAD_LEFT) . NL;
+                        $contenido .= str_pad($tipoPago[0] . ": ", 40, " ", STR_PAD_RIGHT) . NL ;
+                        $contenido .= str_pad("Cobrado: $" . $tipoPago[1] . "-Anulado: $ " . $tipoPago[2], 40, "-", STR_PAD_LEFT) . NL;
                             $total_cobrado += $tipoPago[1];
                             $total_anulado += $tipoPago[2];
                     }
@@ -408,13 +406,12 @@ class AperturaController extends Controller
                     $pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagos($entity->getId());
                     $pagosAnulado = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagosAnulado($entity->getId());
                     $ticket = $this->get("sistemacaja.ticket");
-                    $contenido = $contenido .
-                        str_pad("-", 40, "=", STR_PAD_BOTH). NL .
-                        str_pad("Apertura nro. ". $entity->getId(), 40, " ", STR_PAD_BOTH) . NL .
-                        str_pad("Comprobantes Validos: ". $entity->getComprobanteCantidad(), 40, " ", STR_PAD_RIGHT) . NL.
-                        str_pad("Comprobantes Anulados: ". $entity->getComprobanteAnulado(), 40, " ",STR_PAD_RIGHT) . NL.
-                        str_pad("Importe Cobrado: $ ". $pagos, 40, " ", STR_PAD_RIGHT) . NL.
-                        str_pad("Importe Anulado:. $ ". $pagosAnulado, 40, " ",STR_PAD_RIGHT) . NL;
+                    $contenido .= str_pad("=", 40, "=", STR_PAD_BOTH). NL ;
+                    $contenido .= str_pad("Apertura nro. ". $entity->getId(), 40, " ", STR_PAD_BOTH) . NL ;
+                    $contenido .= str_pad("Comprobantes Validos: ". $entity->getComprobanteCantidad(), 40, " ", STR_PAD_RIGHT) . NL;
+                    $contenido .= str_pad("Comprobantes Anulados: ". $entity->getComprobanteAnulado(), 40, " ",STR_PAD_RIGHT) . NL;
+                    $contenido .= str_pad("Importe Cobrado: $ ". $pagos, 40, " ", STR_PAD_RIGHT) . NL;
+                    $contenido .= str_pad("Importe Anulado:. $ ". $pagosAnulado, 40, " ",STR_PAD_RIGHT) . NL;
 
                     /*
                     $primer_variable = $this->formateaReferencia("El archivo con el detalle de las cobranzas se llamara banelco", "-", 50);
@@ -473,6 +470,7 @@ class AperturaController extends Controller
                             if(!$msg){
                                 $path_documento = $path_archivos.$archivo_generado.'.txt';
 
+                                /*
                                 $contenido = 'Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado . '.txt';
                                 // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
                                 $mensaje = \Swift_Message::newInstance()
@@ -492,11 +490,11 @@ class AperturaController extends Controller
                                 ));
 
                                 //$this->container->get('mailer')->send($mensaje);
-
+                                */
                                 //Por ultimo: guardo en la tabla Apertura el nombre del archivo generado:
                                 $entity->setArchivoCierre($archivo_generado.'.txt');
-                                //$em->persist($entity);
-                                //$em->flush();
+                                $em->persist($entity);
+                                $em->flush();
                             }
                         }
                     } else {/////////'No hubo cobranza en la presente caja.
@@ -930,6 +928,41 @@ class AperturaController extends Controller
             $referencia_formateada = substr($referencia, 0, $largo_total - 2) . "..";
         }
         return $referencia_formateada;
+
+    }
+
+    public function envioMailAction() {
+
+        $entity = $this->container->get('caja.manager')->getApertura();
+        $caja = $this->container->get("caja.manager")->getCaja();
+        $archivo_generado = $entity->getArchivoCierre();
+        $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
+        $path_documento = $path_archivos.$archivo_generado;
+
+        $contenido = 'Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado . '.txt';
+            // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
+        $mensaje = \Swift_Message::newInstance()
+        ->setSubject('Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado . '.txt')
+        ->setFrom('administrador@posadas.gov.ar')
+            //->setTo('cobros@posadas.gov.ar')
+        ->setBody($contenido)
+        ->attach(\Swift_Attachment::fromPath($path_documento));
+
+
+        $mensaje->setTo(array(
+        "luis_schw@hotmail.com" => "Luis",
+        "eduardo4979@gmail.com" => "Edu",
+        "cachorios@gmail.com" => "Cacho",
+        "diegokrein@gmail.com" => "Diego",
+        "andreanestor@hotmail.com" => "Diego"
+        ));
+
+        $this->container->get('mailer')->send($mensaje);
+
+        $ret  =  array("ok" =>1);
+        $response = new Response();
+        $response->setContent(json_encode($ret));
+        return $response;
 
     }
 }

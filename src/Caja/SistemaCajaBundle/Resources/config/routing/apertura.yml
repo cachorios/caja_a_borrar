@@ -29,6 +29,11 @@ apertura_cierre:
     defaults: { _controller: "SistemaCajaBundle:Apertura:cierre" }
     #requirements: { _method: post }
 
+apertura_envio_mail:
+    pattern:  /envioMail
+    defaults: { _controller: "SistemaCajaBundle:Apertura:envioMail" }
+    #requirements: { _method: post }
+
 apertura_delete:
     pattern:  /{id}/delete
     defaults: { _controller: "SistemaCajaBundle:Apertura:delete" }
