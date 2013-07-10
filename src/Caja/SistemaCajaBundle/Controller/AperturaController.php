@@ -322,8 +322,6 @@ class AperturaController extends Controller
                     foreach ($detalle_pagos as $detalle) {
 
                         $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
-                        var_dump($tabla);
-                        exit;
                         $seccion = $servicio_tabla->getParametro( $tabla, $detalle->getSeccion());
                         if ($seccion) {
                             $nombre_seccion = $seccion->getDescripcion();
