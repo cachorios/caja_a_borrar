@@ -19,6 +19,7 @@ web/config.php
 # -- Composer -----------------------------------------
 composer.phar
 composer.bat
+composer.lock
 *.phar
 # -- PHPUnit ------------------------------------------
 app/phpunit.xml  
@@ -96,3 +97,5 @@ Icon
 parameters.yml
 instalador.php
 conf
+
+/composer.lock
