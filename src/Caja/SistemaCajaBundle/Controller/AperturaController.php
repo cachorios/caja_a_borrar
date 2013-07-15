@@ -333,7 +333,7 @@ class AperturaController extends Controller
                         if ($nombre_seccion_actual == "") { //entra la primera vez
                             $contenido .= str_pad("-", 40, "-", STR_PAD_BOTH). NL;
                             $contenido .= str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL;
-                            $contenido .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH) . " $ " . $detalle->getImporte(), 40, " ", STR_PAD_BOTH) . NL;
+                            $contenido .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH) . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
                             $nombre_seccion_actual = $nombre_seccion;
                             $monto_total_seccion += $detalle->getImporte();
                             $cantidad_comprobantes_seccion ++;
@@ -357,7 +357,7 @@ class AperturaController extends Controller
                             $cantidad_comprobantes_general += $cantidad_comprobantes_seccion;
                             $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
                             $contenido .= str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL;
-                            $contenido .= str_pad($detalle->getComprobante() . " " . $detalle->getReferencia() . " $ " . $detalle->getImporte(), 40, " ", STR_PAD_BOTH) . NL;
+                            $contenido .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH)  . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
                             //INICIALIZO LOS ACUMULADORES DE SECCION
                             $monto_total_seccion =  $detalle->getImporte();;
                             $cantidad_comprobantes_seccion = 1;

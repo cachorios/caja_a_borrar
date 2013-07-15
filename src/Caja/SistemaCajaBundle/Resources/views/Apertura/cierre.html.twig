@@ -78,6 +78,7 @@
 
                         if(statusText == 'success'){
                             if(data.ok == 1){
+
                                 imprimirSerial(data.tk);
                                 //Despues de imprimir, mando el mail como una llamada ajax separada:
                                 envioMail();
@@ -104,7 +105,15 @@
         imprimirSerial = function(data){
             var pser = document.SerialLar;
             try {
-                pser.escribir(data);
+                //Particiono la variable tk recibida, para evitar el llenado del buffer:
+                for (var i=0;i<data.length; i+=500) {
+                    var t = new Date().getTime();
+                    while ((new Date().getTime()) -t < 1000) {
+                        //alert('timer');
+                    }
+
+                    pser.escribir(data.substr(i, 500));
+                }
             } catch (e) {
                 alert('Error de tipo: ' + e);
             }
