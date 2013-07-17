@@ -1,0 +1,30 @@
+responsable:
+    pattern:  /
+    defaults: { _controller: "SistemaCajaBundle:Responsable:index" }
+
+responsable_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "SistemaCajaBundle:Responsable:show" }
+
+responsable_new:
+    pattern:  /new
+    defaults: { _controller: "SistemaCajaBundle:Responsable:new" }
+
+responsable_create:
+    pattern:  /create
+    defaults: { _controller: "SistemaCajaBundle:Responsable:create" }
+    requirements: { _method: post }
+
+responsable_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "SistemaCajaBundle:Responsable:edit" }
+
+responsable_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "SistemaCajaBundle:Responsable:update" }
+    requirements: { _method: post|put }
+
+responsable_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "SistemaCajaBundle:Responsable:delete" }
+    requirements: { _method: post|delete }

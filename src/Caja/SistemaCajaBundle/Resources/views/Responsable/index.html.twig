@@ -1,14 +1,14 @@
 {% extends '::layout.html.twig' %}
-{% block id  "mod_feriado" %}
+{% block id  "mod_responsable" %}
 
 {% block title %}
     {{ parent() }} - Caja {{ 'views.index.list'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
 {% endblock %}
 
 {% block page %}
-    <section id="Feriado">
+    <section id="Responsable">
         <header>
-            <h1>Feriados
+            <h1>Responsables
                 <div class="filters-right">
                     <a class="btn dropdown-toggle btn-mini" data-toggle="collapse" data-target="#filters">
                         {{ 'views.index.filters'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
@@ -38,11 +38,14 @@
             <div class="span12">
                 <div id="filters" class="collapse">
 
-                    <form class="well form-horizontal" action="{{ path('feriado') }}"
+                    <form class="well form-horizontal" action="{{ path('responsable') }}"
                           method="post" {{ form_enctype(filterForm) }}>
 
-                        {{ form_row(filterForm.fecha) }}
                         {{ form_row(filterForm.descripcion) }}
+                        {{ form_row(filterForm.email) }}
+                        {{ form_row(filterForm.detalle) }}
+                        {{ form_row(filterForm.resumen) }}
+                        {{ form_row(filterForm.activo) }}
                         {{ form_rest(filterForm) }}
 
                         <p>
@@ -64,24 +67,28 @@
                     <thead>
                     <tr>
                         <th>Id</th>
-                        <th>Fecha</th>
                         <th>Descripción</th>
-                        <th>Observación</th>
-                        <th>Acción</th>
+                        <th>Email</th>
+                        <th>Detalle</th>
+                        <th>Resumen</th>
+                        <th>Activo</th>
+                        <th>Accion</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for entity in entities %}
                         <tr>
-                            <td><a href="{{ path('feriado_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                            <td>{% if entity.fecha %}{{ entity.fecha|date('d-m-Y') }}{% endif %}</td>
+                            <td><a href="{{ path('responsable_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                             <td>{{ entity.descripcion }}</td>
-                            <td>{{ entity.observacion }}</td>
+                            <td>{{ entity.email }}</td>
+                            <td style="text-align: center;">{{ entity.detalle == true ? 'SI' :'NO' }}</td>
+                            <td style="text-align: center;">{{ entity.resumen == true ? 'SI' :'NO' }}</td>
+                            <td style="text-align: center;">{{ entity.activo == true ? 'SI' :'NO' }}</td>
                             <td>
-                                <a class="btn btn-mini" href="{{ path('feriado_show', { 'id': entity.id }) }}">
+                                <a class="btn btn-mini" href="{{ path('responsable_show', { 'id': entity.id }) }}">
                                     {{ 'views.actions.show'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
                                 </a>
-                                <a class="btn btn-mini" href="{{ path('feriado_edit', { 'id': entity.id }) }}">
+                                <a class="btn btn-mini" href="{{ path('responsable_edit', { 'id': entity.id }) }}">
                                     {{ 'views.actions.edit'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
                                 </a>
 
@@ -98,8 +105,8 @@
             </div>
 
             <div class="span2">
-                <a class="btn btn-primary likepaginator" href="{{ path('feriado_new') }}">
-                    {{ 'views.index.createnew'|trans({}, 'JordiLlonchCrudGeneratorBundle') }} Feriado
+                <a class="btn btn-primary likepaginator" href="{{ path('responsable_new') }}">
+                    {{ 'views.index.createnew'|trans({}, 'JordiLlonchCrudGeneratorBundle') }} Responsable
                 </a>
             </div>
 

@@ -501,6 +501,7 @@ class AperturaController extends Controller
                             }
                         }
                     } else {/////////'No hubo cobranza en la presente caja.
+                        /*
                         $contenido = 'No hubo cobranza en la presente caja.';
                         $apertura_id = $entity->getId();
                         $numero_caja = $entity->getCaja()->getId();
@@ -523,6 +524,7 @@ class AperturaController extends Controller
                         ));
 
                         $this->container->get('mailer')->send($mensaje);
+                        */
                     }
 
                 } else {
@@ -937,29 +939,53 @@ class AperturaController extends Controller
     public function envioMailAction() {
 
         $entity = $this->container->get('caja.manager')->getApertura();
-        $caja = $this->container->get("caja.manager")->getCaja();
-        $archivo_generado = $entity->getArchivoCierre();
-        $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
-        $path_documento = $path_archivos.$archivo_generado;
+        $em = $this->getDoctrine()->getManager();
+        if ($entity->getComprobanteCantidad() > 0) {//Hubo cobranza
+            $caja = $this->container->get("caja.manager")->getCaja();
+            $archivo_generado = $entity->getArchivoCierre();
+            $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
+            $path_documento = $path_archivos.$archivo_generado;
 
-        $contenido = 'Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado . '.txt';
+            $contenido = 'Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado;
+                // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
+            $mensaje = \Swift_Message::newInstance()
+            ->setSubject('Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado)
+            ->setFrom('administrador@posadas.gov.ar')
+                //->setTo('cobros@posadas.gov.ar')
+            ->setBody($contenido)
+            ->attach(\Swift_Attachment::fromPath($path_documento));//Adjunto
+
+
+
+        } else { //No hubo cobranza
+            $contenido = 'No hubo cobranza en la presente caja.';
+            $apertura_id = $entity->getId();
+            $numero_caja = $entity->getCaja()->getId();
+            $datos_caja = 'Caja: ' . $numero_caja . '- Apertura: ' . $apertura_id . ' - Fecha: ' . $entity->getFechaCierre();
             // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
-        $mensaje = \Swift_Message::newInstance()
-        ->setSubject('Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado . '.txt')
-        ->setFrom('administrador@posadas.gov.ar')
+            $mensaje = \Swift_Message::newInstance()
+                ->setSubject('Municipalidad de Posadas - Cierre de Caja - ' . $datos_caja)
+                ->setFrom('administrador@posadas.gov.ar')
             //->setTo('cobros@posadas.gov.ar')
-        ->setBody($contenido)
-        ->attach(\Swift_Attachment::fromPath($path_documento));
-
-
+                ->setBody($contenido);
+            //No hay adjunto
+        }
+        //Recupero los responsables a los cuales se les envia el mail:
+        $responsables = $em->getRepository('SistemaCajaBundle:Responsable')->getResponsablesActivos();
+        $lista = array();
+        foreach ($responsables as $responsable) {
+            $lista[] = $responsable->getEmail();
+        }
+        /*
         $mensaje->setTo(array(
-        "luis_schw@hotmail.com" => "Luis",
-        "eduardo4979@gmail.com" => "Edu",
-        "cachorios@gmail.com" => "Cacho",
-        "diegokrein@gmail.com" => "Diego",
-        "andreanestor@hotmail.com" => "Diego"
+            "luis_schw@hotmail.com" => "Luis",
+            "eduardo4979@gmail.com" => "Edu",
+            "cachorios@gmail.com" => "Cacho",
+            "diegokrein@gmail.com" => "Diego",
+            "andreanestor@hotmail.com" => "Diego"
         ));
-
+        */
+        $mensaje->setTo($lista);
         $this->container->get('mailer')->send($mensaje);
 
         $ret  =  array("ok" =>1);

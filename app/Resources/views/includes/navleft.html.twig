@@ -45,6 +45,11 @@
                     </li>
                 {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}
+                    <li class="responsable">
+                        <a href="{{ path("responsable") }}"><i class="icon-check icon-white"></i>Responsables</a>
+                    </li>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
                     <li class="tipopago">
                         <a href="{{ path("tipopago") }}"><i class="icon-text-width icon-white"></i>Tipos de Pago</a>
                     </li>

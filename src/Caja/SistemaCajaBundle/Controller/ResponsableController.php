@@ -9,31 +9,31 @@ use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\View\TwitterBootstrapView;
 
-use Caja\SistemaCajaBundle\Entity\Feriado;
-use Caja\SistemaCajaBundle\Form\FeriadoType;
-use Caja\SistemaCajaBundle\Form\FeriadoFilterType;
+use Caja\SistemaCajaBundle\Entity\Responsable;
+use Caja\SistemaCajaBundle\Form\ResponsableType;
+use Caja\SistemaCajaBundle\Form\ResponsableFilterType;
 
 /**
- * Feriado controller.
+ * Responsable controller.
  *
  */
-class FeriadoController extends Controller
+class ResponsableController extends Controller
 {
     /**
-     * Lists all Feriado entities.
+     * Lists all Responsable entities.
      *
      */
     public function indexAction()
     {
         $breadcrumbs = $this->get("white_october_breadcrumbs");
         $breadcrumbs->addItem("Inicio", $this->get("router")->generate("home_page"));
-        $breadcrumbs->addItem("Feriado", $this->get("router")->generate("feriado"));
+        $breadcrumbs->addItem("Responsable", $this->get("router")->generate("responsable"));
 
         list($filterForm, $queryBuilder) = $this->filter();
         list($entities, $pagerHtml) = $this->paginator($queryBuilder);
 
 
-        return $this->render('SistemaCajaBundle:Feriado:index.html.twig', array(
+        return $this->render('SistemaCajaBundle:Responsable:index.html.twig', array(
             'entities' => $entities,
             'pagerHtml' => $pagerHtml,
             'filterForm' => $filterForm->createView(),
@@ -49,13 +49,13 @@ class FeriadoController extends Controller
     {
         $request = $this->getRequest();
         $session = $request->getSession();
-        $filterForm = $this->createForm(new FeriadoFilterType());
+        $filterForm = $this->createForm(new ResponsableFilterType());
         $em = $this->getDoctrine()->getManager();
-        $queryBuilder = $em->getRepository('SistemaCajaBundle:Feriado')->createQueryBuilder('e');
+        $queryBuilder = $em->getRepository('SistemaCajaBundle:Responsable')->createQueryBuilder('e');
 
         // Reset filter
         if ($request->getMethod() == 'POST' && $request->get('filter_action') == 'reset') {
-            $session->remove('FeriadoControllerFilter');
+            $session->remove('ResponsableControllerFilter');
         }
 
         // Filter action
@@ -68,13 +68,13 @@ class FeriadoController extends Controller
                 $this->get('lexik_form_filter.query_builder_updater')->addFilterConditions($filterForm, $queryBuilder);
                 // Save filter to session
                 $filterData = $filterForm->getData();
-                $session->set('FeriadoControllerFilter', $filterData);
+                $session->set('ResponsableControllerFilter', $filterData);
             }
         } else {
             // Get filter from session
-            if ($session->has('FeriadoControllerFilter')) {
-                $filterData = $session->get('FeriadoControllerFilter');
-                $filterForm = $this->createForm(new FeriadoFilterType(), $filterData);
+            if ($session->has('ResponsableControllerFilter')) {
+                $filterData = $session->get('ResponsableControllerFilter');
+                $filterForm = $this->createForm(new ResponsableFilterType(), $filterData);
                 $this->get('lexik_form_filter.query_builder_updater')->addFilterConditions($filterForm, $queryBuilder);
             }
         }
@@ -102,7 +102,7 @@ class FeriadoController extends Controller
         $me = $this;
         $routeGenerator = function($page) use ($me)
         {
-            return $me->generateUrl('feriado', array('page' => $page));
+            return $me->generateUrl('responsable', array('page' => $page));
         };
 
         // Paginator - view
@@ -118,14 +118,14 @@ class FeriadoController extends Controller
     }
 
     /**
-     * Creates a new Feriado entity.
+     * Creates a new Responsable entity.
      *
      */
     public function createAction(Request $request)
     {
-        $entity  = new Feriado();
+        $entity  = new Responsable();
         $request = $this->getRequest();
-        $form    = $this->createForm(new FeriadoType(), $entity);
+        $form    = $this->createForm(new ResponsableType(), $entity);
         $form->bind($request);
 
         if ($form->isValid()) {
@@ -134,12 +134,12 @@ class FeriadoController extends Controller
             $em->flush();
             $this->get('session')->getFlashBag()->add('success', 'flash.create.success');
 
-            return $this->redirect($this->generateUrl('feriado_show', array('id' => $entity->getId() )));
+            return $this->redirect($this->generateUrl('responsable_show', array('id' => $entity->getId() )));
         } else {
             $this->get('session')->getFlashBag()->add('error', 'flash.create.error');
         }
 
-        return $this->render('SistemaCajaBundle:Feriado:new.html.twig', array(
+        return $this->render('SistemaCajaBundle:Responsable:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
         ));
@@ -147,74 +147,74 @@ class FeriadoController extends Controller
     }
 
     /**
-     * Displays a form to create a new Feriado entity.
+     * Displays a form to create a new Responsable entity.
      *
      */
     public function newAction()
     {
         $breadcrumbs = $this->get("white_october_breadcrumbs");
         $breadcrumbs->addItem("Inicio", $this->get("router")->generate("home_page"));
-        $breadcrumbs->addItem("Feriado", $this->get("router")->generate("feriado"));
+        $breadcrumbs->addItem("Responsable", $this->get("router")->generate("responsable"));
         $breadcrumbs->addItem("Nuevo" );
 
-        $entity = new Feriado();
-        $form   = $this->createForm(new FeriadoType(), $entity);
+        $entity = new Responsable();
+        $form   = $this->createForm(new ResponsableType(), $entity);
 
-        return $this->render('SistemaCajaBundle:Feriado:new.html.twig', array(
+        return $this->render('SistemaCajaBundle:Responsable:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
         ));
     }
 
     /**
-     * Finds and displays a Feriado entity.
+     * Finds and displays a Responsable entity.
      *
      */
     public function showAction($id)
     {
         $breadcrumbs = $this->get("white_october_breadcrumbs");
         $breadcrumbs->addItem("Inicio", $this->get("router")->generate("home_page"));
-        $breadcrumbs->addItem("Feriado", $this->get("router")->generate("feriado"));
+        $breadcrumbs->addItem("Responsable", $this->get("router")->generate("responsable"));
         $breadcrumbs->addItem("Ver" );
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('SistemaCajaBundle:Feriado')->find($id);
+        $entity = $em->getRepository('SistemaCajaBundle:Responsable')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Feriadoentity.');
+            throw $this->createNotFoundException('Unable to find Responsableentity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('SistemaCajaBundle:Feriado:show.html.twig', array(
+        return $this->render('SistemaCajaBundle:Responsable:show.html.twig', array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),        ));
     }
 
     /**
-     * Displays a form to edit an existing Feriado entity.
+     * Displays a form to edit an existing Responsable entity.
      *
      */
     public function editAction($id)
     {
         $breadcrumbs = $this->get("white_october_breadcrumbs");
         $breadcrumbs->addItem("Inicio", $this->get("router")->generate("home_page"));
-        $breadcrumbs->addItem("Feriado", $this->get("router")->generate("feriado"));
+        $breadcrumbs->addItem("Responsable", $this->get("router")->generate("responsable"));
         $breadcrumbs->addItem("Editar" );
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('SistemaCajaBundle:Feriado')->find($id);
+        $entity = $em->getRepository('SistemaCajaBundle:Responsable')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Feriado entity.');
+            throw $this->createNotFoundException('Unable to find Responsable entity.');
         }
 
-        $editForm = $this->createForm(new FeriadoType(), $entity);
+        $editForm = $this->createForm(new ResponsableType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('SistemaCajaBundle:Feriado:edit.html.twig', array(
+        return $this->render('SistemaCajaBundle:Responsable:edit.html.twig', array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -222,31 +222,31 @@ class FeriadoController extends Controller
     }
 
     /**
-     * Edits an existing Feriado entity.
+     * Edits an existing Responsable entity.
      *
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('SistemaCajaBundle:Feriado')->find($id);
+        $entity = $em->getRepository('SistemaCajaBundle:Responsable')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Feriado entity.');
+            throw $this->createNotFoundException('Unable to find Responsable entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new FeriadoType(), $entity);
+        $editForm = $this->createForm(new ResponsableType(), $entity);
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('feriado_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('responsable_edit', array('id' => $id)));
         }
 
-        return $this->render('SistemaCajaBundle:Feriado:edit.html.twig', array(
+        return $this->render('SistemaCajaBundle:Responsable:edit.html.twig', array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -254,7 +254,7 @@ class FeriadoController extends Controller
     }
 
     /**
-     * Deletes a Feriado entity.
+     * Deletes a Responsable entity.
      *
      */
     public function deleteAction(Request $request, $id)
@@ -264,21 +264,21 @@ class FeriadoController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('SistemaCajaBundle:Feriado')->find($id);
+            $entity = $em->getRepository('SistemaCajaBundle:Responsable')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Feriado entity.');
+                throw $this->createNotFoundException('Unable to find Responsable entity.');
             }
 
             $em->remove($entity);
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('feriado'));
+        return $this->redirect($this->generateUrl('Responsable'));
     }
 
     /**
-     * Creates a form to delete a Feriado entity by id.
+     * Creates a form to delete a Responsable entity by id.
      *
      * @param mixed $id The entity id
      *
