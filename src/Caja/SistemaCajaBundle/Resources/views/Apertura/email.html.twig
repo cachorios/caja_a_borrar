@@ -1,0 +1,37 @@
+{% block id 'mod_email' %}
+
+    {% block title %}
+        Apertura {{ 'views.show.show'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+    {% endblock %}
+
+    {% block page %}
+
+        <section id="view_Apertura">
+            <header>
+                <h1 style="font-size: 20px; font-family: sans-serif, Verdana, Arial, Helvetica; font-weight: bold; color: #0000CC;">
+                    <img src="http://posadas.gov.ar/images_mail/mailmembretetemplate.jpg" width="400" />
+                    Apertura - Resumen del Archivo de Cobranza
+                </h1>
+            </header>
+            <div style="font-size: 14px; font-family: sans-serif, Verdana, Arial, Helvetica; font-weight: bold; color: #0000CC;">
+                <fieldset>
+                    <div>
+                        <label>Fecha</label>
+                        <div><span>{{ entity.fecha|date('d-m-Y ') }}</span></div>
+                    </div>
+                    <div>
+                        <label>Nombre del Archivo</label>
+                        <div><span>{{ entity.archivocierre }}</span></div>
+                    </div>
+                    <div>
+                        <label>Fecha de cierre</label>
+                        <div><span>
+                                        {% if entity.fechacierre %}
+                                            {{ entity.fechacierre |date('d-m-Y H:i:s') }}
+                                        {% endif %}
+                                        </span>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+    {% endblock %}
