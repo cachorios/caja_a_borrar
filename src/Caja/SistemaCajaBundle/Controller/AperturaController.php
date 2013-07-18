@@ -880,7 +880,6 @@ class AperturaController extends Controller
     }
 
     public function envioMailAction() {
-
         $entity = $this->container->get('caja.manager')->getApertura();
         $archivo_generado = $entity->getArchivoCierre();
         $em = $this->getDoctrine()->getManager();
@@ -900,8 +899,13 @@ class AperturaController extends Controller
 
             $contenido_resumen = 'Municipalidad de Posadas - Resumen de Cierre de Caja - ' . $archivo_generado;
             // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
-            $mailContext = array('caja' => $entity);
-            $html = $this->container->get('twig')->render('SistemaCajaBundle:Apertura:email.html.twig', array( 'entity' => $entity));
+
+            $pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagos($entity->getId());
+            $pagos_anulados = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagosAnulado($entity->getId());
+            $comprobantes_validos = $entity->getComprobanteCantidad();
+            $comprobantes_anulados = $entity->getComprobanteAnulado();
+            $mailContext = array('entity' => $entity, 'validos' => $comprobantes_validos, 'anulados' => $comprobantes_anulados, 'pagos' => $pagos, 'pagos_anulados' => $pagos_anulados);
+            $html = $this->container->get('twig')->render('SistemaCajaBundle:Apertura:email.html.twig', $mailContext);
             $mensaje_resumen = \Swift_Message::newInstance()
                 ->setSubject('Municipalidad de Posadas - Resumen de Cierre de Caja - ' . $archivo_generado)
                 ->setFrom('administrador@posadas.gov.ar')
@@ -931,10 +935,11 @@ class AperturaController extends Controller
                 ->setFrom('administrador@posadas.gov.ar')
                 ->setBody($contenido_resumen);
         }
-        //Recupero los responsables a los cuales se les envia el mail:
-        $responsables = $em->getRepository('SistemaCajaBundle:Responsable')->getResponsablesActivos();
         $lista_detalle = array();
         $lista_resumen = array();
+        //Recupero los responsables a los cuales se les envia el mail:
+        $responsables = $em->getRepository('SistemaCajaBundle:Responsable')->getResponsablesActivos();
+        $ret  =  array("ok" =>0);
         foreach ($responsables as $responsable) {
             if ($responsable->getDetalle()) {//Si tiene activada la opcion para recibir el archivo con el detalle del cierre
                 $lista_detalle[] = $responsable->getEmail();
@@ -942,17 +947,17 @@ class AperturaController extends Controller
             if ($responsable->getResumen()) {//Si tiene activada la opcion para recibir el archivo con el resumen del cierre
                 $lista_resumen[] = $responsable->getEmail();
             }
-            if (count($lista_detalle) > 0) {
-                $mensaje_detalle->setTo($lista_detalle);
-                $this->container->get('mailer')->send($mensaje_detalle);
-            }
-            if (count($lista_resumen) > 0) {
-                $mensaje_resumen->setTo($lista_resumen);
-                $this->container->get('mailer')->send($mensaje_resumen);
-            }
+        }
+        if (count($lista_detalle) > 0) {
+            $mensaje_detalle->setTo($lista_detalle);
+            $this->container->get('mailer')->send($mensaje_detalle);
             $ret  =  array("ok" =>1);
         }
-
+        if (count($lista_resumen) > 0) {
+            $mensaje_resumen->setTo($lista_resumen);
+            $this->container->get('mailer')->send($mensaje_resumen);
+            $ret  =  array("ok" =>1);
+        }
         $em->close();
         $response = new Response();
         $response->setContent(json_encode($ret));
