@@ -16,7 +16,7 @@ koppdev@googlemail.com
 */
 
 // users may change this variable to fit their needs:
-var msgBoxImagePath = "../images/";
+var msgBoxImagePath = "/images/";
 
 jQuery.msgBox = msg;
 function msg (options) {
