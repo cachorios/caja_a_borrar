@@ -286,15 +286,14 @@ class AperturaController extends Controller
     {
         $entity = $this->container->get('caja.manager')->getApertura();
         $caja = $this->container->get("caja.manager")->getCaja();
+        $editForm = $this->createForm(new AperturaCierreType(), $entity);
         $msg=false;
         if (!$entity) {
             $msg='No se pudo recuperar la apertura';
         } else {
-            $entity->setFechaCierre(new \DateTime());
-            $entity->setDireccionIp($_SERVER['REMOTE_ADDR']);
-            $entity->setHost($_SERVER['HTTP_HOST']);
-
-            $editForm = $this->createForm(new AperturaCierreType(), $entity);
+//            $entity->setFechaCierre(new \DateTime());
+//            $entity->setDireccionIp($_SERVER['REMOTE_ADDR']);
+//            $entity->setHost($_SERVER['HTTP_HOST']);
 
             $request = $this->getRequest();
             $tk = "";
@@ -304,60 +303,80 @@ class AperturaController extends Controller
                     $em = $this->getDoctrine()->getManager();
 
                     // Hago el "commit" del cierre, entonces si falla la generacion del archivo, no interfiere con esto
-                    //$em->persist($entity);
-                    //$em->flush();
+//                    $em->persist($entity);
+//                    $em->flush();
 
                     $ticket = $this->get("sistemacaja.ticket");
                     $servicio_tabla = $this->get("lar.parametro.tabla");
-
+                    $bm = $this->container->get("caja.barra");
 
                     //Primer parte de la impresion: detalle de pagos por tipo de seccion:
                     $detalle_pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetallePagos($entity->getId());
-                    $contenido =  str_pad("Cierre de Caja", 40, " ", STR_PAD_BOTH);
-                    $seccion_actual = "";
+                    $contenido =  str_pad("Cierre de Caja", 40, " ", STR_PAD_BOTH) . NL;
+                    $nombre_seccion_actual = "";
                     $monto_total_seccion = 0;
                     $cantidad_comprobantes_seccion = 0;
                     $monto_total_general = 0;
                     $cantidad_comprobantes_general = 0;
                     foreach ($detalle_pagos as $detalle) {
 
-                        $nombre_seccion = $servicio_tabla->getParametro( 10, $detalle->getSeccion());
+                        $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
+                        $seccion = $servicio_tabla->getParametro( $tabla, $detalle->getSeccion());
+                        if ($seccion) {
+                            $nombre_seccion = $seccion->getDescripcion();
+                        } else {
+                            $nombre_seccion = "seccion desconocida";
+                        }
+
                         //Pregunto si es la misma seccion, o tengo que hacer el "cambio" (corte de control)
-                        if ($seccion_actual == "") { //entra la primera vez
-                            $contenido = $contenido .
-                                str_pad("-", 40, "-", STR_PAD_BOTH).
-                                str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL;
-                                str_pad("C " . $detalle->getComprobante() . " " . $detalle->getReferencia() . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
-                            $seccion_actual = $nombre_seccion;
+                        if ($nombre_seccion_actual == "") { //entra la primera vez
+                            $contenido .= str_pad("-", 40, "-", STR_PAD_BOTH). NL;
+                            $contenido .= str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL;
+                            $contenido .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH) . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
+                            $nombre_seccion_actual = $nombre_seccion;
                             $monto_total_seccion += $detalle->getImporte();
                             $cantidad_comprobantes_seccion ++;
-                        } else if ($nombre_seccion == $seccion_actual) { //entra si es igual al anterior
-                            $contenido = $contenido . str_pad("C " . $detalle->getComprobante() . " " . $detalle->getReferencia() . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
-                            $seccion_actual = $servicio_tabla->getParametro( 10, $detalle->getSeccion());;
+                        } else if ($nombre_seccion == $nombre_seccion_actual) { //entra si es igual al anterior
+                            $contenido .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH)  . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
+                            $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
+                            $seccion_actual = $servicio_tabla->getParametro( $tabla, $detalle->getSeccion());
+                            if ($seccion_actual) {
+                                $nombre_seccion_actual = $seccion_actual->getDescripcion();
+                            } else {
+                                $nombre_seccion_actual = "seccion desconocida";
+                            }
                             $monto_total_seccion += $detalle->getImporte();
                             $cantidad_comprobantes_seccion ++;
                         } else {//corte de control, immprimo una linea, muestro totales, otra linea y empiezo otra seccion:
-                            $contenido = $contenido . str_pad("-", 40, "-", STR_PAD_BOTH).
-                                str_pad($seccion_actual . " $ " . $monto_total_seccion . ". Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH) . NL;
+                            $contenido .= str_pad(" ", 40, " ", STR_PAD_BOTH). NL;
+                            $contenido .= str_pad($nombre_seccion_actual . ": $ " . $monto_total_seccion, 40, " ", STR_PAD_BOTH) . NL;
+                            $contenido .= str_pad("Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH) . NL;
+                            $contenido .= str_pad("-", 40, "-", STR_PAD_BOTH). NL;
                             $monto_total_general += $monto_total_seccion;
                             $cantidad_comprobantes_general += $cantidad_comprobantes_seccion;
-
-                            $contenido = $contenido .
-                                    str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL;
-                                    str_pad("C " . $detalle->getComprobante() . " " . $detalle->getReferencia() . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
+                            $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
+                            $contenido .= str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL;
+                            $contenido .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH)  . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
                             //INICIALIZO LOS ACUMULADORES DE SECCION
-                            $monto_total_seccion =  $detalle->getImporte();
+                            $monto_total_seccion =  $detalle->getImporte();;
                             $cantidad_comprobantes_seccion = 1;
-                            $seccion_actual = $detalle->getSeccion();
+
+                            $seccion_actual = $servicio_tabla->getParametro( $tabla, $detalle->getSeccion());
+                            if ($seccion_actual) {
+                                $nombre_seccion_actual = $seccion_actual->getDescripcion();
+                            } else {
+                                $nombre_seccion_actual = "seccion desconocida";
+                            }
                         }
                     }
                     $monto_total_general += $monto_total_seccion;
                     $cantidad_comprobantes_general += $cantidad_comprobantes_seccion;
-                    $contenido = $contenido . str_pad("-", 40, "-", STR_PAD_BOTH).
-                        str_pad($seccion_actual . " $ " . $monto_total_seccion . ". Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH) . NL .
-                        str_pad("-", 40, "-", STR_PAD_BOTH).
-                        str_pad("TOTAL COBRADO: $ " . $monto_total_general , 40, " ", STR_PAD_BOTH) . NL .
-                        str_pad("CANTIDAD DE COMPROBANTES: " . $cantidad_comprobantes_general, 40, " ", STR_PAD_BOTH) . NL;
+                    $contenido .= str_pad(" ", 40, " ", STR_PAD_BOTH).  NL;
+                    $contenido .= str_pad($nombre_seccion_actual . ": $ " . $monto_total_seccion , 40, " ", STR_PAD_BOTH) . NL;
+                    $contenido .= str_pad("Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH) . NL;
+                    $contenido .= str_pad("-", 40, "-", STR_PAD_BOTH) . NL;
+                    $contenido .= str_pad("TOTAL COBRADO: $ " . $monto_total_general , 40, " ", STR_PAD_BOTH) . NL;
+                    $contenido .= str_pad("CANTIDAD DE COMPROBANTES: " . $cantidad_comprobantes_general, 40, " ", STR_PAD_BOTH) . NL;
 
                     ///////////////////////////////////////////////////////////////////////////////////////////
                     //Segunda parte de la impresion: detalle de pagos por tipo de pago:
@@ -374,11 +393,11 @@ class AperturaController extends Controller
 
                     $total_cobrado = 0;
                     $total_anulado = 0;
-                    $contenido = $contenido .str_pad("-", 40, "=", STR_PAD_BOTH);
-                    $contenido = $contenido . str_pad("Formas de Cobro: ", 40, " ", STR_PAD_RIGHT) . NL;
+                    $contenido .= str_pad("=", 40, "=", STR_PAD_BOTH) . NL;
+                    $contenido .= str_pad("Formas de Cobro: ", 40, " ", STR_PAD_RIGHT) . NL;
                     foreach ($tipoPagos as $tipoPago) {
-                        $contenido =  $contenido . str_pad($tipoPago[0] . ": ", 40, " ", STR_PAD_RIGHT) . NL;
-                        $contenido =  $contenido . str_pad("Cobrado: $" . $tipoPago[1] . "-Anulado: $ " . $tipoPago[2], 40, "-", STR_PAD_LEFT) . NL;
+                        $contenido .= str_pad($tipoPago[0] . ": ", 40, " ", STR_PAD_RIGHT) . NL ;
+                        $contenido .= str_pad("Cobrado: $" . $tipoPago[1] . "-Anulado: $ " . $tipoPago[2], 40, "-", STR_PAD_LEFT) . NL;
                             $total_cobrado += $tipoPago[1];
                             $total_anulado += $tipoPago[2];
                     }
@@ -389,21 +408,13 @@ class AperturaController extends Controller
                     $pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagos($entity->getId());
                     $pagosAnulado = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagosAnulado($entity->getId());
                     $ticket = $this->get("sistemacaja.ticket");
-                    $contenido = $contenido .
-                        str_pad("-", 40, "=", STR_PAD_BOTH). NL .
-                        str_pad("Apertura nro. ". $entity->getId(), 40, " ", STR_PAD_BOTH) . NL .
-                        str_pad("Comprobantes Validos: ". $entity->getComprobanteCantidad(), 40, " ", STR_PAD_RIGHT) . NL.
-                        str_pad("Comprobantes Anulados: ". $entity->getComprobanteAnulado(), 40, " ",STR_PAD_RIGHT) . NL.
-                        str_pad("Importe Cobrado: $ ". $pagos, 40, " ", STR_PAD_RIGHT) . NL.
-                        str_pad("Importe Anulado:. $ ". $pagosAnulado, 40, " ",STR_PAD_RIGHT) . NL;
+                    $contenido .= str_pad("=", 40, "=", STR_PAD_BOTH). NL ;
+                    $contenido .= str_pad("Apertura nro. ". $entity->getId(), 40, " ", STR_PAD_BOTH) . NL ;
+                    $contenido .= str_pad("Comprobantes Validos: ". $entity->getComprobanteCantidad(), 40, " ", STR_PAD_RIGHT) . NL;
+                    $contenido .= str_pad("Comprobantes Anulados: ". $entity->getComprobanteAnulado(), 40, " ",STR_PAD_RIGHT) . NL;
+                    $contenido .= str_pad("Importe Cobrado: $ ". $pagos, 40, " ", STR_PAD_RIGHT) . NL;
+                    $contenido .= str_pad("Importe Anulado:. $ ". $pagosAnulado, 40, " ",STR_PAD_RIGHT) . NL;
 
-                    /*
-                    $primer_variable = $this->formateaReferencia("El archivo con el detalle de las cobranzas se llamara banelco", "-", 50);
-                    $segunda_variable = $this->formateaReferencia("El archivo con", "-", 50, STR_PAD_BOTH);
-                    var_dump($primer_variable);
-                    var_dump($segunda_variable);
-                    exit;
-                    */
                     $ticket->setContenido($contenido);
                     $tk .= $ticket->getTicketFull();
                     $tk .= $ticket->getTicketTestigo();
@@ -452,59 +463,14 @@ class AperturaController extends Controller
                             }
                             //Si esta todo bien, sigo:
                             if(!$msg){
-                                $path_documento = $path_archivos.$archivo_generado.'.txt';
-
-                                $contenido = 'Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado . '.txt';
-                                // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
-                                $mensaje = \Swift_Message::newInstance()
-                                    ->setSubject('Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado . '.txt')
-                                    ->setFrom('administrador@posadas.gov.ar')
-                                    //->setTo('cobros@posadas.gov.ar')
-                                    ->setBody($contenido)
-                                    ->attach(\Swift_Attachment::fromPath($path_documento));
-
-
-                                $mensaje->setTo(array(
-                                    "luis_schw@hotmail.com" => "Luis",
-                                    "eduardo4979@gmail.com" => "Edu",
-                                    "cachorios@gmail.com" => "Cacho",
-                                    "diegokrein@gmail.com" => "Diego",
-                                    "andreanestor@hotmail.com" => "Diego"
-                                ));
-
-                                $this->container->get('mailer')->send($mensaje);
-
                                 //Por ultimo: guardo en la tabla Apertura el nombre del archivo generado:
                                 $entity->setArchivoCierre($archivo_generado.'.txt');
-                                //$em->persist($entity);
-                                //$em->flush();
+                                $em->persist($entity);
+                                $em->flush();
                             }
                         }
-                    } else {/////////'No hubo cobranza en la presente caja.
-                        $contenido = 'No hubo cobranza en la presente caja.';
-                        $apertura_id = $entity->getId();
-                        $numero_caja = $entity->getCaja()->getId();
-                        $datos_caja = 'Caja: ' . $numero_caja . '- Apertura: ' . $apertura_id . ' - Fecha: ' . $entity->getFechaCierre();
-                        // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
-                        $mensaje = \Swift_Message::newInstance()
-                            ->setSubject('Municipalidad de Posadas - Cierre de Caja - ' . $datos_caja)
-                            ->setFrom('administrador@posadas.gov.ar')
-                        //->setTo('cobros@posadas.gov.ar')
-                            ->setBody($contenido);
-                        //No hay adjunto
-
-
-                        $mensaje->setTo(array(
-                            "luis_schw@hotmail.com" => "Luis",
-                            "eduardo4979@gmail.com" => "Edu",
-                            "cachorios@gmail.com" => "Cacho",
-                            "diegokrein@gmail.com" => "Diego",
-                            "andreanestor@hotmail.com" => "Diego"
-                        ));
-
-                        $this->container->get('mailer')->send($mensaje);
                     }
-
+                    $em->close();
                 } else {
                     $msg='Alguno de los datos ingresados es incorrecto';
                 }
@@ -845,28 +811,28 @@ class AperturaController extends Controller
                     ->attach(\Swift_Attachment::fromPath($path_documento));
 
 
-                $mensaje->setTo(array(
-                    "luis_schw@hotmail.com" => "Luis",
-                    "eduardo4979@gmail.com" => "Edu",
-                    "cachorios@gmail.com" => "Cacho",
-                    "diegokrein@gmail.com" => "Diego"
-                ));
-
-                $resultado = $this->container->get('mailer')->send($mensaje);
-                /*
-                if (!$this->container->get('mailer')->send($mensaje, $failures)) {
-                    echo "Failures:";
-                    print_r($failures);
-                    $this->get('session')->getFlashBag()->add('error', 'No se pudo enviar el archivo');
+                //Recupero los responsables a los cuales se les envia el mail:
+                $responsables = $em->getRepository('SistemaCajaBundle:Responsable')->getResponsablesActivos();
+                $lista = array();
+                foreach ($responsables as $responsable) {
+                    $lista[] = $responsable->getEmail();
                 }
-                */
-                if ($resultado != 0) {
-                    $this->get('session')->getFlashBag()->add('success', 'El archivo fue enviado exitosamente.');
-                } else {
-                    $this->get('session')->getFlashBag()->add('error', 'No se pudo enviar el archivo');
+                if (count($lista) > 0) {
+                    $mensaje->setTo($lista);
+                    $resultado = $this->container->get('mailer')->send($mensaje);
+                    if ($resultado != 0) {
+                        $this->get('session')->getFlashBag()->add('success', 'El archivo fue enviado exitosamente.');
+                    } else {
+                        $this->get('session')->getFlashBag()->add('error', 'No se pudo enviar el archivo');
+                        //Se deberia enviar un mail de todas formas, avisando del error....
+                        return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
+                    }
+                } else {//No habia destinatarios para enviar el mail
+                    $this->get('session')->getFlashBag()->add('error', 'No se pudo enviar el archivo. No hay destinatarios');
                     //Se deberia enviar un mail de todas formas, avisando del error....
                     return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
                 }
+
             } catch (Swift_TransportException $e) {
                 $em->getConnection()->rollback();
                 $em->close();
@@ -880,14 +846,13 @@ class AperturaController extends Controller
                 $this->get('session')->getFlashBag()->add('error', 'No se pudo enviar el archivo: ' . $e);
                 return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
             }
-            $deleteForm = $this->createDeleteForm($id);
             return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
         } else {
             $this->get('session')->getFlashBag()->add('error', 'No se pudieron recuperar los datos de la apertura.');
         }
 
         return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig',
-            array('entity' => $entity, 'edit_form' => $editForm->createView(), 'delete_form' => $deleteForm->createView(),));
+            array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
     }
 
 
@@ -911,6 +876,92 @@ class AperturaController extends Controller
             $referencia_formateada = substr($referencia, 0, $largo_total - 2) . "..";
         }
         return $referencia_formateada;
+
+    }
+
+    public function envioMailAction() {
+        $entity = $this->container->get('caja.manager')->getApertura();
+        $archivo_generado = $entity->getArchivoCierre();
+        $em = $this->getDoctrine()->getManager();
+        if ($entity->getComprobanteCantidad() > 0) {//Hubo cobranza
+            $caja = $this->container->get("caja.manager")->getCaja();
+            $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
+            $path_documento = $path_archivos.$archivo_generado;
+
+            $contenido = 'Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado;
+            // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
+            $mensaje_detalle = \Swift_Message::newInstance()
+            ->setSubject('Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado)
+            ->setFrom('administrador@posadas.gov.ar')
+                //->setTo('cobros@posadas.gov.ar')
+            ->setBody($contenido)
+            ->attach(\Swift_Attachment::fromPath($path_documento));//Adjunto
+
+            $contenido_resumen = 'Municipalidad de Posadas - Resumen de Cierre de Caja - ' . $archivo_generado;
+            // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
+
+            $pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagos($entity->getId());
+            $pagos_anulados = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagosAnulado($entity->getId());
+            $comprobantes_validos = $entity->getComprobanteCantidad();
+            $comprobantes_anulados = $entity->getComprobanteAnulado();
+            $mailContext = array('entity' => $entity, 'validos' => $comprobantes_validos, 'anulados' => $comprobantes_anulados, 'pagos' => $pagos, 'pagos_anulados' => $pagos_anulados);
+            $html = $this->container->get('twig')->render('SistemaCajaBundle:Apertura:email.html.twig', $mailContext);
+            $mensaje_resumen = \Swift_Message::newInstance()
+                ->setSubject('Municipalidad de Posadas - Resumen de Cierre de Caja - ' . $archivo_generado)
+                ->setFrom('administrador@posadas.gov.ar')
+                ->setBody($contenido_resumen)
+                ->addPart($html, 'text/html');
+
+
+
+
+        } else { //No hubo cobranza
+            $apertura_id = $entity->getId();
+            $numero_caja = $entity->getCaja()->getId();
+            $datos_caja = 'Caja: ' . $numero_caja . '- Apertura: ' . $apertura_id . ' - Fecha: ' . $entity->getFechaCierre();
+            $contenido = 'No hubo cobranza en la presente caja: ' . $datos_caja;
+            // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
+            $mensaje_detalle = \Swift_Message::newInstance()
+                ->setSubject('Municipalidad de Posadas - Detalle de Cierre de Caja - ' . $entity->getFechaCierre())
+                ->setFrom('administrador@posadas.gov.ar')
+                ->setBody($contenido);
+            //No hay adjunto
+
+            $contenido_resumen = 'Municipalidad de Posadas - Resumen de Cierre de Caja - ' . $entity->getFechaCierre();
+            $contenido_resumen .= 'No hubo cobranza en la presente caja: ' . $datos_caja;
+            // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
+            $mensaje_resumen = \Swift_Message::newInstance()
+                ->setSubject('Municipalidad de Posadas - Resumen de Cierre de Caja')
+                ->setFrom('administrador@posadas.gov.ar')
+                ->setBody($contenido_resumen);
+        }
+        $lista_detalle = array();
+        $lista_resumen = array();
+        //Recupero los responsables a los cuales se les envia el mail:
+        $responsables = $em->getRepository('SistemaCajaBundle:Responsable')->getResponsablesActivos();
+        $ret  =  array("ok" =>0);
+        foreach ($responsables as $responsable) {
+            if ($responsable->getDetalle()) {//Si tiene activada la opcion para recibir el archivo con el detalle del cierre
+                $lista_detalle[] = $responsable->getEmail();
+            }
+            if ($responsable->getResumen()) {//Si tiene activada la opcion para recibir el archivo con el resumen del cierre
+                $lista_resumen[] = $responsable->getEmail();
+            }
+        }
+        if (count($lista_detalle) > 0) {
+            $mensaje_detalle->setTo($lista_detalle);
+            $this->container->get('mailer')->send($mensaje_detalle);
+            $ret  =  array("ok" =>1);
+        }
+        if (count($lista_resumen) > 0) {
+            $mensaje_resumen->setTo($lista_resumen);
+            $this->container->get('mailer')->send($mensaje_resumen);
+            $ret  =  array("ok" =>1);
+        }
+        $em->close();
+        $response = new Response();
+        $response->setContent(json_encode($ret));
+        return $response;
 
     }
 }

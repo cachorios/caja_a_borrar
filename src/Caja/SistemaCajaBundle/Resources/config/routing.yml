@@ -21,3 +21,7 @@ SistemaCajaBundle_tipopago:
 SistemaCajaBundle_feriado:
     resource: "@SistemaCajaBundle/Resources/config/routing/feriado.yml"
     prefix:   /feriado
+
+SistemaCajaBundle_responsable:
+    resource: "@SistemaCajaBundle/Resources/config/routing/responsable.yml"
+    prefix:   /responsable

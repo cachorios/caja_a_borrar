@@ -45,7 +45,7 @@
                 </form>
             </div>
         </div>
-
+        <div><form id="form_envio_mail" action="{{ path('apertura_envio_mail') }}" method="post" {{ form_enctype(edit_form) }}></form></div>
     </section>
 
     {% block javascriptshead %}
@@ -72,6 +72,7 @@
         $(function() {
             $("#form_cierre").submit(function(e){
                 e.preventDefault();
+                $.blockUI({ message: "Imprimiendo ticket..." });
                 $("#form_cierre").ajaxSubmit({
                     dataType: 'json',
                     success: function(data, statusText, xhr, $form){
@@ -79,15 +80,18 @@
                         if(statusText == 'success'){
                             if(data.ok == 1){
                                 imprimirSerial(data.tk);
-                                //redirigir
-                                window.location = "{{ path('apertura') }}";
+                                //Despues de imprimir, mando el mail como una llamada ajax separada:
+                                $.unblockUI();
+                                envioMail();
                             }
                             else if(data.ok != 1){
+                                $.unblockUI();
                                 alert('Mensaje de error: ' + data.msg);
                             }
                         }
                     },
                     error: function(data){
+                        $.unblockUI();
                         alert('Mensaje de error al imprimir: ' + data.msg + '. Ticket: ' + data.tk);
 
                     }
@@ -104,11 +108,49 @@
         imprimirSerial = function(data){
             var pser = document.SerialLar;
             try {
-                pser.escribir(data);
+                //Particiono la variable tk recibida, para evitar el llenado del buffer:
+                for (var i=0;i<data.length; i+=500) {
+                    var t = new Date().getTime();
+                    while ((new Date().getTime()) -t < 1000) {
+                        //alert('timer');
+                    }
+
+                    pser.escribir(data.substr(i, 500));
+                }
+                $.unblockUI();
             } catch (e) {
+                $.unblockUI();
                 alert('Error de tipo: ' + e);
             }
         }
+
+        /**
+         * Envia el mail correspondiente
+         */
+         envioMail = function() {
+             $.blockUI({ message: "Enviando mail..." });
+             $("#form_envio_mail").ajaxSubmit({
+                 dataType: 'json',
+                 success: function(data, statusText, xhr, $form){
+
+                     if(statusText == 'success'){
+                         if(data.ok == 1){
+                             // Todo ok, por ultimo, redirigir a la ventana de apertura:
+                             $.unblockUI();
+                             window.location = "{{ path('apertura') }}";
+                         }
+                         else if(data.ok != 1){
+                             $.unblockUI();
+                             alert('Error al enviar el mail correspondiente');
+                         }
+                     }
+                 },
+                 error: function(data){
+                     $.unblockUI();
+                     alert('Error al enviar el mail correspondiente.');
+                 }
+             });
+         }
 
     </script>
 {% endblock %}

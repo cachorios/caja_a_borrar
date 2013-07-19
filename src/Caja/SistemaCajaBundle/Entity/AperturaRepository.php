@@ -156,7 +156,8 @@ class AperturaRepository extends EntityRepository
                         //51	52	    2	        Valor Decimales del Importe Cobrado
                         //53	60	    8	        Fecha de Pago – Formato AAAAMMDD
                         //61	61	    1	        Código Fijo de empresa. Uso interno de la Municipalidad de Posadas. Usar siempre un Valor Fijo = 1 (Uno)
-                        //62	65	    4	        Numero de Caja Rellenados con ceros a la izquierda
+                        //62	63	    2	        Numero de Caja Rellenados con ceros a la izquierda
+                        //64	65	    2	        Numero de Sucursal Rellenados con ceros a la izquierda = 00
                         $datos = $detalle->getCodigoBarra();
                         $decimales = explode(".",$detalle->getImporte());
                         $datos .= sprintf('%08d', $detalle->getImporte() * 100);//elimino decimales
@@ -171,7 +172,8 @@ class AperturaRepository extends EntityRepository
                         */
                         $datos .= $detalle->getFecha()->format('Ymd'); //fecha de pago
                         $datos .= 1; //Código Fijo de empresa. Uso interno. Usar siempre un Valor Fijo = 1 (Uno)
-                        $datos .= $apertura->getCaja()->getNumero(). "\n"; //Numero de Caja Rellenados con ceros a la izquierda
+                        $datos .= sprintf("%02d",$apertura->getCaja()->getNumero()); //Numero de Caja Rellenados con ceros a la izquierda
+                        $datos .= "00". "\n"; //Numero de sucursal Rellenados con ceros a la izquierda, no se esta usando
                         $write = fputs($fp, $datos);
                     }
                 }
