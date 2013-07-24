@@ -306,6 +306,8 @@ class AperturaController extends Controller
 //                    $em->persist($entity);
 //                    $em->flush();
 
+
+                    ////////////////ESTO DEBERIA IR A LA FUNCION IMPRIMIR TICKET////////////////////////////
                     $ticket = $this->get("sistemacaja.ticket");
                     $servicio_tabla = $this->get("lar.parametro.tabla");
                     $bm = $this->container->get("caja.barra");
@@ -407,7 +409,7 @@ class AperturaController extends Controller
 
                     $pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagos($entity->getId());
                     $pagosAnulado = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagosAnulado($entity->getId());
-                    $ticket = $this->get("sistemacaja.ticket");
+                    //$ticket = $this->get("sistemacaja.ticket");
                     $contenido .= str_pad("=", 40, "=", STR_PAD_BOTH). NL ;
                     $contenido .= str_pad("Apertura nro. ". $entity->getId(), 40, " ", STR_PAD_BOTH) . NL ;
                     $contenido .= str_pad("Comprobantes Validos: ". $entity->getComprobanteCantidad(), 40, " ", STR_PAD_RIGHT) . NL;
@@ -963,5 +965,189 @@ class AperturaController extends Controller
         $response->setContent(json_encode($ret));
         return $response;
 
+    }
+
+    /**
+     * Prepara la ventana desde la cual se puede reeimprimir un cierre de cobranza
+     * que no se haya impreso al cerrar la caja, por algun motivo
+     *
+     */
+    public function prepararReimpresionCierreAction($id)
+    {
+        $breadcrumbs = $this->get("white_october_breadcrumbs");
+        $breadcrumbs->addItem("Inicio", $this->get("router")->generate("home_page"));
+        $breadcrumbs->addItem("Apertura", $this->get("router")->generate("apertura"));
+        $breadcrumbs->addItem("Ver");
+
+        $em = $this->getDoctrine()->getManager();
+
+        $caja = $this->container->get('caja.manager')->getCaja();
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id, "caja" => $caja->getId()));
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Apertura entity.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+
+        return $this->render('SistemaCajaBundle:Apertura:reimprimirCierre.html.twig', array('entity' => $entity, 'caja' => $caja, 'delete_form' => $deleteForm->createView(),));
+    }
+
+    /**
+     * Permite reimprimir un cierre de caja no se haya impreso al cerrar la caja, por algun motivo
+     *
+     */
+    public function reimprimirCierreAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $caja = $this->container->get('caja.manager')->getCaja();
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id, "caja" => $caja->getId()));
+        $deleteForm = $this->createDeleteForm($id);
+        $msg = false;
+        if ($entity) {
+            $tk = $this->imprimirCierre($id);
+            if ($tk == "") {
+                 $msg = 'No se pudierno recuperar los datos del cierre.';
+            }
+        } else {
+            $msg = 'No se pudieron recuperar los datos de la apertura.';
+        }
+        //Verifico si estuvo todo ok, y devuelvo:
+        if(!$msg){
+            $ret  =  array("ok" =>1, "tk"=> $tk);
+        }else{
+            $ret  =  array("ok" =>0, "msg"=> $msg);
+        }
+
+        $response = new Response();
+        $response->setContent(json_encode($ret));
+        return $response;
+    }
+
+
+    /*
+     * Imprime o reimprime el cierre de caja.
+     */
+    public function imprimirCierre($id) {
+
+        $em = $this->getDoctrine()->getManager();
+        $tk = "";
+        $caja = $this->container->get('caja.manager')->getCaja();
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id, "caja" => $caja->getId()));
+        $ticket = $this->get("sistemacaja.ticket");
+        $servicio_tabla = $this->get("lar.parametro.tabla");
+        $bm = $this->container->get("caja.barra");
+
+        //Primer parte de la impresion: detalle de pagos por tipo de seccion:
+        $detalle_pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetallePagos($entity->getId());
+        $contenido =  str_pad("Cierre de Caja", 40, " ", STR_PAD_BOTH) . NL;
+        $nombre_seccion_actual = "";
+        $monto_total_seccion = 0;
+        $cantidad_comprobantes_seccion = 0;
+        $monto_total_general = 0;
+        $cantidad_comprobantes_general = 0;
+        foreach ($detalle_pagos as $detalle) {
+
+            $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
+            $seccion = $servicio_tabla->getParametro( $tabla, $detalle->getSeccion());
+            if ($seccion) {
+                $nombre_seccion = $seccion->getDescripcion();
+            } else {
+                $nombre_seccion = "seccion desconocida";
+            }
+
+            //Pregunto si es la misma seccion, o tengo que hacer el "cambio" (corte de control)
+            if ($nombre_seccion_actual == "") { //entra la primera vez
+                $contenido .= str_pad("-", 40, "-", STR_PAD_BOTH). NL;
+                $contenido .= str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL;
+                $contenido .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH) . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
+                $nombre_seccion_actual = $nombre_seccion;
+                $monto_total_seccion += $detalle->getImporte();
+                $cantidad_comprobantes_seccion ++;
+            } else if ($nombre_seccion == $nombre_seccion_actual) { //entra si es igual al anterior
+                $contenido .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH)  . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
+                $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
+                $seccion_actual = $servicio_tabla->getParametro( $tabla, $detalle->getSeccion());
+                if ($seccion_actual) {
+                    $nombre_seccion_actual = $seccion_actual->getDescripcion();
+                } else {
+                    $nombre_seccion_actual = "seccion desconocida";
+                }
+                $monto_total_seccion += $detalle->getImporte();
+                $cantidad_comprobantes_seccion ++;
+            } else {//corte de control, immprimo una linea, muestro totales, otra linea y empiezo otra seccion:
+                $contenido .= str_pad(" ", 40, " ", STR_PAD_BOTH). NL;
+                $contenido .= str_pad($nombre_seccion_actual . ": $ " . $monto_total_seccion, 40, " ", STR_PAD_BOTH) . NL;
+                $contenido .= str_pad("Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH) . NL;
+                $contenido .= str_pad("-", 40, "-", STR_PAD_BOTH). NL;
+                $monto_total_general += $monto_total_seccion;
+                $cantidad_comprobantes_general += $cantidad_comprobantes_seccion;
+                $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
+                $contenido .= str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL;
+                $contenido .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH)  . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
+                //INICIALIZO LOS ACUMULADORES DE SECCION
+                $monto_total_seccion =  $detalle->getImporte();;
+                $cantidad_comprobantes_seccion = 1;
+
+                $seccion_actual = $servicio_tabla->getParametro( $tabla, $detalle->getSeccion());
+                if ($seccion_actual) {
+                    $nombre_seccion_actual = $seccion_actual->getDescripcion();
+                } else {
+                    $nombre_seccion_actual = "seccion desconocida";
+                }
+            }
+        }
+        $monto_total_general += $monto_total_seccion;
+        $cantidad_comprobantes_general += $cantidad_comprobantes_seccion;
+        $contenido .= str_pad(" ", 40, " ", STR_PAD_BOTH).  NL;
+        $contenido .= str_pad($nombre_seccion_actual . ": $ " . $monto_total_seccion , 40, " ", STR_PAD_BOTH) . NL;
+        $contenido .= str_pad("Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH) . NL;
+        $contenido .= str_pad("-", 40, "-", STR_PAD_BOTH) . NL;
+        $contenido .= str_pad("TOTAL COBRADO: $ " . $monto_total_general , 40, " ", STR_PAD_BOTH) . NL;
+        $contenido .= str_pad("CANTIDAD DE COMPROBANTES: " . $cantidad_comprobantes_general, 40, " ", STR_PAD_BOTH) . NL;
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        //Segunda parte de la impresion: detalle de pagos por tipo de pago:
+        $PagoTipoPago = $em->getRepository('SistemaCajaBundle:Apertura')->getPagosByTipoPago($entity->getId());
+        $tipoPagos = array();
+        foreach ($PagoTipoPago as $tipo) {
+            if (!array_key_exists($tipo['id'], $tipoPagos)) {
+                $tipoPagos[$tipo['id']] = array($tipo['descripcion'], 0, 0);
+            }
+            $tipoPagos[$tipo['id']][1] = $tipo['importe'] + $tipo['anulado'];
+            $tipoPagos[$tipo['id']][2] = $tipo['anulado'];
+
+        }
+
+        $total_cobrado = 0;
+        $total_anulado = 0;
+        $contenido .= str_pad("=", 40, "=", STR_PAD_BOTH) . NL;
+        $contenido .= str_pad("Formas de Cobro: ", 40, " ", STR_PAD_RIGHT) . NL;
+        foreach ($tipoPagos as $tipoPago) {
+            $contenido .= str_pad($tipoPago[0] . ": ", 40, " ", STR_PAD_RIGHT) . NL ;
+            $contenido .= str_pad("Cobrado: $" . $tipoPago[1] . "-Anulado: $ " . $tipoPago[2], 40, "-", STR_PAD_LEFT) . NL;
+            $total_cobrado += $tipoPago[1];
+            $total_anulado += $tipoPago[2];
+        }
+
+        ///////////////////////////////////////////////////////////////////////////
+        //Tercer parte de la impresion: cantidad de comprobantes y montos finales:
+
+        $pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagos($entity->getId());
+        $pagosAnulado = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagosAnulado($entity->getId());
+        //$ticket = $this->get("sistemacaja.ticket");
+        $contenido .= str_pad("=", 40, "=", STR_PAD_BOTH). NL ;
+        $contenido .= str_pad("Apertura nro. ". $entity->getId(), 40, " ", STR_PAD_BOTH) . NL ;
+        $contenido .= str_pad("Comprobantes Validos: ". $entity->getComprobanteCantidad(), 40, " ", STR_PAD_RIGHT) . NL;
+        $contenido .= str_pad("Comprobantes Anulados: ". $entity->getComprobanteAnulado(), 40, " ",STR_PAD_RIGHT) . NL;
+        $contenido .= str_pad("Importe Cobrado: $ ". $pagos, 40, " ", STR_PAD_RIGHT) . NL;
+        $contenido .= str_pad("Importe Anulado:. $ ". $pagosAnulado, 40, " ",STR_PAD_RIGHT) . NL;
+
+        $ticket->setContenido($contenido);
+        $tk .= $ticket->getTicketFull();
+        $tk .= $ticket->getTicketTestigo();
+
+        return $tk;
     }
 }

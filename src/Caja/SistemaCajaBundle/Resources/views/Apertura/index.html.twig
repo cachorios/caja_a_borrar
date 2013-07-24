@@ -109,6 +109,9 @@
                                     <a class="btn btn-mini" href="{{ path('apertura_preparar_envio', { 'id': entity.id }) }}">
                                         {{ 'Reenviar Archivo'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
                                     </a>
+                                    <a class="btn btn-mini" href="{{ path('apertura_preparar_reimpresion_cierre', { 'id': entity.id }) }}">
+                                        {{ 'Reemprimir Cierre'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                                    </a>
                                 {% endif %}
                             </td>
                         </tr>

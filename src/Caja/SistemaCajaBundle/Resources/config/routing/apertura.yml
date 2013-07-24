@@ -63,7 +63,14 @@ apertura_preparar_envio:
     pattern:  /{id}/prepararEnvio
     defaults: { _controller: "SistemaCajaBundle:Apertura:prepararEnvio" }
 
-
 apertura_enviar_mail:
     pattern:  /{id}/enviarMail
     defaults: { _controller: "SistemaCajaBundle:Apertura:enviarMail" }
+
+apertura_preparar_reimpresion_cierre:
+    pattern:  /{id}/prepararReimpresionCierre
+    defaults: { _controller: "SistemaCajaBundle:Apertura:prepararReimpresionCierre" }
+
+apertura_reimprimir_cierre:
+    pattern:  /{id}/reimprimirCierre
+    defaults: { _controller: "SistemaCajaBundle:Apertura:reimprimirCierre" }
