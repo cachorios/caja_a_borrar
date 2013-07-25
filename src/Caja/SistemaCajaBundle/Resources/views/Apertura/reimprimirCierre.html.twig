@@ -56,18 +56,18 @@
 
         <div class="row-fluid">
             <div class="span12">
-                <div class="offset2 span2">
-                    <a class="btn" href="{{ path('apertura') }}">
-                        {{ 'views.recordactions.backtothelist'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
-                    </a>
-                </div>
-                {% if entity.fechaCierre %}
-                    <div class="span2">
-                        <a class="btn btn-primary" href="{{ path('apertura_reimprimir_cierre', { 'id': entity.id }) }}">
-                            {{ 'Reimprimir'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                <form id="form_reimpresion_cierre" class="form-horizontal" action="{{ path('apertura_reimprimir_cierre', { 'id': entity.id }) }}">
+                    <div class="offset2 span2">
+                        <a class="btn" href="{{ path('apertura') }}">
+                            {{ 'views.recordactions.backtothelist'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
                         </a>
                     </div>
-                {% endif %}
+                    {% if entity.fechaCierre %}
+                        <div class="span2">
+                            <button type="submit" class="btn btn-success">{{ 'Reimprimir'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
+                        </div>
+                    {% endif %}
+                </form>
             </div>
         </div>
 
@@ -95,7 +95,7 @@
         $(function() {
             $("#form_reimpresion_cierre").submit(function(e){
                 e.preventDefault();
-                $.blockUI({ message: "Imprimiendo ticket..." });
+                $.blockUI({ message: "Reimprimiendo ticket..." });
                 $("#form_reimpresion_cierre").ajaxSubmit({
                     dataType: 'json',
                     success: function(data, statusText, xhr, $form){
