@@ -74,3 +74,11 @@ apertura_preparar_reimpresion_cierre:
 apertura_reimprimir_cierre:
     pattern:  /{id}/reimprimirCierre
     defaults: { _controller: "SistemaCajaBundle:Apertura:reimprimirCierre" }
+
+apertura_preparar_reimpresion_ticket:
+    pattern:  /{id}prepararReimpresionTicket
+    defaults: { _controller: "SistemaCajaBundle:Apertura:prepararReimpresionTicket" }
+
+apertura_reimprimir_ticket:
+    pattern:  /{id}/reimprimirTicket
+    defaults: { _controller: "SistemaCajaBundle:Apertura:reimprimirTicket" }

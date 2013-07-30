@@ -1038,4 +1038,67 @@ class AperturaController extends Controller
 
         return $tk;
     }
+
+    /**
+     * Prepara la ventana desde la cual se puede reeimprimir un ticket de cobranza
+     * que no se haya impreso al momento del cobro, por algun motivo
+     *
+     */
+    public function prepararReimpresionTicketAction($id)
+    {
+        $breadcrumbs = $this->get("white_october_breadcrumbs");
+        $breadcrumbs->addItem("Inicio", $this->get("router")->generate("home_page"));
+        $breadcrumbs->addItem("Apertura", $this->get("router")->generate("apertura"));
+        $breadcrumbs->addItem("Ver");
+
+        $em = $this->getDoctrine()->getManager();
+
+        $caja = $this->container->get('caja.manager')->getCaja();
+
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id, "caja" => $caja->getId()));
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Apertura entity.');
+        } else {
+            $entities= $em->getRepository('SistemaCajaBundle:Apertura')->getDetallePagos($entity->getId());
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+
+        return $this->render('SistemaCajaBundle:Apertura:reimprimirTicket.html.twig', array('entities' => $entities, 'caja' => $caja, 'delete_form' => $deleteForm->createView(),));
+    }
+
+    /**
+     * Permite reimprimir un ticket que no se haya impreso al momento del cobro, por algun motivo
+     *
+     */
+    public function reimprimirTicketAction($id) {
+        /*
+        $em = $this->getDoctrine()->getManager();
+
+        $caja = $this->container->get('caja.manager')->getCaja();
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id, "caja" => $caja->getId()));
+        $deleteForm = $this->createDeleteForm($id);
+        $msg = false;
+        if ($entity) {
+            $tk = $this->imprimirCierre($id);
+            if ($tk == "") {
+                $msg = 'No se pudieron recuperar los datos del cierre.';
+            }
+        } else {
+            $msg = 'No se pudieron recuperar los datos de la apertura.';
+        }
+        //Verifico si estuvo todo ok, y devuelvo:
+        if(!$msg){
+            $ret  =  array("ok" =>1, "tk"=> $tk);
+        }else{
+            $ret  =  array("ok" =>0, "msg"=> $msg);
+        }
+
+        $response = new Response();
+        $response->setContent(json_encode($ret));
+        return $response;
+        */
+    }
+
 }
