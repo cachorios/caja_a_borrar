@@ -7,6 +7,7 @@ fixtures:
         comprobante: 1
         importe: 62
         anulado: 0
+        seccion: 1
     ld2:
         lote: l2
         fecha: '20130112'
@@ -14,6 +15,7 @@ fixtures:
         codigo_barra: '011201120112012100545'
         importe: 85
         anulado: 0
+        seccion: 2
     ld3:
         lote: l2
         fecha: '20130112'
@@ -21,6 +23,7 @@ fixtures:
         codigo_barra: '011201120112012100544'
         importe: 90
         anulado: 0
+        seccion: 3
     ld4:
         lote: l3
         fecha: '20130112'
@@ -28,3 +31,4 @@ fixtures:
         codigo_barra: '011201120112012100545'
         importe: 285.36
         anulado: 1
+        seccion: 4

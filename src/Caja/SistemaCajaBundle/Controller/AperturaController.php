@@ -1040,11 +1040,12 @@ class AperturaController extends Controller
     }
 
     /**
-     * Prepara la ventana desde la cual se puede reeimprimir un ticket de cobranza
-     * que no se haya impreso al momento del cobro, por algun motivo
+     * Prepara la ventana desde la cual se puede reimprimir un ticket de cobranza
+     * que no se haya impreso al momento del cobro, por algun motivo.
+     * Lista los tickets cobrados en la caja actual
      *
      */
-    public function prepararReimpresionTicketAction($id)
+    public function mostrarReimpresionTicketsAction($id)
     {
         $breadcrumbs = $this->get("white_october_breadcrumbs");
         $breadcrumbs->addItem("Inicio", $this->get("router")->generate("home_page"));
@@ -1065,40 +1066,89 @@ class AperturaController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('SistemaCajaBundle:Apertura:reimprimirTicket.html.twig', array('entities' => $entities, 'caja' => $caja, 'delete_form' => $deleteForm->createView(),));
+        return $this->render('SistemaCajaBundle:Apertura:mostrarReimpresionTickets.html.twig', array('entities' => $entities, 'caja' => $caja, 'delete_form' => $deleteForm->createView(),));
     }
 
+
     /**
-     * Permite reimprimir un ticket que no se haya impreso al momento del cobro, por algun motivo
+     * Prepara la ventana desde la cual se puede reeimprimir un ticket
+     * que no se haya impreso al momento del registro, por algun motivo.
+     * Es como una ventana previa o de confirmación, antes de reimprimir.
      *
      */
-    public function reimprimirTicketAction($id) {
-        /*
+    public function prepararReimpresionTicketAction($id)
+    {
+        $breadcrumbs = $this->get("white_october_breadcrumbs");
+        $breadcrumbs->addItem("Inicio", $this->get("router")->generate("home_page"));
+        $breadcrumbs->addItem("Apertura", $this->get("router")->generate("apertura"));
+        $breadcrumbs->addItem("Ver");
+
         $em = $this->getDoctrine()->getManager();
 
         $caja = $this->container->get('caja.manager')->getCaja();
-        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id, "caja" => $caja->getId()));
-        $deleteForm = $this->createDeleteForm($id);
-        $msg = false;
-        if ($entity) {
-            $tk = $this->imprimirCierre($id);
-            if ($tk == "") {
-                $msg = 'No se pudieron recuperar los datos del cierre.';
-            }
-        } else {
-            $msg = 'No se pudieron recuperar los datos de la apertura.';
+        $detalle = $em->getRepository('SistemaCajaBundle:LoteDetalle')->findOneBy(array('id' => $id));
+
+        if (!$detalle) {
+            throw $this->createNotFoundException('Unable to find LoteDetalle entity.');
         }
-        //Verifico si estuvo todo ok, y devuelvo:
-        if(!$msg){
-            $ret  =  array("ok" =>1, "tk"=> $tk);
-        }else{
-            $ret  =  array("ok" =>0, "msg"=> $msg);
+
+        $bm = $this->container->get("caja.barra");
+        $servicio_tabla = $this->get("lar.parametro.tabla");
+        $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
+        $seccion = $servicio_tabla->getParametro( $tabla, $detalle->getSeccion());
+        if ($seccion) {
+            $seccion = $seccion->getDescripcion();
+        } else {
+            $seccion = "seccion desconocida";
+        }
+        $referencia = $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH);
+        $deleteForm = $this->createDeleteForm($id);
+
+        return $this->render('SistemaCajaBundle:Apertura:reimprimirTicket.html.twig', array('entity' => $detalle, 'caja' => $caja, 'delete_form' => $deleteForm->createView(), 'seccion' =>$seccion, 'referencia' => $referencia));
+    }
+
+
+
+    /**
+     * Reimprime un ticket que no se haya impreso al momento del cobro, por algun motivo
+     *
+     */
+    public function reimprimirTicketAction($id) {
+
+        $tk = "";
+        $ticket = $this->get("sistemacaja.ticket");
+        $msg=false;
+        $em = $this->getDoctrine()->getManager();
+        $caja = $this->container->get('caja.manager')->getCaja();
+        $detalle = $em->getRepository('SistemaCajaBundle:LoteDetalle')->findOneBy(array('id' => $id));
+        if ($detalle) {
+            $ticket->setContenido(array(
+                    array("Comprobante " . $detalle->getComprobante(), $detalle->getImporte()),
+                )
+
+            );
+            $ticket->setValores(array(
+                'ticket' => $detalle->getId(),
+                'codigobarra' => $detalle->getCodigoBarra(),
+                'referencia' => $detalle->getReferencia()
+            ));
+            $tk .= $ticket->getTicketFull();
+            $tk .= $ticket->getTicketTestigo();
+
+        } else {
+            $msg = 'No se pudieron recuperar los datos del comprobante.';
+        }
+
+        if (!$msg) {
+            $ret = array("ok" => 1, "tk" => $tk);
+        } else {
+            $ret = array("ok" => 0, "msg" => $msg);
         }
 
         $response = new Response();
         $response->setContent(json_encode($ret));
         return $response;
-        */
+
     }
 
 }

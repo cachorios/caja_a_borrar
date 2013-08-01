@@ -6,16 +6,18 @@ fixtures:
         identificador: '[1,4][18,1]'
         valor: 93392
         longitud: 44
+        conReferencia: true
     c2:
         nombre: MP Sistema Comercio
         empresa: MP
         identificador: '[1,4][18,1][19,1]'
         valor: 933913
         longitud: 44
-
+        conReferencia: false
     c4:
         nombre: MP Convenios ant.
         empresa: MP
         identificador: '[1,4][18,1][19,1]'
         valor: 933916
         longitud: 44
+        conReferencia: false

@@ -114,7 +114,7 @@
                                     </a>
                                 {% endif %}
                                 {%if  not entity.fechacierre and is_granted('ROLE_ADMIN') %}
-                                    <a class="btn btn-mini" href="{{ path('apertura_preparar_reimpresion_ticket', { 'id': entity.id }) }}">
+                                    <a class="btn btn-mini" href="{{ path('apertura_mostrar_reimpresion_tickets', { 'id': entity.id }) }}">
                                         {{ 'Reimprimir Ticket'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
                                     </a>
                                 {% endif %}
