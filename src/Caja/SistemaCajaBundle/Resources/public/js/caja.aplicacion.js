@@ -122,3 +122,15 @@ function formato_numero(numero, decimales, separador_decimal, separador_miles) {
 
     return numero;
 }
+
+/**
+ * Genera retardo
+ * @param millis
+ */
+function pausa(millis)
+{
+    var date = new Date();
+    var curDate = null;
+    do { curDate = new Date(); }
+    while(curDate-date < millis);
+}

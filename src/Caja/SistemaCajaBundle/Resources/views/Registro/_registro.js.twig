@@ -1,7 +1,6 @@
 <script type="text/javascript">
 
 
-
 $('#load_indicador')
         .ajaxStart(function () {
             //$('body').append('"<div class="ajax_block"></div>');
@@ -272,7 +271,7 @@ $(document).ready(function (e) {
     postAddPago = function (row, i) {
         /**El pago por defecto, como es fijo en la primer carga de la pagina se pasa como parametro
          * al renderview, asi no lo tenemos que esta pidiendo
-          */
+         */
 
         $("#caja_sistemacajabundle_registrotype_pagos_" + i + "_tipo_pago").val(tipoPagoDefault);
         $("#caja_sistemacajabundle_registrotype_pagos_" + i + "_importe").val(formato_numero(totalComprobante - totalPago, 2, "."));
@@ -360,25 +359,9 @@ $(document).ready(function (e) {
             ],
             success: function (result) {
                 if (result == "Si") {
-                    miForm = $("form", "#form_CodigoBarra"); //.submit();
 
-                    $.ajax({
-                        type: 'POST',
-                        url: $(miForm).attr('action'),
-                        data: $(miForm).serialize(),
-                        dataType: "json",
-                        success: function(data) {
-                            //$('#result').html(data);
-                            if(data.ok == 1){
-                                imprimirSerial(data.ticket);
-                                //redirigir
-                                window.location = "{{ path('registro') }}";
-                            }
-                            else if(data.ok != 1){
-                                alert(data.error);
-                            }
-                        }
-                    })
+                    //guardarRegistro sera llamado si el estado esta ok!
+                    varificarEstadoSerial("guardarRegistro");
                     return false;
                 }
                 if (result == "Cancelar") {
@@ -390,20 +373,82 @@ $(document).ready(function (e) {
         e.preventDefault();
         return false;
 
-    })
+    });
+
+    /**
+     * Guarda el registro y manda a imprmir
+     */
+    guardarRegistro = function () {
+        miForm = $("form", "#form_CodigoBarra"); //.submit();
+
+        $.ajax({
+            type: 'POST',
+            url: $(miForm).attr('action'),
+            data: $(miForm).serialize(),
+            dataType: "json",
+            success: function (data) {
+                //$('#result').html(data);
+                if (data.ok == 1) {
+                    imprimirSerial(data.ticket);
+                    //redirigir
+                    window.location = "{{ path('registro') }}";
+                }
+                else if (data.ok != 1) {
+                    alert(data.error);
+                }
+            }
+        })
+    }
+
 
     /**
      * Manda a la impresora fiscal.
      * @param data
      */
-    imprimirSerial = function(data){
+    varificarEstadoSerial = function (sFuncion) {
         var pser = document.SerialLar;
         try {
-            pser.escribir(data);
+
+            pser.ifEstadoRun(sFuncion);
         } catch (e) {
             alert(e);
         }
     }
+
+    /**
+     * Manda a la impresora fiscal.
+     * @param data
+     */
+    imprimirSerial = function (data) {
+        var pser = document.SerialLar;
+        try {
+            if (impresoraOK == 1) {
+                pser.escribir(data);
+            }
+
+        } catch (e) {
+            alert(e);
+        }
+    }
+
+    /**
+     * Estado de la impresora fiscal.
+     */
+    estadoSerial = function () {
+        var pser = document.SerialLar;
+        try {
+            impresoraOK = 0;
+            esperandoEstado = 1;
+            pser.getEstado();
+        } catch (e) {
+            alert(e);
+        }
+    }
+
+
+    $("#estado").click(function () {
+        estadoSerial();
+    });
 
 
 }); //fin document ready

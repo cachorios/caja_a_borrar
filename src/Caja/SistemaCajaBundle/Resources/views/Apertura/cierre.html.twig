@@ -123,6 +123,22 @@
                 alert('Error de tipo: ' + e);
             }
         }
+		
+		function noticia(parm, tipo){
+				if(tipo >0){
+					$.msgBox({
+						title: "Error TICKETADORA",
+						content: parm,
+						type: "error",
+						success: function (result) {
+							window.location = "{{ path("apertura_monitor")}}";
+						}
+					});
+				}else{
+					$("#msgBarra").html("TICKET: "+parm);
+				}
+				
+			}
 
         /**
          * Envia el mail correspondiente
