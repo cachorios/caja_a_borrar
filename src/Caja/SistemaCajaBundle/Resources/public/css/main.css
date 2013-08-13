@@ -45,8 +45,9 @@
 #mod_TipoPago .container aside nav ul .tipopago,
 #mod_codigobarra .container aside nav ul .codigobarra,
 #mod_larparametro .container aside nav ul .larparametro,
+#mod_usuario .container aside nav ul .usuario,
+#mod_anular .container aside nav ul .anular
 
-#mod_usuario .container aside nav ul .usuario
 {color:#ffffff;text-shadow:0 -1px 0 rgba(0, 0, 0, 0.25);background-color:#ef643e;background-image:-moz-linear-gradient(top, #ff764e, #d64926);background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#ff764e), to(#d64926));background-image:-webkit-linear-gradient(top, #ff764e, #d64926);background-image:-o-linear-gradient(top, #ff764e, #d64926);background-image:linear-gradient(to bottom, #ff764e, #d64926);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffff764e', endColorstr='#ffd64926', GradientType=0);border-color:#d64926 #d64926 #95331a;border-color:rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);border-top:1px solid #d27349;border-bottom:1px solid rgba(0, 0, 0, 0.9);}
 
 /*------------- Navegacion izquierda hover  -----------*/
@@ -54,14 +55,15 @@
 #mod_monitor .container aside nav ul .monitor a:hover,
 #mod_registro .container aside nav ul .registro a:hover,
 #mod_apertura .container aside nav ul .apertura  a:hover,
-#mod_apertura .container aside nav ul .cierre  a:hover,
+#mod_cierre .container aside nav ul .cierre  a:hover,
 #mod_caja .container aside nav ul .caja a:hover,
 #mod_feriado .container aside nav ul .feriado a:hover,
 #mod_responsable .container aside nav ul .responsable a:hover,
 #mod_TipoPago .container aside nav ul .tipopago a:hover,
 #mod_codigobarra .container aside nav ul .codigobarra a:hover,
 #mod_larparametro .container aside nav ul .larparametro  a:hover,
-#mod_usuario .container aside nav ul .usuario a:hover
+#mod_usuario .container aside nav ul .usuario a:hover,
+#mod_anular .container aside nav ul .anular a:hover
 
 {background-color: transparent  !important;}
 /*----------- FIN LEFT NAV  -----------------*

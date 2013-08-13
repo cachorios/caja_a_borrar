@@ -19,7 +19,7 @@ class AperturaRepository extends EntityRepository
             ->join("a.caja","c")
             ->where('c.cajero = :cajero')
             ->setParameter("cajero", $usuario->getId())
-            ->orderBy("a.fecha",'asc');
+            ->orderBy("a.fecha",'desc');
 
         return $a;
     }

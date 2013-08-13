@@ -1,0 +1,131 @@
+{% extends '::layout.html.twig' %}
+{% block id 'mod_reimprimir_ticket' %}
+
+{% block title %}
+    {{ parent() }} - Apertura {{ 'views.show.show'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+{% endblock %}
+
+{% block page %}
+
+    <section id="view_Apertura">
+        <header>
+            <h1>Apertura  - {{ caja.nombre }} - Reimpresión de Tickets</h1>
+        </header>
+        {{ wo_render_breadcrumbs() }}
+        {% for type, flashMessages in app.session.flashbag.all() %}
+            {% for flashMessage in flashMessages %}
+                <div class='alert alert-{{ type }}'>
+                    {{ flashMessage|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+        <div class="row-fluid">
+            <div class="span12">
+
+                <table class="table table-striped table-bordered table-condensed">
+                    <thead>
+                    <tr>
+                        <th>Nro Comprobante</th>
+                        <th>Fecha</th>
+                        <th>Código de Barra</th>
+                        <th>Importe</th>
+                        <th>{{ 'views.index.actions'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for entity in entities %}
+                        <tr>
+                            <td>{{ entity.id }}</td>
+                            <td>{% if entity.fecha %}{{ entity.fecha|date('d-m-Y H:i:s') }}{% endif %}</td>
+                            <td>{{ entity.codigoBarra }}</td>
+                            <td>{{ entity.importe | number_format(2, '.', ',')  }}</td>
+                            <td>{% if is_granted('ROLE_ADMIN') %}
+                                    <a class="btn btn-mini" href="{{ path('apertura_preparar_reimpresion_ticket', { 'id': entity.id }) }}">
+                                        {{ 'Reimprimir'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    {% block javascriptshead %}
+        <script src="{{  asset('js/jquery.form.min.js') }}"></script>
+        <script src="{{  asset('js/deployJava.js') }}"></script>
+    {% endblock %}
+
+    <script>
+
+        var attributes = {
+            code:       "applet.Main",
+            archive:    "{{  asset('SerialLar.jar')}}",
+            width:      5,
+            height:     5,
+            id:			'SerialLar',
+            visible: false
+        };
+        var parameters = {separate_jvm:"true", draggable:"true", jnlp_href:"{{  asset('SerialLar.jnlp') }}", puerto: "{{ caja.puerto }}"}; <!-- Applet Parameters -->
+        var version = "1.5"; <!-- Required Java Version -->
+        deployJava.runApplet(attributes, parameters, version);
+    </script>
+
+    <script>
+        $(function() {
+            $("#form_reimpresion_ticket").submit(function(e){
+                e.preventDefault();
+                $.blockUI({ message: "Reimprimiendo ticket..." });
+                $("#form_reimpresion_ticket").ajaxSubmit({
+                    dataType: 'json',
+                    success: function(data, statusText, xhr, $form){
+
+                        if(statusText == 'success'){
+                            if(data.ok == 1){
+                                imprimirSerial(data.tk);
+                                //Despues de imprimir, mando el mail como una llamada ajax separada:
+                                $.unblockUI();
+                                window.location = "{{ path('apertura') }}";
+                            }
+                            else if(data.ok != 1){
+                                $.unblockUI();
+                                alert('Mensaje de error: ' + data.msg);
+                            }
+                        }
+                    },
+                    error: function(data){
+                        $.unblockUI();
+                        alert('Mensaje de error al reimprimir: ' + data.msg + '. Ticket: ' + data.tk);
+
+                    }
+                });
+
+                return false;
+            });
+        });
+
+        /**
+         * Manda a la impresora fiscal.
+         * @param data
+         */
+        imprimirSerial = function(data){
+            var pser = document.SerialLar;
+            try {
+                //Particiono la variable tk recibida, para evitar el llenado del buffer:
+                for (var i=0;i<data.length; i+=500) {
+                    var t = new Date().getTime();
+                    while ((new Date().getTime()) -t < 1000) {
+                        //alert('timer');
+                    }
+
+                    pser.escribir(data.substr(i, 500));
+                }
+                $.unblockUI();
+            } catch (e) {
+                $.unblockUI();
+                alert('Error de tipo: ' + e);
+            }
+        }
+    </script>
+{% endblock %}

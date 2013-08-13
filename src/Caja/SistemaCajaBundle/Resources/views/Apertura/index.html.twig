@@ -109,6 +109,14 @@
                                     <a class="btn btn-mini" href="{{ path('apertura_preparar_envio', { 'id': entity.id }) }}">
                                         {{ 'Reenviar Archivo'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
                                     </a>
+                                    <a class="btn btn-mini" href="{{ path('apertura_preparar_reimpresion_cierre', { 'id': entity.id }) }}">
+                                        {{ 'Reimprimir Cierre'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                                    </a>
+                                {% endif %}
+                                {%if  not entity.fechacierre and is_granted('ROLE_ADMIN') %}
+                                    <a class="btn btn-mini" href="{{ path('apertura_mostrar_reimpresion_tickets', { 'id': entity.id }) }}">
+                                        {{ 'Reimprimir Ticket'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                                    </a>
                                 {% endif %}
                             </td>
                         </tr>

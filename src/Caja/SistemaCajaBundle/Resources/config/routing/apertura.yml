@@ -63,7 +63,29 @@ apertura_preparar_envio:
     pattern:  /{id}/prepararEnvio
     defaults: { _controller: "SistemaCajaBundle:Apertura:prepararEnvio" }
 
-
 apertura_enviar_mail:
     pattern:  /{id}/enviarMail
     defaults: { _controller: "SistemaCajaBundle:Apertura:enviarMail" }
+
+apertura_preparar_reimpresion_cierre:
+    pattern:  /{id}/prepararReimpresionCierre
+    defaults: { _controller: "SistemaCajaBundle:Apertura:prepararReimpresionCierre" }
+
+apertura_reimprimir_cierre:
+    pattern:  /{id}/reimprimirCierre
+    defaults: { _controller: "SistemaCajaBundle:Apertura:reimprimirCierre" }
+
+apertura_mostrar_reimpresion_tickets:
+    #en esta ventana se ven los tickets cobrados en la caja actual
+    pattern:  /{id}/mostrarReimpresionTickets
+    defaults: { _controller: "SistemaCajaBundle:Apertura:mostrarReimpresionTickets" }
+
+apertura_preparar_reimpresion_ticket:
+    #en esta ventana se ven los datos del ticket seleccionado en la ventana anterior
+    pattern:  /{id}/prepararReimpresionTicket
+    defaults: { _controller: "SistemaCajaBundle:Apertura:prepararReimpresionTicket" }
+
+apertura_reimprimir_ticket:
+    #en esta accion recien se reimprime el ticket
+    pattern:  /{id}/reimprimirTicket
+    defaults: { _controller: "SistemaCajaBundle:Apertura:reimprimirTicket" }

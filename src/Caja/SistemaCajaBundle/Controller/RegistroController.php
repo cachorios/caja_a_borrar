@@ -73,10 +73,6 @@ class RegistroController extends Controller implements IControllerAuditable
 
                 //Aqui debe retornar al timbrado de cada comprobante
 
-                //Esto ya no va por la llamada ajax!!
-//				$this->get('session')->getFlashBag()->add('success', 'flash.create.success');
-//				return $this->redirect($this->generateUrl('registro'));
-
                 $tk = "";
                 foreach ($lote->getDetalle() as $detalle) {
                     $ticket = $this->get("sistemacaja.ticket");
@@ -101,7 +97,6 @@ class RegistroController extends Controller implements IControllerAuditable
 
 
             } else {
-                //$this->get('session')->getFlashBag()->add('error', $msg );
                 $response->setContent(json_encode(array(
                     "ok" => 0,
                     "error" => $msg
@@ -118,15 +113,6 @@ class RegistroController extends Controller implements IControllerAuditable
 
         return $response;
 
-        /*
-		return $this->render("SistemaCajaBundle:Registro:registro.html.twig", array(
-				"lote" => $lote,
-				"form" => $form->createView(),
-				"caja" => $caja,
-				"apertura" => $apertura
-			)
-		);
-        */
     }
 
     private function validarDetallesPagos(Lote $lote)
