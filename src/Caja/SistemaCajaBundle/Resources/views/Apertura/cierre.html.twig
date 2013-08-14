@@ -46,6 +46,7 @@
             </div>
         </div>
         <div><form id="form_envio_mail" action="{{ path('apertura_envio_mail') }}" method="post" {{ form_enctype(edit_form) }}></form></div>
+        {% include 'SistemaCajaBundle:Apertura:_cierre.js.twig' %}
     </section>
 
     {% block javascriptshead %}
@@ -54,6 +55,10 @@
     {% endblock %}
 
     <script>
+
+        var bOpen = 0;
+        var impresoraOK = 0; // de inicio no esta ok, verificar estado
+        var esperandoEstado = 1;
 
         var attributes = {
             code:       "applet.Main",
@@ -66,107 +71,42 @@
         var parameters = {separate_jvm:"true", draggable:"true", jnlp_href:"{{  asset('SerialLar.jnlp') }}", puerto: "{{ caja.puerto }}"}; <!-- Applet Parameters -->
         var version = "1.5"; <!-- Required Java Version -->
         deployJava.runApplet(attributes, parameters, version);
-    </script>
 
-    <script>
-        $(function() {
-            $("#form_cierre").submit(function(e){
-                e.preventDefault();
-                $.blockUI({ message: "Imprimiendo ticket..." });
-                $("#form_cierre").ajaxSubmit({
-                    dataType: 'json',
-                    success: function(data, statusText, xhr, $form){
-
-                        if(statusText == 'success'){
-                            if(data.ok == 1){
-                                imprimirSerial(data.tk);
-                                //Despues de imprimir, mando el mail como una llamada ajax separada:
-                                $.unblockUI();
-                                envioMail();
-                            }
-                            else if(data.ok != 1){
-                                $.unblockUI();
-                                alert('Mensaje de error: ' + data.msg);
-                            }
-                        }
-                    },
-                    error: function(data){
-                        $.unblockUI();
-                        alert('Mensaje de error al imprimir: ' + data.msg + '. Ticket: ' + data.tk);
-
+        function noticia(parm, tipo) {
+            esperandoEstado = 0;
+            if(tipo == 0) {
+                impresoraOK = 1;
+            }else if (tipo == 1) {
+                bOpen = 1
+                $.msgBox({
+                    title: "Error TICKETADORA",
+                    content: parm,
+                    type: "alert",
+                    autoClose: true,
+                    timeOut: 2000,
+                    showButtons: false,
+                    success: function (result) {
+                        //window.location = "{{ path("apertura_monitor")}}";
+                        bOpen = 0;
+                        impresoraOK = 0;
                     }
                 });
-
-                return false;
-            });
-        });
-
-        /**
-         * Manda a la impresora fiscal.
-         * @param data
-         */
-        imprimirSerial = function(data){
-            var pser = document.SerialLar;
-            try {
-                //Particiono la variable tk recibida, para evitar el llenado del buffer:
-                for (var i=0;i<data.length; i+=500) {
-                    var t = new Date().getTime();
-                    while ((new Date().getTime()) -t < 1000) {
-                        //alert('timer');
+            }else if (tipo == 2) {
+                bOpen = 1;
+                $.msgBox({
+                    title: "Error TICKETADORA",
+                    content: parm,
+                    type: "error",
+                    success: function (result) {
+                        bOpen = 0;
+                        impresoraOK = 0;
+                        window.location = "{{ path("apertura_monitor")}}";
                     }
-
-                    pser.escribir(data.substr(i, 500));
-                }
-                $.unblockUI();
-            } catch (e) {
-                $.unblockUI();
-                alert('Error de tipo: ' + e);
+                });
+            } else {
+                impresoraOK = 1;
+                $("#msgBarra").html("TICKET: " + parm+ " "+tipo);
             }
         }
-		
-		function noticia(parm, tipo){
-				if(tipo >0){
-					$.msgBox({
-						title: "Error TICKETADORA",
-						content: parm,
-						type: "error",
-						success: function (result) {
-							window.location = "{{ path("apertura_monitor")}}";
-						}
-					});
-				}else{
-					$("#msgBarra").html("TICKET: "+parm);
-				}
-				
-			}
-
-        /**
-         * Envia el mail correspondiente
-         */
-         envioMail = function() {
-             $.blockUI({ message: "Enviando mail..." });
-             $("#form_envio_mail").ajaxSubmit({
-                 dataType: 'json',
-                 success: function(data, statusText, xhr, $form){
-
-                     if(statusText == 'success'){
-                         if(data.ok == 1){
-                             // Todo ok, por ultimo, redirigir a la ventana de apertura:
-                             $.unblockUI();
-                             window.location = "{{ path('apertura') }}";
-                         }
-                         else if(data.ok != 1){
-                             $.unblockUI();
-                             alert('Error al enviar el mail correspondiente');
-                         }
-                     }
-                 },
-                 error: function(data){
-                     $.unblockUI();
-                     alert('Error al enviar el mail correspondiente.');
-                 }
-             });
-         }
-
     </script>
 {% endblock %}

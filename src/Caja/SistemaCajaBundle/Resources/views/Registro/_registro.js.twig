@@ -361,7 +361,7 @@ $(document).ready(function (e) {
                 if (result == "Si") {
 
                     //guardarRegistro sera llamado si el estado esta ok!
-                    varificarEstadoSerial("guardarRegistro");
+                    verificarEstadoSerial("guardarRegistro");
                     return false;
                 }
                 if (result == "Cancelar") {
@@ -402,10 +402,10 @@ $(document).ready(function (e) {
 
 
     /**
-     * Manda a la impresora fiscal.
-     * @param data
+     * Determina el estado de la impresora
+     * @param nombre de la funcion a ejecutar si esta todo ok
      */
-    varificarEstadoSerial = function (sFuncion) {
+    verificarEstadoSerial = function (sFuncion) {
         var pser = document.SerialLar;
         try {
 

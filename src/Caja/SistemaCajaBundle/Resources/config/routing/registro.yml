@@ -10,7 +10,6 @@ registro_barra:
       pattern:  /barra
       defaults: { _controller: "SistemaCajaBundle:Registro:barraDetalle" }
 
-
-registro_ticket:
-      pattern:  /{tipo}/ticket
-      defaults: { _controller: "SistemaCajaBundle:Registro:getTicket" }
+#registro_ticket:
+#      pattern:  /{tipo}/ticket
+#      defaults: { _controller: "SistemaCajaBundle:Registro:getTicket" }
