@@ -184,8 +184,6 @@ class RegistroController extends Controller implements IControllerAuditable
 
         //Servicio de codigo de barra, para interpretarlo
         $bm = $this->container->get("caja.barra");
-//        $bm->setCodigo("93390001234513015201101000000123400001231000");
-
         $bm->setCodigo($cb, $apertura->getFecha());
 
         $imp = $bm->getImporte($this->container->get("sistemacaja.prorroga"));
@@ -213,6 +211,7 @@ class RegistroController extends Controller implements IControllerAuditable
         return $response->setContent($rJson);
     }
 
+    /*
     public function getTicketAction($tipo = 0)
     {
         $tk = "Hola";
@@ -247,6 +246,7 @@ class RegistroController extends Controller implements IControllerAuditable
         return $response->setContent($tk);
 
     }
+    */
 
     /**
      * @return Array, un array con los nombres de los actions excluidos
@@ -254,5 +254,13 @@ class RegistroController extends Controller implements IControllerAuditable
     function getNoAuditables()
     {
         return array();
+    }
+
+    /**
+     * @return Array, un array asociativo con los datos que se estan creando / modificando / eliminando / imprimiendo
+     */
+    function getDatosAuditoria()
+    {
+        return null;
     }
 }
