@@ -7,7 +7,7 @@
         <description>Manejo de Puerto Serie</description>
         <description kind="short">SerialLar</description>
     </information>
-	
+
 	<update check="background"/>
 	<security>
 		<all-permissions/>
