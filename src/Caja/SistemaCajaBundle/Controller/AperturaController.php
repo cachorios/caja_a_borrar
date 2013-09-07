@@ -21,11 +21,13 @@ use Caja\SistemaCajaBundle\Form\AperturaFilterType;
 use Caja\SistemaCajaBundle\Entity\Caja;
 use Symfony\Component\HttpFoundation\Response;
 
+use Common\AuditorBundle\Lib\IControllerAuditable;
+
 /**
  * Apertura controller.
  *
  */
-class AperturaController extends Controller
+class AperturaController extends Controller implements IControllerAuditable
 {
     /**
      * Lists all Apertura entities.
@@ -36,7 +38,6 @@ class AperturaController extends Controller
         $breadcrumbs = $this->get("white_october_breadcrumbs");
         $breadcrumbs->addItem("Inicio", $this->get("router")->generate("home_page"));
         $breadcrumbs->addItem("Apertura", $this->get("router")->generate("apertura"));
-
         list($filterForm, $queryBuilder) = $this->filter();
         list($entities, $pagerHtml) = $this->paginator($queryBuilder);
 
@@ -291,9 +292,9 @@ class AperturaController extends Controller
         if (!$entity) {
             $msg='No se pudo recuperar la apertura';
         } else {
-            $entity->setFechaCierre(new \DateTime());
-            $entity->setDireccionIp($_SERVER['REMOTE_ADDR']);
-            $entity->setHost($_SERVER['HTTP_HOST']);
+            //$entity->setFechaCierre(new \DateTime());
+            //$entity->setDireccionIp($_SERVER['REMOTE_ADDR']);
+            //$entity->setHost($_SERVER['HTTP_HOST']);
 
             $request = $this->getRequest();
             $tk = "";
@@ -355,8 +356,8 @@ class AperturaController extends Controller
                             if(!$msg){
                                 //Por ultimo: guardo en la tabla Apertura el nombre del archivo generado:
                                 $entity->setArchivoCierre($archivo_generado.'.txt');
-                                $em->persist($entity);
-                                $em->flush();
+                                //$em->persist($entity);
+                                //$em->flush();
                             }
                         }
                     }
@@ -770,11 +771,22 @@ class AperturaController extends Controller
     }
 
     public function envioMailAction() {
-        $entity = $this->container->get('caja.manager')->getApertura();
-        $archivo_generado = $entity->getArchivoCierre();
+
+        $id_apertura = $this->getRequest()->get('id');
         $em = $this->getDoctrine()->getManager();
+        $caja = $this->container->get("caja.manager")->getCaja();
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id_apertura, "caja" => $caja->getId()));
+
+        if (!$entity) { //No se pudo recuperar la apertura
+            $ret  =  array("ok" =>0);
+            $response = new Response();
+            $response->setContent(json_encode($ret));
+            return $response;
+        }
+
+        $archivo_generado = $entity->getArchivoCierre();
+
         if ($entity->getComprobanteCantidad() > 0) {//Hubo cobranza
-            $caja = $this->container->get("caja.manager")->getCaja();
             $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
             $path_documento = $path_archivos.$archivo_generado;
 
@@ -1149,6 +1161,14 @@ class AperturaController extends Controller
         $response->setContent(json_encode($ret));
         return $response;
 
+    }
+
+    /**
+     * @return Array, un array con los nombres de los actions excluidos
+     */
+    function getNoAuditables()
+    {
+        return array();
     }
 
 }
