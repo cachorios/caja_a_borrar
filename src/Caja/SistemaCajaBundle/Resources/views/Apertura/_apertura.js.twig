@@ -18,7 +18,6 @@
 
                     if (statusText == 'success') {
                         if (data.ok == 1) {
-                            alert("Datos a imprimir: " + data.tk);
                             imprimirSerial(data.tk);
                             //Despues de imprimir, se redirige al monitor:
                             $.unblockUI();
