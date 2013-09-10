@@ -2,7 +2,7 @@
 
     $(function () {
 
-        $("#form_cierre").submit(function (e) {
+        $("#form_apertura").submit(function (e) {
             e.preventDefault();
             $.blockUI({ message:"Imprimiendo ticket..." });
             verificarEstadoSerial("comprobarImpresora");
@@ -12,16 +12,17 @@
 
         comprobarImpresora = function () {
 
-            $("#form_cierre").ajaxSubmit({
+            $("#form_apertura").ajaxSubmit({
                 dataType:'json',
                 success:function (data, statusText, xhr, $form) {
 
                     if (statusText == 'success') {
                         if (data.ok == 1) {
+                            alert("Datos a imprimir: " + data.tk);
                             imprimirSerial(data.tk);
-                            //Despues de imprimir, mando el mail como una llamada ajax separada:
+                            //Despues de imprimir, se redirige al monitor:
                             $.unblockUI();
-                            envioMail();
+                            window.location = "{{ path('apertura_monitor') }}";
                         }
                         else if (data.ok != 1) {
                             $.unblockUI();
@@ -45,7 +46,7 @@
      * Determina el estado de la impresora
      * @param nombre de la funcion a ejecutar si esta todo ok
      */
-    verificarEstadoSerial = function (sFuncion, datos) {
+    verificarEstadoSerial = function (sFuncion) {
         var pser = document.SerialLar;
         $.unblockUI();
         try {
@@ -54,7 +55,6 @@
             alert(e);
         }
     }
-
 
     /**
      * Manda a la impresora fiscal.
@@ -69,7 +69,6 @@
                 while ((new Date().getTime()) - t < 1000) {
                     //alert('timer');
                 }
-
                 pser.escribir(data.substr(i, 500));
             }
             $.unblockUI();
@@ -78,34 +77,5 @@
             alert('Error de tipo: ' + e);
         }
     }
-
-    /**
-     * Envia el mail correspondiente
-     */
-    envioMail = function () {
-        $.blockUI({ message:"Enviando mail..." });
-        $("#form_envio_mail").ajaxSubmit({
-            dataType:'json',
-            success:function (data, statusText, xhr, $form) {
-
-                if (statusText == 'success') {
-                    if (data.ok == 1) {
-                        // Todo ok, por ultimo, redirigir a la ventana de apertura:
-                        $.unblockUI();
-                        window.location = "{{ path('apertura') }}";
-                    }
-                    else if (data.ok != 1) {
-                        $.unblockUI();
-                        alert('Error al enviar el mail correspondiente.');
-                    }
-                }
-            },
-            error:function (data) {
-                $.unblockUI();
-                alert('Error al enviar el mail correspondiente..');
-            }
-        });
-    }
-
 
 </script>

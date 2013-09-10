@@ -292,9 +292,9 @@ class AperturaController extends Controller implements IControllerAuditable
         if (!$entity) {
             $msg='No se pudo recuperar la apertura';
         } else {
-            //$entity->setFechaCierre(new \DateTime());
-            //$entity->setDireccionIp($_SERVER['REMOTE_ADDR']);
-            //$entity->setHost($_SERVER['HTTP_HOST']);
+            $entity->setFechaCierre(new \DateTime());
+            $entity->setDireccionIp($_SERVER['REMOTE_ADDR']);
+            $entity->setHost($_SERVER['HTTP_HOST']);
 
             $request = $this->getRequest();
             $tk = "";
@@ -341,7 +341,7 @@ class AperturaController extends Controller implements IControllerAuditable
                         if (!file_exists($path_archivos)) {
                             //Si no existe el directorio donde se guardan los archivos de cierre, lo creo;
                             if(!mkdir($path_archivos, '0644')) { // 0644 es lectura y escritura para el propietario, lectura para los demÃ¡s
-                                $msg='Â¡Â¡Â¡ Error al crear el directorio que va a contener los archivos de cierre !!!!!';
+                                $msg='¡¡¡ Error al crear el directorio que va a contener los archivos de cierre !!!!!';
                             }
                         }
 
@@ -350,14 +350,14 @@ class AperturaController extends Controller implements IControllerAuditable
                             $archivo_generado = $em->getRepository('SistemaCajaBundle:Apertura')->generaArchivoTexto($apertura_id, $numero_caja, $path_archivos);
 
                             if (!$archivo_generado) {
-                                $msg='Â¡Â¡Â¡ Error al generar el archivo de texto que se envia por mail !!!!!';
+                                $msg='¡¡¡ Error al generar el archivo de texto que se envia por mail !!!!!';
                             }
                             //Si esta todo bien, sigo:
                             if(!$msg){
                                 //Por ultimo: guardo en la tabla Apertura el nombre del archivo generado:
                                 $entity->setArchivoCierre($archivo_generado.'.txt');
-                                //$em->persist($entity);
-                                //$em->flush();
+                                $em->persist($entity);
+                                $em->flush();
                             }
                         }
                     }
@@ -667,7 +667,6 @@ class AperturaController extends Controller implements IControllerAuditable
     public function enviarMailAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-
         $caja = $this->container->get('caja.manager')->getCaja();
         $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id, "caja" => $caja->getId()));
         $deleteForm = $this->createDeleteForm($id);
@@ -820,17 +819,17 @@ class AperturaController extends Controller implements IControllerAuditable
         } else { //No hubo cobranza
             $apertura_id = $entity->getId();
             $numero_caja = $entity->getCaja()->getId();
-            $datos_caja = 'Caja: ' . $numero_caja . '- Apertura: ' . $apertura_id . ' - Fecha: ' . $entity->getFechaCierre();
+            $datos_caja = 'Caja: ' . $numero_caja . '- Apertura: ' . $apertura_id . ' - Fecha: ' . $entity->getFechaCierre()->format('d-m-Y');
             $contenido = 'No hubo cobranza en la presente caja: ' . $datos_caja;
             // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
             $mensaje_detalle = \Swift_Message::newInstance()
-                ->setSubject('Municipalidad de Posadas - Detalle de Cierre de Caja - ' . $entity->getFechaCierre())
+                ->setSubject('Municipalidad de Posadas - Detalle de Cierre de Caja - ' . $entity->getFechaCierre()->format('d-m-Y'))
                 ->setFrom('administrador@posadas.gov.ar')
                 ->setBody($contenido);
             //No hay adjunto
 
-            $contenido_resumen = 'Municipalidad de Posadas - Resumen de Cierre de Caja - ' . $entity->getFechaCierre();
-            $contenido_resumen .= 'No hubo cobranza en la presente caja: ' . $datos_caja;
+            $contenido_resumen = 'Municipalidad de Posadas - Resumen de Cierre de Caja - ' . $entity->getFechaCierre()->format('d-m-Y');
+            $contenido_resumen .= '. No hubo cobranza en la presente caja: ' . $datos_caja;
             // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
             $mensaje_resumen = \Swift_Message::newInstance()
                 ->setSubject('Municipalidad de Posadas - Resumen de Cierre de Caja')
