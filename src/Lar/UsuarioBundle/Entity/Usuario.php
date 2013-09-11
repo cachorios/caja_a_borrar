@@ -714,4 +714,5 @@ class Usuario implements AdvancedUserInterface
 
         return $this;
     }
+
 }

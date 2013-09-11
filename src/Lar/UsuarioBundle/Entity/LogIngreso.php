@@ -2,6 +2,7 @@
 namespace Lar\UsuarioBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+
 /**
  * LogIngreso
  *
@@ -21,8 +22,8 @@ class LogIngreso
 
     /**
      * @ORM\ManyToOne(targetEntity="\Lar\UsuarioBundle\Entity\Usuario")
-    * @ORM\JoinColumn(name="usuario_id", referencedColumnName="id")
-    */
+     * @ORM\JoinColumn(name="usuario_id", referencedColumnName="id")
+     */
     private $usuario;
 
     /**
@@ -44,7 +45,7 @@ class LogIngreso
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -60,14 +61,14 @@ class LogIngreso
     public function setDescripcion($descripcion)
     {
         $this->descripcion = $descripcion;
-    
+
         return $this;
     }
 
     /**
      * Get descripcion
      *
-     * @return string 
+     * @return string
      */
     public function getDescripcion()
     {
@@ -83,14 +84,14 @@ class LogIngreso
     public function setUsuario(\Lar\UsuarioBundle\Entity\Usuario $usuario = null)
     {
         $this->usuario = $usuario;
-    
+
         return $this;
     }
 
     /**
      * Get usuario
      *
-     * @return \Lar\UsuarioBundle\Entity\Usuario 
+     * @return \Lar\UsuarioBundle\Entity\Usuario
      */
     public function getUsuario()
     {
@@ -106,17 +107,18 @@ class LogIngreso
     public function setFecha($fecha)
     {
         $this->fecha = $fecha;
-    
+
         return $this;
     }
 
     /**
      * Get fecha
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getFecha()
     {
         return $this->fecha;
     }
+
 }
