@@ -22,7 +22,7 @@ class LoginListener {
         $em = $this->contenedor->get('doctrine.orm.entity_manager');
         $ingreso_valido = $em->getRepository('UsuarioBundle:Usuario')->validarIngreso($event->getAuthenticationToken()->getUser());
         if (!$ingreso_valido) {
-            throw new BadCredentialsException('Ingreso rechazado. Dia, horario o lugar no permitido/s.', 0);
+            throw new BadCredentialsException('Ingreso rechazado. Dia, horario o lugar no permitidos.', 0);
             $event->stopPropagation();
         }
     }

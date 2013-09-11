@@ -44,9 +44,10 @@ class UsuarioRepository extends EntityRepository
             return true;
         }
         $usuario_ingreso = $em->getRepository('UsuarioBundle:UsuarioIngreso')->findOneBy(array('usuario' => $usuario->getId()));
-        if (!$usuario_ingreso)
+        if (!$usuario_ingreso) { //No tiene definido un lugar y horario de acceso
             $em->getRepository('UsuarioBundle:LogIngreso')->guardarRegistro($usuario, $valido);
-
+            return false;
+        }
         switch (date("w")) {
             case 0:
                 $valido = $usuario_ingreso->getDomingo();

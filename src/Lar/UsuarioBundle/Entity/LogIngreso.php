@@ -8,7 +8,11 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table()
  * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Lar\UsuarioBundle\Entity\LogIngresoRepository")
  */
+
+
+
 class LogIngreso
 {
     /**
