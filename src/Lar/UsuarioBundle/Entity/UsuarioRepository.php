@@ -39,6 +39,7 @@ class UsuarioRepository extends EntityRepository
                 $es_administrador = true;
             }
         }
+        // $usuario = $this->get('security.context')->isGranted('ROLE_ADMIN');
         if ($es_administrador) {// esta todo bien:
             $em->getRepository('UsuarioBundle:LogIngreso')->guardarRegistro($usuario, true);
             return true;
@@ -51,18 +52,25 @@ class UsuarioRepository extends EntityRepository
         switch (date("w")) {
             case 0:
                 $valido = $usuario_ingreso->getDomingo();
+                break;
             case 1:
-                $valido = $usuario_ingreso->getMartes();
+                $valido = $usuario_ingreso->getLunes();
+                break;
             case 2:
-                $valido = $usuario_ingreso->getMiercoles();
+                $valido = $usuario_ingreso->getMartes();
+                break;
             case 3:
-                $valido = $usuario_ingreso->getJueves();
+                $valido = $usuario_ingreso->getMiercoles();
+                break;
             case 4:
-                $valido = $usuario_ingreso->getViernes();
+                $valido = $usuario_ingreso->getJueves();
+                break;
             case 5:
-                $valido = $usuario_ingreso->getSabado();
+                $valido = $usuario_ingreso->getViernes();
+                break;
             case 6:
-                $valido = $usuario_ingreso->getDomingo();
+                $valido = $usuario_ingreso->getSabado();
+                break;
         }
 
         //Si no tiene horario de ingreso seteado, no puede entrar: error de datos:
