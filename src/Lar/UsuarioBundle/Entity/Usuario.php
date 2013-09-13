@@ -30,44 +30,44 @@ use Imagine\Image\Box;
 class Usuario implements AdvancedUserInterface
 
 {
-	/**
-	 * @var integer $id
-	 *
-	 * @ORM\Column(name="id", type="integer")
-	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
-	private $id;
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
 
-	/**
-	 * @var string $nombre
-	 *
-	 * @ORM\Column(name="nombre", type="string", length=32)
-	 * @Assert\NotBlank()
-	 */
-	private $nombre;
+    /**
+     * @var string $nombre
+     *
+     * @ORM\Column(name="nombre", type="string", length=32)
+     * @Assert\NotBlank()
+     */
+    private $nombre;
 
-	/**
-	 * @var string $apellido
-	 *
-	 * @ORM\Column(name="apellido", type="string", length=32)
-	 */
-	private $apellido;
+    /**
+     * @var string $apellido
+     *
+     * @ORM\Column(name="apellido", type="string", length=32)
+     */
+    private $apellido;
 
-	/**
-	 * @var string $email
-	 *
-	 * @ORM\Column(name="email", type="string", length=96, unique=true)
-	 * @Assert\Email()
-	 */
-	private $email;
+    /**
+     * @var string $email
+     *
+     * @ORM\Column(name="email", type="string", length=96, unique=true)
+     * @Assert\Email()
+     */
+    private $email;
 
-	/**
-	 * @var string $password
-	 *
-	 * @ORM\Column(name="password", type="string", length=255)
-	 * @Assert\Length(min = 6)
-	 */
+    /**
+     * @var string $password
+     *
+     * @ORM\Column(name="password", type="string", length=255)
+     * @Assert\Length(min = 6)
+     */
 
     private $password;
 
@@ -80,531 +80,531 @@ class Usuario implements AdvancedUserInterface
 
     private $username;
 
-	/**
-	 * @var string $salt
-	 *
-	 * @ORM\Column(name="salt", type="string", length=255)
-	 */
-	private $salt;
-
-	/**
-	 * @var string $direccion
-	 *
-	 * @ORM\Column(name="direccion", type="text")
-	 */
-	private $direccion;
-
-	/**
-	 * @var boolean $permite_email
-	 *
-	 * @ORM\Column(name="permite_email", type="boolean")
-	 */
-	private $permite_email;
-
-	/**
-	 * @var boolean $isActive
-	 *
-	 * @ORM\Column(name="is_active", type="boolean")
-	 */
-	protected $isActive;
-
-	/**
-	 * @var boolean $isDeleted
-	 *
-	 * @ORM\Column(name="is_deleted", type="boolean")
-	 */
-	protected $isDeleted = false;
-	/**
-	 * @var \DateTime $fecha_alta
-	 *
-	 * @ORM\Column(name="fecha_alta", type="datetime")
-	 */
-	private $fecha_alta;
-
-	/**
-	 * @var \DateTime $fecha_nacimiento
-	 *
-	 * @ORM\Column(name="fecha_nacimiento", type="datetime")
-	 */
-	private $fecha_nacimiento;
-
-	/**
-	 * @var string $dni
-	 *
-	 * @ORM\Column(name="dni", type="string", length=9)
-	 */
-	private $dni;
-
-	/**
-	 * @var ArrayCollection $grupos
-	 * @ORM\ManyToMany(targetEntity="Grupo", inversedBy="usuarios")
-	 */
-	protected $grupos;
+    /**
+     * @var string $salt
+     *
+     * @ORM\Column(name="salt", type="string", length=255)
+     */
+    private $salt;
 
     /**
-	 * @ORM\Column(type="string", nullable=true)
-	 *
-	 */
-	protected $foto;
-	//@ A s sert\Image(maxSize = "500k"
-
-	/**
-	 * @orm\Column(type="array", nullable=true)
-	 * @var Symfony\Component\DependencyInjection\ParameterBag\ParameterBag
-	 */
-	protected $contenedor;
-
-
-	/**
-	 * @var /datetime()
+     * @var string $direccion
      *
-	 * @orm\Column(type="datetime", nullable=true)
-	 */
-	protected $ultimo_ingreso;
+     * @ORM\Column(name="direccion", type="text")
+     */
+    private $direccion;
+
+    /**
+     * @var boolean $permite_email
+     *
+     * @ORM\Column(name="permite_email", type="boolean")
+     */
+    private $permite_email;
+
+    /**
+     * @var boolean $isActive
+     *
+     * @ORM\Column(name="is_active", type="boolean")
+     */
+    protected $isActive;
+
+    /**
+     * @var boolean $isDeleted
+     *
+     * @ORM\Column(name="is_deleted", type="boolean")
+     */
+    protected $isDeleted = false;
+    /**
+     * @var \DateTime $fecha_alta
+     *
+     * @ORM\Column(name="fecha_alta", type="datetime")
+     */
+    private $fecha_alta;
+
+    /**
+     * @var \DateTime $fecha_nacimiento
+     *
+     * @ORM\Column(name="fecha_nacimiento", type="datetime")
+     */
+    private $fecha_nacimiento;
+
+    /**
+     * @var string $dni
+     *
+     * @ORM\Column(name="dni", type="string", length=9)
+     */
+    private $dni;
+
+    /**
+     * @var ArrayCollection $grupos
+     * @ORM\ManyToMany(targetEntity="Grupo", inversedBy="usuarios")
+     */
+    protected $grupos;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     */
+    protected $foto;
+    //@ A s sert\Image(maxSize = "500k"
+
+    /**
+     * @orm\Column(type="array", nullable=true)
+     * @var Symfony\Component\DependencyInjection\ParameterBag\ParameterBag
+     */
+    protected $contenedor;
 
 
-	public function __construct()
-	{
-		$this->grupos = new ArrayCollection();
-		$this->isActive = true;
-		$this->salt = sha1(uniqid(mt_rand(), true));
-
-		//$this->contenedor = new ParameterBag();
-	}
-
-	/**
-	 * @return Symfony\Component\DependencyInjection\ParameterBag\ParameterBag
-	 */
-	public function getContenedor()
-	{
-		if($this->contenedor == null) {
-			$this->contenedor = new ParameterBag();
-		}
+    /**
+     * @var /datetime()
+     *
+     * @orm\Column(type="datetime", nullable=true)
+     */
+    protected $ultimo_ingreso;
 
 
-		return $this->contenedor;
-	}
+    public function __construct()
+    {
+        $this->grupos = new ArrayCollection();
+        $this->isActive = true;
+        $this->salt = sha1(uniqid(mt_rand(), true));
 
-	public function setContenedor($contenedor)
-	{
-		$this->contenedor = $contenedor;
-		return $this;
-	}
+        //$this->contenedor = new ParameterBag();
+    }
+
+    /**
+     * @return Symfony\Component\DependencyInjection\ParameterBag\ParameterBag
+     */
+    public function getContenedor()
+    {
+        if ($this->contenedor == null) {
+            $this->contenedor = new ParameterBag();
+        }
 
 
-	/**
-	 * Get id
-	 *
-	 * @return integer
-	 */
-	public
-	function getId()
-	{
-		return $this->id;
-	}
+        return $this->contenedor;
+    }
 
-	/**
-	 * Set nombre
-	 *
-	 * @param string $nombre
-	 * @return Usuario
-	 */
-	public
-	function setNombre($nombre)
-	{
-		$this->nombre = $nombre;
+    public function setContenedor($contenedor)
+    {
+        $this->contenedor = $contenedor;
+        return $this;
+    }
 
-		return $this;
-	}
 
-	/**
-	 * Get nombre
-	 *
-	 * @return string
-	 */
-	public
-	function getNombre()
-	{
-		return $this->nombre;
-	}
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public
+    function getId()
+    {
+        return $this->id;
+    }
 
-	/**
-	 * Set apellido
-	 *
-	 * @param string $apellido
-	 * @return Usuario
-	 */
-	public
-	function setApellido($apellido)
-	{
-		$this->apellido = $apellido;
+    /**
+     * Set nombre
+     *
+     * @param string $nombre
+     * @return Usuario
+     */
+    public
+    function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get apellido
-	 *
-	 * @return string
-	 */
-	public
-	function getApellido()
-	{
-		return $this->apellido;
-	}
+    /**
+     * Get nombre
+     *
+     * @return string
+     */
+    public
+    function getNombre()
+    {
+        return $this->nombre;
+    }
 
-	/**
-	 * Set email
-	 *
-	 * @param string $email
-	 * @return Usuario
-	 */
-	public
-	function setEmail($email)
-	{
-		$this->email = $email;
+    /**
+     * Set apellido
+     *
+     * @param string $apellido
+     * @return Usuario
+     */
+    public
+    function setApellido($apellido)
+    {
+        $this->apellido = $apellido;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get email
-	 *
-	 * @return string
-	 */
-	public
-	function getEmail()
-	{
-		return $this->email;
-	}
+    /**
+     * Get apellido
+     *
+     * @return string
+     */
+    public
+    function getApellido()
+    {
+        return $this->apellido;
+    }
 
-	/**
-	 * Set password
-	 *
-	 * @param string $password
-	 * @return Usuario
-	 */
-	public
-	function setPassword($password)
-	{
-		$this->password = $password;
+    /**
+     * Set email
+     *
+     * @param string $email
+     * @return Usuario
+     */
+    public
+    function setEmail($email)
+    {
+        $this->email = $email;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get password
-	 *
-	 * @return string
-	 */
-	public
-	function getPassword()
-	{
-		return $this->password;
-	}
+    /**
+     * Get email
+     *
+     * @return string
+     */
+    public
+    function getEmail()
+    {
+        return $this->email;
+    }
 
-	/**
-	 * Set salt
-	 *
-	 * @param string $salt
-	 * @return Usuario
-	 */
-	public
-	function setSalt($salt)
-	{
-		$this->salt = $salt;
+    /**
+     * Set password
+     *
+     * @param string $password
+     * @return Usuario
+     */
+    public
+    function setPassword($password)
+    {
+        $this->password = $password;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get salt
-	 *
-	 * @return string
-	 */
-	public
-	function getSalt()
-	{
-		return $this->salt;
-	}
+    /**
+     * Get password
+     *
+     * @return string
+     */
+    public
+    function getPassword()
+    {
+        return $this->password;
+    }
 
-	/**
-	 * Set direccion
-	 *
-	 * @param string $direccion
-	 * @return Usuario
-	 */
-	public
-	function setDireccion($direccion)
-	{
-		$this->direccion = $direccion;
+    /**
+     * Set salt
+     *
+     * @param string $salt
+     * @return Usuario
+     */
+    public
+    function setSalt($salt)
+    {
+        $this->salt = $salt;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get direccion
-	 *
-	 * @return string
-	 */
-	public
-	function getDireccion()
-	{
-		return $this->direccion;
-	}
+    /**
+     * Get salt
+     *
+     * @return string
+     */
+    public
+    function getSalt()
+    {
+        return $this->salt;
+    }
 
-	/**
-	 * Set permite_email
-	 *
-	 * @param boolean $permiteEmail
-	 * @return Usuario
-	 */
-	public
-	function setPermiteEmail($permiteEmail)
-	{
-		$this->permite_email = $permiteEmail;
+    /**
+     * Set direccion
+     *
+     * @param string $direccion
+     * @return Usuario
+     */
+    public
+    function setDireccion($direccion)
+    {
+        $this->direccion = $direccion;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get permite_email
-	 *
-	 * @return boolean
-	 */
-	public
-	function getPermiteEmail()
-	{
-		return $this->permite_email;
-	}
+    /**
+     * Get direccion
+     *
+     * @return string
+     */
+    public
+    function getDireccion()
+    {
+        return $this->direccion;
+    }
 
-	/**
-	 * Set fecha_alta
-	 *
-	 * @param \DateTime $fechaAlta
-	 * @return Usuario
-	 */
-	public
-	function setFechaAlta($fechaAlta)
-	{
-		$this->fecha_alta = $fechaAlta;
+    /**
+     * Set permite_email
+     *
+     * @param boolean $permiteEmail
+     * @return Usuario
+     */
+    public
+    function setPermiteEmail($permiteEmail)
+    {
+        $this->permite_email = $permiteEmail;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get fecha_alta
-	 *
-	 * @return \DateTime
-	 */
-	public
-	function getFechaAlta()
-	{
-		return $this->fecha_alta;
-	}
+    /**
+     * Get permite_email
+     *
+     * @return boolean
+     */
+    public
+    function getPermiteEmail()
+    {
+        return $this->permite_email;
+    }
 
-	/**
-	 * Set fecha_nacimiento
-	 *
-	 * @param \DateTime $fechaNacimiento
-	 * @return Usuario
-	 */
-	public
-	function setFechaNacimiento($fechaNacimiento)
-	{
-		$this->fecha_nacimiento = $fechaNacimiento;
+    /**
+     * Set fecha_alta
+     *
+     * @param \DateTime $fechaAlta
+     * @return Usuario
+     */
+    public
+    function setFechaAlta($fechaAlta)
+    {
+        $this->fecha_alta = $fechaAlta;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get fecha_nacimiento
-	 *
-	 * @return \DateTime
-	 */
-	public
-	function getFechaNacimiento()
-	{
-		return $this->fecha_nacimiento;
-	}
+    /**
+     * Get fecha_alta
+     *
+     * @return \DateTime
+     */
+    public
+    function getFechaAlta()
+    {
+        return $this->fecha_alta;
+    }
 
-	/**
-	 * Set dni
-	 *
-	 * @param string $dni
-	 * @return Usuario
-	 */
-	public
-	function setDni($dni)
-	{
-		$this->dni = $dni;
+    /**
+     * Set fecha_nacimiento
+     *
+     * @param \DateTime $fechaNacimiento
+     * @return Usuario
+     */
+    public
+    function setFechaNacimiento($fechaNacimiento)
+    {
+        $this->fecha_nacimiento = $fechaNacimiento;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get dni
-	 *
-	 * @return string
-	 */
-	public
-	function getDni()
-	{
-		return $this->dni;
-	}
+    /**
+     * Get fecha_nacimiento
+     *
+     * @return \DateTime
+     */
+    public
+    function getFechaNacimiento()
+    {
+        return $this->fecha_nacimiento;
+    }
 
-	/**
-	 * Get an array of grupos
-	 *
-	 * @return array
-	 */
-	function getRoles()
-	{
-		$roles = array();
+    /**
+     * Set dni
+     *
+     * @param string $dni
+     * @return Usuario
+     */
+    public
+    function setDni($dni)
+    {
+        $this->dni = $dni;
 
-		foreach($this->grupos as $grupo) {
-			$roles[] = $grupo->getRole();
-		}
+        return $this;
+    }
 
-		//ld($roles);
-		return $roles;
-	}
+    /**
+     * Get dni
+     *
+     * @return string
+     */
+    public
+    function getDni()
+    {
+        return $this->dni;
+    }
 
-	/**
-	 * Add a group into the collection
-	 *
-	 * @param Grupo $grupo
-	 * @return Usuario
-	 */
-	public function addGrupo(Grupo $grupo)
-	{
-		$this->grupos[] = $grupo;
+    /**
+     * Get an array of grupos
+     *
+     * @return array
+     */
+    function getRoles()
+    {
+        $roles = array();
 
-		return $this;
-	}
+        foreach ($this->grupos as $grupo) {
+            $roles[] = $grupo->getRole();
+        }
 
-	public	function setGrupos($grupos)
-	{
-		$this->grupos = $grupos;
-	}
+        //ld($roles);
+        return $roles;
+    }
 
-	/**
-	 * Get a collection of grupos
-	 *
-	 * @return ArrayCollection
-	 */
-	public	function getGrupos()
-	{
-		return $this->grupos;
-	}
+    /**
+     * Add a group into the collection
+     *
+     * @param Grupo $grupo
+     * @return Usuario
+     */
+    public function addGrupo(Grupo $grupo)
+    {
+        $this->grupos[] = $grupo;
 
-	/**
-	 * Set isActive
-	 *
-	 * @param boolean $isActive
-	 * @return Usuario
-	 */
-	public	function setIsActive($isActive)
-	{
-		$this->isActive = $isActive;
+        return $this;
+    }
 
-		return $this;
-	}
+    public function setGrupos($grupos)
+    {
+        $this->grupos = $grupos;
+    }
 
-	/**
-	 * Set isActive
-	 *
-	 * @return boolean
-	 */
-	public function getIsActive()
-	{
-		return $this->isActive;
+    /**
+     * Get a collection of grupos
+     *
+     * @return ArrayCollection
+     */
+    public function getGrupos()
+    {
+        return $this->grupos;
+    }
 
-	}
+    /**
+     * Set isActive
+     *
+     * @param boolean $isActive
+     * @return Usuario
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
 
-	/**
-	 * Get isActive
-	 *
-	 * @return boolean
-	 */
-	public	function isActive()
-	{
-		return $this->isActive && !$this->isDeleted;
-	}
+        return $this;
+    }
 
-	/**
-	 * Set isDeleted
-	 *
-	 * @param boolean $isDeleted
-	 * @return Usuario
-	 */
-	public function setIsDeleted($isDeleted)
-	{
-		$this->isDeleted = $isDeleted;
+    /**
+     * Set isActive
+     *
+     * @return boolean
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
 
-		return $this;
-	}
+    }
 
-	/**
-	 * Get isDeleted
-	 *
-	 * @return boolean
-	 */
-	public function isDeleted()
-	{
-		return $this->isDeleted;
-	}
+    /**
+     * Get isActive
+     *
+     * @return boolean
+     */
+    public function isActive()
+    {
+        return $this->isActive && !$this->isDeleted;
+    }
 
-	/**
-	 * Set isDeleted
-	 *
-	 * @return boolean
-	 */
-	public
-	function getIsDeleted()
-	{
-		return $this->isDeleted;
+    /**
+     * Set isDeleted
+     *
+     * @param boolean $isDeleted
+     * @return Usuario
+     */
+    public function setIsDeleted($isDeleted)
+    {
+        $this->isDeleted = $isDeleted;
 
-	}
+        return $this;
+    }
 
-	/**
-	 * @inheritDoc
-	 */
-	public 	function isAccountNonExpired()
-	{
-		return true;
-	}
+    /**
+     * Get isDeleted
+     *
+     * @return boolean
+     */
+    public function isDeleted()
+    {
+        return $this->isDeleted;
+    }
 
-	/**
-	 * @inheritDoc
-	 */
-	public 	function isAccountNonLocked()
-	{
-		return true;
-	}
+    /**
+     * Set isDeleted
+     *
+     * @return boolean
+     */
+    public
+    function getIsDeleted()
+    {
+        return $this->isDeleted;
 
-	/**
-	 * @inheritDoc
-	 */
-	public 	function isCredentialsNonExpired()
-	{
-		return true;
-	}
+    }
 
-	/**
-	 * @inheritDoc
-	 */
-	public function isEnabled()
-	{
-		return $this->isActive();
-	}
+    /**
+     * @inheritDoc
+     */
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
 
-	/**
-	 * @inheritDoc
-	 */
-	public function eraseCredentials()
-	{
-	}
+    /**
+     * @inheritDoc
+     */
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isEnabled()
+    {
+        return $this->isActive();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function eraseCredentials()
+    {
+    }
 
     /**
      * Get UserName
@@ -613,93 +613,93 @@ class Usuario implements AdvancedUserInterface
      */
 
     public function getUsername()
-	{
-		return $this->username;
-	}
+    {
+        return $this->username;
+    }
 
-	public function __toString()
-	{
-		return $this->getNombre() . ' ' . $this->getApellido();
-	}
-
-
-	/**
-	 * Set foto
-	 *
-	 * @param string $foto
-	 */
-	public function setFoto($foto)
-	{
-		$this->foto = $foto;
-	}
-
-	/**
-	 * Get foto
-	 *
-	 * @return string
-	 */
-	public function getFoto()
-	{
-		if(!$this->foto) {
-			$this->foto = "anonimo.jpg";
-		}
-		return $this->foto;
-	}
+    public function __toString()
+    {
+        return $this->getNombre() . ' ' . $this->getApellido();
+    }
 
 
-	/**
-	 * Remove grupos
-	 *
-	 * @param \Lar\UsuarioBundle\Entity\Grupo $grupos
-	 */
-	public function removeGrupo(\Lar\UsuarioBundle\Entity\Grupo $grupos)
-	{
-		$this->grupos->removeElement($grupos);
-	}
+    /**
+     * Set foto
+     *
+     * @param string $foto
+     */
+    public function setFoto($foto)
+    {
+        $this->foto = $foto;
+    }
+
+    /**
+     * Get foto
+     *
+     * @return string
+     */
+    public function getFoto()
+    {
+        if (!$this->foto) {
+            $this->foto = "anonimo.jpg";
+        }
+        return $this->foto;
+    }
 
 
-	/**
-	 * Set ultimo_ingreso
-	 *
-	 * @param \DateTime $ultimoIngreso
-	 * @return Usuario
-	 */
-	public function setUltimoIngreso($ultimoIngreso)
-	{
-		$this->ultimo_ingreso = $ultimoIngreso;
-
-		return $this;
-	}
-
-	/**
-	 * Get ultimo_ingreso
-	 *
-	 * @return \DateTime
-	 */
-	public function getUltimoIngreso()
-	{
-		return $this->ultimo_ingreso;
-	}
-
-	public function subirFoto($directorioDestino)
-	{
-		if(null === $this->foto) {
-			return;
-		}
-		//$foto = new File('uploads/' . $this->foto, true);
-		//$nombreArchivoFoto = uniqid('user-').'-foto1.'.$foto->guessExtension();
-		$nombreArchivoFoto = uniqid('user-') . '-foto1.jpg';
-
-		$imagine = new Imagine();
-		$imagine->open('uploads/' . $this->foto)
-			->thumbnail(new Box(300, 300, 'outbound'))
-			->save($directorioDestino . $nombreArchivoFoto);
-
-		//$foto->move($directorioDestino, $nombreArchivoFoto);
+    /**
+     * Remove grupos
+     *
+     * @param \Lar\UsuarioBundle\Entity\Grupo $grupos
+     */
+    public function removeGrupo(\Lar\UsuarioBundle\Entity\Grupo $grupos)
+    {
+        $this->grupos->removeElement($grupos);
+    }
 
 
-		$this->setFoto($nombreArchivoFoto);
-	}
+    /**
+     * Set ultimo_ingreso
+     *
+     * @param \DateTime $ultimoIngreso
+     * @return Usuario
+     */
+    public function setUltimoIngreso($ultimoIngreso)
+    {
+        $this->ultimo_ingreso = $ultimoIngreso;
+
+        return $this;
+    }
+
+    /**
+     * Get ultimo_ingreso
+     *
+     * @return \DateTime
+     */
+    public function getUltimoIngreso()
+    {
+        return $this->ultimo_ingreso;
+    }
+
+    public function subirFoto($directorioDestino)
+    {
+        if (null === $this->foto) {
+            return;
+        }
+        //$foto = new File('uploads/' . $this->foto, true);
+        //$nombreArchivoFoto = uniqid('user-').'-foto1.'.$foto->guessExtension();
+        $nombreArchivoFoto = uniqid('user-') . '-foto1.jpg';
+
+        $imagine = new Imagine();
+        $imagine->open('uploads/' . $this->foto)
+            ->thumbnail(new Box(300, 300, 'outbound'))
+            ->save($directorioDestino . $nombreArchivoFoto);
+
+        //$foto->move($directorioDestino, $nombreArchivoFoto);
+
+
+        $this->setFoto($nombreArchivoFoto);
+    }
 
 
     /**
@@ -715,4 +715,25 @@ class Usuario implements AdvancedUserInterface
         return $this;
     }
 
+    /**
+     * Valida el ingreso al sistema al momento del ingreso
+     * Controla el dia, el horario y el lugar
+     * Si es administrador, siempre ingresa
+     * @param $usuario_ingreso
+     * @param $lugares_ingreso
+     * @return bool
+     */
+    public function validarIngreso($usuario_ingreso, $lugares_ingreso)
+    {
+        $grupos = $this->getGrupos(); // Me fijo si el usuario pertenece al grupo de Administradores:
+        foreach ($grupos as $grupo) {   //$usuario = $this->get('security.context')->isGranted('ROLE_ADMIN');
+            if ($grupo->getNombre() == 'Administrador') {//Ok
+                return true;
+            }
+        }
+        if (!$usuario_ingreso)  //No tiene definido un lugar y horario de acceso
+            return false;
+
+        return $usuario_ingreso->validarIngreso($lugares_ingreso);
+    }
 }
