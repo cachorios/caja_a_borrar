@@ -35,7 +35,7 @@ class UsuarioRepository extends EntityRepository
         $grupos = $usuario->getGrupos();
         $es_administrador = false;
         foreach ($grupos as $grupo) {
-            if ($grupo->getNombre() == 'Administradores') {
+            if ($grupo->getNombre() == 'Administrador') {
                 $es_administrador = true;
             }
         }
@@ -65,6 +65,11 @@ class UsuarioRepository extends EntityRepository
                 $valido = $usuario_ingreso->getDomingo();
         }
 
+        //Si no tiene horario de ingreso seteado, no puede entrar: error de datos:
+        if (!$usuario_ingreso->getHorario()) {
+            $em->getRepository('UsuarioBundle:LogIngreso')->guardarRegistro($usuario, $valido);
+            return false;
+        }
         //Si el dia es valido, verifico el horario:
         if ($valido) {
             $desde = strtotime($usuario_ingreso->getHorario()->getDesde());
