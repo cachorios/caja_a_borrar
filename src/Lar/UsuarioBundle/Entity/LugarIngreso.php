@@ -29,7 +29,7 @@ class LugarIngreso
     /**
      * @var string
      *
-     * @ORM\Column(name="mascara", type="string", length=32)
+     * @ORM\Column(name="mascara", type="string", length=32, nullable=true)
      */
     private $mascara;
 

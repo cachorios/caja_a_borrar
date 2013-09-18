@@ -1,6 +1,5 @@
 <?php
 namespace Lar\UsuarioBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
 /**
  * UsuarioIngreso
@@ -85,9 +84,9 @@ class UsuarioIngreso
     /**
      * @var boolean
      *
-     * @ORM\Column(name="control_lugar", type="boolean")
+     * @ORM\Column(name="lugar_ingreso", type="boolean")
      */
-    private $control_lugar;
+    private $lugar_ingreso;
 
     /**
      * Get id
@@ -261,29 +260,6 @@ class UsuarioIngreso
     }
 
     /**
-     * Set control_lugar
-     *
-     * @param boolean $controlLugar
-     * @return UsuarioIngreso
-     */
-    public function setControlLugar($controlLugar)
-    {
-        $this->control_lugar = $controlLugar;
-
-        return $this;
-    }
-
-    /**
-     * Get control_lugar
-     *
-     * @return boolean
-     */
-    public function getControlLugar()
-    {
-        return $this->control_lugar;
-    }
-
-    /**
      * Set usuario
      *
      * @param \Lar\UsuarioBundle\Entity\Usuario $usuario
@@ -334,7 +310,20 @@ class UsuarioIngreso
      * @param array $lugares
      * @return boolean $valido
      */
-    public function validarIngreso($lugares) {
+    public function validarIngreso($usuario) {
+
+        $grupos = $usuario->getGrupos(); // Me fijo si el usuario pertenece al grupo de Administradores:
+        foreach ($grupos as $grupo) {   //$usuario = $this->get('security.context')->isGranted('ROLE_ADMIN');
+            if ($grupo->getNombre() == 'Administrador') {//Ok
+                return true;
+            }
+        }
+        /*
+        $admin = $this->get  $this->get('security.context')->isGranted('ROLE_ADMIN');
+
+        if ($admin)
+            return true;
+        */
         switch (date("w")) {
             case 0:
                 $valido = $this->getDomingo();
@@ -367,7 +356,8 @@ class UsuarioIngreso
             return false; //Si no tiene horario de ingreso seteado, no puede entrar: error de datos:
         }
         //Verifico el lugar desde donde esta ingresando, para ver si se corresponde con lo que tiene asignado:
-        if ($valido && $this->getControlLugar()) { // Tiene control de lugar
+        if ($valido && $this->getLugarIngreso()) { // Tiene control de lugar
+            /*
             $valido = false;
             foreach ($lugares as $lugar) {// recorro la lista de lugares permitidos:
                 $mascara_valida = $lugar->getMascara();
@@ -376,7 +366,31 @@ class UsuarioIngreso
                     return true; // esta todo bien
                 }
             }
+            */
         }
         return $valido;
+    }
+
+    /**
+     * Set lugar_ingreso
+     *
+     * @param boolean $lugarIngreso
+     * @return UsuarioIngreso
+     */
+    public function setLugarIngreso($lugarIngreso)
+    {
+        $this->lugar_ingreso = $lugarIngreso;
+
+        return $this;
+    }
+
+    /**
+     * Get lugar_ingreso
+     *
+     * @return boolean 
+     */
+    public function getLugarIngreso()
+    {
+        return $this->lugar_ingreso;
     }
 }

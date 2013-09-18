@@ -163,6 +163,12 @@ class Usuario implements AdvancedUserInterface
     protected $ultimo_ingreso;
 
 
+    /**
+     * @ORM\OneToOne(targetEntity="\Lar\UsuarioBundle\Entity\UsuarioIngreso")
+     * @ORM\JoinColumn(name="usuario_ingreso_id", referencedColumnName="id")
+     **/
+    private $usuario_ingreso;
+
     public function __construct()
     {
         $this->grupos = new ArrayCollection();
@@ -735,5 +741,35 @@ class Usuario implements AdvancedUserInterface
             return false;
 
         return $usuario_ingreso->validarIngreso($lugares_ingreso);
+    }
+
+    /**
+     * @param $ingreso_valido
+     */
+    public function registrarIngreso($ingreso_valido) {
+
+    }
+
+    /**
+     * Set usuario_ingreso
+     *
+     * @param \Lar\UsuarioBundle\Entity\UsuarioIngreso $usuarioIngreso
+     * @return Usuario
+     */
+    public function setUsuarioIngreso(\Lar\UsuarioBundle\Entity\UsuarioIngreso $usuarioIngreso = null)
+    {
+        $this->usuario_ingreso = $usuarioIngreso;
+
+        return $this;
+    }
+
+    /**
+     * Get usuario_ingreso
+     *
+     * @return \Lar\UsuarioBundle\Entity\UsuarioIngreso 
+     */
+    public function getUsuarioIngreso()
+    {
+        return $this->usuario_ingreso;
     }
 }
