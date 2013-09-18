@@ -23,7 +23,7 @@ class LoginListener {
       //  $usuario = $em->find('UsuarioBundle:Usuario', $event->getAuthenticationToken()->getUser()->getId());
         $usuario = $event->getAuthenticationToken()->getUser();
 
-        $um = $this->contenedor->get('usuario_manager ');
+        $um = $this->contenedor->get('usuario_manager');
 
         if(!$um->RegistrarIngreso($usuario)){
             throw new BadCredentialsException('Ingreso rechazado. Dia, horario o lugar no permitidos.', 0);

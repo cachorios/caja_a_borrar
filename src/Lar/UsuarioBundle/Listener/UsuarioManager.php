@@ -126,7 +126,13 @@ class UsuarioManager
     }
 
     private function guardarIngreso($msg){
+        $ip = $this->contenedor->get('request')->getClientIp();
         $log = new LogIngreso($this->usuario,$ip,$msg);
+
+        $em = $this->contenedor->get('doctrine.orm.entity_manager');
+
+        $em->persist($log);
+        $em->flush();
     }
 
 }

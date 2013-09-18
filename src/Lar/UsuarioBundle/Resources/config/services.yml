@@ -2,6 +2,11 @@ parameters:
 #    usuario.example.class: Lar\UsuarioBundle\Example
 
 services:
+
+    usuario_manager:
+        class: Lar\UsuarioBundle\Listener\UsuarioManager
+        arguments: [@service_container]
+
     login_listener:
        class: Lar\UsuarioBundle\Listener\LoginListener
        arguments: [@service_container]
@@ -15,6 +20,3 @@ services:
             - { name: doctrine.event_listener, event: prePersist, method: prePersist }
             - { name: doctrine.event_listener, event: preUpdate,  method: preUpdate }
 
-    usuario_manager:
-        class: Lar\UsuarioBundle\Listener\UsuarioManager
-        arguments: [@service_container]
