@@ -18,16 +18,23 @@ class LoginListener {
     }
 
     public function onSecurityInteractiveLogin(InteractiveLoginEvent $event) {
-        $ingreso = false;
-        $em = $this->contenedor->get('doctrine.orm.entity_manager');
-        $usuario = $em->find('UsuarioBundle:Usuario', $event->getAuthenticationToken()->getUser()->getId());
-        if ($usuario->getUsuarioIngreso()) {
-            $ingreso = $usuario->getUsuarioIngreso()->validarIngreso($usuario);
-        }
-        //LogIngreso::registrarIngreso($usuario, $ingreso);
-        if (!$ingreso) {
+       // $ingreso = false;
+       // $em = $this->contenedor->get('doctrine.orm.entity_manager');
+      //  $usuario = $em->find('UsuarioBundle:Usuario', $event->getAuthenticationToken()->getUser()->getId());
+        $usuario = $event->getAuthenticationToken()->getUser();
+
+        $um = $this->contenedor->get('usuario_manager ');
+
+        if(!$um->RegistrarIngreso($usuario)){
             throw new BadCredentialsException('Ingreso rechazado. Dia, horario o lugar no permitidos.', 0);
             $event->stopPropagation();
         }
+
+        //
+        //LogIngreso::registrarIngreso($usuario, $ingreso);
+//        if (!$ingreso) {
+//            throw new BadCredentialsException('Ingreso rechazado. Dia, horario o lugar no permitidos.', 0);
+//            $event->stopPropagation();
+//        }
     }
 }

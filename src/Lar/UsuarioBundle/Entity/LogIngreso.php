@@ -46,6 +46,14 @@ class LogIngreso
      */
     private $fecha;
 
+
+    public function __construct($usuario = null, $ip, $msg)
+    {
+        $this->setUsuario($usuario);
+        $this->setDescripcion("IP: $ip - $msg");
+        $this->setFecha(new \DateTime('now'));
+    }
+
     /**
      * Get id
      *

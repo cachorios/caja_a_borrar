@@ -52,6 +52,7 @@ class AperturaController extends Controller implements IControllerAuditable
     protected function filter()
     {
         $request = $this->getRequest();
+
         $session = $request->getSession();
         $filterForm = $this->createForm(new AperturaFilterType());
         $em = $this->getDoctrine()->getManager();
@@ -341,7 +342,7 @@ class AperturaController extends Controller implements IControllerAuditable
                         if (!file_exists($path_archivos)) {
                             //Si no existe el directorio donde se guardan los archivos de cierre, lo creo;
                             if(!mkdir($path_archivos, '0644')) { // 0644 es lectura y escritura para el propietario, lectura para los demÃ¡s
-                                $msg='¡¡¡ Error al crear el directorio que va a contener los archivos de cierre !!!!!';
+                                $msg='ï¿½ï¿½ï¿½ Error al crear el directorio que va a contener los archivos de cierre !!!!!';
                             }
                         }
 
@@ -350,7 +351,7 @@ class AperturaController extends Controller implements IControllerAuditable
                             $archivo_generado = $em->getRepository('SistemaCajaBundle:Apertura')->generaArchivoTexto($apertura_id, $numero_caja, $path_archivos);
 
                             if (!$archivo_generado) {
-                                $msg='¡¡¡ Error al generar el archivo de texto que se envia por mail !!!!!';
+                                $msg='ï¿½ï¿½ï¿½ Error al generar el archivo de texto que se envia por mail !!!!!';
                             }
                             //Si esta todo bien, sigo:
                             if(!$msg){
