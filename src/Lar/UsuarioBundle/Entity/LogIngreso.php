@@ -12,7 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 
 
-
 class LogIngreso
 {
     /**
@@ -37,6 +36,12 @@ class LogIngreso
      */
     private $descripcion;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ip", type="string", length=16)
+     */
+    private $ip;
 
     /**
      * @var datetime
@@ -50,7 +55,8 @@ class LogIngreso
     public function __construct($usuario = null, $ip, $msg)
     {
         $this->setUsuario($usuario);
-        $this->setDescripcion("IP: $ip - $msg");
+        $this->setDescripcion($msg);
+        $this->setIp($ip);
         $this->setFecha(new \DateTime('now'));
     }
 
@@ -134,25 +140,25 @@ class LogIngreso
     }
 
     /**
-     * @param $usuario
-     * @param $valido
+     * Set ip
+     *
+     * @param string $ip
+     * @return LogIngreso
      */
-
-    public function registrarIngreso($usuario, $valido) {
-        $em = $this->getEntityManager();
-        $logaudit = new LogIngreso();
-        $logaudit->setUsuario($usuario);
-        $logaudit->setFecha(new \DateTime());
-        if ($valido) {
-            $logaudit->setDescripcion('INGRESO VALIDO. ' . $usuario->getNombre() . ":" . $_SERVER['HTTP_HOST'] . ":" . $_SERVER['REMOTE_ADDR']);
-        } else {
-            $logaudit->setDescripcion('INGRESO RECHAZADO. ' . $usuario->getNombre() . ":" . $_SERVER['HTTP_HOST'] . ":" . $_SERVER['REMOTE_ADDR']);
-        }
-        $em->persist($logaudit);
-        $em->flush();
-        if ($valido) {
-
-        }
+    public function setIp($ip)
+    {
+        $this->ip = $ip;
+    
+        return $this;
     }
 
+    /**
+     * Get ip
+     *
+     * @return string 
+     */
+    public function getIp()
+    {
+        return $this->ip;
+    }
 }

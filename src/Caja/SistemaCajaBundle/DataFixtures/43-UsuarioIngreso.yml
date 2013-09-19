@@ -10,9 +10,9 @@ fixtures:
         viernes: true
         sabado:	true
         domingo: true
-        control_lugar: false
+        lugar_ingreso: false
         usuario: cacho
-        horario: h1
+        horario: h2
     ui2:
         lunes:	true
         martes:	true
@@ -21,9 +21,9 @@ fixtures:
         viernes: true
         sabado:	true
         domingo: true
-        control_lugar: false
+        lugar_ingreso: false
         usuario: beto
-        horario: h1
+        horario: h2
 
     ui3:
         lunes:	false
@@ -33,5 +33,6 @@ fixtures:
         viernes: true
         sabado:	true
         domingo: true
-        control_lugar: true
+        lugar_ingreso: true
         usuario: ruben
+        horario: h1

@@ -16,6 +16,7 @@ fixtures:
         foto: user-511a905a4d1de-foto1.jpg
         username: cachorios
         fecha_nacimiento: 1950-01-01
+        fecha_alta: 1950-01-01
         grupos:
             - gr1
             - gr2
@@ -33,6 +34,7 @@ fixtures:
         foto: user-511a8ef7b8377-foto1.jpg
         username: Alberto2000
         fecha_nacimiento: 1950-01-01
+        fecha_alta: 1950-01-01
         grupos:
             - gr1
             - gr2
@@ -51,6 +53,7 @@ fixtures:
         foto: user-511970d001595-foto1.jpg
         username: ruben
         fecha_nacimiento: 1950-01-01
+        fecha_alta: 1950-01-01
         grupos:
             - gr1
 

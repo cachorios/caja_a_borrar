@@ -4,3 +4,8 @@ fixtures:
         descripcion: 'Horario Normal'
         desde: '06:00:00'
         hasta: '20:30:00'
+
+    h2:
+        descripcion: 'Horario Extendido'
+        desde: '00:00:00'
+        hasta: '23:59:59'

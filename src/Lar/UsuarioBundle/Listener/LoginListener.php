@@ -9,32 +9,26 @@
 namespace Lar\UsuarioBundle\Listener;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
-class LoginListener {
+
+class LoginListener
+{
 
     protected $contenedor;
+
     public function __construct($cnt = null)
     {
         $this->contenedor = $cnt;
     }
 
-    public function onSecurityInteractiveLogin(InteractiveLoginEvent $event) {
-       // $ingreso = false;
-       // $em = $this->contenedor->get('doctrine.orm.entity_manager');
-      //  $usuario = $em->find('UsuarioBundle:Usuario', $event->getAuthenticationToken()->getUser()->getId());
+    public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)
+    {
         $usuario = $event->getAuthenticationToken()->getUser();
 
         $um = $this->contenedor->get('usuario_manager');
 
-        if(!$um->RegistrarIngreso($usuario)){
+        if (!$um->RegistrarIngreso($usuario)) {
             throw new BadCredentialsException('Ingreso rechazado. Dia, horario o lugar no permitidos.', 0);
             $event->stopPropagation();
         }
-
-        //
-        //LogIngreso::registrarIngreso($usuario, $ingreso);
-//        if (!$ingreso) {
-//            throw new BadCredentialsException('Ingreso rechazado. Dia, horario o lugar no permitidos.', 0);
-//            $event->stopPropagation();
-//        }
     }
 }

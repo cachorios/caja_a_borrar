@@ -10,7 +10,6 @@
 namespace Lar\UsuarioBundle\Listener;
 
 
-
 use Lar\UsuarioBundle\Entity\LogIngreso;
 use Lar\UsuarioBundle\Entity\Usuario;
 use Symfony\Component\DependencyInjection\Container;
@@ -30,15 +29,15 @@ class UsuarioManager
 
     public function __construct(Container $container)
     {
-            $this->contenedor = $container;
+        $this->contenedor = $container;
     }
 
 
-    public function RegistrarIngreso(Usuario $usuario){
+    public function RegistrarIngreso(Usuario $usuario)
+    {
         $this->usuario = $usuario;
 
-        if($this->verificarIngreso())
-        {
+        if ($this->verificarIngreso()) {
             $this->guardarIngreso("Ingreso Valido");
             return true;
         }
@@ -51,14 +50,12 @@ class UsuarioManager
 
     private function verificarIngreso()
     {
-
-
         if ($this->contenedor->get('security.context')->isGranted('ROLE_ADMIN')) {
             return true;
         }
 
-        if ($this->esDiaValido(date("w")) && $this->esHorarioValido() ) {
-            if($this->usuario->getUsuarioIngreso()->getLugarIngreso()){
+        if ($this->esDiaValido(date("w")) && $this->esHorarioValido()) {
+            if ($this->usuario->getUsuarioIngreso()->getLugarIngreso()) {
                 return $this->verificarLugar();
             }
             return true;
@@ -74,22 +71,25 @@ class UsuarioManager
      */
     private function esDiaValido($d)
     {
-        $ingregso = $this->usuario->getUsuarioIngreso();
+        $ingreso = $this->usuario->getUsuarioIngreso();
 
-        return $d == 0 && $ingregso->getDomingo() ||
-        $d == 1 && $ingregso->getLunes() ||
-        $d == 2 && $ingregso->getMartes() ||
-        $d == 3 && $ingregso->getMiercoles() ||
-        $d == 4 && $ingregso->getJueves() ||
-        $d == 5 && $ingregso->getViernes() ||
-        $d == 6 && $ingregso->getSabado();
+        if (!$ingreso) return false;
+
+        return $d == 0 && $ingreso->getDomingo() ||
+            $d == 1 && $ingreso->getLunes() ||
+            $d == 2 && $ingreso->getMartes() ||
+            $d == 3 && $ingreso->getMiercoles() ||
+            $d == 4 && $ingreso->getJueves() ||
+            $d == 5 && $ingreso->getViernes() ||
+            $d == 6 && $ingreso->getSabado();
     }
 
     private function esHorarioValido()
     {
         $ingregso = $this->usuario->getUsuarioIngreso();
-        if($ingregso->getHorario()) {
-            $ahora = (new \DateTime('now'))->setTime(0,0,0);
+        if ($ingregso->getHorario()) {
+            $ahora = new \DateTime('now');
+            $ahora->setTime(0, 0, 0);
             $desde = $ingregso->getHorario()->getDesde();
             $hasta = $ingregso->getHorario()->getHasta();
             return $ahora >= $desde && $ahora <= $hasta;
@@ -125,9 +125,10 @@ class UsuarioManager
         return $this->contenedor->get('doctrine.orm.entity_manager')->getRepository('UsuarioBundle:LugarIngreso')->findAll();
     }
 
-    private function guardarIngreso($msg){
+    private function guardarIngreso($msg)
+    {
         $ip = $this->contenedor->get('request')->getClientIp();
-        $log = new LogIngreso($this->usuario,$ip,$msg);
+        $log = new LogIngreso($this->usuario, $ip, $msg);
 
         $em = $this->contenedor->get('doctrine.orm.entity_manager');
 
