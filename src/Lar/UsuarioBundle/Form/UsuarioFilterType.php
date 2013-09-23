@@ -27,6 +27,7 @@ class UsuarioFilterType extends AbstractType
             ->add('id',             'filter_number_range')
             ->add('nombre',         'filter_text')
             ->add('apellido',       'filter_text')
+            ->add('username',       'filter_text')
             ->add('email',          'filter_text')
             ->add('direccion',      'filter_text')
             ->add('permite_email',  'filter_boolean')
