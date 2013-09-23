@@ -14,6 +14,7 @@ class PerfilType extends AbstractType
         $builder
             ->add('nombre' )
             ->add('apellido')
+            ->add('username')
             ->add('dni')
             ->add('email');
         if(null == $options['data']->getId()) {

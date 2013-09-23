@@ -14,6 +14,7 @@ class UsuarioType extends AbstractType
         $builder
             ->add('nombre' )
             ->add('apellido')
+            ->add('username')
             ->add('dni')
             ->add('email');
         if(null == $options['data']->getId()) {
@@ -57,7 +58,8 @@ class UsuarioType extends AbstractType
                 'label' => 'Activo?') )
             ->add('isDeleted',null,array('required' => false, 'label' => 'Borrado'))
             ->add('fecha_alta','datetime', array(
-                'widget'    => 'single_text',
+                'data' => new \DateTime("now"),
+                'widget' => 'single_text',
                 'format' => 'dd-M-yyyy H:m',
                 'read_only' => true))
 
