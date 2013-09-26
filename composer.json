@@ -22,7 +22,8 @@
 
         "khepin/yaml-fixtures-bundle": "0.7.*",
         "raulfraile/ladybug-bundle": "0.7.*",
-		"mopa/bootstrap-bundle": "dev-master",
+        "mopa/bootstrap-bundle": "2.3.x-dev",
+        "twbs/bootstrap": "v2.3.2",
 		"jordillonch/crud-generator": "dev-master",
 		"whiteoctober/breadcrumbs-bundle": "dev-master",
 

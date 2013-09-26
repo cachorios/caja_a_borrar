@@ -75,24 +75,24 @@ swiftmailer:
     password:  "%mailer_password%"
     spool:     { type: memory }
 
-mopa_bootstrap:
-    navbar: ~
-    form:
-#        templating: false
-        render_fieldset: false
-        show_legend: false # default is true
-        show_child_legend: true # default is true
-        render_required_asterisk: false
-        error_type: block # or inline which is default
-        render_optional_text: false
-
-
-        collection:
-            widget_remove_btn:
-                icon: trash
-                icon_color: white
-            widget_add_btn:
-                icon: plus-sign
+#mopa_bootstrap:
+#    navbar: ~
+#    form:
+##        templating: false
+#        render_fieldset: false
+#        show_legend: false # default is true
+#        show_child_legend: true # default is true
+#        render_required_asterisk: false
+#        error_type: block # or inline which is default
+#        render_optional_text: false
+#
+#
+#        collection:
+#            widget_remove_btn:
+#                icon: trash
+#                icon_color: white
+#            widget_add_btn:
+#                icon: plus-sign
 
 
 white_october_breadcrumbs: ~
