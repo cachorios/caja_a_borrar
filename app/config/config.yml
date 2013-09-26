@@ -13,12 +13,12 @@ framework:
     csrf_protection: ~
     validation:      { enable_annotations: true }
     templating:
-        engines: ['twig']  #assets_version: SomeVersionScheme
+        engines:         ['twig']  #assets_version: SomeVersionScheme
     default_locale:  "%locale%"
-    trust_proxy_headers: false # Deprecated in 2.0; will be removed in 2.3 (used trusted_proxies instead)
-#    trusted_proxies: ~
+    trusted_proxies: ~
     session:         ~
     fragments:       ~
+    http_method_override: true
 
 # Twig Configuration
 twig:
@@ -27,8 +27,8 @@ twig:
     form:
         resources:
 #            - 'MopaBootstrapBundle:Form:fields.html.twig'
-            - LarParametroBundle:Form:fields.html.twig
-            - LarUtilsBundle:Form:fields.html.twig
+#            - LarParametroBundle:Form:fields.html.twig
+#            - LarUtilsBundle:Form:fields.html.twig
             - LexikFormFilterBundle:Form:form_div_layout.html.twig
     globals:
         usuario_imagenes: 'uploads/users/'

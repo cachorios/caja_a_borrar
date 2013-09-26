@@ -17,15 +17,15 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
 
-            new FOS\UserBundle\FOSUserBundle(),
 
             new Lexik\Bundle\FormFilterBundle\LexikFormFilterBundle(),
             new JordiLlonch\Bundle\CrudGeneratorBundle\JordiLlonchCrudGeneratorBundle(),
             new WhiteOctober\BreadcrumbsBundle\WhiteOctoberBreadcrumbsBundle(),
 
             new RaulFraile\Bundle\LadybugBundle\RaulFraileLadybugBundle(),
-
+            new Khepin\YamlFixturesBundle\KhepinYamlFixturesBundle(),
             new Avalanche\Bundle\ImagineBundle\AvalancheImagineBundle(),
+            new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
 
             new Lar\UtilsBundle\LarUtilsBundle(),
             new Lar\LarParametroBundle\LarParametroBundle(),

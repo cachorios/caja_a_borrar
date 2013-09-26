@@ -1,12 +1,28 @@
-jms_security_extra:
-    secure_all_services: false
-    expressions: true
-
 security:
+    encoders:
+        Symfony\Component\Security\Core\User\User: plaintext
+        Lar\UsuarioBundle\Entity\Usuario: { algorithm: sha512, iterations: 10 }
+        #Stock\StockBundle\Entity\Cliente:   { algorithm: sha512, iterations: 10 }
+
+    role_hierarchy:
+        ROLE_ADMIN:       [ROLE_USUARIO, ROLE_ADMIN]
+        ROLE_USUARIO:     [ROLE_USUARIO]
+
+    providers:
+#        in_memory:
+#            memory:
+#                users:
+#                    user:  { password: userpass, roles: [ 'ROLE_USER' ] }
+#                    admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
+#        all_provider:
+#            chain:
+#                providers: ["usuarios", "clientes"]
+        usuarios:
+            entity: { class: Lar\UsuarioBundle\Entity\Usuario,  property:    username }
     firewalls:
         frontend_pr:
             pattern: ^/*
-            anonymous: ~
+            anonymous: true
             provider: usuarios
             form_login:
                 use_referer: true
@@ -35,29 +51,3 @@ security:
 
 
 
-
-    providers:
-#        in_memory:
-#            memory:
-#                users:
-#                    user:  { password: userpass, roles: [ 'ROLE_USER' ] }
-#                    admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
-#        all_provider:
-#            chain:
-#                providers: ["usuarios", "clientes"]
-        usuarios:
-            entity: { class: Lar\UsuarioBundle\Entity\Usuario,  property:    username }
-
-
-
-#        clientes:
-#            entity: { class: Stock\StockBundle\Entity\Cliente,    property:    usuario }
-
-    encoders:
-        Symfony\Component\Security\Core\User\User: plaintext
-        Lar\UsuarioBundle\Entity\Usuario: { algorithm: sha512, iterations: 10 }
-        #Stock\StockBundle\Entity\Cliente:   { algorithm: sha512, iterations: 10 }
-
-    role_hierarchy:
-        ROLE_ADMIN:       [ROLE_USUARIO, ROLE_ADMIN]
-        ROLE_USUARIO:     [ROLE_USUARIO]
