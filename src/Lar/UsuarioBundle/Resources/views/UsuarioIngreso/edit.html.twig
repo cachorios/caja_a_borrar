@@ -7,10 +7,9 @@
 
     {% block page %}
         <section id="form">
-            <h1>{{ 'views.edit.edit'|trans({'%entity%': 'UsuarioIngreso'}, 'JordiLlonchCrudGeneratorBundle') }}</h1>
+            <h2>Modificar Ingreso de Usuario - <span style="color: #0064cd"> {{ entity }}</span></h2>
 
-            <form class="well" action="{{ path('usuarioingreso_update', { 'id': entity.id }) }}"
-                  method="post" {{ form_enctype(edit_form) }}>
+            <form class="well" action="{{ path('usuarioingreso_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
                 <input type="hidden" name="_method" value="PUT"/>
                 {{ form_widget(edit_form) }}
                 <p>
