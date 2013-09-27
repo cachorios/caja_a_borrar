@@ -2,6 +2,7 @@
 namespace Lar\UsuarioBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+
 /**
  * HorarioIngreso
  *
@@ -44,11 +45,16 @@ class HorarioIngreso
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    public function __toString()
+    {
+        return $this->getDescripcion();
     }
 
     /**
@@ -60,14 +66,14 @@ class HorarioIngreso
     public function setDescripcion($descripcion)
     {
         $this->descripcion = $descripcion;
-    
+
         return $this;
     }
 
     /**
      * Get descripcion
      *
-     * @return string 
+     * @return string
      */
     public function getDescripcion()
     {
@@ -83,14 +89,14 @@ class HorarioIngreso
     public function setDesde($desde)
     {
         $this->desde = $desde;
-    
+
         return $this;
     }
 
     /**
      * Get desde
      *
-     * @return string 
+     * @return string
      */
     public function getDesde()
     {
@@ -106,14 +112,14 @@ class HorarioIngreso
     public function setHasta($hasta)
     {
         $this->hasta = $hasta;
-    
+
         return $this;
     }
 
     /**
      * Get hasta
      *
-     * @return string 
+     * @return string
      */
     public function getHasta()
     {

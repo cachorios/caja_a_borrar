@@ -1,0 +1,39 @@
+{% extends '::layout.html.twig' %}
+{% block id  "mod_usuario_ingreso" %}
+
+
+    {% block title %}
+        {{ parent() }} - {{ 'views.new.creation'|trans({'%entity%': 'UsuarioIngreso'}, 'JordiLlonchCrudGeneratorBundle') }}
+    {% endblock %}
+
+    {#Para limpiar la cabecera el header sin contenido#}
+    {% block header %}{% endblock header %}
+
+
+    {% block headline %}
+        <h1>Nuevo INgreso de Usuario
+            <small>Agregar un ingreso de usuario al sistema.</small>
+        </h1>
+    {% endblock headline %}
+
+    {% block page %}
+        <section>
+            <h1>{{ 'views.new.creation'|trans({'%entity%': 'UsuarioIngreso'}, 'JordiLlonchCrudGeneratorBundle') }}</h1>
+
+            <form class="well" action="{{ path('usuarioingreso_create') }}" method="post" {{ form_enctype(form) }}>
+                {{ form_widget(form) }}
+                <p>
+                    <button type="submit"
+                            class="btn btn-success">{{ 'views.new.create'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
+                </p>
+            </form>
+
+            <div>
+                <div class="float-left">
+                    <a class="btn" href="{{ path('usuarioingreso') }}">
+                        {{ 'views.recordactions.backtothelist'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                    </a>
+                </div>
+            </div>
+        </section>
+    {% endblock %}
