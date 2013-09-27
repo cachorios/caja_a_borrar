@@ -15,14 +15,17 @@ class UsuarioIngresoFilterType extends AbstractType
     {
         $builder
             ->add('id', 'filter_number_range')
-            ->add('lunes', 'filter_choice')
-            ->add('martes', 'filter_choice')
-            ->add('miercoles', 'filter_choice')
-            ->add('jueves', 'filter_choice')
-            ->add('viernes', 'filter_choice')
-            ->add('sabado', 'filter_choice')
-            ->add('domingo', 'filter_choice')
-            ->add('lugar_ingreso', 'filter_choice')
+            ->add('usuario', 'filter_entity', array(
+            'class' => 'UsuarioBundle:Usuario',
+            'property' => 'username'))
+            ->add('lunes', 'filter_boolean')
+            ->add('martes', 'filter_boolean')
+            ->add('miercoles', 'filter_boolean')
+            ->add('jueves', 'filter_boolean')
+            ->add('viernes', 'filter_boolean')
+            ->add('sabado', 'filter_boolean')
+            ->add('domingo', 'filter_boolean')
+            ->add('lugar_ingreso', 'filter_boolean')
         ;
 
         $listener = function(FormEvent $event)
