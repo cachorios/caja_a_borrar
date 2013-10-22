@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "5ba76f82a5459962dcaa3ace7c4215f0",
+    "hash": "4dffd8b7d3c798d297b1da6ee84fdaaa",
     "packages": [
         {
             "name": "avalanche123/imagine-bundle",
@@ -1096,12 +1096,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:cachorios/ParametroBundle.git",
-                "reference": "8b9c73f1088767a18635225cf68f88de32b424ca"
+                "reference": "55322598ffa6c7466e174dc655294d44980ac0ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cachorios/ParametroBundle/zipball/8b9c73f1088767a18635225cf68f88de32b424ca",
-                "reference": "8b9c73f1088767a18635225cf68f88de32b424ca",
+                "url": "https://api.github.com/repos/cachorios/ParametroBundle/zipball/55322598ffa6c7466e174dc655294d44980ac0ef",
+                "reference": "55322598ffa6c7466e174dc655294d44980ac0ef",
                 "shasum": ""
             },
             "require": {
@@ -1133,7 +1133,7 @@
                 "source": "https://github.com/cachorios/ParametroBundle/tree/master",
                 "issues": "https://github.com/cachorios/ParametroBundle/issues"
             },
-            "time": "2013-09-26 13:38:49"
+            "time": "2013-10-01 16:25:14"
         },
         {
             "name": "lar/utiles-bundle",
@@ -1296,17 +1296,17 @@
         },
         {
             "name": "mopa/bootstrap-bundle",
-            "version": "2.3.x-dev",
+            "version": "dev-master",
             "target-dir": "Mopa/Bundle/BootstrapBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phiamo/MopaBootstrapBundle.git",
-                "reference": "0056655087ab9fd577b9e03638d07eba9f742ad4"
+                "reference": "1baa9a40b752d073ea46a4a39f5a26ec64e30dee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phiamo/MopaBootstrapBundle/zipball/0056655087ab9fd577b9e03638d07eba9f742ad4",
-                "reference": "0056655087ab9fd577b9e03638d07eba9f742ad4",
+                "url": "https://api.github.com/repos/phiamo/MopaBootstrapBundle/zipball/1baa9a40b752d073ea46a4a39f5a26ec64e30dee",
+                "reference": "1baa9a40b752d073ea46a4a39f5a26ec64e30dee",
                 "shasum": ""
             },
             "require": {
@@ -1324,7 +1324,7 @@
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.3.x-dev"
+                    "dev-master": "3.x-dev"
                 }
             },
             "autoload": {
@@ -1355,7 +1355,7 @@
                 "form",
                 "template"
             ],
-            "time": "2013-09-23 19:50:20"
+            "time": "2013-10-01 20:06:01"
         },
         {
             "name": "mopa/composer-bridge",
@@ -1410,16 +1410,16 @@
         },
         {
             "name": "pagerfanta/pagerfanta",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/whiteoctober/Pagerfanta.git",
-                "reference": "4d5f15a3700a769bd0af364ccd7ecadb07d91d78"
+                "reference": "9568187b789a39a3933c71e4e28b60fc2c26b70d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/4d5f15a3700a769bd0af364ccd7ecadb07d91d78",
-                "reference": "4d5f15a3700a769bd0af364ccd7ecadb07d91d78",
+                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/9568187b789a39a3933c71e4e28b60fc2c26b70d",
+                "reference": "9568187b789a39a3933c71e4e28b60fc2c26b70d",
                 "shasum": ""
             },
             "require": {
@@ -1468,7 +1468,7 @@
                 "paginator",
                 "paging"
             ],
-            "time": "2013-04-24 11:35:36"
+            "time": "2013-09-23 08:06:55"
         },
         {
             "name": "psr/log",
@@ -2021,16 +2021,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v2.3.4",
+            "version": "v2.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "4fb225f4e315c11aa6d8935b1c0ceaf48ba39f1f"
+                "reference": "aa5626cd2a359567c948ebdeeca68d948640302f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/4fb225f4e315c11aa6d8935b1c0ceaf48ba39f1f",
-                "reference": "4fb225f4e315c11aa6d8935b1c0ceaf48ba39f1f",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/aa5626cd2a359567c948ebdeeca68d948640302f",
+                "reference": "aa5626cd2a359567c948ebdeeca68d948640302f",
                 "shasum": ""
             },
             "require": {
@@ -2125,20 +2125,20 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2013-08-27 08:58:24"
+            "time": "2013-09-27 07:31:40"
         },
         {
             "name": "twbs/bootstrap",
-            "version": "v2.3.2",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "b4c4072679943773a7582daa63f545ba818fa627"
+                "reference": "e8a1df5f060bf7e6631554648e0abde150aedbe4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/b4c4072679943773a7582daa63f545ba818fa627",
-                "reference": "b4c4072679943773a7582daa63f545ba818fa627",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/e8a1df5f060bf7e6631554648e0abde150aedbe4",
+                "reference": "e8a1df5f060bf7e6631554648e0abde150aedbe4",
                 "shasum": ""
             },
             "type": "library",
@@ -2146,13 +2146,23 @@
             "license": [
                 "Apache-2.0"
             ],
-            "description": "Sleek, intuitive, and powerful front-end framework for faster and easier web development.",
-            "homepage": "http://twbs.github.com/bootstrap/",
+            "authors": [
+                {
+                    "name": "sugeng tigefa",
+                    "email": "tigefa@gmail.com"
+                },
+                {
+                    "name": "Jacob Thornton",
+                    "email": "jacobthornton@gmail.com"
+                }
+            ],
+            "description": "Sleek, intuitive, and powerful mobile first front-end framework for faster and easier web development.",
+            "homepage": "http://getbootstrap.com",
             "keywords": [
                 "bootstrap",
                 "css"
             ],
-            "time": "2013-07-27 06:36:38"
+            "time": "2013-08-19 21:18:20"
         },
         {
             "name": "twig/extensions",

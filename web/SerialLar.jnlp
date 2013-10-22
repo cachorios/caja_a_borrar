@@ -3,7 +3,7 @@
     <information>
         <title>SerialLar</title>
         <vendor>Luis Rios</vendor>
-        <homepage href="riossoft.com.ar"/>
+        <homepage href="http://localhost/caja/web/app_dev.php"/>
         <description>Manejo de Puerto Serie</description>
         <description kind="short">SerialLar</description>
     </information>
