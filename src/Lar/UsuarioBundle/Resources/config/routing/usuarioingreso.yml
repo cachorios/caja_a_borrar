@@ -1,0 +1,30 @@
+usuarioingreso:
+    pattern:  /
+    defaults: { _controller: "UsuarioBundle:UsuarioIngreso:index" }
+
+usuarioingreso_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "UsuarioBundle:UsuarioIngreso:show" }
+
+usuarioingreso_new:
+    pattern:  /new
+    defaults: { _controller: "UsuarioBundle:UsuarioIngreso:new" }
+
+usuarioingreso_create:
+    pattern:  /create
+    defaults: { _controller: "UsuarioBundle:UsuarioIngreso:create" }
+    requirements: { _method: post }
+
+usuarioingreso_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "UsuarioBundle:UsuarioIngreso:edit" }
+
+usuarioingreso_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "UsuarioBundle:UsuarioIngreso:update" }
+    requirements: { _method: post|put }
+
+usuarioingreso_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "UsuarioBundle:UsuarioIngreso:delete" }
+    requirements: { _method: post|delete }

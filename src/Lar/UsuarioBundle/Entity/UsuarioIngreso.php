@@ -1,6 +1,7 @@
 <?php
 namespace Lar\UsuarioBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
+
 /**
  * UsuarioIngreso
  *
@@ -27,7 +28,6 @@ class UsuarioIngreso
 
     /**
      * @ORM\ManyToOne(targetEntity="\Lar\UsuarioBundle\Entity\HorarioIngreso")
-
      * @ORM\JoinColumn(name="horario_id", referencedColumnName="id")
      */
     private $horario;
@@ -236,6 +236,12 @@ class UsuarioIngreso
         return $this->sabado;
     }
 
+
+    public function __toString()
+    {
+        return $this->getUsuario()->getUsername();
+    }
+
     /**
      * Set domingo
      *
@@ -310,11 +316,12 @@ class UsuarioIngreso
      * @param array $lugares
      * @return boolean $valido
      */
-    public function validarIngreso($usuario) {
+    public function validarIngreso($usuario)
+    {
 
         $grupos = $usuario->getGrupos(); // Me fijo si el usuario pertenece al grupo de Administradores:
-        foreach ($grupos as $grupo) {   //$usuario = $this->get('security.context')->isGranted('ROLE_ADMIN');
-            if ($grupo->getNombre() == 'Administrador') {//Ok
+        foreach ($grupos as $grupo) { //$usuario = $this->get('security.context')->isGranted('ROLE_ADMIN');
+            if ($grupo->getNombre() == 'Administrador') { //Ok
                 return true;
             }
         }
@@ -387,7 +394,7 @@ class UsuarioIngreso
     /**
      * Get lugar_ingreso
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getLugarIngreso()
     {

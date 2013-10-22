@@ -13,3 +13,7 @@ seguridad:
 perfil:
     resource: "@UsuarioBundle/Resources/config/routing/perfil.yml"
     prefix:   /perfil
+
+usuarioingreso:
+    resource: "@UsuarioBundle/Resources/config/routing/usuarioingreso.yml"
+    prefix:   /usuarioingreso

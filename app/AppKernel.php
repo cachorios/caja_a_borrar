@@ -16,20 +16,16 @@ class AppKernel extends Kernel
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            new JMS\AopBundle\JMSAopBundle(),
-            new JMS\DiExtraBundle\JMSDiExtraBundle($this),
-            new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
+
 
             new Lexik\Bundle\FormFilterBundle\LexikFormFilterBundle(),
             new JordiLlonch\Bundle\CrudGeneratorBundle\JordiLlonchCrudGeneratorBundle(),
             new WhiteOctober\BreadcrumbsBundle\WhiteOctoberBreadcrumbsBundle(),
 
-            new Avalanche\Bundle\ImagineBundle\AvalancheImagineBundle(),
-            new Khepin\YamlFixturesBundle\KhepinYamlFixturesBundle(),
-            new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
-
             new RaulFraile\Bundle\LadybugBundle\RaulFraileLadybugBundle(),
-
+            new Khepin\YamlFixturesBundle\KhepinYamlFixturesBundle(),
+            new Avalanche\Bundle\ImagineBundle\AvalancheImagineBundle(),
+            new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
 
             new Lar\UtilsBundle\LarUtilsBundle(),
             new Lar\LarParametroBundle\LarParametroBundle(),
