@@ -27,7 +27,7 @@
 		
 		"pagerfanta/pagerfanta": "dev-master",
 		"lexik/form-filter-bundle": "1.2.*",
-        "jordillonch/crud-generator": "dev-master",
+        "jordillonch/crud-generator": "2.2.*",
         "whiteoctober/breadcrumbs-bundle": "dev-master",
 
 		"willdurand/expose-translation-bundle": "dev-master",
@@ -65,7 +65,7 @@
     "config": {
         "bin-dir": "bin"
     },
-    "minimum-stability": "alpha",
+    "minimum-stability": "dev",
     "extra": {
         "symfony-app-dir": "app",
         "symfony-web-dir": "web",
