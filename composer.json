@@ -20,7 +20,6 @@
         "sensio/generator-bundle": "2.3.*",
 		"incenteev/composer-parameter-handler": "~2.0",
 
-<<<<<<< HEAD
 		"khepin/yaml-fixtures-bundle": "0.7.*",
 		"raulfraile/ladybug-bundle": "0.7.*",
 		"avalanche123/imagine-bundle": "dev-master",
@@ -29,23 +28,11 @@
 		
 		"pagerfanta/pagerfanta": "dev-master",
 		"lexik/form-filter-bundle": "1.2.*",
-        "jordillonch/crud-generator": "2.2.*",
+        "jordillonch/crud-generator": "dev-master",
         "whiteoctober/breadcrumbs-bundle": "dev-master",
-=======
-        "khepin/yaml-fixtures-bundle": "0.7.*",
-        "raulfraile/ladybug-bundle": "0.7.*",
-        "mopa/bootstrap-bundle": "dev-master",
-        "twbs/bootstrap": "v3.0.0",
-		"jordillonch/crud-generator": "dev-master",
-		"whiteoctober/breadcrumbs-bundle": "dev-master",
-
-
-        "avalanche123/imagine-bundle": "dev-master",
 
         "lar/lar-parametro-bundle": "dev-master",
         "lar/utiles-bundle": "dev-master"
->>>>>>> aedeac148f195f597086f8337e9335c37703a2fb
-
 
     },
     "repositories": [
@@ -78,11 +65,7 @@
     "config": {
         "bin-dir": "bin"
     },
-<<<<<<< HEAD
-    "minimum-stability": "dev",
-=======
     "minimum-stability": "stable",
->>>>>>> aedeac148f195f597086f8337e9335c37703a2fb
     "extra": {
         "symfony-app-dir": "app",
         "symfony-web-dir": "web",
