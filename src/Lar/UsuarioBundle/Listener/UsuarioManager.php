@@ -50,6 +50,8 @@ class UsuarioManager
 
     private function verificarIngreso()
     {
+        return true;
+        /*
         if ($this->contenedor->get('security.context')->isGranted('ROLE_ADMIN')) {
             return true;
         }
@@ -61,6 +63,7 @@ class UsuarioManager
             return true;
         }
         return false;
+        */
     }
 
     /**
@@ -86,12 +89,12 @@ class UsuarioManager
 
     private function esHorarioValido()
     {
-        $ingregso = $this->usuario->getUsuarioIngreso();
-        if ($ingregso->getHorario()) {
+        $ingreso = $this->usuario->getUsuarioIngreso();
+        if ($ingreso->getHorario()) {
             $ahora = new \DateTime('now');
             $ahora->setTime(0, 0, 0);
-            $desde = $ingregso->getHorario()->getDesde();
-            $hasta = $ingregso->getHorario()->getHasta();
+            $desde = $ingreso->getHorario()->getDesde();
+            $hasta = $ingreso->getHorario()->getHasta();
             return $ahora >= $desde && $ahora <= $hasta;
         }
         return false;

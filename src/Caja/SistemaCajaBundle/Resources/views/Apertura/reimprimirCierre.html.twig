@@ -132,13 +132,13 @@
             var pser = document.SerialLar;
             try {
                 //Particiono la variable tk recibida, para evitar el llenado del buffer:
-                for (var i=0;i<data.length; i+=500) {
+                for (var i=0;i<data.length; i+=250) {
                     var t = new Date().getTime();
-                    while ((new Date().getTime()) -t < 1000) {
+                    while ((new Date().getTime()) -t < 2000) {
                         //alert('timer');
                     }
 
-                    pser.escribir(data.substr(i, 500));
+                    pser.escribir(data.substr(i, 250));
                 }
                 $.unblockUI();
             } catch (e) {

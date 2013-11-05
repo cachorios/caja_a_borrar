@@ -105,7 +105,7 @@ class CodigoBarraLive
         foreach ($this->vtos as $vto) {
             $lVto = $oProrroga->getVencimiento($vto[0]);
             $this->logger->info("-->: " . $this->fechaCalculo->format('Y-m-d') . ' - ' . $lVto->format('Y-m-d'));
-            if ($this->fechaCalculo <= $lVto) {
+            if ($this->fechaCalculo->format('Y-m-d') <= $lVto->format('Y-m-d')) {
                 return $vto[1];
             }
         }
