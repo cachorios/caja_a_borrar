@@ -14,7 +14,7 @@ $('#load_indicador')
 
 /**
  * @var dataBarra
- * variable para asignar el balor de data (coleccion de elementos)
+ * variable para asignar el valor de data (coleccion de elementos)
  * que tiene el boton agregar (hidden)
  * ya que hay eventos al cual no se le puede pasar, y es nevesario acceder a este.
  */
@@ -437,11 +437,18 @@ $(document).ready(function (e) {
     estadoSerial = function () {
         var pser = document.SerialLar;
         try {
-            impresoraOK = 0;
-            esperandoEstado = 1;
-            pser.getEstado();
+            //Particiono la variable tk recibida, para evitar el llenado del buffer:
+            for (var i=0;i<data.length; i+=250) {
+                var t = new Date().getTime();
+                while ((new Date().getTime()) -t < 2000) {
+                    //alert('timer');
+                }
+                pser.escribir(data.substr(i, 250));
+            }
+            $.unblockUI();
         } catch (e) {
-            alert(e);
+            $.unblockUI();
+            alert('Error de tipo: ' + e);
         }
     }
 
