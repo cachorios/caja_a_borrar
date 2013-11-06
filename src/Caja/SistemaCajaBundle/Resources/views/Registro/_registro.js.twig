@@ -1,6 +1,6 @@
 <script type="text/javascript">
 
-
+procesandoPago = 0;
 $('#load_indicador')
         .ajaxStart(function () {
             //$('body').append('"<div class="ajax_block"></div>');
@@ -223,22 +223,20 @@ $(document).ready(function (e) {
     /*---------------------------- PAGO ------------------------------------------------------------ */
     //boton que abre la ventana modal de pago
     $("#PagarComprobantes").click(function () {
-        var $pagmod,
-                btnAdd,
-                data;
+        var $pagmod, btnAdd, data;
 
         totalPago = 0;
 
-        $.msgBox({
-            title: "Confirmación",
-            content: "Realiza el pago de estos comprobantes?",
-            type: "confirm",
-            buttons: [
-                { value: "Si" },
-                { value: "Cancelar"}
-            ],
-            success: function (result) {
-                if (result == "Si") {
+//        $.msgBox({
+//            title: "Confirmación",
+//            content: "Realiza el pago de estos comprobantes?",
+//            type: "confirm",
+//            buttons: [
+//                { value: "Si" },
+//                { value: "Cancelar"}
+//            ],
+//            success: function (result) {
+//                if (result == "Si") {
                     $("#apago_importe").text(formato_numero(totalComprobante, 2));
                     /* quitar las lineas actuales para que iniciar */
                     $pagmod = $("#PagoModal");
@@ -248,9 +246,9 @@ $(document).ready(function (e) {
                     btnAdd = $("[data-coleccion-add-btn]", $pagmod);
                     btnAdd.trigger('click');
                     $pagmod.modal();
-                }
-            }
-        });
+//                }
+//            }
+//        });
 
 
     });
@@ -348,7 +346,10 @@ $(document).ready(function (e) {
      * Evento click del boton REGISTRAR PAGO
      */
     $("#pago_save").click(function (e) {
-
+        if(procesandoPago == 1) {
+            return;
+        }
+        procesandoPago = 1;
         $.msgBox({
             title: "Registración de Pago",
             content: "Si esta todo correcto,<br> proceda a almacenar el pago e imprime ticket!",
@@ -365,7 +366,7 @@ $(document).ready(function (e) {
                     return false;
                 }
                 if (result == "Cancelar") {
-
+                    procesandoPago = 0;
                 }
             }
         });
@@ -391,6 +392,7 @@ $(document).ready(function (e) {
                 if (data.ok == 1) {
                     imprimirSerial(data.ticket);
                     //redirigir
+
                     window.location = "{{ path('registro') }}";
                 }
                 else if (data.ok != 1) {
