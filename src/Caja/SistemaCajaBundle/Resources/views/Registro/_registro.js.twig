@@ -1,6 +1,5 @@
 <script type="text/javascript">
 
-procesandoPago = 0;
 $('#load_indicador')
         .ajaxStart(function () {
             //$('body').append('"<div class="ajax_block"></div>');
@@ -16,7 +15,7 @@ $('#load_indicador')
  * @var dataBarra
  * variable para asignar el valor de data (coleccion de elementos)
  * que tiene el boton agregar (hidden)
- * ya que hay eventos al cual no se le puede pasar, y es nevesario acceder a este.
+ * ya que hay eventos al cual no se le puede pasar, y es necesario acceder a este.
  */
 var dataBarra;
 var totalComprobante;
@@ -346,13 +345,10 @@ $(document).ready(function (e) {
      * Evento click del boton REGISTRAR PAGO
      */
     $("#pago_save").click(function (e) {
-        if(procesandoPago == 1) {
-            return;
-        }
-        procesandoPago = 1;
+        $this = $(this);
         $.msgBox({
             title: "Registración de Pago",
-            content: "Si esta todo correcto,<br> proceda a almacenar el pago e imprime ticket!",
+            content: "Si esta todo correcto,<br> procede a almacenar el pago e imprimir ticket!",
             type: "confirm",
             buttons: [
                 { value: "Si" },
@@ -360,13 +356,12 @@ $(document).ready(function (e) {
             ],
             success: function (result) {
                 if (result == "Si") {
-
+                    $this.hide();
                     //guardarRegistro sera llamado si el estado esta ok!
                     verificarEstadoSerial("guardarRegistro");
                     return false;
                 }
                 if (result == "Cancelar") {
-                    procesandoPago = 0;
                 }
             }
         });

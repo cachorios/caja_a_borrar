@@ -204,7 +204,7 @@ class AperturaRepository extends EntityRepository
               WHERE
                   l.apertura = :apertura_id
                   AND ld.importe > 0
-              ORDER BY ld.seccion
+              ORDER BY ld.seccion, ld.comprobante
               ")
             ->setParameter("apertura_id", $apertura_id)
         ;

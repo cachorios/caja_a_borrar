@@ -36,7 +36,7 @@ $(document).ready(function (e) {
         var $msgBarra = $("#msgBarra");
         $barra = $(this);
         dataBarra = "";
-        $.blockUI({ message: null });
+        $.blockUI({ message:null });
 
         cb = $barra.val().replace(/^\s*|\s*$/g, "");
 
@@ -76,8 +76,8 @@ $(document).ready(function (e) {
             url:"{{ path('apertura_existe_comprobante') }}",
             data:{ cb:cb  },
             dataType:"json",
-            async: false,
-            success: function(data) {
+            async:false,
+            success:function (data) {
                 if (data.ok == 1) {
                     $('#detalle').html(data.detalle);
                     existe = true;
@@ -178,11 +178,11 @@ $(document).ready(function (e) {
         $('input.importe', 'div#caja_sistemacajabundle_aperturaanulartype_detalle').each(function () {
             total = total + parseFloat(this.value);
         });
-        totalComprobante = Math.round(total*100)/100;
+        totalComprobante = Math.round(total * 100) / 100;
         $("#lote_detalle_total").text(formato_numero(total, 2));
-        if(totalComprobante>0){
+        if (totalComprobante > 0) {
             $("#AnularComprobantes").show();
-        }else{
+        } else {
             $("#AnularComprobantes").hide();
         }
         $.unblockUI();
@@ -191,17 +191,20 @@ $(document).ready(function (e) {
     //boton que abre la ventana modal de pago
     $("#AnularComprobantes").click(function () {
         var $pagmod,
-             btnAdd,
-             data;
+                btnAdd,
+                data;
 
         totalPago = 0;
 
         $.msgBox({
-            title: "Confirmación",
-            content: "Realiza la anulación de estos comprobantes?",
-            type: "confirm",
-            buttons: [{ value: "Si" },  { value: "Cancelar"}],
-            success: function (result) {
+            title:"Confirmación",
+            content:"Realiza la anulación de estos comprobantes?",
+            type:"confirm",
+            buttons:[
+                { value:"Si" },
+                { value:"Cancelar"}
+            ],
+            success:function (result) {
                 if (result == "Si") {
                     //$("#apago_importe").text(formato_numero(totalComprobante, 2));
 
@@ -283,7 +286,7 @@ $(document).ready(function (e) {
             } else {
                 total = Math.round((total + parseFloat(this.value)) * 100) / 100;
                 if (total >= totalComprobante) {
-                    $(this).val(formato_numero(totalComprobante - total + parseFloat(this.value)  , 2,"."));
+                    $(this).val(formato_numero(totalComprobante - total + parseFloat(this.value), 2, "."));
                     total = totalComprobante
                     n = 1;
                 }
@@ -295,24 +298,27 @@ $(document).ready(function (e) {
         $("#totalpago").text(formato_numero(totalPago, 2));
         $("#totalSaldo").text(formato_numero(totalComprobante - totalPago, 2));
 
-        if( Math.round((totalComprobante - totalPago)*100 )/100 >0 ){
+        if (Math.round((totalComprobante - totalPago) * 100) / 100 > 0) {
             $("[data-coleccion-add-btn]", "#PagoModal").trigger('click');
         }
 
     };
 
     //se cambia pago_save por anulacion_save
-    $("#anulacion_save").click(function(e){
+    $("#anulacion_save").click(function (e) {
 
         $.msgBox({
-            title: "Anulación de Pago",
-            content: "Si esta todo correcto,<br> procede a anular el pago?",
-            type: "confirm",
-            buttons: [{ value: "Si" },  { value: "Cancelar"}],
-            success: function (result) {
+            title:"Anulación de Pago",
+            content:"Si esta todo correcto,<br> procede a anular el pago?",
+            type:"confirm",
+            buttons:[
+                { value:"Si" },
+                { value:"Cancelar"}
+            ],
+            success:function (result) {
                 if (result == "Si") {
-                   //Cambiar el formulario....
-                   $("form","#form_CodigoBarra").submit();
+                    //Cambiar el formulario....
+                    $("form", "#form_CodigoBarra").submit();
                 }
                 if (result == "Cancelar") {
 
@@ -326,8 +332,76 @@ $(document).ready(function (e) {
     })
 
 
-
 }); //fin document ready
 
+$(function () {
+
+    $("#formulario_anulacion").submit(function (e) {
+        e.preventDefault();
+        $.blockUI({ message:"Imprimiendo ticket de anulacion..." });
+        verificarEstadoSerial("comprobarImpresora");
+        return false;
+    });
+
+    comprobarImpresora = function () {
+        $("#formulario_anulacion").ajaxSubmit({
+            dataType:'json',
+            success:function (data, statusText, xhr, $form) {
+
+                if (statusText == 'success') {
+                    if (data.ok == 1) {
+                        imprimirSerial(data.tk);
+                        //redirigir
+                        window.location = "{{ path('apertura_anulado') }}";
+                    }
+                    else if (data.ok != 1) {
+                        alert('Mensaje de error: ' + data.msg);
+                    }
+                }
+            },
+            error:function (data) {
+                alert('Mensaje de error al imprimir: ' + data.msg);
+
+            }
+        });
+    }
+});
+
+/**
+ * Determina el estado de la impresora
+ * @param nombre de la funcion a ejecutar si esta todo ok
+ */
+verificarEstadoSerial = function (sFuncion, datos) {
+    var pser = document.SerialLar;
+    $.unblockUI();
+    try {
+        pser.ifEstadoRun(sFuncion);
+    } catch (e) {
+        alert(e);
+    }
+}
+
+/**
+ * Manda a la impresora fiscal.
+ * @param data
+ */
+imprimirSerial = function (data) {
+    var pser = document.SerialLar;
+    try {
+        //Particiono la variable tk recibida, para evitar el llenado del buffer:
+        for (var i = 0; i < data.length; i += 250) {
+            var t = new Date().getTime();
+            while ((new Date().getTime()) - t < 2000) {
+                //alert('timer');
+            }
+
+            pser.escribir(data.substr(i, 250));
+        }
+        $.unblockUI();
+    } catch (e) {
+        $.unblockUI();
+        alert('Error de tipo: ' + e);
+    }
+}
 
 </script>
