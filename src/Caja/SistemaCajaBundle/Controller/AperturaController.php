@@ -193,9 +193,9 @@ class AperturaController extends Controller implements IControllerAuditable
 
                 $ticket = $this->get("sistemacaja.ticket");
                 $ticket->setContenido(
-                    str_pad("Apertura de Caja", 40, " ", STR_PAD_BOTH).
-                    str_pad("-", 40, "-", STR_PAD_BOTH).
-                    str_pad("Apertura nro. ". $entity->getId(), 40, "-", STR_PAD_BOTH)
+                    str_pad("Apertura de Caja", 40, " ", STR_PAD_BOTH) .
+                        str_pad("-", 40, "-", STR_PAD_BOTH) .
+                        str_pad("Apertura nro. " . $entity->getId(), 40, "-", STR_PAD_BOTH)
                 );
                 $tk = $ticket->getTicketTestigo();
                 ////return $this->redirect($this->generateUrl('apertura'));
@@ -289,9 +289,9 @@ class AperturaController extends Controller implements IControllerAuditable
         $entity = $this->container->get('caja.manager')->getApertura();
         $caja = $this->container->get("caja.manager")->getCaja();
         $editForm = $this->createForm(new AperturaCierreType(), $entity);
-        $msg=false;
+        $msg = false;
         if (!$entity) {
-            $msg='No se pudo recuperar la apertura';
+            $msg = 'No se pudo recuperar la apertura';
         } else {
             $entity->setFechaCierre(new \DateTime());
             $entity->setDireccionIp($_SERVER['REMOTE_ADDR']);
@@ -314,21 +314,21 @@ class AperturaController extends Controller implements IControllerAuditable
                     }
 
                     //Genero el archivo de texto que se envia por mail. CONSIDERACIONES GENERALES:
-    //                El archivo con el detalle de las cobranzas debería tener  la siguiente estructura.
-    //                Solicito que el nombre comience con EP seguido de la fecha de cobro en formado DDMMAA. EJ:
-    //                Cobranzas del Día 18 de Marzo del 2013, EP180313.TXT – Cobranzas del Día 2 de Mayo del 2013, EP020513.TXT,
-    //                dado que la incorporación de datos a nuestros sistema esta automatizada
-    //                y espera un archivo con esa estructura de nombres.
-    //                Cabe mencionar que este formato es igual y único para cualquier tasa municipal que se cobra
+                    //                El archivo con el detalle de las cobranzas debería tener  la siguiente estructura.
+                    //                Solicito que el nombre comience con EP seguido de la fecha de cobro en formado DDMMAA. EJ:
+                    //                Cobranzas del Día 18 de Marzo del 2013, EP180313.TXT – Cobranzas del Día 2 de Mayo del 2013, EP020513.TXT,
+                    //                dado que la incorporacion de datos a nuestros sistema esta automatizada
+                    //                y espera un archivo con esa estructura de nombres.
+                    //                Cabe mencionar que este formato es igual y único para cualquier tasa municipal que se cobra
 
                     //Por cada comprobante generado:
-    //                Desde	Hasta	Longitud	Descripción
-    //                1	    44	    44	        Código de Barras de la Municipalidad Utilizado para la Cobranza.  Sin modificaciones
-    //                45	50	    6	        Valor Entero del  Importe Cobrado
-    //                51	52	    2	        Valor Decimales del Importe Cobrado
-    //                53	60	    8	        Fecha de Pago – Formato AAAAMMDD
-    //                61	61	    1	        Código Fijo de empresa. Uso interno de la Municipalidad de Posadas. Usar siempre un Valor Fijo = 1 (Uno)
-    //                62	65	    4	        Numero de Caja Rellenados con ceros a la izquierda
+                    //                Desde	Hasta	Longitud	Descripción
+                    //                1	    44	    44	        Código de Barras de la Municipalidad Utilizado para la Cobranza.  Sin modificaciones
+                    //                45	50	    6	        Valor Entero del  Importe Cobrado
+                    //                51	52	    2	        Valor Decimales del Importe Cobrado
+                    //                53	60	    8	        Fecha de Pago – Formato AAAAMMDD
+                    //                61	61	    1	        Código Fijo de empresa. Uso interno de la Municipalidad de Posadas. Usar siempre un Valor Fijo = 1 (Uno)
+                    //                62	65	    4	        Numero de Caja Rellenados con ceros a la izquierda
 
 
                     /////////////////////////////////////////////////////////////
@@ -341,22 +341,22 @@ class AperturaController extends Controller implements IControllerAuditable
                         $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
                         if (!file_exists($path_archivos)) {
                             //Si no existe el directorio donde se guardan los archivos de cierre, lo creo;
-                            if(!mkdir($path_archivos, '0644')) { // 0644 es lectura y escritura para el propietario, lectura para los demás
-                                $msg='��� Error al crear el directorio que va a contener los archivos de cierre !!!!!';
+                            if (!mkdir($path_archivos, '0644')) { // 0644 es lectura y escritura para el propietario, lectura para los demás
+                                $msg = '��� Error al crear el directorio que va a contener los archivos de cierre !!!!!';
                             }
                         }
 
                         //Si esta todo bien, sigo:
-                        if(!$msg){
+                        if (!$msg) {
                             $archivo_generado = $em->getRepository('SistemaCajaBundle:Apertura')->generaArchivoTexto($apertura_id, $numero_caja, $path_archivos);
 
                             if (!$archivo_generado) {
-                                $msg='��� Error al generar el archivo de texto que se envia por mail !!!!!';
+                                $msg = '��� Error al generar el archivo de texto que se envia por mail !!!!!';
                             }
                             //Si esta todo bien, sigo:
-                            if(!$msg){
+                            if (!$msg) {
                                 //Por ultimo: guardo en la tabla Apertura el nombre del archivo generado:
-                                $entity->setArchivoCierre($archivo_generado.'.txt');
+                                $entity->setArchivoCierre($archivo_generado . '.txt');
                                 $em->persist($entity);
                                 $em->flush();
                             }
@@ -364,14 +364,14 @@ class AperturaController extends Controller implements IControllerAuditable
                     }
                     $em->close();
                 } else {
-                    $msg='Alguno de los datos ingresados es incorrecto';
+                    $msg = 'Alguno de los datos ingresados es incorrecto';
                 }
 
                 //Verifico si estuvo todo ok, y devuelvo:
-                if(!$msg){
-                    $ret  =  array("ok" =>1, "tk"=> $tk);
-                }else{
-                    $ret  =  array("ok" =>0, "msg"=> $msg);
+                if (!$msg) {
+                    $ret = array("ok" => 1, "tk" => $tk);
+                } else {
+                    $ret = array("ok" => 0, "msg" => $msg);
                 }
 
                 $response = new Response();
@@ -383,7 +383,6 @@ class AperturaController extends Controller implements IControllerAuditable
 
         return $this->render('SistemaCajaBundle:Apertura:cierre.html.twig', array('entity' => $entity, 'caja' => $caja, 'edit_form' => $editForm->createView(),));
     }
-
 
 
     /**
@@ -499,7 +498,7 @@ class AperturaController extends Controller implements IControllerAuditable
             //$this->get('session')->getFlashBag()->add('error', 'No se ingresaron comprobantes para anular.');
             //return $this->redirect($this->generateUrl('apertura_anulado'));
             $msg = 'No se ingresaron comprobantes para anular.';
-            $ret  =  array("ok" =>0, "msg"=> $msg);
+            $ret = array("ok" => 0, "msg" => $msg);
 
             $response = new Response();
             $response->setContent(json_encode($ret));
@@ -513,7 +512,7 @@ class AperturaController extends Controller implements IControllerAuditable
             //$this->get('session')->getFlashBag()->add('error', 'No existe una apertura activa.');
             //return $this->redirect($this->generateUrl('apertura_new '));
             $msg = 'No existe una apertura activa.';
-            $ret  =  array("ok" =>0, "msg"=> $msg);
+            $ret = array("ok" => 0, "msg" => $msg);
 
             $response = new Response();
             $response->setContent(json_encode($ret));
@@ -534,7 +533,7 @@ class AperturaController extends Controller implements IControllerAuditable
                 //$this->get('session')->getFlashBag()->add('error', $puede_anular_parcialmente);
                 //return $this->redirect($this->generateUrl('apertura_anulado'));
                 $msg = $puede_anular_parcialmente;
-                $ret  =  array("ok" =>0, "msg"=> $msg);
+                $ret = array("ok" => 0, "msg" => $msg);
 
                 $response = new Response();
                 $response->setContent(json_encode($ret));
@@ -550,9 +549,9 @@ class AperturaController extends Controller implements IControllerAuditable
                 foreach ($comprobantes as $comprobante) {
                     $ticket = $this->get("sistemacaja.ticket");
                     $ticket->setContenido(
-                        str_pad(" ", 40, " ", STR_PAD_BOTH).
-                        str_pad("Comprobante " . $comprobante->getComprobante(),25, " " ,STR_PAD_RIGHT).
-                        str_pad(sprintf("%9.2f",$comprobante->getImporte()),15, " ", STR_PAD_LEFT)
+                        str_pad(" ", 40, " ", STR_PAD_BOTH) .
+                            str_pad("Comprobante " . $comprobante->getComprobante(), 25, " ", STR_PAD_RIGHT) .
+                            str_pad(sprintf("%9.2f", $comprobante->getImporte()), 15, " ", STR_PAD_LEFT)
                     );
 
                     $ticket->setValores(array(
@@ -565,26 +564,25 @@ class AperturaController extends Controller implements IControllerAuditable
                 }
 
                 //$tk .= $ticket->getTicketTestigo();  //si se quiere imprimir ticket deshabilitar esta linea
-                $ret  =  array("ok" =>1, "tk"=> $tk);
+                $ret = array("ok" => 1, "tk" => $tk);
 
             } catch (\Exception $e) {
                 //$this->get('session')->getFlashBag()->add('error', 'Hubo un fallo al guardar los datos: ' . $e->getMessage());
                 //return $this->redirect($this->generateUrl('apertura_anulado'));
-                $msg =  'Hubo un fallo al guardar los datos: ' . $e->getMessage();
-                $ret  =  array("ok" =>0, "msg"=> $msg);
+                $msg = 'Hubo un fallo al guardar los datos: ' . $e->getMessage();
+                $ret = array("ok" => 0, "msg" => $msg);
             }
 
         } else {
             //$this->get('session')->getFlashBag()->add('error', 'Alguno de los comprobantes seleccionados es incorrecto.');
             //return $this->redirect($this->generateUrl('apertura_anulado'));
-            $msg =  'Alguno de los comprobantes seleccionados es incorrecto.';
-            $ret  =  array("ok" =>0, "msg"=> $msg);
+            $msg = 'Alguno de los comprobantes seleccionados es incorrecto.';
+            $ret = array("ok" => 0, "msg" => $msg);
         }
 
         //$this->get('session')->getFlashBag()->add('success', 'Los comprobantes seleccionados han sido anulados');
         //return $this->redirect($this->generateUrl('apertura_anulado'));
         /*Verifico si estuvo todo ok, y devuelvo:*/
-
 
 
         $response = new Response();
@@ -718,7 +716,7 @@ class AperturaController extends Controller implements IControllerAuditable
                         //Se deberia enviar un mail de todas formas, avisando del error....
                         return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
                     }
-                } else {//No habia destinatarios para enviar el mail
+                } else { //No habia destinatarios para enviar el mail
                     $this->get('session')->getFlashBag()->add('error', 'No se pudo enviar el archivo. No hay destinatarios');
                     //Se deberia enviar un mail de todas formas, avisando del error....
                     return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
@@ -751,17 +749,18 @@ class AperturaController extends Controller implements IControllerAuditable
      * FUNCION QUE RECIBE UNA REFERENCIA, UN STRING DE RELLENO Y UNA CANTIDAD DE CARACTERES A DEVOLVER
      *
      */
-    public function formateaReferencia($referencia, $string_relleno, $largo_total, $orientacion_relleno = null) {
+    public function formateaReferencia($referencia, $string_relleno, $largo_total, $orientacion_relleno = null)
+    {
 
         if ($orientacion_relleno == null) {
-            $orientacion_relleno = STR_PAD_RIGHT;//si no se pidio orientacion, por defecto es derecha
+            $orientacion_relleno = STR_PAD_RIGHT; //si no se pidio orientacion, por defecto es derecha
         }
         $largo_inicial = strlen(trim($referencia));
         if ($largo_inicial <= $largo_total) { //se rellena con el string de relleno hasta completar el largo solicitado
             $referencia_formateada = $referencia;
-            while ( $largo_inicial < $largo_total ){//relleno hasta completar
+            while ($largo_inicial < $largo_total) { //relleno hasta completar
                 $referencia_formateada = str_pad($referencia_formateada, $largo_total, $string_relleno, $orientacion_relleno);
-                $largo_inicial ++;
+                $largo_inicial++;
             }
         } else { //la referencia es mas larga de lo que se debe devolver, se debe truncar y devolver al final puntos suspensivos
             $referencia_formateada = substr($referencia, 0, $largo_total - 2) . "..";
@@ -770,7 +769,8 @@ class AperturaController extends Controller implements IControllerAuditable
 
     }
 
-    public function envioMailAction() {
+    public function envioMailAction()
+    {
 
         $id_apertura = $this->getRequest()->get('id');
         $em = $this->getDoctrine()->getManager();
@@ -778,7 +778,7 @@ class AperturaController extends Controller implements IControllerAuditable
         $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id_apertura, "caja" => $caja->getId()));
 
         if (!$entity) { //No se pudo recuperar la apertura
-            $ret  =  array("ok" =>0);
+            $ret = array("ok" => 0);
             $response = new Response();
             $response->setContent(json_encode($ret));
             return $response;
@@ -786,18 +786,19 @@ class AperturaController extends Controller implements IControllerAuditable
 
         $archivo_generado = $entity->getArchivoCierre();
 
-        if ($entity->getComprobanteCantidad() > 0) {//Hubo cobranza
+        if ($entity->getComprobanteCantidad() > 0) { //Hubo cobranza
             $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
-            $path_documento = $path_archivos.$archivo_generado;
+            $path_documento = $path_archivos . $archivo_generado;
 
             $contenido = 'Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado;
             // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
             $mensaje_detalle = \Swift_Message::newInstance()
-            ->setSubject('Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado)
-            ->setFrom('administrador@posadas.gov.ar')
-                //->setTo('cobros@posadas.gov.ar')
-            ->setBody($contenido)
-            ->attach(\Swift_Attachment::fromPath($path_documento));//Adjunto
+                ->setSubject('Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado)
+                ->setFrom('administrador@posadas.gov.ar')
+            //->setTo('cobros@posadas.gov.ar')
+                ->setBody($contenido)
+                ->attach(\Swift_Attachment::fromPath($path_documento));
+            //Adjunto
 
             $contenido_resumen = 'Municipalidad de Posadas - Resumen de Cierre de Caja - ' . $archivo_generado;
             // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
@@ -813,8 +814,6 @@ class AperturaController extends Controller implements IControllerAuditable
                 ->setFrom('administrador@posadas.gov.ar')
                 ->setBody($contenido_resumen)
                 ->addPart($html, 'text/html');
-
-
 
 
         } else { //No hubo cobranza
@@ -841,24 +840,24 @@ class AperturaController extends Controller implements IControllerAuditable
         $lista_resumen = array();
         //Recupero los responsables a los cuales se les envia el mail:
         $responsables = $em->getRepository('SistemaCajaBundle:Responsable')->getResponsablesActivos();
-        $ret  =  array("ok" =>0);
+        $ret = array("ok" => 0);
         foreach ($responsables as $responsable) {
-            if ($responsable->getDetalle()) {//Si tiene activada la opcion para recibir el archivo con el detalle del cierre
+            if ($responsable->getDetalle()) { //Si tiene activada la opcion para recibir el archivo con el detalle del cierre
                 $lista_detalle[] = $responsable->getEmail();
             }
-            if ($responsable->getResumen()) {//Si tiene activada la opcion para recibir el archivo con el resumen del cierre
+            if ($responsable->getResumen()) { //Si tiene activada la opcion para recibir el archivo con el resumen del cierre
                 $lista_resumen[] = $responsable->getEmail();
             }
         }
         if (count($lista_detalle) > 0) {
             $mensaje_detalle->setTo($lista_detalle);
             $this->container->get('mailer')->send($mensaje_detalle);
-            $ret  =  array("ok" =>1);
+            $ret = array("ok" => 1);
         }
         if (count($lista_resumen) > 0) {
             $mensaje_resumen->setTo($lista_resumen);
             $this->container->get('mailer')->send($mensaje_resumen);
-            $ret  =  array("ok" =>1);
+            $ret = array("ok" => 1);
         }
         $em->close();
         $response = new Response();
@@ -908,16 +907,16 @@ class AperturaController extends Controller implements IControllerAuditable
         if ($entity) {
             $tk = $this->imprimirCierre($id);
             if ($tk == "") {
-                 $msg = 'No se pudieron recuperar los datos del cierre.';
+                $msg = 'No se pudieron recuperar los datos del cierre.';
             }
         } else {
             $msg = 'No se pudieron recuperar los datos de la apertura.';
         }
         //Verifico si estuvo todo ok, y devuelvo:
-        if(!$msg){
-            $ret  =  array("ok" =>1, "tk"=> $tk);
-        }else{
-            $ret  =  array("ok" =>0, "msg"=> $msg);
+        if (!$msg) {
+            $ret = array("ok" => 1, "tk" => $tk);
+        } else {
+            $ret = array("ok" => 0, "msg" => $msg);
         }
 
         $response = new Response();
@@ -929,7 +928,8 @@ class AperturaController extends Controller implements IControllerAuditable
     /*
      * Imprime o reimprime el cierre de caja.
      */
-    public function imprimirCierre($id) {
+    public function imprimirCierre($id)
+    {
 
         $em = $this->getDoctrine()->getManager();
         $tk = "";
@@ -941,7 +941,8 @@ class AperturaController extends Controller implements IControllerAuditable
 
         //Primer parte de la impresion: detalle de pagos por tipo de seccion:
         $detalle_pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetallePagos($entity->getId());
-        $contenido =  str_pad("Cierre de Caja", 40, " ", STR_PAD_BOTH) . NL;
+        $contenido = str_pad("Cierre de Caja", 40, " ", STR_PAD_BOTH) . NL;
+        $contenido .= str_pad("Cajero: " . $caja->getCajero()->getUsername(), 40, " ", STR_PAD_BOTH) . NL;
         $nombre_seccion_actual = "";
         $monto_total_seccion = 0;
         $cantidad_comprobantes_seccion = 0;
@@ -950,7 +951,7 @@ class AperturaController extends Controller implements IControllerAuditable
         foreach ($detalle_pagos as $detalle) {
 
             $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
-            $seccion = $servicio_tabla->getParametro( $tabla, $detalle->getSeccion());
+            $seccion = $servicio_tabla->getParametro($tabla, $detalle->getSeccion());
             if ($seccion) {
                 $nombre_seccion = $seccion->getDescripcion();
             } else {
@@ -959,38 +960,63 @@ class AperturaController extends Controller implements IControllerAuditable
 
             //Pregunto si es la misma seccion, o tengo que hacer el "cambio" (corte de control)
             if ($nombre_seccion_actual == "") { //entra la primera vez
-                $contenido .= str_pad("-", 40, "-", STR_PAD_BOTH). NL;
+                $contenido .= str_pad("-", 40, "-", STR_PAD_BOTH) . NL;
                 $contenido .= str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL;
-                $contenido .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH) . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
+                //$contenido .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH)  . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
+                $parcial_1 = $detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH);
+                if (!$detalle->getAnulado()) {
+                    $parcial_2 = " $ " . sprintf("%9.2f", $detalle->getImporte());
+                    $monto_total_seccion += $detalle->getImporte();
+                } else {
+                    $parcial_2 = " ANULADO";
+                }
+                $contenido .= str_pad($parcial_1 . $parcial_2, 40, " ", STR_PAD_BOTH) . NL;
                 $nombre_seccion_actual = $nombre_seccion;
-                $monto_total_seccion += $detalle->getImporte();
-                $cantidad_comprobantes_seccion ++;
+
+                $cantidad_comprobantes_seccion++;
             } else if ($nombre_seccion == $nombre_seccion_actual) { //entra si es igual al anterior
-                $contenido .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH)  . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
+                //$contenido .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH)  . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
+                $parcial_1 = $detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH);
+                if (!$detalle->getAnulado()) {
+                    $parcial_2 = " $ " . sprintf("%9.2f", $detalle->getImporte());
+                    $monto_total_seccion += $detalle->getImporte();
+                } else {
+                    $parcial_2 = " ANULADO";
+                }
+                $contenido .= str_pad($parcial_1 . $parcial_2, 40, " ", STR_PAD_BOTH) . NL;
                 $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
-                $seccion_actual = $servicio_tabla->getParametro( $tabla, $detalle->getSeccion());
+                $seccion_actual = $servicio_tabla->getParametro($tabla, $detalle->getSeccion());
                 if ($seccion_actual) {
                     $nombre_seccion_actual = $seccion_actual->getDescripcion();
                 } else {
                     $nombre_seccion_actual = "seccion desconocida";
                 }
-                $monto_total_seccion += $detalle->getImporte();
-                $cantidad_comprobantes_seccion ++;
-            } else {//corte de control, immprimo una linea, muestro totales, otra linea y empiezo otra seccion:
-                $contenido .= str_pad(" ", 40, " ", STR_PAD_BOTH). NL;
+
+                $cantidad_comprobantes_seccion++;
+            } else { //corte de control, immprimo una linea, muestro totales, otra linea y empiezo otra seccion:
+                $contenido .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL;
                 $contenido .= str_pad($nombre_seccion_actual . ": $ " . $monto_total_seccion, 40, " ", STR_PAD_BOTH) . NL;
                 $contenido .= str_pad("Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH) . NL;
-                $contenido .= str_pad("-", 40, "-", STR_PAD_BOTH). NL;
+                $contenido .= str_pad("-", 40, "-", STR_PAD_BOTH) . NL;
                 $monto_total_general += $monto_total_seccion;
                 $cantidad_comprobantes_general += $cantidad_comprobantes_seccion;
                 $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
                 $contenido .= str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL;
-                $contenido .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH)  . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
+                //$contenido .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH)  . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
+                $parcial_1 = $detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH);
+                if (!$detalle->getAnulado()) {
+                    $parcial_2 = " $ " . sprintf("%9.2f", $detalle->getImporte());
+                    $monto_total_seccion = $detalle->getImporte();
+                } else {
+                    $parcial_2 = " ANULADO";
+                    $monto_total_seccion = 0;
+                }
+                $contenido .= str_pad($parcial_1 . $parcial_2, 40, " ", STR_PAD_BOTH) . NL;
                 //INICIALIZO LOS ACUMULADORES DE SECCION
-                $monto_total_seccion =  $detalle->getImporte();;
+
                 $cantidad_comprobantes_seccion = 1;
 
-                $seccion_actual = $servicio_tabla->getParametro( $tabla, $detalle->getSeccion());
+                $seccion_actual = $servicio_tabla->getParametro($tabla, $detalle->getSeccion());
                 if ($seccion_actual) {
                     $nombre_seccion_actual = $seccion_actual->getDescripcion();
                 } else {
@@ -1000,11 +1026,11 @@ class AperturaController extends Controller implements IControllerAuditable
         }
         $monto_total_general += $monto_total_seccion;
         $cantidad_comprobantes_general += $cantidad_comprobantes_seccion;
-        $contenido .= str_pad(" ", 40, " ", STR_PAD_BOTH).  NL;
-        $contenido .= str_pad($nombre_seccion_actual . ": $ " . $monto_total_seccion , 40, " ", STR_PAD_BOTH) . NL;
+        $contenido .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL;
+        $contenido .= str_pad($nombre_seccion_actual . ": $ " . $monto_total_seccion, 40, " ", STR_PAD_BOTH) . NL;
         $contenido .= str_pad("Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH) . NL;
         $contenido .= str_pad("-", 40, "-", STR_PAD_BOTH) . NL;
-        $contenido .= str_pad("TOTAL COBRADO: $ " . $monto_total_general , 40, " ", STR_PAD_BOTH) . NL;
+        $contenido .= str_pad("TOTAL COBRADO: $ " . $monto_total_general, 40, " ", STR_PAD_BOTH) . NL;
         $contenido .= str_pad("CANTIDAD DE COMPROBANTES: " . $cantidad_comprobantes_general, 40, " ", STR_PAD_BOTH) . NL;
 
         ///////////////////////////////////////////////////////////////////////////////////////////
@@ -1025,7 +1051,7 @@ class AperturaController extends Controller implements IControllerAuditable
         $contenido .= str_pad("=", 40, "=", STR_PAD_BOTH) . NL;
         $contenido .= str_pad("Formas de Cobro: ", 40, " ", STR_PAD_RIGHT) . NL;
         foreach ($tipoPagos as $tipoPago) {
-            $contenido .= str_pad($tipoPago[0] . ": ", 40, " ", STR_PAD_RIGHT) . NL ;
+            $contenido .= str_pad($tipoPago[0] . ": ", 40, " ", STR_PAD_RIGHT) . NL;
             $contenido .= str_pad("Cobrado: $" . $tipoPago[1] . "-Anulado: $ " . $tipoPago[2], 40, "-", STR_PAD_LEFT) . NL;
             $total_cobrado += $tipoPago[1];
             $total_anulado += $tipoPago[2];
@@ -1037,15 +1063,16 @@ class AperturaController extends Controller implements IControllerAuditable
         $pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagos($entity->getId());
         $pagosAnulado = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagosAnulado($entity->getId());
         //$ticket = $this->get("sistemacaja.ticket");
-        $contenido .= str_pad("=", 40, "=", STR_PAD_BOTH). NL ;
-        $contenido .= str_pad("Apertura nro. ". $entity->getId(), 40, " ", STR_PAD_BOTH) . NL ;
-        $contenido .= str_pad("Comprobantes Validos: ". $entity->getComprobanteCantidad(), 40, " ", STR_PAD_RIGHT) . NL;
-        $contenido .= str_pad("Comprobantes Anulados: ". $entity->getComprobanteAnulado(), 40, " ",STR_PAD_RIGHT) . NL;
-        $contenido .= str_pad("Importe Cobrado: $ ". $pagos, 40, " ", STR_PAD_RIGHT) . NL;
-        $contenido .= str_pad("Importe Anulado:. $ ". $pagosAnulado, 40, " ",STR_PAD_RIGHT) . NL;
+        $contenido .= str_pad("=", 40, "=", STR_PAD_BOTH) . NL;
+        $contenido .= str_pad("Apertura nro. " . $entity->getId(), 40, " ", STR_PAD_BOTH) . NL;
+        $contenido .= str_pad("Comprobantes Validos: " . $entity->getComprobanteCantidad(), 40, " ", STR_PAD_RIGHT) . NL;
+        $contenido .= str_pad("Comprobantes Anulados: " . $entity->getComprobanteAnulado(), 40, " ", STR_PAD_RIGHT) . NL;
+        $contenido .= str_pad("Importe Cobrado: $ " . $pagos, 40, " ", STR_PAD_RIGHT) . NL;
+        $contenido .= str_pad("Importe Anulado:. $ " . $pagosAnulado, 40, " ", STR_PAD_RIGHT) . NL;
 
         $ticket->setContenido($contenido);
-        $tk .= $ticket->getTicketFull();
+        //Si se esta reimprimiendo el cierre, ya no debe imprimirse hacia afuera (full)...al final manejamos desde el menu
+        //$tk .= $ticket->getTicketFull();
         $tk .= $ticket->getTicketTestigo();
 
         return $tk;
@@ -1073,7 +1100,7 @@ class AperturaController extends Controller implements IControllerAuditable
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Apertura entity.');
         } else {
-            $entities= $em->getRepository('SistemaCajaBundle:Apertura')->getDetallePagos($entity->getId());
+            $entities = $em->getRepository('SistemaCajaBundle:Apertura')->getDetallePagos($entity->getId());
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -1107,7 +1134,7 @@ class AperturaController extends Controller implements IControllerAuditable
         $bm = $this->container->get("caja.barra");
         $servicio_tabla = $this->get("lar.parametro.tabla");
         $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
-        $seccion = $servicio_tabla->getParametro( $tabla, $detalle->getSeccion());
+        $seccion = $servicio_tabla->getParametro($tabla, $detalle->getSeccion());
         if ($seccion) {
             $seccion = $seccion->getDescripcion();
         } else {
@@ -1116,28 +1143,26 @@ class AperturaController extends Controller implements IControllerAuditable
         $referencia = $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH);
         $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('SistemaCajaBundle:Apertura:reimprimirTicket.html.twig', array('entity' => $detalle, 'caja' => $caja, 'delete_form' => $deleteForm->createView(), 'seccion' =>$seccion, 'referencia' => $referencia));
+        return $this->render('SistemaCajaBundle:Apertura:reimprimirTicket.html.twig', array('entity' => $detalle, 'caja' => $caja, 'delete_form' => $deleteForm->createView(), 'seccion' => $seccion, 'referencia' => $referencia));
     }
-
 
 
     /**
      * Reimprime un ticket que no se haya impreso al momento del cobro, por algun motivo
      *
      */
-    public function reimprimirTicketAction($id) {
+    public function reimprimirTicketAction($id)
+    {
 
         $tk = "";
         $ticket = $this->get("sistemacaja.ticket");
-        $msg=false;
+        $msg = false;
         $em = $this->getDoctrine()->getManager();
         $caja = $this->container->get('caja.manager')->getCaja();
         $detalle = $em->getRepository('SistemaCajaBundle:LoteDetalle')->findOneBy(array('id' => $id));
         if ($detalle) {
             $ticket->setContenido(array(
-                    array("Comprobante " . $detalle->getComprobante(), $detalle->getImporte()),
-                )
-
+                    array("REIMP.Compr." . $detalle->getComprobante(), sprintf("%9.2f", $detalle->getImporte())))
             );
             $ticket->setValores(array(
                 'ticket' => $detalle->getId(),

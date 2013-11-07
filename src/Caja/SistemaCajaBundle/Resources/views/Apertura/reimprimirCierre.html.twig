@@ -1,150 +1,195 @@
 {% extends '::layout.html.twig' %}
 {% block id 'mod_apertura' %}
 
-{% block title %}
-    {{ parent() }} - Apertura {{ 'views.show.show'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
-{% endblock %}
+    {% block title %}
+        {{ parent() }} - Apertura {{ 'views.show.show'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+    {% endblock %}
 
-{% block page %}
+    {% block page %}
 
-    <section id="view_Apertura">
-        <header>
-            <h1>Apertura - {{ caja.nombre }} - Reimpresión del Cierre de Caja</h1>
-        </header>
-        {{ wo_render_breadcrumbs() }}
-        {% for type, flashMessages in app.session.flashbag.all() %}
-            {% for flashMessage in flashMessages %}
-                <div class='alert alert-{{ type }}'>
-                    {{ flashMessage|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
-                </div>
+        <section id="view_Apertura">
+            <header>
+                <h1>Apertura - {{ caja.nombre }} - Reimpresión del Cierre de Caja</h1>
+            </header>
+            {{ wo_render_breadcrumbs() }}
+            {% for type, flashMessages in app.session.flashbag.all() %}
+                {% for flashMessage in flashMessages %}
+                    <div class='alert alert-{{ type }}'>
+                        {{ flashMessage|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                    </div>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
-        <div class="row-fluid">
-            <div class="span12">
-                <form class="form-horizontal">
-                    <fieldset>
-                        <div class="control-group">
-                            <label class="control-label">Fecha</label>
+            <div class="row-fluid">
+                <div class="span12">
+                    <form class="form-horizontal">
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label">Fecha</label>
 
-                            <div class="controls"><span
-                                    class="input-xlarge uneditable-input">{{ entity.fecha|date('d-m-Y ') }}</span>
+                                <div class="controls"><span
+                                        class="input-xlarge uneditable-input">{{ entity.fecha|date('d-m-Y ') }}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label">Nombre del Archivo</label>
+                            <div class="control-group">
+                                <label class="control-label">Nombre del Archivo</label>
 
-                            <div class="controls"><span
-                                    class="input-xlarge uneditable-input">{{ entity.archivocierre }}</span></div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label">Fecha de cierre</label>
+                                <div class="controls"><span
+                                        class="input-xlarge uneditable-input">{{ entity.archivocierre }}</span></div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Fecha de cierre</label>
 
-                            <div class="controls"><span
-                                    class="input-xlarge uneditable-input">
+                                <div class="controls"><span
+                                        class="input-xlarge uneditable-input">
                                         {% if entity.fechacierre %}
                                             {{ entity.fechacierre |date('d-m-Y H:i:s') }}
                                         {% endif %}
                                         </span>
 
+                                </div>
                             </div>
-                        </div>
-                    </fieldset>
-                </form>
+                        </fieldset>
+                    </form>
+                </div>
             </div>
-        </div>
 
 
-        <div class="row-fluid">
-            <div class="span12">
-                <form id="form_reimpresion_cierre" class="form-horizontal" action="{{ path('apertura_reimprimir_cierre', { 'id': entity.id }) }}">
-                    <div class="offset2 span2">
-                        <a class="btn" href="{{ path('apertura') }}">
-                            {{ 'views.recordactions.backtothelist'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
-                        </a>
-                    </div>
-                    {% if entity.fechaCierre %}
-                        <div class="span2">
-                            <button type="submit" class="btn btn-success">{{ 'Reimprimir'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
+            <div class="row-fluid">
+                <div class="span12">
+                    <form id="form_reimpresion_cierre" class="form-horizontal"
+                          action="{{ path('apertura_reimprimir_cierre', { 'id': entity.id }) }}">
+                        <div class="offset2 span2">
+                            <a class="btn" href="{{ path('apertura') }}">
+                                {{ 'views.recordactions.backtothelist'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                            </a>
                         </div>
-                    {% endif %}
-                </form>
+                        {% if entity.fechaCierre %}
+                            <div class="span2">
+                                <button type="submit"
+                                        class="btn btn-success">{{ 'Reimprimir'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
+                            </div>
+                        {% endif %}
+                    </form>
+                </div>
             </div>
-        </div>
+            {% include 'SistemaCajaBundle:Apertura:_mostrarReimpresionCierre.js.twig' %}
+            {% block javascriptshead %}
+                <script src="{{ asset('js/jquery.form.min.js') }}"></script>
+                <script src="{{ asset('js/deployJava.js') }}"></script>
+            {% endblock %}
 
-    {% block javascriptshead %}
-        <script src="{{  asset('js/jquery.form.min.js') }}"></script>
-        <script src="{{  asset('js/deployJava.js') }}"></script>
-    {% endblock %}
+            <script>
 
-    <script>
+                var bOpen = 0;
+                var impresoraOK = 0; // de inicio no esta ok, verificar estado
+                var esperandoEstado = 1;
 
-        var attributes = {
-            code:       "applet.Main",
-            archive:    "{{  asset('SerialLar.jar')}}",
-            width:      5,
-            height:     5,
-            id:			'SerialLar',
-            visible: false
-        };
-        var parameters = {separate_jvm:"true", draggable:"true", jnlp_href:"{{  asset('SerialLar.jnlp') }}", puerto: "{{ caja.puerto }}"}; <!-- Applet Parameters -->
-        var version = "1.5"; <!-- Required Java Version -->
-        deployJava.runApplet(attributes, parameters, version);
-    </script>
 
-    <script>
-        $(function() {
-            $("#form_reimpresion_cierre").submit(function(e){
-                e.preventDefault();
-                $.blockUI({ message: "Reimprimiendo ticket de cierre de caja..." });
-                $("#form_reimpresion_cierre").ajaxSubmit({
-                    dataType: 'json',
-                    success: function(data, statusText, xhr, $form){
+                var attributes = {
+                    code:"applet.Main",
+                    archive:"{{  asset('SerialLar.jar')}}",
+                    width:5,
+                    height:5,
+                    id:'SerialLar',
+                    visible:false
+                };
+                var parameters = {separate_jvm:"true", draggable:"true", jnlp_href:"{{  asset('SerialLar.jnlp') }}", puerto:"{{ caja.puerto }}"};
+                <!-- Applet Parameters -->
+                var version = "1.5";
+                <!-- Required Java Version -->
+                deployJava.runApplet(attributes, parameters, version);
 
-                        if(statusText == 'success'){
-                            if(data.ok == 1){
-                                imprimirSerial(data.tk);
-                                //Despues de imprimir, mando el mail como una llamada ajax separada:
-                                $.unblockUI();
-                                window.location = "{{ path('apertura') }}";
+                function noticia(parm, tipo) {
+                    esperandoEstado = 0;
+                    if (tipo == 0) {
+                        impresoraOK = 1;
+                    } else if (tipo == 1) {
+                        bOpen = 1
+                        $.msgBox({
+                            title:"Error TICKETADORA",
+                            content:parm,
+                            type:"alert",
+                            autoClose:true,
+                            timeOut:2000,
+                            showButtons:false,
+                            success:function (result) {
+                                bOpen = 0;
+                                impresoraOK = 0;
                             }
-                            else if(data.ok != 1){
-                                $.unblockUI();
-                                alert('Mensaje de error: ' + data.msg);
+                        });
+                    } else if (tipo == 2) {
+                        bOpen = 1;
+                        $.msgBox({
+                            title:"Error TICKETADORA",
+                            content:parm,
+                            type:"error",
+                            success:function (result) {
+                                bOpen = 0;
+                                impresoraOK = 0;
+                                window.location = "{{ path("apertura_monitor")}}";
                             }
-                        }
-                    },
-                    error: function(data){
-                        $.unblockUI();
-                        alert('Mensaje de error al reimprimir: ' + data.msg + '. Ticket: ' + data.tk);
-
+                        });
+                    } else {
+                        impresoraOK = 1;
+                        //$("#msgBarra").html("TICKET: " + parm+ " "+tipo);
                     }
+                }
+            </script>
+
+            <script>
+                $(function () {
+                    $("#form_reimpresion_cierre").submit(function (e) {
+                        e.preventDefault();
+                        $.blockUI({ message:"Reimprimiendo ticket de cierre de caja..." });
+                        $("#form_reimpresion_cierre").ajaxSubmit({
+                            dataType:'json',
+                            success:function (data, statusText, xhr, $form) {
+
+                                if (statusText == 'success') {
+                                    if (data.ok == 1) {
+                                        imprimirSerial(data.tk);
+                                        //Despues de imprimir, mando el mail como una llamada ajax separada:
+                                        $.unblockUI();
+                                        window.location = "{{ path('apertura') }}";
+                                    }
+                                    else if (data.ok != 1) {
+                                        $.unblockUI();
+                                        alert('Mensaje de error: ' + data.msg);
+                                    }
+                                }
+                            },
+                            error:function (data) {
+                                $.unblockUI();
+                                alert('Mensaje de error al reimprimir: ' + data.msg + '. Ticket: ' + data.tk);
+
+                            }
+                        });
+
+                        return false;
+                    });
                 });
 
-                return false;
-            });
-        });
+                /**
+                 * Manda a la impresora fiscal.
+                 * @param data
+                 */
+                imprimirSerial = function (data) {
+                    var pser = document.SerialLar;
+                    try {
+                        //Particiono la variable tk recibida, para evitar el llenado del buffer:
+                        for (var i = 0; i < data.length; i += 250) {
+                            var t = new Date().getTime();
+                            while ((new Date().getTime()) - t < 2000) {
+                                //alert('timer');
+                            }
 
-        /**
-         * Manda a la impresora fiscal.
-         * @param data
-         */
-        imprimirSerial = function(data){
-            var pser = document.SerialLar;
-            try {
-                //Particiono la variable tk recibida, para evitar el llenado del buffer:
-                for (var i=0;i<data.length; i+=250) {
-                    var t = new Date().getTime();
-                    while ((new Date().getTime()) -t < 2000) {
-                        //alert('timer');
+                            pser.escribir(data.substr(i, 250));
+                        }
+                        $.unblockUI();
+                    } catch (e) {
+                        $.unblockUI();
+                        alert('Error de tipo: ' + e);
                     }
-
-                    pser.escribir(data.substr(i, 250));
                 }
-                $.unblockUI();
-            } catch (e) {
-                $.unblockUI();
-                alert('Error de tipo: ' + e);
-            }
-        }
-    </script>
-{% endblock %}
+            </script>
+    {% endblock %}

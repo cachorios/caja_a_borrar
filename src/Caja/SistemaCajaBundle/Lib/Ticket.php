@@ -131,7 +131,7 @@ class Ticket
 
         $total = 0;
 
-        if($tipo == 0 ){
+        if($tipo == 0 ){ //ticket full
             if (is_array($this->contenido)) {
                 $str .= $this->armaDetalle( $total);
                 $str .= ESC . "U" . chr(1); //unidireccional
@@ -141,7 +141,7 @@ class Ticket
                 $str .= $this->contenido.NL;
             }
         }
-        if($tipo == 1){
+        if($tipo == 1){ // ticket testigo
             if (is_array($this->contenido)) {
                 $str .= $this->armaDetalle( $total);
                 $str .= ESC . "U" . chr(1); //unidireccional

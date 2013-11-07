@@ -1,0 +1,87 @@
+<script type="text/javascript">
+
+    $(function () {
+
+
+        $("#form_reimpresion_ticket").submit(function (e) {
+            e.preventDefault();
+            $.blockUI({ message:"Reimprimiendo ticket ..." });
+            verificarEstadoSerial("comprobarImpresora");
+            return false;
+        });
+
+
+        comprobarImpresora = function () {
+            $("#form_reimpresion_ticket").submit(function (e) {
+                e.preventDefault();
+                $.blockUI({ message:"Reimprimiendo ticket..." });
+                $("#form_reimpresion_ticket").ajaxSubmit({
+                    dataType:'json',
+                    success:function (data, statusText, xhr, $form) {
+
+                        if (statusText == 'success') {
+                            if (data.ok == 1) {
+                                imprimirSerial(data.tk);
+                                //Despues de imprimir, mando el mail como una llamada ajax separada:
+                                $.unblockUI();
+                                window.location = "{{ path('apertura') }}";
+                            }
+                            else if (data.ok != 1) {
+                                $.unblockUI();
+                                alert('Mensaje de error: ' + data.msg);
+                            }
+                        }
+                    },
+                    error:function (data) {
+                        $.unblockUI();
+                        alert('Mensaje de error al reimprimir: ' + data.msg + '. Ticket: ' + data.tk);
+
+                    }
+                });
+
+                return false;
+            });
+
+        }
+    });
+
+
+    /**
+     * Determina el estado de la impresora
+     * @param nombre de la funcion a ejecutar si esta todo ok
+     */
+    verificarEstadoSerial = function (sFuncion, datos) {
+        var pser = document.SerialLar;
+        $.unblockUI();
+        try {
+            pser.ifEstadoRun(sFuncion);
+        } catch (e) {
+            alert(e);
+        }
+    }
+
+
+    /**
+     * Manda a la impresora fiscal.
+     * @param data
+     */
+    imprimirSerial = function (data) {
+        var pser = document.SerialLar;
+        try {
+            //Particiono la variable tk recibida, para evitar el llenado del buffer:
+            for (var i = 0; i < data.length; i += 250) {
+                var t = new Date().getTime();
+                while ((new Date().getTime()) - t < 2000) {
+                    //alert('timer');
+                }
+
+                pser.escribir(data.substr(i, 250));
+            }
+            $.unblockUI();
+        } catch (e) {
+            $.unblockUI();
+            alert('Error de tipo: ' + e);
+        }
+    }
+
+</script>
