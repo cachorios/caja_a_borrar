@@ -357,6 +357,7 @@ $(document).ready(function (e) {
             success: function (result) {
                 if (result == "Si") {
                     $this.hide();
+                    //ocultar el boton de cancelar con jquery clasico
                     //guardarRegistro sera llamado si el estado esta ok!
                     verificarEstadoSerial("guardarRegistro");
                     return false;
@@ -376,7 +377,6 @@ $(document).ready(function (e) {
      */
     guardarRegistro = function () {
         miForm = $("form", "#form_CodigoBarra"); //.submit();
-
         $.ajax({
             type: 'POST',
             url: $(miForm).attr('action'),
@@ -420,40 +420,20 @@ $(document).ready(function (e) {
         var pser = document.SerialLar;
         try {
             if (impresoraOK == 1) {
-                pser.escribir(data);
+                //Particiono la variable tk recibida, para evitar el llenado del buffer:
+                for (var i=0;i<data.length; i+=250) {
+                    var t = new Date().getTime();
+                    while ((new Date().getTime()) -t < 1500) {
+                        ///alert('timer');
+                    }
+                    pser.escribir(data.substr(i, 250));
+                }
             }
 
         } catch (e) {
             alert(e);
         }
     }
-
-    /**
-     * Estado de la impresora fiscal.
-     */
-    estadoSerial = function () {
-        var pser = document.SerialLar;
-        try {
-            //Particiono la variable tk recibida, para evitar el llenado del buffer:
-            for (var i=0;i<data.length; i+=250) {
-                var t = new Date().getTime();
-                while ((new Date().getTime()) -t < 2000) {
-                    //alert('timer');
-                }
-                pser.escribir(data.substr(i, 250));
-            }
-            $.unblockUI();
-        } catch (e) {
-            $.unblockUI();
-            alert('Error de tipo: ' + e);
-        }
-    }
-
-
-    $("#estado").click(function () {
-        estadoSerial();
-    });
-
 
 }); //fin document ready
 

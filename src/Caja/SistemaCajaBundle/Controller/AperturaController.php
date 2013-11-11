@@ -346,7 +346,7 @@ class AperturaController extends Controller implements IControllerAuditable
 
                     if ($entity->getComprobanteCantidad() > 0) {
                         $apertura_id = $entity->getId();
-                        $numero_caja = $entity->getCaja()->getId();
+                        $numero_caja = $entity->getCaja()->getNumero();
                         $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
                         if (!file_exists($path_archivos)) {
                             //Si no existe el directorio donde se guardan los archivos de cierre, lo creo;
@@ -450,7 +450,7 @@ class AperturaController extends Controller implements IControllerAuditable
         $DetalleTipoPago = $this->getDetalleTipoPago($apertura->getId());
 
         return $this->render('SistemaCajaBundle:Apertura:monitor.html.twig',
-            array('caja' => $caja, 'apertura' => $apertura, 'importe_pago' => $pagos, 'pagos_anulado' => $pagosAnulado,
+            array('caja' => $caja, 'apertura' => $apertura, 'importe_pago' => sprintf("%9.2f", $pagos), 'pagos_anulado' => sprintf("%9.2f", $pagosAnulado),
                 'detallepago' => $DetalleTipoPago));
     }
 
@@ -1068,15 +1068,16 @@ class AperturaController extends Controller implements IControllerAuditable
 
         }
 
-        $total_cobrado = 0;
-        $total_anulado = 0;
+        //$total_cobrado = 0;
+        //$total_anulado = 0;
         $contenido .= str_pad("=", 40, "=", STR_PAD_BOTH) . NL;
         $contenido .= str_pad("Formas de Cobro: ", 40, " ", STR_PAD_RIGHT) . NL;
         foreach ($tipoPagos as $tipoPago) {
             $contenido .= str_pad($tipoPago[0] . ": ", 40, " ", STR_PAD_RIGHT) . NL;
-            $contenido .= str_pad("Cobrado: $" . $tipoPago[1] . "-Anulado: $ " . $tipoPago[2], 40, "-", STR_PAD_LEFT) . NL;
-            $total_cobrado += $tipoPago[1];
-            $total_anulado += $tipoPago[2];
+            //$contenido .= str_pad("Cobrado: $" . sprintf("%9.2f", $tipoPago[1]) . "-Anulado: $" . sprintf("%9.2f", $tipoPago[2]), 40, "-", STR_PAD_LEFT) . NL;
+            $contenido .= str_pad("$ " . sprintf("%9.2f", $tipoPago[1]) . " - Anulado: $ " . sprintf("%9.2f", $tipoPago[2]), 40, "-", STR_PAD_LEFT) . NL;
+            //$total_cobrado += $tipoPago[1];
+            //$total_anulado += $tipoPago[2];
         }
 
         ///////////////////////////////////////////////////////////////////////////
@@ -1089,8 +1090,8 @@ class AperturaController extends Controller implements IControllerAuditable
         $contenido .= str_pad("Apertura nro. " . $entity->getId(), 40, " ", STR_PAD_BOTH) . NL;
         $contenido .= str_pad("Comprobantes Validos: " . $entity->getComprobanteCantidad(), 40, " ", STR_PAD_RIGHT) . NL;
         $contenido .= str_pad("Comprobantes Anulados: " . $entity->getComprobanteAnulado(), 40, " ", STR_PAD_RIGHT) . NL;
-        $contenido .= str_pad("Importe Cobrado: $ " . $pagos, 40, " ", STR_PAD_RIGHT) . NL;
-        $contenido .= str_pad("Importe Anulado:. $ " . $pagosAnulado, 40, " ", STR_PAD_RIGHT) . NL;
+        $contenido .= str_pad("Importe Cobrado: $ " . sprintf("%9.2f", $pagos), 40, " ", STR_PAD_RIGHT) . NL;
+        $contenido .= str_pad("Importe Anulado: $ " . sprintf("%9.2f", $pagosAnulado), 40, " ", STR_PAD_RIGHT) . NL;
 
         $ticket->setContenido($contenido);
         //Si se esta reimprimiendo el cierre, ya no debe imprimirse hacia afuera (full)...al final manejamos desde el menu
@@ -1108,8 +1109,17 @@ class AperturaController extends Controller implements IControllerAuditable
         $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
         $contenido_resumen .= str_pad("Comprobantes Validos: " . $entity->getComprobanteCantidad(), 40, " ", STR_PAD_RIGHT) . NL;
         $contenido_resumen .= str_pad("Comprobantes Anulados: " . $entity->getComprobanteAnulado(), 40, " ", STR_PAD_RIGHT) . NL;
-        $contenido_resumen .= str_pad("Importe Cobrado: $ " . $pagos, 40, " ", STR_PAD_RIGHT) . NL;
-        $contenido_resumen .= str_pad("Importe Anulado:. $ " . $pagosAnulado, 40, " ", STR_PAD_RIGHT) . NL;
+        $contenido_resumen .= str_pad("Importe Cobrado: $ " . sprintf("%9.2f", $pagos), 40, " ", STR_PAD_RIGHT) . NL;
+        $contenido_resumen .= str_pad("Importe Anulado:. $ " . sprintf("%9.2f", $pagosAnulado), 40, " ", STR_PAD_RIGHT) . NL;
+
+        //Se agrega un resumen por tipo de cobro:
+        $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+        $contenido_resumen .= str_pad("Formas de Cobro: ", 40, " ", STR_PAD_RIGHT) . NL;
+        foreach ($tipoPagos as $tipoPago) {
+            $contenido_resumen .= str_pad($tipoPago[0] . ": ", 40, " ", STR_PAD_RIGHT) . NL;
+            $contenido_resumen .= str_pad("$ " . sprintf("%9.2f", $tipoPago[1]) . " - Anulado: $ " . sprintf("%9.2f", $tipoPago[2]), 40, "-", STR_PAD_LEFT) . NL;
+        }
+
         $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
         $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
         $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
