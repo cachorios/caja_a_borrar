@@ -50,20 +50,17 @@ class UsuarioManager
 
     private function verificarIngreso()
     {
-        return true;
-        /*
         if ($this->contenedor->get('security.context')->isGranted('ROLE_ADMIN')) {
             return true;
         }
-
         if ($this->esDiaValido(date("w")) && $this->esHorarioValido()) {
+
             if ($this->usuario->getUsuarioIngreso()->getLugarIngreso()) {
                 return $this->verificarLugar();
             }
             return true;
         }
         return false;
-        */
     }
 
     /**
@@ -91,10 +88,9 @@ class UsuarioManager
     {
         $ingreso = $this->usuario->getUsuarioIngreso();
         if ($ingreso->getHorario()) {
-            $ahora = new \DateTime('now');
-            $ahora->setTime(0, 0, 0);
-            $desde = $ingreso->getHorario()->getDesde();
-            $hasta = $ingreso->getHorario()->getHasta();
+            $ahora = strtotime('now');
+            $desde = strtotime($ingreso->getHorario()->getDesde());
+            $hasta = strtotime($ingreso->getHorario()->getHasta());
             return $ahora >= $desde && $ahora <= $hasta;
         }
         return false;
@@ -110,8 +106,7 @@ class UsuarioManager
 
         foreach ($lugares as $lugar) {
             $mascara_valida = $lugar->getMascara();
-            $mascara_ip_origen = substr($this->contenedor->get('request')->getClientIp(), strlen($mascara_valida));
-
+            $mascara_ip_origen = substr($this->contenedor->get('request')->getClientIp(), 0, strlen($mascara_valida));
             if ($mascara_valida == $mascara_ip_origen) {
                 return true;
             }
