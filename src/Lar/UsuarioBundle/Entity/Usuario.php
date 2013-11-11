@@ -721,29 +721,7 @@ class Usuario implements AdvancedUserInterface
         return $this;
     }
 
-    /**
-     * Valida el ingreso al sistema al momento del ingreso
-     * Controla el dia, el horario y el lugar
-     * Si es administrador, siempre ingresa
-     * @param $usuario_ingreso
-     * @param $lugares_ingreso
-     * @return bool
-     */
-    public function validarIngreso($usuario_ingreso, $lugares_ingreso)
-    {
-        $grupos = $this->getGrupos(); // Me fijo si el usuario pertenece al grupo de Administradores:
-        foreach ($grupos as $grupo) {   //$usuario = $this->get('security.context')->isGranted('ROLE_ADMIN');
-            if ($grupo->getNombre() == 'Administrador') {//Ok
-                return true;
-            }
-        }
-        if (!$usuario_ingreso)  //No tiene definido un lugar y horario de acceso
-            return false;
-
-        return $usuario_ingreso->validarIngreso($lugares_ingreso);
-    }
-
-    /**
+      /**
      * @param $ingreso_valido
      */
     public function registrarIngreso($ingreso_valido) {

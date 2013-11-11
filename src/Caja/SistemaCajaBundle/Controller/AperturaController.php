@@ -41,8 +41,17 @@ class AperturaController extends Controller implements IControllerAuditable
         list($filterForm, $queryBuilder) = $this->filter();
         list($entities, $pagerHtml) = $this->paginator($queryBuilder);
 
+        $apertura = $this->container->get('caja.manager')->getApertura();
+        if ($apertura) {
+            $tiene_apertura_activa = true;
+        } else {
+            $tiene_apertura_activa = false;
+        }
         return $this->render('SistemaCajaBundle:Apertura:index.html.twig',
-            array('entities' => $entities, 'pagerHtml' => $pagerHtml, 'filterForm' => $filterForm->createView(),));
+            array('entities' => $entities,
+                'pagerHtml' => $pagerHtml,
+                'filterForm' => $filterForm->createView(),
+                'tiene_apertura_activa' => $tiene_apertura_activa));
     }
 
     /**
@@ -939,9 +948,22 @@ class AperturaController extends Controller implements IControllerAuditable
         $servicio_tabla = $this->get("lar.parametro.tabla");
         $bm = $this->container->get("caja.barra");
 
+        // Se ingresa una suerte de encabezado de cierre, para facilitar la division de grupos
+        $contenido = str_pad("CIERRE DE CAJA EFECTUADO", 40, "-", STR_PAD_BOTH) . NL;
+        $contenido .= str_pad("", 40, " ", STR_PAD_BOTH) . NL;
+        $contenido .= str_pad("", 40, " ", STR_PAD_BOTH) . NL;
+        $contenido .= str_pad("", 40, " ", STR_PAD_BOTH) . NL;
+        $contenido .= str_pad("", 40, " ", STR_PAD_BOTH) . NL;
+        $contenido .= str_pad("", 40, " ", STR_PAD_BOTH) . NL;
+        $contenido .= "CAJA: " . $caja->getNumero() . NL;
+        $contenido .= str_pad("FECHA: " . date("d-m-Y"), 20, " ", STR_PAD_RIGHT) . str_pad("HORA: ".date("H:i:s"), 19, " ", STR_PAD_LEFT) . NL;
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+
         //Primer parte de la impresion: detalle de pagos por tipo de seccion:
         $detalle_pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetallePagos($entity->getId());
-        $contenido = str_pad("Cierre de Caja", 40, " ", STR_PAD_BOTH) . NL;
+        $contenido .= str_pad("Cierre de Caja", 40, " ", STR_PAD_BOTH) . NL;
+        $contenido .= str_pad("Apertura nro. " . $entity->getId(), 40, " ", STR_PAD_BOTH) . NL;
         $contenido .= str_pad("Cajero: " . $caja->getCajero()->getUsername(), 40, " ", STR_PAD_BOTH) . NL;
         $nombre_seccion_actual = "";
         $monto_total_seccion = 0;
@@ -995,7 +1017,7 @@ class AperturaController extends Controller implements IControllerAuditable
                 $cantidad_comprobantes_seccion++;
             } else { //corte de control, immprimo una linea, muestro totales, otra linea y empiezo otra seccion:
                 $contenido .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL;
-                $contenido .= str_pad($nombre_seccion_actual . ": $ " . $monto_total_seccion, 40, " ", STR_PAD_BOTH) . NL;
+                $contenido .= str_pad($nombre_seccion_actual . ": $ " . sprintf("%9.2f", $monto_total_seccion), 40, " ", STR_PAD_BOTH) . NL;
                 $contenido .= str_pad("Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH) . NL;
                 $contenido .= str_pad("-", 40, "-", STR_PAD_BOTH) . NL;
                 $monto_total_general += $monto_total_seccion;
@@ -1027,10 +1049,10 @@ class AperturaController extends Controller implements IControllerAuditable
         $monto_total_general += $monto_total_seccion;
         $cantidad_comprobantes_general += $cantidad_comprobantes_seccion;
         $contenido .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL;
-        $contenido .= str_pad($nombre_seccion_actual . ": $ " . $monto_total_seccion, 40, " ", STR_PAD_BOTH) . NL;
+        $contenido .= str_pad($nombre_seccion_actual . ": $ " . sprintf("%9.2f", $monto_total_seccion), 40, " ", STR_PAD_BOTH) . NL;
         $contenido .= str_pad("Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH) . NL;
         $contenido .= str_pad("-", 40, "-", STR_PAD_BOTH) . NL;
-        $contenido .= str_pad("TOTAL COBRADO: $ " . $monto_total_general, 40, " ", STR_PAD_BOTH) . NL;
+        $contenido .= str_pad("TOTAL COBRADO: $ " . sprintf("%9.2f", $monto_total_general), 40, " ", STR_PAD_BOTH) . NL;
         $contenido .= str_pad("CANTIDAD DE COMPROBANTES: " . $cantidad_comprobantes_general, 40, " ", STR_PAD_BOTH) . NL;
 
         ///////////////////////////////////////////////////////////////////////////////////////////
@@ -1074,6 +1096,30 @@ class AperturaController extends Controller implements IControllerAuditable
         //Si se esta reimprimiendo el cierre, ya no debe imprimirse hacia afuera (full)...al final manejamos desde el menu
         //$tk .= $ticket->getTicketFull();
         $tk .= $ticket->getTicketTestigo();
+
+        //Genero una segunda parte de la impresion, que va hacia afuera, a modo de resumen para el cajero:
+        $ticket_resumen = $this->get("sistemacaja.ticket");
+        $contenido_resumen = str_pad("=", 40, "=", STR_PAD_BOTH) . NL; //doble linea
+        $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+        $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+        $contenido_resumen .= str_pad("RESUMEN DE CIERRE DE CAJA", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+        $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+        $contenido_resumen .= str_pad("Apertura nro. " . $entity->getId(), 40, " ", STR_PAD_BOTH) . NL;
+        $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+        $contenido_resumen .= str_pad("Comprobantes Validos: " . $entity->getComprobanteCantidad(), 40, " ", STR_PAD_RIGHT) . NL;
+        $contenido_resumen .= str_pad("Comprobantes Anulados: " . $entity->getComprobanteAnulado(), 40, " ", STR_PAD_RIGHT) . NL;
+        $contenido_resumen .= str_pad("Importe Cobrado: $ " . $pagos, 40, " ", STR_PAD_RIGHT) . NL;
+        $contenido_resumen .= str_pad("Importe Anulado:. $ " . $pagosAnulado, 40, " ", STR_PAD_RIGHT) . NL;
+        $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+        $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+        $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+        $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+        $contenido_resumen .= str_pad("_________________________", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+        $contenido_resumen .= str_pad("RECIBIDO POR JEFE DE CAJA", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+        $contenido_resumen .= str_pad("DIRECCION DE TESORERIA - MUN. POSADAS", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+        $ticket->setContenido($contenido_resumen);
+
+        $tk .= $ticket->getTicketFull();
 
         return $tk;
     }

@@ -98,7 +98,7 @@ class Ticket
             $str .= ESC . '!' . '0'.NL;
             //$str .= ESC . 'a' . chr(0); //izquierda
             $str .= ESC . '!' . chr(1);
-            $str .= "DIR: " . "RIVADAVIA 1501, POSADAS" . NL;
+            $str .= "DIR: " . "RIVADAVIA 1579, POSADAS, MISIONES" . NL;
             $str .= str_pad("FECHA: $fecha", 20, " ", STR_PAD_RIGHT) . str_pad("HORA: $hora", 19, " ", STR_PAD_LEFT) . NL;
             $str .= str_pad("", 40, "-") .NL;
 
@@ -145,7 +145,7 @@ class Ticket
             if (is_array($this->contenido)) {
                 $str .= $this->armaDetalle( $total);
                 $str .= ESC . "U" . chr(1); //unidireccional
-                $str .= str_pad("TOTAL:", 20, " ", STR_PAD_RIGHT) . str_pad($total, 20, " ", STR_PAD_LEFT) . NL;
+                $str .= str_pad("TOTAL:", 20, " ", STR_PAD_RIGHT) . str_pad(sprintf('%9.2f',$total), 20, " ", STR_PAD_LEFT) . NL;
             } else {
                 $str .= $this->contenido.NL;
             }
