@@ -28,6 +28,7 @@ class AperturaCierreType extends AbstractType
 
     public function getName()
     {
-        return 'caja_sistemacajabundle_aperturacierretype';
+        //return 'caja_sistemacajabundle_aperturacierretype';
+        return 'Datos';
     }
 }
