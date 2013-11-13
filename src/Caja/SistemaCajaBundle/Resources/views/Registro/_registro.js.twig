@@ -345,7 +345,7 @@ $(document).ready(function (e) {
      * Evento click del boton REGISTRAR PAGO
      */
     $("#pago_save").click(function (e) {
-        $this = $(this);
+        //$this = $(this);
         $.msgBox({
             title: "Registración de Pago",
             content: "Si esta todo correcto,<br> procede a almacenar el pago e imprimir ticket!",
@@ -356,7 +356,9 @@ $(document).ready(function (e) {
             ],
             success: function (result) {
                 if (result == "Si") {
-                    $this.hide();
+                    //$this.hide();
+                    $(".modal-footer").hide();
+
                     //ocultar el boton de cancelar con jquery clasico
                     //guardarRegistro sera llamado si el estado esta ok!
                     verificarEstadoSerial("guardarRegistro");

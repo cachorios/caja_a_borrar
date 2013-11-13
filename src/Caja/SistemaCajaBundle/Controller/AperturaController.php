@@ -1110,7 +1110,7 @@ class AperturaController extends Controller implements IControllerAuditable
         $contenido_resumen .= str_pad("Comprobantes Validos: " . $entity->getComprobanteCantidad(), 40, " ", STR_PAD_RIGHT) . NL;
         $contenido_resumen .= str_pad("Comprobantes Anulados: " . $entity->getComprobanteAnulado(), 40, " ", STR_PAD_RIGHT) . NL;
         $contenido_resumen .= str_pad("Importe Cobrado: $ " . sprintf("%9.2f", $pagos), 40, " ", STR_PAD_RIGHT) . NL;
-        $contenido_resumen .= str_pad("Importe Anulado:. $ " . sprintf("%9.2f", $pagosAnulado), 40, " ", STR_PAD_RIGHT) . NL;
+        $contenido_resumen .= str_pad("Importe Anulado: $ " . sprintf("%9.2f", $pagosAnulado), 40, " ", STR_PAD_RIGHT) . NL;
 
         //Se agrega un resumen por tipo de cobro:
         $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco

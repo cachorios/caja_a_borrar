@@ -19,7 +19,7 @@ class LotePagoType extends AbstractType
     $builder
 
 		->add('tipo_pago')
-        ->add('importe','money',array('attr' => array('class' =>'importe')))
+        ->add('importe','money',array('currency' => 'S', 'attr' => array('class' =>'importe')))
 
     ;
 }
