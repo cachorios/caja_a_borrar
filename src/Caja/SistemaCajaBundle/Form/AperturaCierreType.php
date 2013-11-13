@@ -16,7 +16,7 @@ class AperturaCierreType extends AbstractType
         $builder->add('comprobante_anulado','number',array("disabled" =>true));
         $builder->add('importe_cobro','number',array("disabled" =>true));
         $builder->add('importe_anulado','number',array("disabled" =>true));
-        $builder->add('fecha_cierre', null,array("disabled" =>true));
+        //$builder->add('fecha_cierre', null,array("disabled" =>true));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -28,7 +28,6 @@ class AperturaCierreType extends AbstractType
 
     public function getName()
     {
-        //return 'caja_sistemacajabundle_aperturacierretype';
-        return 'Datos';
+        return 'caja_sistemacajabundle_aperturacierretype';
     }
 }

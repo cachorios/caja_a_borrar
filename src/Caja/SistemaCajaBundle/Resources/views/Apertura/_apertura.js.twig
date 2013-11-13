@@ -1,7 +1,16 @@
 <script type="text/javascript">
 
-    $(function () {
+    var miTimer;
+    miTimer = setInterval(function(){
+        if (document.SerialLar.isActive()){
+            jQuery("#form_apertura").show();
+            window.clearTimeout(miTimer);
+            $.unblockUI();
+        }
+    },500);
 
+    $(function () {
+        $.blockUI({ message:"Esperando impresora..." });
         $("#form_apertura").submit(function (e) {
             e.preventDefault();
             $.blockUI({ message:"Imprimiendo ticket..." });
