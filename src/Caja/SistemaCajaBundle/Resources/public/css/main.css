@@ -233,6 +233,7 @@ div#caja_sistemacajabundle_registrotype_detalle tfoot h2{
 }
 .importe{
     text-align: right;
+    width: 120px;
 }
 
 .registro_detalle_barra{
