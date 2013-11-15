@@ -241,6 +241,31 @@ class AperturaRepository extends EntityRepository
 
     }
 
+    /**
+     * Obtiene el detalle de TODOS LOS comprobantes registrados en la apertura
+     * @param $apertura_id
+     * @return array que contiene cada comprobante registrado
+     */
+    public function getDetalleTodosPagos($apertura_id)
+    {
+        $em = $this->getEntityManager();
+
+        $q = $em->createQuery("
+              SELECT ld.id, ld.importe, ld.anulado, ld.comprobante, ld.referencia, ld.codigo_barra, ld.seccion
+              FROM
+                  SistemaCajaBundle:LoteDetalle ld JOIN ld.lote l
+              WHERE
+                  l.apertura = :apertura_id
+              ORDER BY ld.seccion, ld.comprobante
+              ")
+            ->setParameter("apertura_id", $apertura_id)
+        ;
+
+        $res = $q->getResult();
+        return $res;
+
+    }
+
 
 
 }

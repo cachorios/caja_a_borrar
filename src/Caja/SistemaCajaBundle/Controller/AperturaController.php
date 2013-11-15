@@ -351,7 +351,7 @@ class AperturaController extends Controller implements IControllerAuditable
                         if (!file_exists($path_archivos)) {
                             //Si no existe el directorio donde se guardan los archivos de cierre, lo creo;
                             if (!mkdir($path_archivos, '0644')) { // 0644 es lectura y escritura para el propietario, lectura para los demÃ¡s
-                                $msg = '¡¡¡ Error al crear el directorio que va a contener los archivos de cierre !!!!!';
+                                $msg = 'Â¡Â¡Â¡ Error al crear el directorio que va a contener los archivos de cierre !!!!!';
                             }
                         }
 
@@ -360,7 +360,7 @@ class AperturaController extends Controller implements IControllerAuditable
                             $archivo_generado = $em->getRepository('SistemaCajaBundle:Apertura')->generaArchivoTexto($apertura_id, $numero_caja, $path_archivos);
 
                             if (!$archivo_generado) {
-                                $msg = '¡¡¡ Error al generar el archivo de texto que se envia por mail !!!!!';
+                                $msg = 'Â¡Â¡Â¡ Error al generar el archivo de texto que se envia por mail !!!!!';
                             }
                             //Si esta todo bien, sigo:
                             if (!$msg) {
@@ -443,15 +443,19 @@ class AperturaController extends Controller implements IControllerAuditable
         }
 
         $em = $this->getDoctrine()->getManager();
-
         $pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagos($apertura->getId());
         $pagosAnulado = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagosAnulado($apertura->getId());
-
         $DetalleTipoPago = $this->getDetalleTipoPago($apertura->getId());
+        //$detalle_pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetallePagos($apertura->getId());
+        $detalle_pagos = $this->getDetallePagos($apertura->getId());
 
         return $this->render('SistemaCajaBundle:Apertura:monitor.html.twig',
-            array('caja' => $caja, 'apertura' => $apertura, 'importe_pago' => sprintf("%9.2f", $pagos), 'pagos_anulado' => sprintf("%9.2f", $pagosAnulado),
-                'detallepago' => $DetalleTipoPago));
+            array('caja' => $caja,
+                'apertura' => $apertura,
+                'importe_pago' => sprintf("%9.2f", $pagos),
+                'pagos_anulado' => sprintf("%9.2f", $pagosAnulado),
+                'detalle_tipo_pagos' => $DetalleTipoPago,
+                'detalle_pagos' => $detalle_pagos));
     }
 
     private function getDetalleTipoPago($ap_id)
@@ -471,6 +475,40 @@ class AperturaController extends Controller implements IControllerAuditable
 
         }
         return $tipoPago;
+    }
+
+    private function getDetallePagos($ap_id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $servicio_tabla = $this->get("lar.parametro.tabla");
+        $bm = $this->container->get("caja.barra");
+
+        $pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetalleTodosPagos($ap_id);
+
+        $array_detalle_pagos= array();
+
+        foreach ($pagos as $pago) {
+
+            if (!array_key_exists($pago['id'], $array_detalle_pagos)) {
+                $array_detalle_pagos[$pago['id']] = array($pago['comprobante'], 0, 0, "", "");
+            }
+
+            $array_detalle_pagos[$pago['id']][1] = $pago['importe'] + $pago['anulado'];
+            $array_detalle_pagos[$pago['id']][2] = $pago['anulado'];
+            $array_detalle_pagos[$pago['id']][3] = $pago['comprobante'];
+            $array_detalle_pagos[$pago['id']][4] = $pago['referencia'];
+            $tabla = $bm->getTablaSeccionByCodigoBarra($pago['codigo_barra']);
+            $seccion = $servicio_tabla->getParametro($tabla, $pago['seccion']);
+            if ($seccion) {
+                $array_detalle_pagos[$pago['id']][5] = $seccion->getDescripcion();
+            } else {
+                $array_detalle_pagos[$pago['id']][5] = "seccion desconocida";
+            }
+
+
+        }
+
+        return $array_detalle_pagos;
     }
 
     public function anularAction()
@@ -956,7 +994,7 @@ class AperturaController extends Controller implements IControllerAuditable
         $contenido .= str_pad("", 40, " ", STR_PAD_BOTH) . NL;
         $contenido .= str_pad("", 40, " ", STR_PAD_BOTH) . NL;
         $contenido .= "CAJA: " . $caja->getNumero() . NL;
-        $contenido .= str_pad("FECHA: " . date("d-m-Y"), 20, " ", STR_PAD_RIGHT) . str_pad("HORA: ".date("H:i:s"), 19, " ", STR_PAD_LEFT) . NL;
+        $contenido .= str_pad("FECHA: " . date("d-m-Y"), 20, " ", STR_PAD_RIGHT) . str_pad("HORA: " . date("H:i:s"), 19, " ", STR_PAD_LEFT) . NL;
 
         ///////////////////////////////////////////////////////////////////////////////////////////
 
