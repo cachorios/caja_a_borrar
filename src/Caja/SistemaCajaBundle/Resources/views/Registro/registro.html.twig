@@ -137,9 +137,23 @@
             }
 
 
+            jQuery(document).ready(function($)
+            {
+                $('#tscroll').tableScroll({height:200});
+                //$('#tscroll').tableScroll({width:400});
+                //$('#tscroll').tableScroll({containerClass:'myCustomClass'});
+            });
+
+
         </script>
 
     {% endblock %}
 
 
 
+    {% block stylesheets %}
+        <link href="{{ asset('css/jquery.tablescroll.css') }}" rel="stylesheet">
+    {% endblock %}
+    {% block javascripts %}
+        <script src="{{  asset('js/jquery.tablescroll.js') }}"></script>
+    {% endblock javascripts %}
