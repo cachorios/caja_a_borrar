@@ -12,14 +12,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class AperturaRepository extends EntityRepository
 {
-    public function getAperturas($usuario){
+    public function getAperturas($usuario)
+    {
         $em = $this->getEntityManager();
 
         $a = $this->createQueryBuilder("a")
-            ->join("a.caja","c")
+            ->join("a.caja", "c")
             ->where('c.cajero = :cajero')
             ->setParameter("cajero", $usuario->getId())
-            ->orderBy("a.fecha",'desc');
+            ->orderBy("a.fecha", 'desc');
 
         return $a;
     }
@@ -48,8 +49,7 @@ class AperturaRepository extends EntityRepository
                   t.id, t.descripcion, l.apertura
               ORDER BY
                   t.id")
-            ->setParameter("apertura_id", $apertura_id)
-        ;
+            ->setParameter("apertura_id", $apertura_id);
 
         $res = $q->getResult();
 
@@ -73,8 +73,7 @@ class AperturaRepository extends EntityRepository
               WHERE
                   l.apertura = :apertura_id
               ")
-            ->setParameter("apertura_id", $apertura_id)
-        ;
+            ->setParameter("apertura_id", $apertura_id);
 
         $res = $q->getSingleResult();
 
@@ -103,13 +102,12 @@ class AperturaRepository extends EntityRepository
                   l.apertura = :apertura_id
                   AND p.importe < 0
               ")
-            ->setParameter("apertura_id", $apertura_id)
-        ;
+            ->setParameter("apertura_id", $apertura_id);
 
         $res = $q->getSingleResult();
 
         if ($res[1] < 0) {
-            return - $res[1];
+            return -$res[1];
         } else {
             return 0;
         }
@@ -138,14 +136,14 @@ class AperturaRepository extends EntityRepository
         //El nombre de archivo siempre empieza con EP
         $nombre_archivo = "MU";
         //Despues va la fecha:
-        $nombre_archivo .= $apertura->getFecha()->format('d');//dia
-        $nombre_archivo .= $apertura->getFecha()->format('m');//mes
-        $nombre_archivo .= $apertura->getFecha()->format('y');//año
-        $nombre_archivo .= '_' . $numero_caja;//numero de caja
-        $nombre_archivo .= '_' . $apertura_id;//id de caja
+        $nombre_archivo .= $apertura->getFecha()->format('d'); //dia
+        $nombre_archivo .= $apertura->getFecha()->format('m'); //mes
+        $nombre_archivo .= $apertura->getFecha()->format('y'); //año
+        $nombre_archivo .= '_' . $numero_caja; //numero de caja
+        $nombre_archivo .= '_' . $apertura_id; //id de caja
 
-        $fp = fopen($path_archivos.$nombre_archivo.".txt", "w+");
-        if ($fp) {//fopen devuelve un recurso de puntero a fichero si tiene éxito, o FALSE si se produjo un error.
+        $fp = fopen($path_archivos . $nombre_archivo . ".txt", "w+");
+        if ($fp) { //fopen devuelve un recurso de puntero a fichero si tiene éxito, o FALSE si se produjo un error.
             //Recorro los comprobantes cobrados en esa caja, no anulados:
             foreach ($apertura->getLotes() as $lote) {
                 foreach ($lote->getDetalle() as $detalle) {
@@ -159,8 +157,8 @@ class AperturaRepository extends EntityRepository
                         //62	63	    2	        Numero de Caja Rellenados con ceros a la izquierda
                         //64	65	    2	        Numero de Sucursal Rellenados con ceros a la izquierda = 00
                         $datos = $detalle->getCodigoBarra();
-                        $decimales = explode(".",$detalle->getImporte());
-                        $datos .= sprintf('%08d', $detalle->getImporte() * 100);//elimino decimales
+                        $decimales = explode(".", $detalle->getImporte());
+                        $datos .= sprintf('%08d', $detalle->getImporte() * 100); //elimino decimales
 
                         /*
                         $datos .= str_pad($decimales[0] , 6, "0", STR_PAD_LEFT); //parte entera, rellenada con ceros -> 6 posiciones
@@ -172,8 +170,8 @@ class AperturaRepository extends EntityRepository
                         */
                         $datos .= $detalle->getFecha()->format('Ymd'); //fecha de pago
                         $datos .= 1; //Código Fijo de empresa. Uso interno. Usar siempre un Valor Fijo = 1 (Uno)
-                        $datos .= sprintf("%02d",$apertura->getCaja()->getNumero()); //Numero de Caja Rellenados con ceros a la izquierda
-                        $datos .= "00". "\n"; //Numero de sucursal Rellenados con ceros a la izquierda, no se esta usando
+                        $datos .= sprintf("%02d", $apertura->getCaja()->getNumero()); //Numero de Caja Rellenados con ceros a la izquierda
+                        $datos .= "00" . "\n"; //Numero de sucursal Rellenados con ceros a la izquierda, no se esta usando
                         $write = fputs($fp, $datos);
                     }
                 }
@@ -206,8 +204,7 @@ class AperturaRepository extends EntityRepository
                   AND ld.importe > 0
               ORDER BY ld.seccion, ld.comprobante
               ")
-            ->setParameter("apertura_id", $apertura_id)
-        ;
+            ->setParameter("apertura_id", $apertura_id);
 
         $res = $q->getResult();
 
@@ -258,14 +255,51 @@ class AperturaRepository extends EntityRepository
                   l.apertura = :apertura_id
               ORDER BY ld.seccion, ld.comprobante
               ")
-            ->setParameter("apertura_id", $apertura_id)
-        ;
+            ->setParameter("apertura_id", $apertura_id);
 
         $res = $q->getResult();
         return $res;
 
     }
 
+    /**
+     * Obtiene la sumatoria de los pagos, por tipo de seccion
+     * @param $apertura_id
+     * @return array que contiene cada comprobante registrado
+     */
+    public function getPagosByTipoSeccion($apertura_id)
+    {
+        $em = $this->getEntityManager();
+        $q = $em->createQuery("SELECT  t.id, t.descripcion,
+                                (select sum(pp.importe) FROM SistemaCajaBundle:LotePago pp JOIN pp.lote ll
+                                WHERE
+                                  ll.apertura = l.apertura
+                                  and pp.tipo_pago = t.id
+                                   and pp.importe > 0
+                                ) as importe,
+                                (select sum(ppp.importe) FROM SistemaCajaBundle:LotePago ppp JOIN ppp.lote lll
+                                WHERE
+                                  lll.apertura = l.apertura
+                                  and ppp.tipo_pago = t.id
+                                  and ppp.importe < 0
+                                ) as anulado
+              FROM
+                  SistemaCajaBundle:LotePago p
+                  JOIN p.tipo_pago t
+                  JOIN p.lote l
 
+              WHERE
+                  l.apertura = :apertura_id
+              GROUP BY
+                  t.id, t.descripcion, l.apertura
+              ORDER BY
+                  t.id")
+            ->setParameter("apertura_id", $apertura_id);
+
+        $res = $q->getResult();
+
+        return $res;
+
+    }
 
 }

@@ -448,6 +448,7 @@ class AperturaController extends Controller implements IControllerAuditable
         $DetalleTipoPago = $this->getDetalleTipoPago($apertura->getId());
         //$detalle_pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetallePagos($apertura->getId());
         $detalle_pagos = $this->getDetallePagos($apertura->getId());
+        $DetalleTipoSeccion = $this->getPagosTipoSeccion($apertura->getId());
 
         return $this->render('SistemaCajaBundle:Apertura:monitor.html.twig',
             array('caja' => $caja,
@@ -455,6 +456,7 @@ class AperturaController extends Controller implements IControllerAuditable
                 'importe_pago' => sprintf("%9.2f", $pagos),
                 'pagos_anulado' => sprintf("%9.2f", $pagosAnulado),
                 'detalle_tipo_pagos' => $DetalleTipoPago,
+                'detalle_tipo_seccion' => $DetalleTipoSeccion,
                 'detalle_pagos' => $detalle_pagos));
     }
 
@@ -493,7 +495,7 @@ class AperturaController extends Controller implements IControllerAuditable
                 $array_detalle_pagos[$pago['id']] = array($pago['comprobante'], 0, 0, "", "");
             }
 
-            $array_detalle_pagos[$pago['id']][1] = $pago['importe'] + $pago['anulado'];
+            $array_detalle_pagos[$pago['id']][1] = $pago['importe'];
             $array_detalle_pagos[$pago['id']][2] = $pago['anulado'];
             $array_detalle_pagos[$pago['id']][3] = $pago['comprobante'];
             $array_detalle_pagos[$pago['id']][4] = $pago['referencia'];
@@ -504,12 +506,43 @@ class AperturaController extends Controller implements IControllerAuditable
             } else {
                 $array_detalle_pagos[$pago['id']][5] = "seccion desconocida";
             }
-
-
         }
 
         return $array_detalle_pagos;
     }
+
+    private function getPagosTipoSeccion($ap_id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $servicio_tabla = $this->get("lar.parametro.tabla");
+        $bm = $this->container->get("caja.barra");
+
+        $pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetalleTodosPagos($ap_id);
+
+        $array_detalle_pagos= array();
+
+        foreach ($pagos as $pago) {
+
+            if (!array_key_exists($pago['id'], $array_detalle_pagos)) {
+                $array_detalle_pagos[$pago['id']] = array($pago['comprobante'], 0, 0, "", "");
+            }
+
+            $array_detalle_pagos[$pago['id']][1] = $pago['importe'];
+            $array_detalle_pagos[$pago['id']][2] = $pago['anulado'];
+            $array_detalle_pagos[$pago['id']][3] = $pago['comprobante'];
+            $array_detalle_pagos[$pago['id']][4] = $pago['referencia'];
+            $tabla = $bm->getTablaSeccionByCodigoBarra($pago['codigo_barra']);
+            $seccion = $servicio_tabla->getParametro($tabla, $pago['seccion']);
+            if ($seccion) {
+                $array_detalle_pagos[$pago['id']][5] = $seccion->getDescripcion();
+            } else {
+                $array_detalle_pagos[$pago['id']][5] = "seccion desconocida";
+            }
+        }
+
+        return $array_detalle_pagos;
+    }
+
 
     public function anularAction()
     {
