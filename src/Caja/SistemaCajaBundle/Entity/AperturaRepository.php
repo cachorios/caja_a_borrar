@@ -281,6 +281,7 @@ class AperturaRepository extends EntityRepository
                                  AND ldd.seccion = ld.seccion
                                  AND ll.apertura = :apertura_id
                                  AND ll.apertura = l.apertura
+                                 AND ldd.anulado = 0
                                  AND pp.importe > 0
                                 ) as importe,
                                 (select sum(ppp.importe)
@@ -293,6 +294,7 @@ class AperturaRepository extends EntityRepository
                                  AND lddd.seccion = ld.seccion
                                  AND lll.apertura = :apertura_id
                                  AND lll.apertura = l.apertura
+                                 AND lddd.anulado = 1
                                  AND ppp.importe < 0
                                 )  as anulado
               FROM
