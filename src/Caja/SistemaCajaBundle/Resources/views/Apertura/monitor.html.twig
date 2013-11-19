@@ -107,9 +107,7 @@
                     <table class="table table-striped full-section table-hover">
                         <thead>
                         <tr>
-                            <th>Secci&oacute;n</th>
-                            <th>Comprobante</th>
-                            <th style="text-align: right;">Referencia</th>
+                            <th>Tipo de Secci&oacute;n</th>
                             <th style="text-align: right;">Cobrado</th>
                             <th style="text-align: right;">Anulado</th>
                         </tr>
@@ -117,35 +115,20 @@
                         <tbody>
                         {% set tc = 0 %}
                         {% set ta = 0 %}
+
                         {% for item in detalle_tipo_seccion %}
-                            {% if item.2 == 0 %}
-                                {% set tc = tc + item.1 %}
-                            {% endif %}
-                            {% if item.2 == 1 %}
-                                {% set ta = ta + item.1%}
-                            {% endif %}
+                            {% set tc = tc + item.1 %}
+                            {% set ta = ta + item.2 %}
                             <tr>
-                                <td class="primary">{{ item.5 }}</td>
-                                <td class="primary">{{ item.3 }}</td>
-                                <td style="text-align: right;">{{ item.4 }}</td>
-                                {% if item.2 == 0 %}
-                                    <td style="text-align: right;">{{ item.1 | number_format(2,',','.') }}</td>
-                                {% else %}
-                                    <td style="text-align: right;"></td>
-                                {% endif %}
-                                {% if item.2 == 1 %}
-                                    <td style="text-align: right;">{{ item.1| number_format(2,',','.') }}</td>
-                                {% else %}
-                                    <td style="text-align: right;"></td>
-                                {% endif %}
+                                <td class="primary">{{ item.0 }}</td>
+                                <td style="text-align: right;">{{ item.1 | number_format(2,',','.') }}</td>
+                                <td style="text-align: right;">{{ item.2 | number_format(2,',','.') }}</td>
                             </tr>
                         {% endfor %}
 
                         </tbody>
                         <tfoot>
                         <td class=""><strong>Totales</strong></td>
-                        <td style="text-align: right;"></td>
-                        <td style="text-align: right;"></td>
                         <td style="text-align: right;"><strong>{{ tc | number_format(2,',','.') }}</strong></td>
                         <td style="text-align: right;"><strong>{{ ta | number_format(2,',','.') }}</strong></td>
                         </tfoot>

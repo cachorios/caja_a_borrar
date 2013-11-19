@@ -270,30 +270,43 @@ class AperturaRepository extends EntityRepository
     public function getPagosByTipoSeccion($apertura_id)
     {
         $em = $this->getEntityManager();
-        $q = $em->createQuery("SELECT  t.id, t.descripcion,
-                                (select sum(pp.importe) FROM SistemaCajaBundle:LotePago pp JOIN pp.lote ll
-                                WHERE
-                                  ll.apertura = l.apertura
-                                  and pp.tipo_pago = t.id
-                                   and pp.importe > 0
+        $q = $em->createQuery("SELECT lp.id, lp.descripcion_corta,
+                                (select sum(pp.importe)
+                                 FROM SistemaCajaBundle:LotePago pp
+                                 JOIN pp.lote ll
+                                 JOIN ll.detalle ldd,
+                                 LarParametroBundle:LarParametro lpp
+                                 WHERE lpp.tabla = 10
+                                 AND lpp.codigo = ldd.seccion
+                                 AND ldd.seccion = ld.seccion
+                                 AND ll.apertura = :apertura_id
+                                 AND ll.apertura = l.apertura
+                                 AND pp.importe > 0
                                 ) as importe,
-                                (select sum(ppp.importe) FROM SistemaCajaBundle:LotePago ppp JOIN ppp.lote lll
-                                WHERE
-                                  lll.apertura = l.apertura
-                                  and ppp.tipo_pago = t.id
-                                  and ppp.importe < 0
-                                ) as anulado
+                                (select sum(ppp.importe)
+                                 FROM SistemaCajaBundle:LotePago ppp
+                                 JOIN ppp.lote lll
+                                 JOIN lll.detalle lddd,
+                                 LarParametroBundle:LarParametro lppp
+                                 WHERE lppp.tabla = 10
+                                 AND lppp.codigo = lddd.seccion
+                                 AND lddd.seccion = ld.seccion
+                                 AND lll.apertura = :apertura_id
+                                 AND lll.apertura = l.apertura
+                                 AND ppp.importe < 0
+                                )  as anulado
               FROM
                   SistemaCajaBundle:LotePago p
                   JOIN p.tipo_pago t
                   JOIN p.lote l
-
-              WHERE
-                  l.apertura = :apertura_id
+                  JOIN l.detalle ld,
+                  LarParametroBundle:LarParametro lp
+              WHERE lp.tabla = 10
+                  AND lp.codigo = ld.seccion
+                  AND l.apertura = :apertura_id
               GROUP BY
-                  t.id, t.descripcion, l.apertura
-              ORDER BY
-                  t.id")
+                  lp.id, lp.descripcion_corta, l.apertura, ld.seccion
+              ORDER BY lp.descripcion_corta")
             ->setParameter("apertura_id", $apertura_id);
 
         $res = $q->getResult();

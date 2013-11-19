@@ -517,27 +517,19 @@ class AperturaController extends Controller implements IControllerAuditable
         $servicio_tabla = $this->get("lar.parametro.tabla");
         $bm = $this->container->get("caja.barra");
 
-        $pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetalleTodosPagos($ap_id);
+        //$pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetalleTodosPagos($ap_id);
+        $pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getPagosByTipoSeccion($ap_id);
 
         $array_detalle_pagos= array();
 
         foreach ($pagos as $pago) {
 
             if (!array_key_exists($pago['id'], $array_detalle_pagos)) {
-                $array_detalle_pagos[$pago['id']] = array($pago['comprobante'], 0, 0, "", "");
+                $array_detalle_pagos[$pago['id']] = array($pago['descripcion_corta'], 0, 0, "", "");
             }
 
             $array_detalle_pagos[$pago['id']][1] = $pago['importe'];
             $array_detalle_pagos[$pago['id']][2] = $pago['anulado'];
-            $array_detalle_pagos[$pago['id']][3] = $pago['comprobante'];
-            $array_detalle_pagos[$pago['id']][4] = $pago['referencia'];
-            $tabla = $bm->getTablaSeccionByCodigoBarra($pago['codigo_barra']);
-            $seccion = $servicio_tabla->getParametro($tabla, $pago['seccion']);
-            if ($seccion) {
-                $array_detalle_pagos[$pago['id']][5] = $seccion->getDescripcion();
-            } else {
-                $array_detalle_pagos[$pago['id']][5] = "seccion desconocida";
-            }
         }
 
         return $array_detalle_pagos;
