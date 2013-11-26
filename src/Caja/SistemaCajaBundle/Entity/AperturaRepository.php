@@ -270,7 +270,7 @@ class AperturaRepository extends EntityRepository
     public function getPagosByTipoSeccion($apertura_id)
     {
         $em = $this->getEntityManager();
-        $q = $em->createQuery("SELECT lp.id, lp.descripcion_corta,
+        $q = $em->createQuery("SELECT lp.id, lp.descripcion,
                                 (select sum(pp.importe)
                                  FROM SistemaCajaBundle:LotePago pp
                                  JOIN pp.lote ll
@@ -307,8 +307,8 @@ class AperturaRepository extends EntityRepository
                   AND lp.codigo = ld.seccion
                   AND l.apertura = :apertura_id
               GROUP BY
-                  lp.id, lp.descripcion_corta, l.apertura, ld.seccion
-              ORDER BY lp.descripcion_corta")
+                  lp.id, lp.descripcion, l.apertura, ld.seccion
+              ORDER BY lp.descripcion")
             ->setParameter("apertura_id", $apertura_id);
 
         $res = $q->getResult();

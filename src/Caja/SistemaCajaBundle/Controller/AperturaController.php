@@ -456,8 +456,8 @@ class AperturaController extends Controller implements IControllerAuditable
                 'importe_pago' => sprintf("%9.2f", $pagos),
                 'pagos_anulado' => sprintf("%9.2f", $pagosAnulado),
                 'detalle_tipo_pagos' => $DetalleTipoPago,
-                'detalle_tipo_seccion' => $DetalleTipoSeccion,
-                'detalle_pagos' => $detalle_pagos));
+                'detalle_tipo_seccion' => $DetalleTipoSeccion)); //,
+                //'detalle_pagos' => $detalle_pagos));
     }
 
     private function getDetalleTipoPago($ap_id)
@@ -525,7 +525,7 @@ class AperturaController extends Controller implements IControllerAuditable
         foreach ($pagos as $pago) {
 
             if (!array_key_exists($pago['id'], $array_detalle_pagos)) {
-                $array_detalle_pagos[$pago['id']] = array($pago['descripcion_corta'], 0, 0, "", "");
+                $array_detalle_pagos[$pago['id']] = array($pago['descripcion'], 0, 0, "", "");
             }
 
             $array_detalle_pagos[$pago['id']][1] = $pago['importe'];
