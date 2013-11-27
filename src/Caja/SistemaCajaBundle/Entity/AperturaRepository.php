@@ -247,7 +247,7 @@ class AperturaRepository extends EntityRepository
     {
         $em = $this->getEntityManager();
         $q = $em->createQuery("
-              SELECT ld.id, ld.importe, ld.anulado, ld.comprobante, ld.referencia
+              SELECT ld.seccion, ld.importe, ld.anulado, ld.comprobante, ld.referencia
               FROM
                   SistemaCajaBundle:LoteDetalle ld JOIN ld.lote l,
                   LarParametroBundle:LarParametro lp
