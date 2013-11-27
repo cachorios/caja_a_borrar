@@ -7,31 +7,14 @@
 
     function VerMasInfo(seccion) {
         var nombre_seccion = "#mas_info_" + seccion;
-        jQuery(nombre_seccion).html(nombre_seccion);
-        return false;
+        //jQuery(nombre_seccion).html(nombre_seccion);
         // Primero se hace la llamada ajax
-        /*
-        $("#formulario_mas_info").ajaxSubmit({
-            //data: { seccion: seccion},
-            success:function (data, statusText, xhr, $form) {
-                if (statusText == 'success') {
-                    //y luego se muestran los datos:
-                    var nombre_seccion = "#mas_info_" + seccion;
-                    jQuery(nombre_seccion).html(data);
-                    return false;
-                    $.unblockUI();
-
-                }
-            },
-            error:function (data) {
-                $.unblockUI();
-                alert('Mensaje de error al imprimir: ' + data.msg + '. Ticket: ' + data.tk);
-
-            }
+        var url= "{{ path('apertura_mas_info') }}";
+        $.blockUI({ message:"Espere por favor..." });
+        jQuery.get(url, {'tipo_seccion': seccion },function(data){
+            jQuery(nombre_seccion).html(data);
+            $.unblockUI();
         });
-        */
     }
     ;
-
-
 </script>

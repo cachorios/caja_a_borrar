@@ -123,7 +123,7 @@
                             <tr>
                                 <td class="primary">{{ item.0 }}</td>
                                 <td style="text-align: left;">
-                                    <a href="#" onclick=VerMasInfo({{ item.3 }})>
+                                    <a href="#" class="links" onclick=VerMasInfo({{ item.3 }})>
                                         <img src="{{ asset("img/masInfo.gif" ) }}"/>
                                     </a>
 
@@ -137,6 +137,7 @@
                         </tbody>
                         <tfoot>
                         <td class=""><strong>Totales</strong></td>
+                        <td class=""></td>
                         <td style="text-align: right;"><strong>{{ tc | number_format(2,',','.') }}</strong></td>
                         <td style="text-align: right;"><strong>{{ ta | number_format(2,',','.') }}</strong></td>
                         </tfoot>
@@ -150,11 +151,6 @@
             <div class="span6">
 
             </div>
-            </div>
-            <div>
-                <form id="formulario_mas_info" action="{{ path('apertura_mas_info') }}"
-                      method="post">
-                </form>
             </div>
             {% include 'SistemaCajaBundle:Apertura:_monitor.js.twig' %}
         </section>

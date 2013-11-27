@@ -243,19 +243,23 @@ class AperturaRepository extends EntityRepository
      * @param $apertura_id
      * @return array que contiene cada comprobante registrado
      */
-    public function getDetalleTodosPagos($apertura_id)
+    public function getDetalleTodosPagosSeccion($apertura_id, $tipo_seccion)
     {
         $em = $this->getEntityManager();
 
         $q = $em->createQuery("
               SELECT ld.id, ld.importe, ld.anulado, ld.comprobante, ld.referencia, ld.codigo_barra, ld.seccion
               FROM
-                  SistemaCajaBundle:LoteDetalle ld JOIN ld.lote l
-              WHERE
-                  l.apertura = :apertura_id
+                  SistemaCajaBundle:LoteDetalle ld JOIN ld.lote l,
+                  LarParametroBundle:LarParametro lp
+              WHERE lp.tabla = 10
+                  AND lp.codigo = ld.seccion
+                  AND l.apertura = :apertura_id
+                  AND ld.seccion = :tipo_seccion
               ORDER BY ld.seccion, ld.comprobante
               ")
-            ->setParameter("apertura_id", $apertura_id);
+            ->setParameter("apertura_id", $apertura_id)
+            ->setParameter("tipo_seccion", $tipo_seccion);
 
         $res = $q->getResult();
         return $res;
