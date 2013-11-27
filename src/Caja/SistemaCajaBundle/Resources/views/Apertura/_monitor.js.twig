@@ -1,20 +1,49 @@
 <script type="text/javascript">
 
+    /** /////////////////////////////////////////////////////////////////////////////////////////////////
+     * Variables Globales
+     *////////////////////////////////////////////////////////////////////////////////////////////////////
+    var arr_mas_menos = new Array("+", "-"); // Textos de Link MasInfo [+/-]
+
+
+
+    /** /////////////////////////////////////////////////////////////////////////////////////////////////
+     * Funcion que Invierte el botón [+/-] del MasInfo
+     *////////////////////////////////////////////////////////////////////////////////////////////////////
+    function get_nvo_link_mas_info(arr_mas_menos, actual){ // Retorna nuevo valor de Link Show/Hide [Toggle]
+        if(actual == arr_mas_menos[0]) return arr_mas_menos[1];
+        if(actual == arr_mas_menos[1]) return arr_mas_menos[0];
+    }
+
+
     /**
      * Funcion que recibe un tipo de seccion y hace una llamada ajax
-     * para mostrar el detall de cobros para esa seccion en la caja actual
+     * para mostrar el detalle de cobros para esa seccion en la caja actual
      */
 
     function VerMasInfo(seccion) {
-        var nombre_seccion = "#mas_info_" + seccion;
-        //jQuery(nombre_seccion).html(nombre_seccion);
-        // Primero se hace la llamada ajax
-        var url= "{{ path('apertura_mas_info') }}";
-        $.blockUI({ message:"Espere por favor..." });
-        jQuery.get(url, {'tipo_seccion': seccion },function(data){
-            jQuery(nombre_seccion).html(data);
-            $.unblockUI();
-        });
+        var nombre_seccion = "#link_mas_info_" + seccion;
+        var nombre_div = "#div_datos_seccion_" + seccion;
+
+        //jQuery(nombre_seccion).toggle();
+        var signo = get_nvo_link_mas_info(arr_mas_menos, jQuery(nombre_seccion).text());
+        jQuery(nombre_seccion).text(signo);
+        //Ahora llamo al template que muestra u oculta los datos:
+
+        if (signo == "-") {
+            // Primero se hace la llamada ajax
+            var url= "{{ path('apertura_mas_info') }}";
+            $.blockUI({ message:"Espere por favor..." });
+            jQuery.get(url, {'tipo_seccion': seccion },function(data){
+                //alert("Signo: " + signo + ". Seccion: " + nombre_div);
+                jQuery(nombre_div).html(data);
+                $.unblockUI();
+            });
+        } else {
+            jQuery(nombre_div).html("");
+        }
+
+
     }
     ;
 </script>

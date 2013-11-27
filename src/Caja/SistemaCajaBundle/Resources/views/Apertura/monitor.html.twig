@@ -107,8 +107,8 @@
                     <table class="table table-striped full-section table-hover">
                         <thead>
                         <tr>
-                            <th>Tipo de Secci&oacute;n</th>
-                            <th style="text-align: left;">Ver Detalle</th>
+                            <th colspan="2" >Tipo de Secci&oacute;n</th>
+                            <th style="text-align: center;">Ver Mas Información</th>
                             <th style="text-align: right;">Cobrado</th>
                             <th style="text-align: right;">Anulado</th>
                         </tr>
@@ -122,15 +122,20 @@
                             {% set ta = ta + item.2 %}
                             <tr>
                                 <td class="primary">{{ item.0 }}</td>
-                                <td style="text-align: left;">
-                                    <a href="#" class="links" onclick=VerMasInfo({{ item.3 }})>
-                                        <img src="{{ asset("img/masInfo.gif" ) }}"/>
+                                <td style="text-align: center;">
+                                    <a href="#" class="links" onclick="VerMasInfo({{ item.3 }});return false;">
+                                        <div style="font-size: 20px; font-weight: bold;" id="link_mas_info_{{ item.3 }}">+</div>
                                     </a>
-
-                                    <div id="mas_info_{{ item.3 }}"></div>
                                 </td>
                                 <td style="text-align: right;">{{ item.1 | number_format(2,',','.') }}</td>
                                 <td style="text-align: right;">{{ item.2 | number_format(2,',','.') }}</td>
+                            </tr>
+                            <tr></tr>
+                            <td align="left" colspan="4">
+                                <div id="div_datos_seccion_{{ item.3 }}"
+                                     style="”display: none; overflow-x:hidden; overflow-y:auto; max-height: 10em;">
+                                </div>
+                            </td>
                             </tr>
                         {% endfor %}
 
