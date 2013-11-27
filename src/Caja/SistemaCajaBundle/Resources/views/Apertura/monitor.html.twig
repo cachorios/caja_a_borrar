@@ -108,6 +108,7 @@
                         <thead>
                         <tr>
                             <th>Tipo de Secci&oacute;n</th>
+                            <th style="text-align: left;">Ver Detalle</th>
                             <th style="text-align: right;">Cobrado</th>
                             <th style="text-align: right;">Anulado</th>
                         </tr>
@@ -121,6 +122,13 @@
                             {% set ta = ta + item.2 %}
                             <tr>
                                 <td class="primary">{{ item.0 }}</td>
+                                <td style="text-align: left;">
+                                    <a href="#" onclick=VerMasInfo({{ item.3 }})>
+                                        <img src="{{ asset("img/masInfo.gif" ) }}"/>
+                                    </a>
+
+                                    <div id="mas_info_{{ item.3 }}"></div>
+                                </td>
                                 <td style="text-align: right;">{{ item.1 | number_format(2,',','.') }}</td>
                                 <td style="text-align: right;">{{ item.2 | number_format(2,',','.') }}</td>
                             </tr>
@@ -139,10 +147,15 @@
                 </div>
             </div>
 
-                <div class="span6">
+            <div class="span6">
 
-                </div>
             </div>
-
+            </div>
+            <div>
+                <form id="formulario_mas_info" action="{{ path('apertura_mas_info') }}"
+                      method="post">
+                </form>
+            </div>
+            {% include 'SistemaCajaBundle:Apertura:_monitor.js.twig' %}
         </section>
     {% endblock page %}

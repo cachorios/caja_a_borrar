@@ -530,6 +530,7 @@ class AperturaController extends Controller implements IControllerAuditable
 
             $array_detalle_pagos[$pago['id']][1] = $pago['importe'];
             $array_detalle_pagos[$pago['id']][2] = $pago['anulado'];
+            $array_detalle_pagos[$pago['id']][3] = $pago['id'];
         }
 
         return $array_detalle_pagos;
@@ -1305,6 +1306,13 @@ class AperturaController extends Controller implements IControllerAuditable
         $response->setContent(json_encode($ret));
         return $response;
 
+    }
+
+    /**
+     * @return coleccion de comprobantes del tipo recibido
+     */
+    function masInfo($seccion) {
+        return $seccion;
     }
 
     /**

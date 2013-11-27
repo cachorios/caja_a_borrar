@@ -89,3 +89,8 @@ apertura_reimprimir_ticket:
     #en esta accion recien se reimprime el ticket
     pattern:  /{id}/reimprimirTicket
     defaults: { _controller: "SistemaCajaBundle:Apertura:reimprimirTicket" }
+
+apertura_mas_info:
+    #Es llamada desde el monitor para ver el detalle de cobros de un tipo de seccion
+    pattern:  /masInfo
+    defaults: { _controller: "SistemaCajaBundle:Apertura:masInfo" }
