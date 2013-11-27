@@ -491,13 +491,13 @@ class AperturaController extends Controller implements IControllerAuditable
 
         foreach ($pagos as $pago) {
 
-            if (!array_key_exists($pago['id'], $array_detalle_pagos)) {
-                $array_detalle_pagos[$pago['id']] = array($pago['descripcion'], 0, 0, "", "");
+            if (!array_key_exists($pago['codigo'], $array_detalle_pagos)) {
+                $array_detalle_pagos[$pago['codigo']] = array($pago['descripcion'], 0, 0, "", "");
             }
 
-            $array_detalle_pagos[$pago['id']][1] = $pago['importe'];
-            $array_detalle_pagos[$pago['id']][2] = $pago['anulado'];
-            $array_detalle_pagos[$pago['id']][3] = $pago['id'];
+            $array_detalle_pagos[$pago['codigo']][1] = $pago['importe'];
+            $array_detalle_pagos[$pago['codigo']][2] = $pago['anulado'];
+            $array_detalle_pagos[$pago['codigo']][3] = $pago['codigo'];
         }
 
         return $array_detalle_pagos;
@@ -1301,9 +1301,6 @@ class AperturaController extends Controller implements IControllerAuditable
     private function getDetalleTodosPagosSeccion($ap_id, $tipo_seccion)
     {
         $em = $this->getDoctrine()->getManager();
-        $servicio_tabla = $this->get("lar.parametro.tabla");
-        $bm = $this->container->get("caja.barra");
-
         $pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetalleTodosPagosSeccion($ap_id, $tipo_seccion);
 
         $array_detalle_pagos= array();

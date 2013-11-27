@@ -246,9 +246,8 @@ class AperturaRepository extends EntityRepository
     public function getDetalleTodosPagosSeccion($apertura_id, $tipo_seccion)
     {
         $em = $this->getEntityManager();
-
         $q = $em->createQuery("
-              SELECT ld.id, ld.importe, ld.anulado, ld.comprobante, ld.referencia, ld.codigo_barra, ld.seccion
+              SELECT ld.id, ld.importe, ld.anulado, ld.comprobante, ld.referencia
               FROM
                   SistemaCajaBundle:LoteDetalle ld JOIN ld.lote l,
                   LarParametroBundle:LarParametro lp
@@ -256,7 +255,7 @@ class AperturaRepository extends EntityRepository
                   AND lp.codigo = ld.seccion
                   AND l.apertura = :apertura_id
                   AND ld.seccion = :tipo_seccion
-              ORDER BY ld.seccion, ld.comprobante
+              ORDER BY ld.comprobante
               ")
             ->setParameter("apertura_id", $apertura_id)
             ->setParameter("tipo_seccion", $tipo_seccion);
@@ -274,7 +273,7 @@ class AperturaRepository extends EntityRepository
     public function getPagosByTipoSeccion($apertura_id)
     {
         $em = $this->getEntityManager();
-        $q = $em->createQuery("SELECT lp.id, lp.descripcion,
+        $q = $em->createQuery("SELECT lp.codigo, lp.descripcion,
                                 (select sum(pp.importe)
                                  FROM SistemaCajaBundle:LotePago pp
                                  JOIN pp.lote ll
@@ -311,7 +310,7 @@ class AperturaRepository extends EntityRepository
                   AND lp.codigo = ld.seccion
                   AND l.apertura = :apertura_id
               GROUP BY
-                  lp.id, lp.descripcion, l.apertura, ld.seccion
+                  lp.codigo, lp.descripcion, l.apertura, ld.seccion
               ORDER BY lp.descripcion")
             ->setParameter("apertura_id", $apertura_id);
 
