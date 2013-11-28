@@ -21,10 +21,9 @@
      * para mostrar el detalle de cobros para esa seccion en la caja actual
      */
 
-    function VerMasInfo(seccion) {
+    function VerMasInfo(seccion, nombre) {
         var nombre_seccion = "#link_mas_info_" + seccion;
         var nombre_div = "#div_datos_seccion_" + seccion;
-
         //jQuery(nombre_seccion).toggle();
         var signo = get_nvo_link_mas_info(arr_mas_menos, jQuery(nombre_seccion).text());
         jQuery(nombre_seccion).text(signo);
@@ -33,9 +32,8 @@
         if (signo == "-") {
             // Primero se hace la llamada ajax
             var url= "{{ path('apertura_mas_info') }}";
-            $.blockUI({ message:"Espere por favor..." });
+            $.blockUI({ message:"Obteniendo comprobantes de " + nombre});
             jQuery.get(url, {'tipo_seccion': seccion },function(data){
-                //alert("Signo: " + signo + ". Seccion: " + nombre_div);
                 jQuery(nombre_div).html(data);
                 $.unblockUI();
             });

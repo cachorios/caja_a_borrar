@@ -107,8 +107,8 @@
                     <table class="table table-striped full-section table-hover">
                         <thead>
                         <tr>
-                            <th colspan="2" >Tipo de Secci&oacute;n</th>
-                            <th style="text-align: center;">Ver Mas Información</th>
+                            <th >Tipo de Secci&oacute;n</th>
+                            <th style="text-align: center;">Mas Información</th>
                             <th style="text-align: right;">Cobrado</th>
                             <th style="text-align: right;">Anulado</th>
                         </tr>
@@ -123,8 +123,8 @@
                             <tr>
                                 <td class="primary">{{ item.0 }}</td>
                                 <td style="text-align: center;">
-                                    <a href="#" class="links" onclick="VerMasInfo({{ item.3 }});return false;">
-                                        <div style="font-size: 20px; font-weight: bold;" id="link_mas_info_{{ item.3 }}">+</div>
+                                    <a href="#" class="links" onclick="VerMasInfo({{ item.3 }}, '{{ item.0 }}');return false;">
+                                        <div style="font-size: 24px; font-weight: bold;" id="link_mas_info_{{ item.3 }}">+</div>
                                     </a>
                                 </td>
                                 <td style="text-align: right;">{{ item.1 | number_format(2,',','.') }}</td>
