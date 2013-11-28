@@ -1307,16 +1307,16 @@ class AperturaController extends Controller implements IControllerAuditable
 
         foreach ($pagos as $pago) {
 
-            if (!array_key_exists($pago['seccion'], $array_detalle_pagos)) {
-                $array_detalle_pagos[$pago['seccion']] = array($pago['comprobante'], 0, 0, "", "");
+            if (!array_key_exists($pago['id'], $array_detalle_pagos)) {
+                $array_detalle_pagos[$pago['id']] = array($pago['comprobante'], 0, 0, "", "");
             }
 
-            $array_detalle_pagos[$pago['seccion']][1] = $pago['importe'];
-            $array_detalle_pagos[$pago['seccion']][2] = $pago['anulado'];
-            $array_detalle_pagos[$pago['seccion']][3] = $pago['comprobante'];
-            $array_detalle_pagos[$pago['seccion']][4] = $pago['referencia'];
+            $array_detalle_pagos[$pago['id']][1] = $pago['importe'];
+            $array_detalle_pagos[$pago['id']][2] = $pago['anulado'];
+            $array_detalle_pagos[$pago['id']][3] = $pago['comprobante'];
+            $array_detalle_pagos[$pago['id']][4] = $pago['referencia'];
         }
-
+        //ladybug_dump_die($array_detalle_pagos);
         return $array_detalle_pagos;
     }
 

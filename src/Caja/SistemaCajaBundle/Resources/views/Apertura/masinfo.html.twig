@@ -1,47 +1,36 @@
-<div class="row-fluid">
-    <div class="span12">
-        <table class="table table-striped full-section table-hover">
-            <thead>
-            <tr>
-                <th>Nro Comprobante</th>
-                <th style="text-align: right;">Referencia</th>
-                <th style="text-align: right;">Cobrado</th>
-                <th style="text-align: right;">Anulado</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% set tc = 0 %}
-            {% set ta = 0 %}
-            {% for item in detalle_pagos %}
-                {% if item.2 == 0 %}
-                    {% set tc = tc + item.1 %}
-                {% endif %}
-                {% if item.2 == 1 %}
-                    {% set ta = ta + item.1 %}
-                {% endif %}
-                <tr>
-                    <td class="primary">{{ item.3 }}</td>
-                    <td style="text-align: right;">{{ item.4 }}</td>
-                    {% if item.2 == 0 %}
-                        <td style="text-align: right;">{{ item.1 | number_format(2,',','.') }}</td>
-                    {% else %}
-                        <td style="text-align: right;"></td>
-                    {% endif %}
-                    {% if item.2 == 1 %}
-                        <td style="text-align: right;">{{ item.1| number_format(2,',','.') }}</td>
-                    {% else %}
-                        <td style="text-align: right;"></td>
-                    {% endif %}
-                </tr>
-            {% endfor %}
+<table class="table table-striped full-section table-hover">
+    <thead>
+    <tr>
+        <th>Nro Comprobante</th>
+        <th style="text-align: right;">Referencia</th>
+        <th style="text-align: right;">Cobrado</th>
+        <th style="text-align: right;">Anulado</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% set tc = 0 %}
+    {% set ta = 0 %}
+    {% for pago in detalle_pagos %}
+        {% if pago.2 == 0 %}
+            {% set tc = tc + pago.1 %}
+        {% endif %}
+        {% if pago.2 == 1 %}
+            {% set ta = ta + pago.1 %}
+        {% endif %}
+        <tr>
+            <td>{{ pago.3 }}</td>
+            <td style="text-align: right;">{{ pago.4 }}</td>
+            {% if pago.2 == 0 %}
+                <td style="text-align: right;">{{ pago.1 | number_format(2,',','.') }}</td>
+            {% else %}
+                <td style="text-align: right;"></td>
+            {% endif %}
+            {% if pago.2 == 1 %}
+                <td style="text-align: right;">{{ pago.1| number_format(2,',','.') }}</td>
+            {% else %}
+                <td style="text-align: right;"></td>
+            {% endif %}
+        </tr>
+    {% endfor %}
 
-            </tbody>
-            <tfoot>
-            <td class=""><strong>Totales</strong></td>
-            <td style="text-align: right;"></td>
-            <td style="text-align: right;"><strong>{{ tc | number_format(2,',','.') }}</strong></td>
-            <td style="text-align: right;"><strong>{{ ta | number_format(2,',','.') }}</strong></td>
-            </tfoot>
-        </table>
-    </div>
-</div>
+    </tbody>
