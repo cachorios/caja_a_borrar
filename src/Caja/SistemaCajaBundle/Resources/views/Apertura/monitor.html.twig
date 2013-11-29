@@ -107,8 +107,8 @@
                     <table class="table table-striped full-section table-hover">
                         <thead>
                         <tr>
-                            <th >Tipo de Secci&oacute;n</th>
-                            <th style="text-align: center;">Mas Información</th>
+                            <th>Tipo de Secci&oacute;n</th>
+                            <th style="text-align: center;">Cantidad</th>
                             <th style="text-align: right;">Cobrado</th>
                             <th style="text-align: right;">Anulado</th>
                         </tr>
@@ -116,33 +116,42 @@
                         <tbody>
                         {% set tc = 0 %}
                         {% set ta = 0 %}
+                        {% set total = 0 %}
 
                         {% for item in detalle_tipo_seccion %}
                             {% set tc = tc + item.1 %}
                             {% set ta = ta + item.2 %}
+                            {% set total = total + item.4 %}
                             <tr>
-                                <td class="primary">{{ item.0 }}</td>
-                                <td style="text-align: center;">
-                                    <a href="#" class="links" onclick="VerMasInfo({{ item.3 }}, '{{ item.0 }}');return false;">
-                                        <div style="font-size: 24px; font-weight: bold;" id="link_mas_info_{{ item.3 }}">+</div>
+                                <td class="primary" style="white-space: nowrap">
+
+                                    <a href="#" class="links"
+                                       onclick="VerMasInfo({{ item.3 }}, '{{ item.0 }}');return false;">
+                                        <span style="font-size: 24px; font-weight: bold;"
+                                              id="link_mas_info_{{ item.3 }}">+
+                                        </span>
                                     </a>
+                                    {{ item.0 }}
+
+
                                 </td>
+                                <td style="text-align: center;">{{ item.4 }}</td>
                                 <td style="text-align: right;">{{ item.1 | number_format(2,',','.') }}</td>
                                 <td style="text-align: right;">{{ item.2 | number_format(2,',','.') }}</td>
                             </tr>
-                            <tr></tr>
-                            <td align="left" colspan="4">
-                                <div id="div_datos_seccion_{{ item.3 }}"
-                                     style="”display: none;">
-                                </div>
-                            </td>
+                            <tr id="fila_datos_seccion_{{ item.3 }}" style="display: none;">
+                                <td align="left" colspan="4">
+                                    <div id="div_datos_seccion_{{ item.3 }}">
+
+                                    </div>
+                                </td>
                             </tr>
                         {% endfor %}
 
                         </tbody>
                         <tfoot>
                         <td class=""><strong>Totales</strong></td>
-                        <td class=""></td>
+                        <td style="text-align: center;"><strong>{{ total }}</strong></td>
                         <td style="text-align: right;"><strong>{{ tc | number_format(2,',','.') }}</strong></td>
                         <td style="text-align: right;"><strong>{{ ta | number_format(2,',','.') }}</strong></td>
                         </tfoot>

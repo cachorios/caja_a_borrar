@@ -22,13 +22,14 @@
      */
 
     function VerMasInfo(seccion, nombre) {
+
         var nombre_seccion = "#link_mas_info_" + seccion;
         var nombre_div = "#div_datos_seccion_" + seccion;
-        //jQuery(nombre_seccion).toggle();
-        var signo = get_nvo_link_mas_info(arr_mas_menos, jQuery(nombre_seccion).text());
+        var nombre_fila = "#fila_datos_seccion_" + seccion;
+        jQuery(nombre_fila).toggle();
+        var signo = get_nvo_link_mas_info(arr_mas_menos, jQuery.trim(jQuery(nombre_seccion).text()));
         jQuery(nombre_seccion).text(signo);
         //Ahora llamo al template que muestra u oculta los datos:
-
         if (signo == "-") {
             // Primero se hace la llamada ajax
             var url= "{{ path('apertura_mas_info') }}";

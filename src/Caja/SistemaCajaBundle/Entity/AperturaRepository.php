@@ -274,9 +274,8 @@ class AperturaRepository extends EntityRepository
     {
         $em = $this->getEntityManager();
         $q = $em->createQuery("SELECT lp.codigo, lp.descripcion,
-                                (select sum(pp.importe)
-                                 FROM SistemaCajaBundle:LotePago pp
-                                 JOIN pp.lote ll
+                                (select sum(ldd.importe)
+                                 FROM SistemaCajaBundle:Lote ll
                                  JOIN ll.detalle ldd,
                                  LarParametroBundle:LarParametro lpp
                                  WHERE lpp.tabla = 10
@@ -285,11 +284,10 @@ class AperturaRepository extends EntityRepository
                                  AND ll.apertura = :apertura_id
                                  AND ll.apertura = l.apertura
                                  AND ldd.anulado = 0
-                                 AND pp.importe > 0
+                                 AND ldd.importe > 0
                                 ) as importe,
-                                (select sum(ppp.importe)
-                                 FROM SistemaCajaBundle:LotePago ppp
-                                 JOIN ppp.lote lll
+                                (select sum(lddd.importe)
+                                 FROM SistemaCajaBundle:Lote lll
                                  JOIN lll.detalle lddd,
                                  LarParametroBundle:LarParametro lppp
                                  WHERE lppp.tabla = 10
@@ -298,12 +296,11 @@ class AperturaRepository extends EntityRepository
                                  AND lll.apertura = :apertura_id
                                  AND lll.apertura = l.apertura
                                  AND lddd.anulado = 1
-                                 AND ppp.importe < 0
-                                )  as anulado
+                                 AND lddd.importe < 0
+                                )  as anulado,
+                                count(l.apertura) as cantidad
               FROM
-                  SistemaCajaBundle:LotePago p
-                  JOIN p.tipo_pago t
-                  JOIN p.lote l
+                  SistemaCajaBundle:Lote l
                   JOIN l.detalle ld,
                   LarParametroBundle:LarParametro lp
               WHERE lp.tabla = 10

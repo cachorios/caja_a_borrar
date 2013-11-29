@@ -317,7 +317,7 @@ class AperturaController extends Controller implements IControllerAuditable
                     $em->persist($entity);
                     $em->flush();
 
-                    $tk = $this->imprimirCierre($entity->getId());
+                    $tk = $this->imprimirCierre($entity->getId(), 1);
                     if ($tk == "") {
                         $msg = 'No se pudieron recuperar los datos del cierre.';
                     }
@@ -498,6 +498,7 @@ class AperturaController extends Controller implements IControllerAuditable
             $array_detalle_pagos[$pago['codigo']][1] = $pago['importe'];
             $array_detalle_pagos[$pago['codigo']][2] = $pago['anulado'];
             $array_detalle_pagos[$pago['codigo']][3] = $pago['codigo'];
+            $array_detalle_pagos[$pago['codigo']][4] = $pago['cantidad'];
         }
 
         return $array_detalle_pagos;
@@ -945,7 +946,7 @@ class AperturaController extends Controller implements IControllerAuditable
         $deleteForm = $this->createDeleteForm($id);
         $msg = false;
         if ($entity) {
-            $tk = $this->imprimirCierre($id);
+            $tk = $this->imprimirCierre($id, 2);
             if ($tk == "") {
                 $msg = 'No se pudieron recuperar los datos del cierre.';
             }
@@ -968,9 +969,10 @@ class AperturaController extends Controller implements IControllerAuditable
     /*
      * Imprime o reimprime el cierre de caja.
      */
-    public function imprimirCierre($id)
+    public function imprimirCierre($id, $tipo_impresion = 1)
     {
-
+        //si el tipo es 1 es el primer cierre, o sea el caso normal
+        //si el tipo es 2 es una reimpresion
         $em = $this->getDoctrine()->getManager();
         $tk = "";
         $caja = $this->container->get('caja.manager')->getCaja();
@@ -980,14 +982,18 @@ class AperturaController extends Controller implements IControllerAuditable
         $bm = $this->container->get("caja.barra");
 
         // Se ingresa una suerte de encabezado de cierre, para facilitar la division de grupos
-        $contenido = str_pad("CIERRE DE CAJA EFECTUADO", 40, "-", STR_PAD_BOTH) . NL;
+        if ($tipo_impresion == 1) {
+            $contenido = str_pad("CIERRE DE CAJA EFECTUADO", 40, "-", STR_PAD_BOTH) . NL;
+        } else {
+            $contenido = str_pad("REIMPRESION DE CIERRE DE CAJA", 40, "-", STR_PAD_BOTH) . NL;
+        }
         $contenido .= str_pad("", 40, " ", STR_PAD_BOTH) . NL;
         $contenido .= str_pad("", 40, " ", STR_PAD_BOTH) . NL;
         $contenido .= str_pad("", 40, " ", STR_PAD_BOTH) . NL;
         $contenido .= str_pad("", 40, " ", STR_PAD_BOTH) . NL;
         $contenido .= str_pad("", 40, " ", STR_PAD_BOTH) . NL;
         $contenido .= "CAJA: " . $caja->getNumero() . NL;
-        $contenido .= str_pad("FECHA: " . date("d-m-Y"), 20, " ", STR_PAD_RIGHT) . str_pad("HORA: " . date("H:i:s"), 19, " ", STR_PAD_LEFT) . NL;
+        $contenido .= str_pad("FECHA: " . date("d-m-Y"), 20, " ", STR_PAD_RIGHT) . str_pad("HORA: " . $entity->getFechaCierre()->format("H:i:s"), 19, " ", STR_PAD_LEFT) . NL;
 
         ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1099,16 +1105,12 @@ class AperturaController extends Controller implements IControllerAuditable
 
         }
 
-        //$total_cobrado = 0;
-        //$total_anulado = 0;
         $contenido .= str_pad("=", 40, "=", STR_PAD_BOTH) . NL;
         $contenido .= str_pad("Formas de Cobro: ", 40, " ", STR_PAD_RIGHT) . NL;
         foreach ($tipoPagos as $tipoPago) {
             $contenido .= str_pad($tipoPago[0] . ": ", 40, " ", STR_PAD_RIGHT) . NL;
-            //$contenido .= str_pad("Cobrado: $" . sprintf("%9.2f", $tipoPago[1]) . "-Anulado: $" . sprintf("%9.2f", $tipoPago[2]), 40, "-", STR_PAD_LEFT) . NL;
             $contenido .= str_pad("$ " . sprintf("%9.2f", $tipoPago[1]) . " - Anulado: $ " . sprintf("%9.2f", $tipoPago[2]), 40, "-", STR_PAD_LEFT) . NL;
-            //$total_cobrado += $tipoPago[1];
-            //$total_anulado += $tipoPago[2];
+
         }
 
         ///////////////////////////////////////////////////////////////////////////
@@ -1125,43 +1127,44 @@ class AperturaController extends Controller implements IControllerAuditable
         $contenido .= str_pad("Importe Anulado: $ " . sprintf("%9.2f", $pagosAnulado), 40, " ", STR_PAD_RIGHT) . NL;
 
         $ticket->setContenido($contenido);
-        //Si se esta reimprimiendo el cierre, ya no debe imprimirse hacia afuera (full)...al final manejamos desde el menu
-        //$tk .= $ticket->getTicketFull();
+
         $tk .= $ticket->getTicketTestigo();
 
-        //Genero una segunda parte de la impresion, que va hacia afuera, a modo de resumen para el cajero:
-        $ticket_resumen = $this->get("sistemacaja.ticket");
-        $contenido_resumen = str_pad("=", 40, "=", STR_PAD_BOTH) . NL; //doble linea
-        $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-        $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-        $contenido_resumen .= str_pad("RESUMEN DE CIERRE DE CAJA", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-        $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-        $contenido_resumen .= str_pad("Apertura nro. " . $entity->getId(), 40, " ", STR_PAD_BOTH) . NL;
-        $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-        $contenido_resumen .= str_pad("Comprobantes Validos: " . $entity->getComprobanteCantidad(), 40, " ", STR_PAD_RIGHT) . NL;
-        $contenido_resumen .= str_pad("Comprobantes Anulados: " . $entity->getComprobanteAnulado(), 40, " ", STR_PAD_RIGHT) . NL;
-        $contenido_resumen .= str_pad("Importe Cobrado: $ " . sprintf("%9.2f", $pagos), 40, " ", STR_PAD_RIGHT) . NL;
-        $contenido_resumen .= str_pad("Importe Anulado: $ " . sprintf("%9.2f", $pagosAnulado), 40, " ", STR_PAD_RIGHT) . NL;
+        // EL RESUMEN SE HACE SOLO EN EL CASO NORMAL (NO REIMPRESION)
+        if ($tipo_impresion == 1) {
+            //Genero una segunda parte de la impresion, que va hacia afuera, a modo de resumen para el cajero:
+            $ticket_resumen = $this->get("sistemacaja.ticket");
+            $contenido_resumen = str_pad("=", 40, "=", STR_PAD_BOTH) . NL; //doble linea
+            $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+            $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+            $contenido_resumen .= str_pad("RESUMEN DE CIERRE DE CAJA", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+            $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+            $contenido_resumen .= str_pad("Apertura nro. " . $entity->getId(), 40, " ", STR_PAD_BOTH) . NL;
+            $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+            $contenido_resumen .= str_pad("Comprobantes Validos: " . $entity->getComprobanteCantidad(), 40, " ", STR_PAD_RIGHT) . NL;
+            $contenido_resumen .= str_pad("Comprobantes Anulados: " . $entity->getComprobanteAnulado(), 40, " ", STR_PAD_RIGHT) . NL;
+            $contenido_resumen .= str_pad("Importe Cobrado: $ " . sprintf("%9.2f", $pagos), 40, " ", STR_PAD_RIGHT) . NL;
+            $contenido_resumen .= str_pad("Importe Anulado: $ " . sprintf("%9.2f", $pagosAnulado), 40, " ", STR_PAD_RIGHT) . NL;
 
-        //Se agrega un resumen por tipo de cobro:
-        $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-        $contenido_resumen .= str_pad("Formas de Cobro: ", 40, " ", STR_PAD_RIGHT) . NL;
-        foreach ($tipoPagos as $tipoPago) {
-            $contenido_resumen .= str_pad($tipoPago[0] . ": ", 40, " ", STR_PAD_RIGHT) . NL;
-            $contenido_resumen .= str_pad("$ " . sprintf("%9.2f", $tipoPago[1]) . " - Anulado: $ " . sprintf("%9.2f", $tipoPago[2]), 40, "-", STR_PAD_LEFT) . NL;
+            //Se agrega un resumen por tipo de cobro:
+            $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+            $contenido_resumen .= str_pad("Formas de Cobro: ", 40, " ", STR_PAD_RIGHT) . NL;
+            foreach ($tipoPagos as $tipoPago) {
+                $contenido_resumen .= str_pad($tipoPago[0] . ": ", 40, " ", STR_PAD_RIGHT) . NL;
+                $contenido_resumen .= str_pad("$ " . sprintf("%9.2f", $tipoPago[1]) . " - Anulado: $ " . sprintf("%9.2f", $tipoPago[2]), 40, "-", STR_PAD_LEFT) . NL;
+            }
+
+            $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+            $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+            $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+            $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+            $contenido_resumen .= str_pad("_________________________", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+            $contenido_resumen .= str_pad("RECIBIDO POR JEFE DE CAJA", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+            $contenido_resumen .= str_pad("DIRECCION DE TESORERIA - MUN. POSADAS", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
+            $ticket->setContenido($contenido_resumen);
+
+            $tk .= $ticket->getTicketFull();
         }
-
-        $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-        $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-        $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-        $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-        $contenido_resumen .= str_pad("_________________________", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-        $contenido_resumen .= str_pad("RECIBIDO POR JEFE DE CAJA", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-        $contenido_resumen .= str_pad("DIRECCION DE TESORERIA - MUN. POSADAS", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-        $ticket->setContenido($contenido_resumen);
-
-        $tk .= $ticket->getTicketFull();
-
         return $tk;
     }
 
@@ -1288,11 +1291,6 @@ class AperturaController extends Controller implements IControllerAuditable
             return $this->redirect($this->generateUrl('apertura_new'));
         }
         $detalle_pagos = $this->getDetalleTodosPagosSeccion($apertura->getId(), $tipo_seccion);
-        /*
-        $response = new Response();
-        $response->setContent($tipo_seccion);
-        return $response;
-        */
         return $this->render('SistemaCajaBundle:Apertura:masinfo.html.twig',
             array('detalle_pagos' => $detalle_pagos));
 
@@ -1303,7 +1301,7 @@ class AperturaController extends Controller implements IControllerAuditable
         $em = $this->getDoctrine()->getManager();
         $pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetalleTodosPagosSeccion($ap_id, $tipo_seccion);
 
-        $array_detalle_pagos= array();
+        $array_detalle_pagos = array();
 
         foreach ($pagos as $pago) {
 
