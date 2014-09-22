@@ -142,7 +142,7 @@ function pausa(millis)
 
 imprimir_Serial = function (data) {
     var pser = document.SerialLar;
-    var t, maxChar = 80, maxTime = 2500;
+    var t, maxChar = 80, maxTime = 500;
     try {
         //Particiono la variable tk recibida, para evitar el llenado del buffer:
         for (var i = 0; i < data.length; i += maxChar) {
