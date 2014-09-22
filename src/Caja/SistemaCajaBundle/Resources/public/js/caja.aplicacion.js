@@ -134,3 +134,12 @@ function pausa(millis)
     do { curDate = new Date(); }
     while(curDate-date < millis);
 }
+
+/**
+ * Manda a la impresora fiscal.
+ * @param data
+ */
+
+imprimir_Serial = function (data) {
+    imprimir_Serial(data);
+}

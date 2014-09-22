@@ -386,22 +386,7 @@ verificarEstadoSerial = function (sFuncion, datos) {
  * @param data
  */
 imprimirSerial = function (data) {
-    var pser = document.SerialLar;
-    try {
-        //Particiono la variable tk recibida, para evitar el llenado del buffer:
-        for (var i = 0; i < data.length; i += 250) {
-            var t = new Date().getTime();
-            while ((new Date().getTime()) - t < 2000) {
-                //alert('timer');
-            }
-
-            pser.escribir(data.substr(i, 250));
-        }
-        $.unblockUI();
-    } catch (e) {
-        $.unblockUI();
-        alert('Error de tipo: ' + e);
-    }
+    imprimir_Serial(data);
 }
 
 </script>
