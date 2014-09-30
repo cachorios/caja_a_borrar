@@ -6,7 +6,7 @@
  * Time: 17:06
  * To change this template use File | Settings | File Templates.
  */
-namespace MP\GeneralBundle\Lib;
+namespace Caja\GeneralBundle\Lib;
 
 use Symfony\Component\DependencyInjection;
 use Symfony\Component\Yaml\Parser;

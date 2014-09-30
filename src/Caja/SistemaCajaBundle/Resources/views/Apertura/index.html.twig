@@ -116,6 +116,11 @@
                                                href="{{ path('apertura_preparar_reimpresion_cierre', { 'id': entity.id }) }}">
                                                 {{ 'Reimprimir Cierre'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
                                             </a>
+
+                                            <a class="btn btn-mini" target="_blank"
+                                               href="{{ path('apertura_preparar_reimpresion_cierre_reporte', { 'id': entity.id }) }}">
+                                                {{ 'Reimprimir Cierre Reporte'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                                            </a>
                                         {% endif %}
                                     {% endif %}
                                     {% if  not entity.fechacierre and is_granted('ROLE_ADMIN') %}

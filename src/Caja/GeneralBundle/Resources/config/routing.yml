@@ -1,3 +1,7 @@
 general_homepage:
     pattern:  /hello/{name}
     defaults: { _controller: GeneralBundle:Default:index }
+
+GeneralBundle_reporte:
+    resource: "@GeneralBundle/Resources/config/routing/reporte.yml"
+    prefix:   /reporte

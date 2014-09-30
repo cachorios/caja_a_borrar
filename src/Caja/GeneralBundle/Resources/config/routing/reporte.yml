@@ -1,0 +1,7 @@
+reporte_imprimir:
+    pattern:  /imprimir
+    defaults: { _controller: "GeneralBundle:Reporte:imprimir" }
+
+
+
+

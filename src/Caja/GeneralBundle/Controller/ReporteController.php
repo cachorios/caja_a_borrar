@@ -1,6 +1,6 @@
 <?php
 
-namespace MP\GeneralBundle\Controller;
+namespace Caja\GeneralBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use MP\GeneralBundle\Lib\MotorImpresion;

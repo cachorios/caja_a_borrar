@@ -3,7 +3,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-namespace MP\GeneralBundle\Lib;
+namespace Caja\GeneralBundle\Lib;
 
 /**
  *

@@ -934,6 +934,37 @@ class AperturaController extends Controller implements IControllerAuditable
     }
 
     /**
+     * Prepara la ventana desde la cual se puede reeimprimir un cierre de cobranza
+     * que no se haya impreso al cerrar la caja, por algun motivo
+     *
+     */
+    public function prepararReimpresionCierreReporteAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        T::setEM($em);
+        $breadcrumbs = $this->get("white_october_breadcrumbs");
+        $breadcrumbs->addItem("Inicio", $this->get("router")->generate("home_page"));
+        $breadcrumbs->addItem("Apertura", $this->get("router")->generate("apertura"));
+        $breadcrumbs->addItem("Ver");
+
+        $em = $this->getDoctrine()->getManager();
+
+        $caja = $this->container->get('caja.manager')->getCaja();
+        //$entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('apertura_id' => $id, "caja_id" => $caja->getId()));
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Apertura entity.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+
+        $parametro = array('clase' => 'Caja\GeneralBundle\Lib\Reportes\ReimpresionCierre', 'id' => $id, "caja" => $caja->getId());
+        $this->get('session')->getFlashBag()->add('parametro', $parametro);
+        return $this->redirect($this->generateUrl("reporte_imprimir"));
+        //return $this->render('SistemaCajaBundle:Apertura:reimprimirCierre.html.twig', array('entity' => $entity, 'caja' => $caja, 'delete_form' => $deleteForm->createView(),));
+    }
+
+    /**
      * Permite reimprimir un cierre de caja no se haya impreso al cerrar la caja, por algun motivo
      *
      */

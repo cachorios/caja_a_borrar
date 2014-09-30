@@ -71,6 +71,10 @@ apertura_preparar_reimpresion_cierre:
     pattern:  /{id}/prepararReimpresionCierre
     defaults: { _controller: "SistemaCajaBundle:Apertura:prepararReimpresionCierre" }
 
+apertura_preparar_reimpresion_cierre_reporte:
+    pattern:  /{id}/prepararReimpresionCierreReporte
+    defaults: { _controller: "SistemaCajaBundle:Apertura:prepararReimpresionCierreReporte" }
+
 apertura_reimprimir_cierre:
     pattern:  /{id}/reimprimirCierre
     defaults: { _controller: "SistemaCajaBundle:Apertura:reimprimirCierre" }
