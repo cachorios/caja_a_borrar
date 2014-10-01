@@ -3,14 +3,12 @@
 namespace Caja\GeneralBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use MP\GeneralBundle\Lib\MotorImpresion;
+use Caja\GeneralBundle\Lib\MotorImpresion;
 //use MP\GeneralBundle\Lib\ReportesCatastroImagenPlancheta;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\DependencyInjection\Reference;
-use MP\GeneralBundle\Lib\T;
+use Caja\GeneralBundle\Lib\T;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use MP\GeneralBundle\Lib\Reportes\boletaPago;
-
 class ReporteController extends Controller {
     /* public function indexAction($name) {
       return $this->render('GeneralBundle:Default:index.html.twig', array('name' => $name));
@@ -65,6 +63,8 @@ class ReporteController extends Controller {
             $motorImpresion->imprimirReporte($imprimible);
 
             $parametrosReportes = $motorImpresion->obtenerParametrosReporte();
+            ld($parametrosReportes);
+            exit;
 
             return $this->render('GeneralBundle:Reporte:index.html.twig', array('parametros' => $parametrosReportes));
         } else {

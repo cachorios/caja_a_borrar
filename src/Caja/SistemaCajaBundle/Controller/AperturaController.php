@@ -2,13 +2,11 @@
 
 namespace Caja\SistemaCajaBundle\Controller;
 
-use Caja\SistemaCajaBundle\Lib\IModuloAuditable;
+use Common\AuditorBundle\Lib\IModuloAuditable;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\View\TwitterBootstrapView;
-
 use Caja\SistemaCajaBundle\Entity\Apertura;
 use Caja\SistemaCajaBundle\Entity\Lote;
 use Caja\SistemaCajaBundle\Entity\LoteDetalle;
@@ -20,8 +18,8 @@ use Caja\SistemaCajaBundle\Form\AperturaCierreType;
 use Caja\SistemaCajaBundle\Form\AperturaFilterType;
 use Caja\SistemaCajaBundle\Entity\Caja;
 use Symfony\Component\HttpFoundation\Response;
-
 use Common\AuditorBundle\Lib\IControllerAuditable;
+use Caja\GeneralBundle\Lib\T;
 
 /**
  * Apertura controller.
@@ -935,33 +933,18 @@ class AperturaController extends Controller implements IControllerAuditable
 
     /**
      * Prepara la ventana desde la cual se puede reeimprimir un cierre de cobranza
-     * que no se haya impreso al cerrar la caja, por algun motivo
-     *
+     * que no se haya impreso al cerrar la caja, por algun motivo.
+     * Se imprime en el formato nuevo (A4)
      */
     public function prepararReimpresionCierreReporteAction($id)
     {
         $em = $this->getDoctrine()->getManager();
         T::setEM($em);
-        $breadcrumbs = $this->get("white_october_breadcrumbs");
-        $breadcrumbs->addItem("Inicio", $this->get("router")->generate("home_page"));
-        $breadcrumbs->addItem("Apertura", $this->get("router")->generate("apertura"));
-        $breadcrumbs->addItem("Ver");
-
         $em = $this->getDoctrine()->getManager();
-
         $caja = $this->container->get('caja.manager')->getCaja();
-        //$entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('apertura_id' => $id, "caja_id" => $caja->getId()));
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Apertura entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
         $parametro = array('clase' => 'Caja\GeneralBundle\Lib\Reportes\ReimpresionCierre', 'id' => $id, "caja" => $caja->getId());
         $this->get('session')->getFlashBag()->add('parametro', $parametro);
         return $this->redirect($this->generateUrl("reporte_imprimir"));
-        //return $this->render('SistemaCajaBundle:Apertura:reimprimirCierre.html.twig', array('entity' => $entity, 'caja' => $caja, 'delete_form' => $deleteForm->createView(),));
     }
 
     /**
