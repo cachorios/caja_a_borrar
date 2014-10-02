@@ -3,17 +3,17 @@ reportes:
   paths:
     #para windows
     aplicacion_path:   http://localhost:8080/MuniReportes/ReporteControlador
-    projecto_path:     C:/xampp/htdocs/mp_sistemas
-    jxrml_path:        C:/xampp/htdocs/mp_sistemas/files/reportes  #el problema de esto es que solo hace referencia a una sola aplicacion
-    output_path:       C:/xampp/htdocs/mp_sistemas/web/temp/
-    file_path:         C:/xampp/htdocs/mp_sistemas/web/temp/
-    image_path:        C:/xampp/htdocs/mp_sistemas/web/assets/images/
+    projecto_path:     C:/xampp/htdocs/caja
+    jxrml_path:        C:/xampp/htdocs/caja/files/reportes  #el problema de esto es que solo hace referencia a una sola aplicacion
+    output_path:       C:/xampp/htdocs/caja/web/temp/
+    file_path:         C:/xampp/htdocs/caja/web/temp/
+    image_path:        C:/xampp/htdocs/caja/web/assets/images/
 
     #para linux
     #aplicacion_path:   http://192.0.4.248:8080/MuniReportes/ReporteControlador
     #aplicacion_path:   http://www.sistemareporte.posadas.gov.ar/MuniReportes/ReporteControlador
-    #projecto_path:     /var/www/mp_sistemas
-    #jxrml_path:        /var/www/mp_sistemas/files/reportes  #el problema de esto es que solo hace referencia a una sola aplicacion
-    #output_path:       /var/www/mp_sistemas/web/temp/
-    #file_path:         /var/www/mp_sistemas/web/temp/
-    #image_path:        /var/www/mp_sistemas/web/assets/images/
+    #projecto_path:     /var/www/caja
+    #jxrml_path:        /var/www/caja/files/reportes  #el problema de esto es que solo hace referencia a una sola aplicacion
+    #output_path:       /var/www/caja/web/temp/
+    #file_path:         /var/www/caja/web/temp/
+    #image_path:        /var/www/caja/web/assets/images/

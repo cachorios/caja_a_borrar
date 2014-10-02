@@ -1,3 +1,7 @@
+general:
+    resource: "@GeneralBundle/Resources/config/routing.yml"
+    prefix:   /
+
 common_auditor:
     resource: "@CommonAuditorBundle/Resources/config/routing.yml"
     prefix:   /

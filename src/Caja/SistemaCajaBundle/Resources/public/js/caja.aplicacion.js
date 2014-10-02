@@ -142,14 +142,15 @@ function pausa(millis)
 
 imprimir_Serial = function (data) {
     var pser = document.SerialLar;
-    var t, maxChar = 80, maxTime = 500;
+    var maxChar = 80;
     try {
         //Particiono la variable tk recibida, para evitar el llenado del buffer:
         for (var i = 0; i < data.length; i += maxChar) {
-            t = new Date().getTime();
-            while ((new Date().getTime()) - t < maxTime) {
-                //alert('timer');
-            }
+            //t = new Date().getTime();
+//            while ((new Date().getTime()) - t < maxTime) {
+//                //alert('timer');
+//            }
+            wait(500);
 
             pser.escribir(data.substr(i, maxChar));
         }
@@ -158,4 +159,13 @@ imprimir_Serial = function (data) {
         $.unblockUI();
         alert('Error de tipo: ' + e);
     }
+}
+
+wait = function(tiempo) {
+    var t;
+    t = new Date().getTime();
+    while ((new Date().getTime()) - t < tiempo) {
+
+    }
+
 }

@@ -63,8 +63,6 @@ class ReporteController extends Controller {
             $motorImpresion->imprimirReporte($imprimible);
 
             $parametrosReportes = $motorImpresion->obtenerParametrosReporte();
-            ld($parametrosReportes);
-            exit;
 
             return $this->render('GeneralBundle:Reporte:index.html.twig', array('parametros' => $parametrosReportes));
         } else {

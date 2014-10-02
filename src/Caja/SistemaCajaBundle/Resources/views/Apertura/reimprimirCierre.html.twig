@@ -65,7 +65,7 @@
                         </div>
                         {% if entity.fechaCierre %}
                             <div class="span2">
-                                <button type="submit"
+                                <button type="submit" id="boton_reimpresion_cierre" style="display: none"
                                         class="btn btn-success">{{ 'Reimprimir'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
                             </div>
                         {% endif %}
@@ -80,6 +80,7 @@
 
             <script>
 
+                //boton_reimpresion_cierre
                 var bOpen = 0;
                 var impresoraOK = 0; // de inicio no esta ok, verificar estado
                 var esperandoEstado = 1;
@@ -134,9 +135,7 @@
                         //$("#msgBarra").html("TICKET: " + parm+ " "+tipo);
                     }
                 }
-            </script>
 
-            <script>
                 $(function () {
                     $("#form_reimpresion_cierre").submit(function (e) {
                         e.preventDefault();
@@ -176,5 +175,10 @@
                 imprimirSerial = function (data) {
                     imprimir_Serial(data);
                 }
+
+                $(document).ready(function(){
+                    wait(5000);
+                    $('#boton_reimpresion_cierre').show();
+                });
             </script>
     {% endblock %}

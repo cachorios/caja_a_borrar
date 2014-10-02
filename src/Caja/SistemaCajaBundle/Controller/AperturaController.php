@@ -938,11 +938,12 @@ class AperturaController extends Controller implements IControllerAuditable
      */
     public function prepararReimpresionCierreReporteAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
-        T::setEM($em);
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
+        //T::setEM($em);
+        //$em = $this->getDoctrine()->getManager();
         $caja = $this->container->get('caja.manager')->getCaja();
-        $parametro = array('clase' => 'Caja\GeneralBundle\Lib\Reportes\ReimpresionCierre', 'id' => $id, "caja" => $caja->getId());
+        $servicio_tabla = $this->get("lar.parametro.tabla");
+        $parametro = array('clase' => 'Caja\GeneralBundle\Lib\Reportes\ImpresionCierre', 'apertura_id' => $id, "caja_id" => $caja->getId());
         $this->get('session')->getFlashBag()->add('parametro', $parametro);
         return $this->redirect($this->generateUrl("reporte_imprimir"));
     }

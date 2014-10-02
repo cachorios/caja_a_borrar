@@ -74,7 +74,7 @@ class ImpresionCierre implements Imprimible
      * Retorna la apertura
      */
     private function getApertura() {
-        return $this->em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('apertura_id' => $this->getAperturaId(), "caja_id" =>  $this->getCajaId()));
+        return $this->em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $this->getAperturaId(), "caja" =>  $this->getCajaId()));
     }
 
     /**
@@ -142,11 +142,12 @@ class ImpresionCierre implements Imprimible
 
         $datos = "titulo|numero_caja|fecha_cierre|numero_apertura|cajero|seccion|comprobante|referencia|importe|forma_cobro|importe_forma_cobro|anulado_forma_cobro|comprobantes_validos|comprobantes_anulados|importe_cobrado|importe_anulado\n";
 
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->getEntityManager();
         $caja = $this->container->get('caja.manager')->getCaja();
         //$entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $this->getAperturaId(), "caja" => $this->getCajaId()));
         $apertura = $this->getApertura();
-        $servicio_tabla = $this->get("lar.parametro.tabla");
+        //$servicio_tabla = $this->get("lar.parametro.tabla");
+
         $bm = $this->container->get("caja.barra");
 
         // Se ingresa una suerte de encabezado de cierre, para facilitar la division de grupos
@@ -178,7 +179,8 @@ class ImpresionCierre implements Imprimible
         foreach ($detalle_pagos as $detalle) {
 
             $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
-            $seccion = $servicio_tabla->getParametro($tabla, $detalle->getSeccion());
+            $seccion = $em->getRepository("LarParametroBundle:LarParametro")->findOneBy(array('tabla' => $tabla, 'codigo' => $detalle->getSeccion()));
+            //$seccion = $servicio_tabla->getParametro($tabla, $detalle->getSeccion());
             if ($seccion) {
                 $nombre_seccion = $seccion->getDescripcion();
             } else {
@@ -190,7 +192,7 @@ class ImpresionCierre implements Imprimible
                 $datos .= str_pad("-", 40, "-", STR_PAD_BOTH) . NL;
                 $datos .= str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL;
                 //$datos .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH)  . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
-                $parcial_1 = $detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH);
+                $parcial_1 = $detalle->getComprobante() . " " . $detalle->getReferencia();
                 if (!$detalle->getAnulado()) {
                     $parcial_2 = " $ " . sprintf("%9.2f", $detalle->getImporte());
                     $monto_total_seccion += $detalle->getImporte();
@@ -203,7 +205,7 @@ class ImpresionCierre implements Imprimible
                 $cantidad_comprobantes_seccion++;
             } else if ($nombre_seccion == $nombre_seccion_actual) { //entra si es igual al anterior
                 //$datos .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH)  . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
-                $parcial_1 = $detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH);
+                $parcial_1 = $detalle->getComprobante() . " " . $detalle->getReferencia();
                 if (!$detalle->getAnulado()) {
                     $parcial_2 = " $ " . sprintf("%9.2f", $detalle->getImporte());
                     $monto_total_seccion += $detalle->getImporte();
@@ -212,7 +214,7 @@ class ImpresionCierre implements Imprimible
                 }
                 $datos .= str_pad($parcial_1 . $parcial_2, 40, " ", STR_PAD_BOTH) . NL;
                 $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
-                $seccion_actual = $servicio_tabla->getParametro($tabla, $detalle->getSeccion());
+                $seccion_actual = $em->getRepository("LarParametroBundle:LarParametro")->findOneBy(array('tabla' => $tabla, 'codigo' => $detalle->getSeccion()));
                 if ($seccion_actual) {
                     $nombre_seccion_actual = $seccion_actual->getDescripcion();
                 } else {
@@ -230,7 +232,7 @@ class ImpresionCierre implements Imprimible
                 $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
                 $datos .= str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL;
                 //$datos .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH)  . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
-                $parcial_1 = $detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH);
+                $parcial_1 = $detalle->getComprobante() . " " . $detalle->getReferencia();
                 if (!$detalle->getAnulado()) {
                     $parcial_2 = " $ " . sprintf("%9.2f", $detalle->getImporte());
                     $monto_total_seccion = $detalle->getImporte();
@@ -243,7 +245,7 @@ class ImpresionCierre implements Imprimible
 
                 $cantidad_comprobantes_seccion = 1;
 
-                $seccion_actual = $servicio_tabla->getParametro($tabla, $detalle->getSeccion());
+                $seccion_actual = $em->getRepository("LarParametroBundle:LarParametro")->findOneBy(array('tabla' => $tabla, 'codigo' => $detalle->getSeccion()));
                 if ($seccion_actual) {
                     $nombre_seccion_actual = $seccion_actual->getDescripcion();
                 } else {
