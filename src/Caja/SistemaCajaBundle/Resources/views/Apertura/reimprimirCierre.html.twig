@@ -65,7 +65,7 @@
                         </div>
                         {% if entity.fechaCierre %}
                             <div class="span2">
-                                <button type="submit" id="boton_reimpresion_cierre" style="display: none"
+                                <button type="submit" id="boton_reimpresion_cierre"
                                         class="btn btn-success">{{ 'Reimprimir'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
                             </div>
                         {% endif %}
@@ -79,6 +79,8 @@
             {% endblock %}
 
             <script>
+
+                $("#form_reimpresion_cierre").hide();
 
                 //boton_reimpresion_cierre
                 var bOpen = 0;
@@ -136,49 +138,11 @@
                     }
                 }
 
-                $(function () {
-                    $("#form_reimpresion_cierre").submit(function (e) {
-                        e.preventDefault();
-                        $.blockUI({ message:"Reimprimiendo ticket de cierre de caja..." });
-                        $("#form_reimpresion_cierre").ajaxSubmit({
-                            dataType:'json',
-                            success:function (data, statusText, xhr, $form) {
-
-                                if (statusText == 'success') {
-                                    if (data.ok == 1) {
-                                        imprimirSerial(data.tk);
-                                        //Despues de imprimir, mando el mail como una llamada ajax separada:
-                                        $.unblockUI();
-                                        window.location = "{{ path('apertura') }}";
-                                    }
-                                    else if (data.ok != 1) {
-                                        $.unblockUI();
-                                        alert('Mensaje de error: ' + data.msg);
-                                    }
-                                }
-                            },
-                            error:function (data) {
-                                $.unblockUI();
-                                alert('Mensaje de error al reimprimir: ' + data.msg + '. Ticket: ' + data.tk);
-
-                            }
-                        });
-
-                        return false;
-                    });
-                });
-
-                /**
-                 * Manda a la impresora fiscal.
-                 * @param data
-                 */
-                imprimirSerial = function (data) {
-                    imprimir_Serial(data);
-                }
-
+                /*
                 $(document).ready(function(){
-                    wait(5000);
+                    //wait(5000);
                     $('#boton_reimpresion_cierre').show();
                 });
+                */
             </script>
     {% endblock %}

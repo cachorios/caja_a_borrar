@@ -1,8 +1,16 @@
 <script type="text/javascript">
 
+    var miTimer;
+    miTimer = setInterval(function(){
+        if (document.SerialLar.isActive()){
+            jQuery("#form_reimpresion_ticket").show();
+            window.clearTimeout(miTimer);
+            $.unblockUI();
+        }
+    },500);
+
     $(function () {
-
-
+        $.blockUI({ message:"Esperando impresora..." });
         $("#form_reimpresion_ticket").submit(function (e) {
             e.preventDefault();
             $.blockUI({ message:"Reimprimiendo ticket ..." });
@@ -12,45 +20,39 @@
 
 
         comprobarImpresora = function () {
-            $("#form_reimpresion_ticket").submit(function (e) {
-                e.preventDefault();
-                $.blockUI({ message:"Reimprimiendo ticket..." });
-                $("#form_reimpresion_ticket").ajaxSubmit({
-                    dataType:'json',
-                    success:function (data, statusText, xhr, $form) {
+            $("#form_reimpresion_ticket").ajaxSubmit({
+                dataType:'json',
+                success:function (data, statusText, xhr, $form) {
 
-                        if (statusText == 'success') {
-                            if (data.ok == 1) {
-                                imprimirSerial(data.tk);
-                                //Despues de imprimir, mando el mail como una llamada ajax separada:
-                                $.unblockUI();
-                                window.location = "{{ path('apertura') }}";
-                            }
-                            else if (data.ok != 1) {
-                                $.unblockUI();
-                                alert('Mensaje de error: ' + data.msg);
-                            }
+                    if (statusText == 'success') {
+                        if (data.ok == 1) {
+                            imprimirSerial(data.tk);
+                            //Despues de imprimir, se redirige al monitor:
+                            $.unblockUI();
+                            window.location = "{{ path('apertura_monitor') }}";
                         }
-                    },
-                    error:function (data) {
-                        $.unblockUI();
-                        alert('Mensaje de error al reimprimir: ' + data.msg + '. Ticket: ' + data.tk);
-
+                        else if (data.ok != 1) {
+                            $.unblockUI();
+                            alert('Mensaje de error: ' + data.msg);
+                        }
                     }
-                });
+                },
+                error:function (data) {
+                    $.unblockUI();
+                    alert('Mensaje de error al reimprimir: ' + data.msg + '. Ticket: ' + data.tk);
 
-                return false;
+                }
             });
+
 
         }
     });
-
 
     /**
      * Determina el estado de la impresora
      * @param nombre de la funcion a ejecutar si esta todo ok
      */
-    verificarEstadoSerial = function (sFuncion, datos) {
+    verificarEstadoSerial = function (sFuncion) {
         var pser = document.SerialLar;
         $.unblockUI();
         try {
@@ -59,7 +61,6 @@
             alert(e);
         }
     }
-
 
     /**
      * Manda a la impresora fiscal.
