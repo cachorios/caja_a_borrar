@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="ISO-8859-1"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="Deuda"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="612"
+		 pageHeight="792"
+		 columnWidth="572"
+		 columnSpacing="0"
+		 leftMargin="20"
+		 rightMargin="20"
+		 topMargin="20"
+		 bottomMargin="20"
+		 whenNoDataType="NoPages"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="ISO-8859-1" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<parameter name="rutaImagen" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="activo" isForPrompting="false" class="java.lang.String"/>
+
+	<field name="titulo" class="java.lang.String"/>
+	<field name="numero_caja" class="java.lang.String"/>
+	<field name="fecha_cierre" class="java.lang.String"/>
+	<field name="hora_cierre" class="java.lang.String"/>
+	<field name="numero_apertura" class="java.lang.String"/>
+	<field name="cajero" class="java.lang.String"/>
+	<field name="comprobantes_validos" class="java.lang.String"/>
+	<field name="comprobantes_anulados" class="java.lang.String"/>
+	<field name="importe_cobrado" class="java.lang.String"/>
+	<field name="importe_anulado" class="java.lang.String"/>
+	<field name="forma_cobro1" class="java.lang.String"/>
+	<field name="importe_forma_cobro1" class="java.lang.String"/>
+	<field name="anulado_forma_cobro1" class="java.lang.String"/>
+	<field name="forma_cobro2" class="java.lang.String"/>
+	<field name="importe_forma_cobro2" class="java.lang.String"/>
+	<field name="anulado_forma_cobro2" class="java.lang.String"/>
+	<field name="forma_cobro3" class="java.lang.String"/>
+	<field name="importe_forma_cobro3" class="java.lang.String"/>
+	<field name="anulado_forma_cobro3" class="java.lang.String"/>
+	<field name="forma_cobro4" class="java.lang.String"/>
+	<field name="importe_forma_cobro4" class="java.lang.String"/>
+	<field name="anulado_forma_cobro4" class="java.lang.String"/>
+	<field name="forma_cobro5" class="java.lang.String"/>
+	<field name="importe_forma_cobro5" class="java.lang.String"/>
+	<field name="anulado_forma_cobro5" class="java.lang.String"/>
+	<field name="seccion" class="java.lang.String"/>
+	<field name="comprobante" class="java.lang.String"/>
+	<field name="referencia" class="java.lang.String"/>
+	<field name="importe" class="java.lang.String"/>
+	<field name="observacion" class="java.lang.String"/>
+
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="80"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="57"
+						y="24"
+						width="231"
+						height="13"
+						forecolor="#000000"
+						key="staticText-10"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Top">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="false"/>
+					</textElement>
+				<text><![CDATA[Sistema Integral de Recaudaciones]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="57"
+						y="8"
+						width="276"
+						height="16"
+						forecolor="#000000"
+						key="staticText-11"/>
+					<box></box>
+					<textElement textAlignment="Left">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true" isUnderline="false"/>
+					</textElement>
+				<text><![CDATA[Municipalidad Ciudad de Posadas]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="145"
+						y="43"
+						width="246"
+						height="26"
+						forecolor="#000000"
+						key="staticText-12"/>
+					<box></box>
+					<textElement textAlignment="Center">
+						<font pdfFontName="Helvetica-Bold" size="18" isBold="true" isUnderline="false"/>
+					</textElement>
+				<text><![CDATA[ESTADO DE DEUDA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="498"
+						y="42"
+						width="73"
+						height="0"
+						key="staticText-13"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<text><![CDATA[Static Text]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="436"
+						y="37"
+						width="135"
+						height="13"
+						key="textField-12"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Emitido: " + $F{cajero}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="HH.mm" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="436"
+						y="65"
+						width="135"
+						height="13"
+						key="textField-4"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="79"
+						width="573"
+						height="1"
+						forecolor="#666666"
+						key="line-4"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="436"
+						y="51"
+						width="135"
+						height="13"
+						key="textField-5"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="67"  isSplitAllowed="true" >
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="15"
+						width="570"
+						height="0"
+						key="line-5"/>
+					<graphicElement stretchType="NoStretch">
+					<pen lineWidth="0.05"/>
+</graphicElement>
+				</line>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="19"
+						y="21"
+						width="387"
+						height="12"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{seccion}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="19"
+						y="38"
+						width="386"
+						height="12"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{referencia}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="19"
+						y="54"
+						width="386"
+						height="12"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{importe}]]></textFieldExpression>
+				</textField>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="15"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="1"
+						y="2"
+						width="186"
+						height="13"
+						backcolor="#E6E6E6"
+						key="textField-9"/>
+					<box></box>
+					<textElement textAlignment="Left">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Impreso por: " + $F{cajero}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="186"
+						y="2"
+						width="359"
+						height="13"
+						backcolor="#E6E6E6"
+						key="textField-13"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Pagina "+$V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="545"
+						y="2"
+						width="26"
+						height="13"
+						backcolor="#E6E6E6"
+						key="textField-14"/>
+					<box></box>
+					<textElement textAlignment="Left">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="25"  isSplitAllowed="true" >
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="1"
+						width="555"
+						height="1"
+						key="line"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+			</band>
+		</summary>
+</jasperReport>

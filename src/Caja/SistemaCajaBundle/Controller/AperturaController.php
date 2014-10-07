@@ -1008,7 +1008,7 @@ class AperturaController extends Controller implements IControllerAuditable
 //        $contenido .= str_pad("", 40, " ", STR_PAD_BOTH) . NL;
 //        $contenido .= str_pad("", 40, " ", STR_PAD_BOTH) . NL;
         $contenido .= "CAJA: " . $caja->getNumero() . NL;
-        $contenido .= str_pad("FECHA: " . date("d-m-Y"), 20, " ", STR_PAD_RIGHT) . str_pad("HORA: " . $entity->getFechaCierre()->format("H:i:s"), 19, " ", STR_PAD_LEFT) . NL;
+        $contenido .= str_pad("FECHA: " . $entity->getFechaCierre()->format("d/m/Y"), 20, " ", STR_PAD_RIGHT) . str_pad("HORA: " . $entity->getFechaCierre()->format("H:i:s"), 19, " ", STR_PAD_LEFT) . NL;
 
         ///////////////////////////////////////////////////////////////////////////////////////////
 

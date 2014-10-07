@@ -73,8 +73,9 @@ class ImpresionCierre implements Imprimible
     /**
      * Retorna la apertura
      */
-    private function getApertura() {
-        return $this->em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $this->getAperturaId(), "caja" =>  $this->getCajaId()));
+    private function getApertura()
+    {
+        return $this->em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $this->getAperturaId(), "caja" => $this->getCajaId()));
     }
 
     /**
@@ -137,204 +138,99 @@ class ImpresionCierre implements Imprimible
      * Genera el txt de la reimpresión del cierre.
      *
      */
-    function generarTxt()
-    {
+    function generarTxt() {
 
-        $datos = "titulo|numero_caja|fecha_cierre|numero_apertura|cajero|seccion|comprobante|referencia|importe|forma_cobro|importe_forma_cobro|anulado_forma_cobro|comprobantes_validos|comprobantes_anulados|importe_cobrado|importe_anulado\n";
+        //$datos = "titulo|numero_caja|fecha_cierre|hora_cierre|numero_apertura|cajero|forma_cobro1|importe_forma_cobro1|anulado_forma_cobro1|forma_cobro2|importe_forma_cobro2|anulado_forma_cobro2|forma_cobro3|importe_forma_cobro3|anulado_forma_cobro3|forma_cobro4|importe_forma_cobro4|anulado_forma_cobro4|comprobantes_validos|comprobantes_anulados|importe_cobrado|importe_anulado|seccion|comprobante|referencia|importe|observacion\n";
+        $datos = "titulo|numero_caja|fecha_cierre|hora_cierre|numero_apertura|cajero|comprobantes_validos|comprobantes_anulados|importe_cobrado|importe_anulado|forma_cobro1|importe_forma_cobro1|anulado_forma_cobro1|forma_cobro2|importe_forma_cobro2|anulado_forma_cobro2|forma_cobro3|importe_forma_cobro3|anulado_forma_cobro3|forma_cobro4|importe_forma_cobro4|anulado_forma_cobro4|forma_cobro5|importe_forma_cobro5|anulado_forma_cobro5|seccion|comprobante|referencia|importe|observacion\n";
 
         $em = $this->getEntityManager();
         $caja = $this->container->get('caja.manager')->getCaja();
-        //$entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $this->getAperturaId(), "caja" => $this->getCajaId()));
         $apertura = $this->getApertura();
-        //$servicio_tabla = $this->get("lar.parametro.tabla");
-
         $bm = $this->container->get("caja.barra");
+        $detalle_pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetallePagos($apertura->getId());
 
         // Se ingresa una suerte de encabezado de cierre, para facilitar la division de grupos
         if ($this->getTipoImpresion() == 1) {
-            $contenido = str_pad("CIERRE DE CAJA EFECTUADO", 40, "-", STR_PAD_BOTH) . NL;
+            $datos_apertura = "CIERRE DE CAJA EFECTUADO" . "|"; //TITULO
         } else {
-            $contenido = str_pad("REIMPRESION DE CIERRE DE CAJA", 40, "-", STR_PAD_BOTH) . NL;
+            $datos_apertura = "REIMPRESION DE CIERRE DE CAJA" . "|"; //TITULO
         }
-        $datos .= str_pad("", 40, " ", STR_PAD_BOTH) . NL;
-        $datos .= str_pad("", 40, " ", STR_PAD_BOTH) . NL;
-        $datos .= str_pad("", 40, " ", STR_PAD_BOTH) . NL;
-        $datos .= str_pad("", 40, " ", STR_PAD_BOTH) . NL;
-        $datos .= str_pad("", 40, " ", STR_PAD_BOTH) . NL;
-        $datos .= "CAJA: " . $caja->getNumero() . NL;
-        $datos .= str_pad("FECHA: " . date("d-m-Y"), 20, " ", STR_PAD_RIGHT) . str_pad("HORA: " . $apertura->getFechaCierre()->format("H:i:s"), 19, " ", STR_PAD_LEFT) . NL;
-
-        ///////////////////////////////////////////////////////////////////////////////////////////
-
-        //Primer parte de la impresion: detalle de pagos por tipo de seccion:
-        $detalle_pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetallePagos($apertura->getId());
-        $datos .= str_pad("Cierre de Caja", 40, " ", STR_PAD_BOTH) . NL;
-        $datos .= str_pad("Apertura nro. " . $apertura->getId(), 40, " ", STR_PAD_BOTH) . NL;
-        $datos .= str_pad("Cajero: " . $caja->getCajero()->getUsername(), 40, " ", STR_PAD_BOTH) . NL;
-        $nombre_seccion_actual = "";
-        $monto_total_seccion = 0;
-        $cantidad_comprobantes_seccion = 0;
-        $monto_total_general = 0;
-        $cantidad_comprobantes_general = 0;
-        foreach ($detalle_pagos as $detalle) {
-
-            $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
-            $seccion = $em->getRepository("LarParametroBundle:LarParametro")->findOneBy(array('tabla' => $tabla, 'codigo' => $detalle->getSeccion()));
-            //$seccion = $servicio_tabla->getParametro($tabla, $detalle->getSeccion());
-            if ($seccion) {
-                $nombre_seccion = $seccion->getDescripcion();
-            } else {
-                $nombre_seccion = "seccion desconocida";
-            }
-
-            //Pregunto si es la misma seccion, o tengo que hacer el "cambio" (corte de control)
-            if ($nombre_seccion_actual == "") { //entra la primera vez
-                $datos .= str_pad("-", 40, "-", STR_PAD_BOTH) . NL;
-                $datos .= str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL;
-                //$datos .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH)  . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
-                $parcial_1 = $detalle->getComprobante() . " " . $detalle->getReferencia();
-                if (!$detalle->getAnulado()) {
-                    $parcial_2 = " $ " . sprintf("%9.2f", $detalle->getImporte());
-                    $monto_total_seccion += $detalle->getImporte();
-                } else {
-                    $parcial_2 = " ANULADO";
-                }
-                $datos .= str_pad($parcial_1 . $parcial_2, 40, " ", STR_PAD_BOTH) . NL;
-                $nombre_seccion_actual = $nombre_seccion;
-
-                $cantidad_comprobantes_seccion++;
-            } else if ($nombre_seccion == $nombre_seccion_actual) { //entra si es igual al anterior
-                //$datos .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH)  . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
-                $parcial_1 = $detalle->getComprobante() . " " . $detalle->getReferencia();
-                if (!$detalle->getAnulado()) {
-                    $parcial_2 = " $ " . sprintf("%9.2f", $detalle->getImporte());
-                    $monto_total_seccion += $detalle->getImporte();
-                } else {
-                    $parcial_2 = " ANULADO";
-                }
-                $datos .= str_pad($parcial_1 . $parcial_2, 40, " ", STR_PAD_BOTH) . NL;
-                $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
-                $seccion_actual = $em->getRepository("LarParametroBundle:LarParametro")->findOneBy(array('tabla' => $tabla, 'codigo' => $detalle->getSeccion()));
-                if ($seccion_actual) {
-                    $nombre_seccion_actual = $seccion_actual->getDescripcion();
-                } else {
-                    $nombre_seccion_actual = "seccion desconocida";
-                }
-
-                $cantidad_comprobantes_seccion++;
-            } else { //corte de control, immprimo una linea, muestro totales, otra linea y empiezo otra seccion:
-                $datos .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL;
-                $datos .= str_pad($nombre_seccion_actual . ": $ " . sprintf("%9.2f", $monto_total_seccion), 40, " ", STR_PAD_BOTH) . NL;
-                $datos .= str_pad("Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH) . NL;
-                $datos .= str_pad("-", 40, "-", STR_PAD_BOTH) . NL;
-                $monto_total_general += $monto_total_seccion;
-                $cantidad_comprobantes_general += $cantidad_comprobantes_seccion;
-                $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
-                $datos .= str_pad("SECCION: " . $nombre_seccion, 40, " ", STR_PAD_BOTH) . NL;
-                //$datos .= str_pad($detalle->getComprobante() . " " . $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH)  . " $ " . sprintf("%9.2f",$detalle->getImporte()), 40, " ", STR_PAD_BOTH) . NL;
-                $parcial_1 = $detalle->getComprobante() . " " . $detalle->getReferencia();
-                if (!$detalle->getAnulado()) {
-                    $parcial_2 = " $ " . sprintf("%9.2f", $detalle->getImporte());
-                    $monto_total_seccion = $detalle->getImporte();
-                } else {
-                    $parcial_2 = " ANULADO";
-                    $monto_total_seccion = 0;
-                }
-                $datos .= str_pad($parcial_1 . $parcial_2, 40, " ", STR_PAD_BOTH) . NL;
-                //INICIALIZO LOS ACUMULADORES DE SECCION
-
-                $cantidad_comprobantes_seccion = 1;
-
-                $seccion_actual = $em->getRepository("LarParametroBundle:LarParametro")->findOneBy(array('tabla' => $tabla, 'codigo' => $detalle->getSeccion()));
-                if ($seccion_actual) {
-                    $nombre_seccion_actual = $seccion_actual->getDescripcion();
-                } else {
-                    $nombre_seccion_actual = "seccion desconocida";
-                }
-            }
-        }
-        $monto_total_general += $monto_total_seccion;
-        $cantidad_comprobantes_general += $cantidad_comprobantes_seccion;
-        $datos .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL;
-        $datos .= str_pad($nombre_seccion_actual . ": $ " . sprintf("%9.2f", $monto_total_seccion), 40, " ", STR_PAD_BOTH) . NL;
-        $datos .= str_pad("Comprobantes: " . $cantidad_comprobantes_seccion, 40, " ", STR_PAD_BOTH) . NL;
-        $datos .= str_pad("-", 40, "-", STR_PAD_BOTH) . NL;
-        $datos .= str_pad("TOTAL COBRADO: $ " . sprintf("%9.2f", $monto_total_general), 40, " ", STR_PAD_BOTH) . NL;
-        $datos .= str_pad("CANTIDAD DE COMPROBANTES: " . $cantidad_comprobantes_general, 40, " ", STR_PAD_BOTH) . NL;
-
-        ///////////////////////////////////////////////////////////////////////////////////////////
-        //Segunda parte de la impresion: detalle de pagos por tipo de pago:
-        $PagoTipoPago = $em->getRepository('SistemaCajaBundle:Apertura')->getPagosByTipoPago($apertura->getId());
-        $tipoPagos = array();
-        foreach ($PagoTipoPago as $tipo) {
-            if (!array_key_exists($tipo['id'], $tipoPagos)) {
-                $tipoPagos[$tipo['id']] = array($tipo['descripcion'], 0, 0);
-            }
-            $tipoPagos[$tipo['id']][1] = $tipo['importe'] + $tipo['anulado'];
-            $tipoPagos[$tipo['id']][2] = $tipo['anulado'];
-
-        }
-
-        $datos .= str_pad("=", 40, "=", STR_PAD_BOTH) . NL;
-        $datos .= str_pad("Formas de Cobro: ", 40, " ", STR_PAD_RIGHT) . NL;
-        foreach ($tipoPagos as $tipoPago) {
-            $datos .= str_pad($tipoPago[0] . ": ", 40, " ", STR_PAD_RIGHT) . NL;
-            $datos .= str_pad("$ " . sprintf("%9.2f", $tipoPago[1]) . " - Anulado: $ " . sprintf("%9.2f", $tipoPago[2]), 40, "-", STR_PAD_LEFT) . NL;
-
-        }
-
-        ///////////////////////////////////////////////////////////////////////////
-        //Tercer parte de la impresion: cantidad de comprobantes y montos finales:
+        $datos_apertura .= $caja->getNumero() . "|"; //numero_caja
+        $datos_apertura .= $apertura->getFechaCierre()->format("d/m/Y") . "|"; //fecha_cierre
+        $datos_apertura .= $apertura->getFechaCierre()->format("H:i:s") . "|"; //hora_cierre
+        $datos_apertura .= $apertura->getId() . "|"; //numero_apertura
+        $datos_apertura .= $caja->getCajero()->getUsername() . "|"; //cajero
 
         $pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagos($apertura->getId());
         $pagosAnulado = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagosAnulado($apertura->getId());
-        //$ticket = $this->get("sistemacaja.ticket");
-        $datos .= str_pad("=", 40, "=", STR_PAD_BOTH) . NL;
-        $datos .= str_pad("Apertura nro. " . $apertura->getId(), 40, " ", STR_PAD_BOTH) . NL;
-        $datos .= str_pad("Comprobantes Validos: " . $apertura->getComprobanteCantidad(), 40, " ", STR_PAD_RIGHT) . NL;
-        $datos .= str_pad("Comprobantes Anulados: " . $apertura->getComprobanteAnulado(), 40, " ", STR_PAD_RIGHT) . NL;
-        $datos .= str_pad("Importe Cobrado: $ " . sprintf("%9.2f", $pagos), 40, " ", STR_PAD_RIGHT) . NL;
-        $datos .= str_pad("Importe Anulado: $ " . sprintf("%9.2f", $pagosAnulado), 40, " ", STR_PAD_RIGHT) . NL;
+        $datos_comprobantes = $apertura->getComprobanteCantidad() . "|"; //comprobantes_validos
+        $datos_comprobantes .= $apertura->getComprobanteAnulado() . "|"; //comprobantes_anulados
+        $datos_comprobantes .= $pagos . "|"; //importe_cobrado
+        $datos_comprobantes .= $pagosAnulado . "|"; //importe_anulado
 
 
-        // EL RESUMEN SE HACE SOLO EN EL CASO NORMAL (NO REIMPRESION)
-        if ($this->getTipoImpresion() == 1) {
-            //Genero una segunda parte de la impresion, que va hacia afuera, a modo de resumen para el cajero:
-            $ticket_resumen = $this->get("sistemacaja.ticket");
-            $contenido_resumen = str_pad("=", 40, "=", STR_PAD_BOTH) . NL; //doble linea
-            $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-            $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-            $contenido_resumen .= str_pad("RESUMEN DE CIERRE DE CAJA", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-            $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-            $contenido_resumen .= str_pad("Apertura nro. " . $apertura->getId(), 40, " ", STR_PAD_BOTH) . NL;
-            $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-            $contenido_resumen .= str_pad("Comprobantes Validos: " . $apertura->getComprobanteCantidad(), 40, " ", STR_PAD_RIGHT) . NL;
-            $contenido_resumen .= str_pad("Comprobantes Anulados: " . $apertura->getComprobanteAnulado(), 40, " ", STR_PAD_RIGHT) . NL;
-            $contenido_resumen .= str_pad("Importe Cobrado: $ " . sprintf("%9.2f", $pagos), 40, " ", STR_PAD_RIGHT) . NL;
-            $contenido_resumen .= str_pad("Importe Anulado: $ " . sprintf("%9.2f", $pagosAnulado), 40, " ", STR_PAD_RIGHT) . NL;
-
-            //Se agrega un resumen por tipo de cobro:
-            $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-            $contenido_resumen .= str_pad("Formas de Cobro: ", 40, " ", STR_PAD_RIGHT) . NL;
-            foreach ($tipoPagos as $tipoPago) {
-                $contenido_resumen .= str_pad($tipoPago[0] . ": ", 40, " ", STR_PAD_RIGHT) . NL;
-                $contenido_resumen .= str_pad("$ " . sprintf("%9.2f", $tipoPago[1]) . " - Anulado: $ " . sprintf("%9.2f", $tipoPago[2]), 40, "-", STR_PAD_LEFT) . NL;
-            }
-
-            $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-            $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-            $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-            $contenido_resumen .= str_pad(" ", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-            $contenido_resumen .= str_pad("_________________________", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-            $contenido_resumen .= str_pad("RECIBIDO POR JEFE DE CAJA", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-            $contenido_resumen .= str_pad("DIRECCION DE TESORERIA - MUN. POSADAS", 40, " ", STR_PAD_BOTH) . NL; //linea en blanco
-            $datos .= $contenido_resumen;
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        //siguiente parte de la impresion: detalle de pagos por tipo de pago:
+        $PagoTipoPago = $em->getRepository('SistemaCajaBundle:Apertura')->getPagosByTipoPago($apertura->getId());
+        $tipoPagos = array();
+        foreach ($PagoTipoPago as $tipo) {
+          if (!array_key_exists($tipo['id'], $tipoPagos)) {
+              $tipoPagos[$tipo['id']] = array($tipo['descripcion'], 0, 0);
+          }
+          $tipoPagos[$tipo['id']][1] = $tipo['importe'] + $tipo['anulado'];
+          $tipoPagos[$tipo['id']][2] = $tipo['anulado'];
+          $tipoPagos[$tipo['id']][3] = $tipo['id'];
         }
 
+        $cantidad_pagos = count($tipoPagos);
+        $formas_pago = "";
+        foreach ($tipoPagos as $tipoPago) {
+            $formas_pago .= $tipoPago[0] . "|"; //forma_cobro
+            $formas_pago .= $tipoPago[1] . "|"; //importe_forma_cobro
+            $formas_pago .= $tipoPago[2] . "|"; //anulado_forma_cobro
+        }
+        //Relleno los tipos faltantes, deben ser 5 en total:
+        while ($cantidad_pagos < 5) { //relleno hasta completar
+            $formas_pago .= "|||";
+            $cantidad_pagos ++;
+        }
+
+        foreach ($detalle_pagos as $detalle) {
+            ////$datos_apertura/////
+            $datos .= $datos_apertura;
+            ////$datos_apertura/////
+
+            ////$datos_comprobantes/////
+            $datos .= $datos_comprobantes;
+            ////$datos_comprobantes/////
+
+            ////$formas_pago/////
+            $datos .= $formas_pago;
+            ////$formas_pago/////
+
+            //////////////////////inicio detalle///////////////////
+            $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
+            $seccion = $em->getRepository("LarParametroBundle:LarParametro")->findOneBy(array('tabla' => $tabla, 'codigo' => $detalle->getSeccion()));
+            if ($seccion) {
+                $datos .= $seccion->getDescripcion() . "|";
+            } else {
+                $datos .= "seccion desconocida" . "|";
+            }
+
+            $datos .= $detalle->getComprobante() . "|"; //cajero
+            $datos .= $detalle->getReferencia() . "|"; //referencia
+            $datos .= $detalle->getImporte() . "|"; //importe
+            if ($detalle->getAnulado()) {
+                $datos .= "ANULADO" . "|"; //observacion
+            } else {
+                $datos .= "|";
+            }
+            //////////////////////fin detalle///////////////////
+
+
+
+            $datos .= "\n"; //salto de linea
+        }
         return utf8_encode($datos);
-
-
     }
-
-
-} 
+}
