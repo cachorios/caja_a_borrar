@@ -69,23 +69,9 @@
 			<band height="80"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
-						x="57"
-						y="24"
-						width="231"
-						height="13"
-						forecolor="#000000"
-						key="staticText-10"/>
-					<box></box>
-					<textElement textAlignment="Left" verticalAlignment="Top">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="false"/>
-					</textElement>
-				<text><![CDATA[Sistema Integral de Recaudaciones]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="57"
-						y="8"
-						width="276"
+						x="106"
+						y="7"
+						width="330"
 						height="16"
 						forecolor="#000000"
 						key="staticText-11"/>
@@ -94,20 +80,6 @@
 						<font pdfFontName="Helvetica-Bold" size="10" isBold="true" isUnderline="false"/>
 					</textElement>
 				<text><![CDATA[Municipalidad Ciudad de Posadas]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="145"
-						y="43"
-						width="246"
-						height="26"
-						forecolor="#000000"
-						key="staticText-12"/>
-					<box></box>
-					<textElement textAlignment="Center">
-						<font pdfFontName="Helvetica-Bold" size="18" isBold="true" isUnderline="false"/>
-					</textElement>
-				<text><![CDATA[ESTADO DE DEUDA]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -135,7 +107,7 @@
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["Emitido: " + $F{cajero}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="HH.mm" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="HH:mm" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="436"
 						y="65"
@@ -170,6 +142,19 @@
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="106"
+						y="42"
+						width="324"
+						height="18"
+						key="textField"/>
+					<box></box>
+					<textElement textAlignment="Center">
+						<font pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{titulo}]]></textFieldExpression>
 				</textField>
 			</band>
 		</pageHeader>
