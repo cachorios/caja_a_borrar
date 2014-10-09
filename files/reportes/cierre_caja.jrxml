@@ -1120,7 +1120,7 @@
 						height="15"
 						key="textField-60"/>
 					<box></box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$F{importe_cobrado}]]></textFieldExpression>
@@ -1146,7 +1146,7 @@
 						height="15"
 						key="textField-62"/>
 					<box></box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$F{importe_anulado}]]></textFieldExpression>
