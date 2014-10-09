@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="es-AR">
 <head>
-    <script src="{{ asset('assets/js/jquery.js') }}" type="text/javascript"></script>
+    <script src="{{  asset('js/jquery.min.js') }}"></script>
 </head>
 <body>
 
-    <form id="motorImpresion"   action="http://localhost:8080/MuniReportes/ReporteControlador" method="post">
+    <form id="motorImpresion" action="http://localhost:8080/MuniReportes/ReporteControlador" method="post">
 
         {% for key,value in parametros %}
                 <input type="hidden" name="{{ key }}" value="{{ value }}">

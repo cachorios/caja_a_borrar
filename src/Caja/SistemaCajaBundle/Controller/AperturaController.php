@@ -710,44 +710,49 @@ class AperturaController extends Controller implements IControllerAuditable
         $deleteForm = $this->createDeleteForm($id);
 
         if ($entity) {
-            try {
-                $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
-                if ($entity->getArchivoCierre()) {
-                    $archivo_generado = $entity->getArchivoCierre();
-                } else {
-                    $this->get('session')->getFlashBag()->add('error', 'No se pudo recuperar el archivo de cobranza');
-                    //Se deberia enviar un mail de todas formas, avisando del error....
-                    return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
-                }
-                $path_documento = $path_archivos . $archivo_generado;
 
-                $fp = fopen($path_documento, "r"); //Apertura para sólo lectura; coloca el puntero al fichero al principio del fichero.
-                if (!$fp) { //fopen devuelve un recurso de puntero a fichero si tiene éxito, o FALSE si se produjo un error.
-                    $this->get('session')->getFlashBag()->add('error', 'No se pudo recuperar el archivo de cobranza');
-                    //Se deberia enviar un mail de todas formas, avisando del error....
-                    return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
-                } else {
-                    fclose($fp);
-                }
-                $contenido = 'REENVIO - Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado;
-                // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
-                $mensaje = \Swift_Message::newInstance()
-                    ->setSubject('REENVIO - Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado)
-                    ->setFrom('administrador@posadas.gov.ar')
-                //->setTo('eduardo4979@gmail.com')
-                    ->setBody($contenido)
-                    ->attach(\Swift_Attachment::fromPath($path_documento));
+            /*
+            $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
+            if ($entity->getArchivoCierre()) {
+                $archivo_generado = $entity->getArchivoCierre();
+            } else {
+                $this->get('session')->getFlashBag()->add('error', 'No se pudo recuperar el archivo de cobranza');
+                //Se deberia enviar un mail de todas formas, avisando del error....
+                return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
+            }
+            $path_documento = $path_archivos . $archivo_generado;
+
+            $fp = fopen($path_documento, "r"); //Apertura para sólo lectura; coloca el puntero al fichero al principio del fichero.
+            if (!$fp) { //fopen devuelve un recurso de puntero a fichero si tiene éxito, o FALSE si se produjo un error.
+                $this->get('session')->getFlashBag()->add('error', 'No se pudo recuperar el archivo de cobranza');
+                //Se deberia enviar un mail de todas formas, avisando del error....
+                return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
+            } else {
+                fclose($fp);
+            }
+            */
+            $archivo_generado = 'prueba';
+            $contenido = 'REENVIO - Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado;
+            // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
+            $mensaje = \Swift_Message::newInstance()
+                ->setSubject('REENVIO - Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado)
+            //->setFrom('administrador@posadas.gov.ar')
+                ->setTo('eduardo4979@gmail.com')
+                ->setBody($contenido);
+            //->attach(\Swift_Attachment::fromPath($path_documento));
 
 
-                //Recupero los responsables a los cuales se les envia el mail:
-                $responsables = $em->getRepository('SistemaCajaBundle:Responsable')->getResponsablesActivos();
-                $lista = array();
-                foreach ($responsables as $responsable) {
-                    $lista[] = $responsable->getEmail();
-                }
-                if (count($lista) > 0) {
-                    $mensaje->setTo($lista);
-                    $resultado = $this->container->get('mailer')->send($mensaje);
+            //Recupero los responsables a los cuales se les envia el mail:
+            $responsables = $em->getRepository('SistemaCajaBundle:Responsable')->getResponsablesActivos();
+            $lista = array();
+            foreach ($responsables as $responsable) {
+                $lista[] = $responsable->getEmail();
+            }
+            if (count($lista) > 0) {
+                $mensaje->setTo($lista);
+                $failedRecipients = array();
+                try {
+                    $resultado = $this->container->get('mailer')->send($mensaje, $failedRecipients);
                     if ($resultado != 0) {
                         $this->get('session')->getFlashBag()->add('success', 'El archivo fue enviado exitosamente.');
                     } else {
@@ -755,23 +760,34 @@ class AperturaController extends Controller implements IControllerAuditable
                         //Se deberia enviar un mail de todas formas, avisando del error....
                         return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
                     }
-                } else { //No habia destinatarios para enviar el mail
-                    $this->get('session')->getFlashBag()->add('error', 'No se pudo enviar el archivo. No hay destinatarios');
-                    //Se deberia enviar un mail de todas formas, avisando del error....
+                } catch (Swift_TransportException $e) {
+                    $em->getConnection()->rollback();
+                    $em->close();
+                    //throw $e;
+                    $this->get('session')->getFlashBag()->add('error', 'No se pudo enviar el archivo: ' . $e);
+                    return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
+                } catch (Swift_RfcComplianceException $e) {
+                    $this->get('session')->getFlashBag()->add('error', 'No se pudo enviar el archivo: ' . $e);
+                    return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
+                    /*
+                    foreach ($mensaje->getTo() as $address => $name) {
+                        $failedRecipients[] = $address;
+                        $em->getConnection()->rollback();
+                        $em->close();
+                        $this->get('session')->getFlashBag()->add('error', 'No se pudo enviar el archivo: ' . $e);
+                        return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
+                    }
+                    */
+                } catch (Exception $e) {
+                    $em->getConnection()->rollback();
+                    $em->close();
+                    //throw $e;
+                    $this->get('session')->getFlashBag()->add('error', 'No se pudo enviar el archivo: ' . $e);
                     return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
                 }
-
-            } catch (Swift_TransportException $e) {
-                $em->getConnection()->rollback();
-                $em->close();
-                //throw $e;
-                $this->get('session')->getFlashBag()->add('error', 'No se pudo enviar el archivo: ' . $e);
-                return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
-            } catch (Exception $e) {
-                $em->getConnection()->rollback();
-                $em->close();
-                //throw $e;
-                $this->get('session')->getFlashBag()->add('error', 'No se pudo enviar el archivo: ' . $e);
+            } else { //No habia destinatarios para enviar el mail
+                $this->get('session')->getFlashBag()->add('error', 'No se pudo enviar el archivo. No hay destinatarios');
+                //Se deberia enviar un mail de todas formas, avisando del error....
                 return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
             }
             return $this->render('SistemaCajaBundle:Apertura:enviar.html.twig', array('entity' => $entity, 'delete_form' => $deleteForm->createView(),));
@@ -890,7 +906,30 @@ class AperturaController extends Controller implements IControllerAuditable
         }
         if (count($lista_detalle) > 0) {
             $mensaje_detalle->setTo($lista_detalle);
-            $this->container->get('mailer')->send($mensaje_detalle);
+            try {
+                $this->container->get('mailer')->send($mensaje_detalle);
+            } catch (Swift_TransportException $e) {
+                $em->getConnection()->rollback();
+                $em->close();
+                $ret = array("error" => $e);
+                $response = new Response();
+                $response->setContent(json_encode($ret));
+                return $response;
+            } catch (Swift_RfcComplianceException $e) {
+                $em->getConnection()->rollback();
+                $em->close();
+                $ret = array("error" => $e);
+                $response = new Response();
+                $response->setContent(json_encode($ret));
+                return $response;
+            } catch (Exception $e) {
+                $em->getConnection()->rollback();
+                $em->close();
+                $ret = array("error" => $e);
+                $response = new Response();
+                $response->setContent(json_encode($ret));
+                return $response;
+            }
             $ret = array("ok" => 1);
         }
         if (count($lista_resumen) > 0) {

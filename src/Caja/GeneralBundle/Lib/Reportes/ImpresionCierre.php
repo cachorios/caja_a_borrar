@@ -108,7 +108,7 @@ class ImpresionCierre implements Imprimible
      */
     public function setNombrePlantilla()
     {
-        $this->plantillaReporte = "reimpresionCierre.jrxml";
+        $this->plantillaReporte = "cierre_caja.jrxml";
     }
 
     /**

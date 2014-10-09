@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="Deuda"
+		 name="cierre_caja"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Portrait"
@@ -57,6 +57,42 @@
 	<field name="importe" class="java.lang.String"/>
 	<field name="observacion" class="java.lang.String"/>
 
+
+		<group  name="seccion" >
+			<groupExpression><![CDATA[$F{seccion}]]></groupExpression>
+			<groupHeader>
+			<band height="50"  isSplitAllowed="true" >
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="9"
+						width="570"
+						height="0"
+						key="line-5"/>
+					<graphicElement stretchType="NoStretch">
+					<pen lineWidth="0.05"/>
+</graphicElement>
+				</line>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="1"
+						y="15"
+						width="387"
+						height="12"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{seccion}]]></textFieldExpression>
+				</textField>
+			</band>
+			</groupHeader>
+			<groupFooter>
+			<band height="50"  isSplitAllowed="true" >
+			</band>
+			</groupFooter>
+		</group>
 		<background>
 			<band height="0"  isSplitAllowed="true" >
 			</band>
@@ -163,35 +199,11 @@
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="67"  isSplitAllowed="true" >
-				<line direction="TopDown">
-					<reportElement
-						x="0"
-						y="15"
-						width="570"
-						height="0"
-						key="line-5"/>
-					<graphicElement stretchType="NoStretch">
-					<pen lineWidth="0.05"/>
-</graphicElement>
-				</line>
+			<band height="43"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="19"
-						y="21"
-						width="387"
-						height="12"
-						key="textField"/>
-					<box></box>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{seccion}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="19"
-						y="38"
+						x="1"
+						y="1"
 						width="386"
 						height="12"
 						key="textField"/>
@@ -203,8 +215,8 @@
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="19"
-						y="54"
+						x="1"
+						y="17"
 						width="386"
 						height="12"
 						key="textField"/>

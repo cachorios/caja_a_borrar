@@ -241,5 +241,6 @@ class MotorImpresion {
             'p_format'         => $this->getFormatoReporte(),
             'separadorColumna' => '|');
         //header("Location:" . $url);
+
     }
 }
