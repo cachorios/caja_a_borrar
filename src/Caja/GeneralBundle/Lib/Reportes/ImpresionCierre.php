@@ -141,7 +141,7 @@ class ImpresionCierre implements Imprimible
     function generarTxt() {
 
         //$datos = "titulo|numero_caja|fecha_cierre|hora_cierre|numero_apertura|cajero|forma_cobro1|importe_forma_cobro1|anulado_forma_cobro1|forma_cobro2|importe_forma_cobro2|anulado_forma_cobro2|forma_cobro3|importe_forma_cobro3|anulado_forma_cobro3|forma_cobro4|importe_forma_cobro4|anulado_forma_cobro4|comprobantes_validos|comprobantes_anulados|importe_cobrado|importe_anulado|seccion|comprobante|referencia|importe|observacion\n";
-        $datos = "titulo|numero_caja|fecha_cierre|hora_cierre|numero_apertura|cajero|comprobantes_validos|comprobantes_anulados|importe_cobrado|importe_anulado|forma_cobro1|importe_forma_cobro1|anulado_forma_cobro1|forma_cobro2|importe_forma_cobro2|anulado_forma_cobro2|forma_cobro3|importe_forma_cobro3|anulado_forma_cobro3|forma_cobro4|importe_forma_cobro4|anulado_forma_cobro4|forma_cobro5|importe_forma_cobro5|anulado_forma_cobro5|seccion|comprobante|referencia|importe|observacion\n";
+        $datos = "titulo|numero_caja|ubicacion|fecha_apertura|hora_apertura|fecha_cierre|hora_cierre|numero_apertura|cajero|comprobantes_validos|comprobantes_anulados|importe_cobrado|importe_anulado|forma_cobro1|importe_forma_cobro1|anulado_forma_cobro1|forma_cobro2|importe_forma_cobro2|anulado_forma_cobro2|forma_cobro3|importe_forma_cobro3|anulado_forma_cobro3|forma_cobro4|importe_forma_cobro4|anulado_forma_cobro4|forma_cobro5|importe_forma_cobro5|anulado_forma_cobro5|seccion|comprobante|referencia|importe|observacion\n";
 
         $em = $this->getEntityManager();
         $caja = $this->container->get('caja.manager')->getCaja();
@@ -156,6 +156,9 @@ class ImpresionCierre implements Imprimible
             $datos_apertura = "REIMPRESION DE CIERRE DE CAJA" . "|"; //TITULO
         }
         $datos_apertura .= $caja->getNumero() . "|"; //numero_caja
+        $datos_apertura .= $caja->getUbicacion() . "|"; //ubicacion
+        $datos_apertura .= $apertura->getFecha()->format("d/m/Y") . "|"; //fecha_apertura
+        $datos_apertura .= $apertura->getFecha()->format("H:i:s") . "|"; //hora_apertura
         $datos_apertura .= $apertura->getFechaCierre()->format("d/m/Y") . "|"; //fecha_cierre
         $datos_apertura .= $apertura->getFechaCierre()->format("H:i:s") . "|"; //hora_cierre
         $datos_apertura .= $apertura->getId() . "|"; //numero_apertura
@@ -165,8 +168,8 @@ class ImpresionCierre implements Imprimible
         $pagosAnulado = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagosAnulado($apertura->getId());
         $datos_comprobantes = $apertura->getComprobanteCantidad() . "|"; //comprobantes_validos
         $datos_comprobantes .= $apertura->getComprobanteAnulado() . "|"; //comprobantes_anulados
-        $datos_comprobantes .= $pagos . "|"; //importe_cobrado
-        $datos_comprobantes .= $pagosAnulado . "|"; //importe_anulado
+        $datos_comprobantes .= strtr(sprintf('%1.2f', $pagos), '.', ',') . "|"; //importe_cobrado
+        $datos_comprobantes .= strtr(sprintf('%1.2f', $pagosAnulado), '.', ',') . "|"; //importe_anulado
 
 
         ///////////////////////////////////////////////////////////////////////////////////////////
@@ -186,8 +189,8 @@ class ImpresionCierre implements Imprimible
         $formas_pago = "";
         foreach ($tipoPagos as $tipoPago) {
             $formas_pago .= $tipoPago[0] . "|"; //forma_cobro
-            $formas_pago .= $tipoPago[1] . "|"; //importe_forma_cobro
-            $formas_pago .= $tipoPago[2] . "|"; //anulado_forma_cobro
+            $formas_pago .= strtr(sprintf('%1.2f', $tipoPago[1]), '.', ',') . "|"; //importe_forma_cobro
+            $formas_pago .= strtr(sprintf('%1.2f', $tipoPago[2]), '.', ',') . "|"; //anulado_forma_cobro
         }
         //Relleno los tipos faltantes, deben ser 5 en total:
         while ($cantidad_pagos < 5) { //relleno hasta completar
@@ -219,11 +222,9 @@ class ImpresionCierre implements Imprimible
 
             $datos .= $detalle->getComprobante() . "|"; //cajero
             $datos .= $detalle->getReferencia() . "|"; //referencia
-            $datos .= $detalle->getImporte() . "|"; //importe
+            $datos .= strtr(sprintf('%1.2f', $detalle->getImporte()), '.', ',') . "|"; //importe
             if ($detalle->getAnulado()) {
-                $datos .= "ANULADO" . "|"; //observacion
-            } else {
-                $datos .= "|";
+                $datos .= "ANULADO"; //observacion
             }
             //////////////////////fin detalle///////////////////
 
