@@ -939,14 +939,14 @@ class AperturaController extends Controller implements IControllerAuditable
      * que no se haya impreso al cerrar la caja, por algun motivo.
      * Se imprime en el formato nuevo (A4)
      */
-    public function prepararReimpresionCierreReporteAction($id)
+    public function prepararReimpresionCierreReporteAction($id, $reporte)
     {
         //$em = $this->getDoctrine()->getManager();
         //T::setEM($em);
         //$em = $this->getDoctrine()->getManager();
         $caja = $this->container->get('caja.manager')->getCaja();
         $servicio_tabla = $this->get("lar.parametro.tabla");
-        $parametro = array('clase' => 'Caja\GeneralBundle\Lib\Reportes\ImpresionCierre', 'apertura_id' => $id, "caja_id" => $caja->getId());
+        $parametro = array('clase' => 'Caja\GeneralBundle\Lib\Reportes\ImpresionCierre', 'apertura_id' => $id, "caja_id" => $caja->getId(), "reporte"=> $reporte);
         $this->get('session')->getFlashBag()->add('parametro', $parametro);
         return $this->redirect($this->generateUrl("reporte_imprimir"));
     }

@@ -19,7 +19,7 @@ class ImpresionCierre implements Imprimible
     private $parametros = array();
     private $container;
     private $em;
-    private $fecha_venc;
+    private $reporte;
 
     /**
      * Enter description here...
@@ -31,11 +31,29 @@ class ImpresionCierre implements Imprimible
         $apertura_id = $parametros['apertura_id'];
         $caja_id = $parametros['caja_id'];
         $tipo_impresion = $parametros['tipo_impresion'];
+        $reporte = $parametros['reporte'];
         $this->parametros = $parametros;
         $this->setAperturaId($apertura_id);
         $this->setCajaId($caja_id);
         $this->setTipoImpresion($tipo_impresion);
+        $this->setReporte($reporte);
         $this->setNombrePlantilla();
+    }
+
+    /**
+     * Setea el tipo de reporte a generar
+     */
+    private function setReporte($reporte)
+    {
+        $this->reporte = $reporte;
+    }
+
+    /**
+     *Indica el tipo de reporte a generar
+     */
+    private function getReporte()
+    {
+        return $this->reporte;
     }
 
     /**
@@ -108,7 +126,12 @@ class ImpresionCierre implements Imprimible
      */
     public function setNombrePlantilla()
     {
-        $this->plantillaReporte = "cierre_caja.jrxml";
+        if ($this->getReporte() == "cierre"){
+            $this->plantillaReporte = "cierre_caja.jrxml";
+        }else{
+            $this->plantillaReporte = "cierre_arqueo.jrxml";
+        }
+
     }
 
     /**
@@ -135,7 +158,7 @@ class ImpresionCierre implements Imprimible
     }
 
     /**
-     * Genera el txt de la reimpresión del cierre.
+     * Genera el txt de la reimpresiï¿½n del cierre.
      *
      */
     function generarTxt() {

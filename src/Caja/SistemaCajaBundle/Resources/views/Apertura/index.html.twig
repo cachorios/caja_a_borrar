@@ -119,7 +119,11 @@
 
                                             <a class="btn btn-mini" target="_blank"
                                                href="{{ path('apertura_preparar_reimpresion_cierre_reporte', { 'id': entity.id }) }}">
-                                                {{ 'Reimprimir Cierre 2'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                                                {{ 'Cierre'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                                            </a>
+                                            <a class="btn btn-mini" target="_blank"
+                                               href="{{ path('apertura_imprimir_arqueo', { 'id': entity.id }) }}">
+                                                {{ 'Arqueo'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
                                             </a>
                                         {% endif %}
                                     {% endif %}

@@ -73,11 +73,15 @@ apertura_preparar_reimpresion_cierre:
 
 apertura_preparar_reimpresion_cierre_reporte:
     pattern:  /{id}/prepararReimpresionCierreReporte
-    defaults: { _controller: "SistemaCajaBundle:Apertura:prepararReimpresionCierreReporte" }
+    defaults: { _controller: "SistemaCajaBundle:Apertura:prepararReimpresionCierreReporte", reporte:cierre }
+
+apertura_imprimir_arqueo:
+    pattern:  /{id}/prepararReimpresionCierreReporteArqueo
+    defaults: { _controller: "SistemaCajaBundle:Apertura:prepararReimpresionCierreReporte", reporte:arqueo }
 
 apertura_reimprimir_cierre:
     pattern:  /{id}/reimprimirCierre
-    defaults: { _controller: "SistemaCajaBundle:Apertura:reimprimirCierre" }
+    defaults: { _controller: "SistemaCajaBundle:Apertura:reimprimirCierre"}
 
 apertura_mostrar_reimpresion_tickets:
     #en esta ventana se ven los tickets cobrados en la caja actual
