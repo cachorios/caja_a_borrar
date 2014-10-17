@@ -355,8 +355,8 @@ class AperturaController extends Controller implements IControllerAuditable
 
                         //Si esta todo bien, sigo:
                         if (!$msg) {
-                            $archivo_generado = $em->getRepository('SistemaCajaBundle:Apertura')->generaArchivoTexto($apertura_id, $numero_caja, $path_archivos);
 
+                            $archivo_generado = $em->getRepository('SistemaCajaBundle:Apertura')->generaArchivoTexto($apertura_id, $numero_caja, $path_archivos);
                             if (!$archivo_generado) {
                                 $msg = '¡¡¡ Error al generar el archivo de texto que se envia por mail !!!!!';
                             }
@@ -999,12 +999,18 @@ class AperturaController extends Controller implements IControllerAuditable
         $servicio_tabla = $this->get("lar.parametro.tabla");
         $bm = $this->container->get("caja.barra");
 
+        $contenido = str_pad("CIERRE DE CAJA EFECTUADO", 40, "-", STR_PAD_BOTH) . NL;
+
+
+        ///// ESTO SE IMPRIMIA HASTA EL 17/10/2014/////
+        /*
         // Se ingresa una suerte de encabezado de cierre, para facilitar la division de grupos
         if ($tipo_impresion == 1) {
             $contenido = str_pad("CIERRE DE CAJA EFECTUADO", 40, "-", STR_PAD_BOTH) . NL;
         } else {
             $contenido = str_pad("REIMPRESION DE CIERRE DE CAJA", 40, "-", STR_PAD_BOTH) . NL;
         }
+
         $contenido .= str_pad("", 40, " ", STR_PAD_BOTH) . NL;
 //        $contenido .= str_pad("", 40, " ", STR_PAD_BOTH) . NL;
 //        $contenido .= str_pad("", 40, " ", STR_PAD_BOTH) . NL;
@@ -1143,11 +1149,15 @@ class AperturaController extends Controller implements IControllerAuditable
         $contenido .= str_pad("Comprobantes Anulados: " . $entity->getComprobanteAnulado(), 40, " ", STR_PAD_RIGHT) . NL;
         $contenido .= str_pad("Importe Cobrado: $ " . sprintf("%9.2f", $pagos), 40, " ", STR_PAD_RIGHT) . NL;
         $contenido .= str_pad("Importe Anulado: $ " . sprintf("%9.2f", $pagosAnulado), 40, " ", STR_PAD_RIGHT) . NL;
+        */
+        ///// ESTO SE IMPRIMIA HASTA EL 17/10/2014/////
 
         $ticket->setContenido($contenido);
 
         $tk .= $ticket->getTicketTestigo();
 
+        ///// ESTO SE IMPRIMIA HASTA EL 17/10/2014/////
+        /*
         // EL RESUMEN SE HACE SOLO EN EL CASO NORMAL (NO REIMPRESION)
         if ($tipo_impresion == 1) {
             //Genero una segunda parte de la impresion, que va hacia afuera, a modo de resumen para el cajero:
@@ -1183,6 +1193,9 @@ class AperturaController extends Controller implements IControllerAuditable
 
             $tk .= $ticket->getTicketFull();
         }
+        */
+        ///// ESTO SE IMPRIMIA HASTA EL 17/10/2014/////
+
         return $tk;
     }
 

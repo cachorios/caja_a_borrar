@@ -112,10 +112,10 @@
                                         </a>
 
                                         {% if not tiene_apertura_activa %}
-                                            <a class="btn btn-mini"
-                                               href="{{ path('apertura_preparar_reimpresion_cierre', { 'id': entity.id }) }}">
-                                                {{ 'Reimprimir Cierre'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
-                                            </a>
+                                            {#<a class="btn btn-mini"#}
+                                               {#href="{{ path('apertura_preparar_reimpresion_cierre', { 'id': entity.id }) }}">#}
+                                                {#{{ 'Reimprimir Cierre'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}#}
+                                            {#</a>#}
 
                                             <a class="btn btn-mini" target="_blank"
                                                href="{{ path('apertura_preparar_reimpresion_cierre_reporte', { 'id': entity.id }) }}">
