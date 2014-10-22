@@ -106,9 +106,9 @@
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="280"
+						x="281"
 						y="1"
-						width="79"
+						width="100"
 						height="15"
 						key="textField"/>
 					<box></box>
@@ -410,18 +410,18 @@
 					<box rightPadding="3">					<topPen lineWidth="0.25" lineStyle="Solid"/>
 					<leftPen lineWidth="0.25" lineStyle="Solid"/>
 					<bottomPen lineWidth="0.25" lineStyle="Solid"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid"/>
 </box>
 					<textElement textAlignment="Right">
 						<font size="9"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA["Cantidad de Comprobantes "]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Total de Comprobantes "]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="276"
+						x="281"
 						y="120"
-						width="84"
+						width="100"
 						height="15"
 						key="textField-106"/>
 					<box rightPadding="3">					<topPen lineWidth="0.25" lineStyle="Solid"/>
@@ -432,7 +432,7 @@
 					<textElement textAlignment="Right">
 						<font size="9"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA["Importe"]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Importe Recaudado"]]></textFieldExpression>
 				</textField>
 			</band>
 		</pageHeader>
@@ -512,9 +512,9 @@
 				</line>
 				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="280"
+						x="281"
 						y="3"
-						width="79"
+						width="100"
 						height="15"
 						key="textField"/>
 					<box>					<topPen lineWidth="0.25" lineStyle="Solid"/>

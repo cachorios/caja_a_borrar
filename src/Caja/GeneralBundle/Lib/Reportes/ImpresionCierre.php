@@ -172,12 +172,15 @@ class ImpresionCierre implements Imprimible
         $bm = $this->container->get("caja.barra");
         $detalle_pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetallePagos($apertura->getId());
 
+        $datos_apertura = "CIERRE DE CAJA" . "|"; //TITULO
+        /*
         // Se ingresa una suerte de encabezado de cierre, para facilitar la division de grupos
         if ($this->getTipoImpresion() == 1) {
             $datos_apertura = "CIERRE DE CAJA EFECTUADO" . "|"; //TITULO
         } else {
             $datos_apertura = "REIMPRESION DE CIERRE DE CAJA" . "|"; //TITULO
         }
+        */
         $datos_apertura .= $caja->getNumero() . "|"; //numero_caja
         $datos_apertura .= $caja->getUbicacion() . "|"; //ubicacion
         $datos_apertura .= $apertura->getFecha()->format("d/m/Y") . "|"; //fecha_apertura
@@ -245,13 +248,15 @@ class ImpresionCierre implements Imprimible
 
             $datos .= $detalle->getComprobante() . "|"; //cajero
             $datos .= $detalle->getReferencia() . "|"; //referencia
-            $datos .= strtr(sprintf('%1.2f', $detalle->getImporte()), '.', ',') . "|"; //importe
+            //$datos .= strtr(sprintf('%1.2f', $detalle->getImporte()), '.', ',') . "|"; //importe
             if ($detalle->getAnulado()) {
+                $datos .= strtr(sprintf('%1.2f', 0), '.', ',') . "|"; //importe
                 $datos .= "ANULADO"; //observacion
+            } else {
+                $datos .= strtr(sprintf('%1.2f', $detalle->getImporte()), '.', ',') . "|"; //importe
+                $datos .= ""; //observacion
             }
             //////////////////////fin detalle///////////////////
-
-
 
             $datos .= "\n"; //salto de linea
         }

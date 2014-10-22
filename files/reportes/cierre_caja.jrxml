@@ -1062,7 +1062,7 @@
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="254"
+						x="267"
 						y="119"
 						width="42"
 						height="15"
@@ -1077,7 +1077,7 @@
 					<reportElement
 						x="140"
 						y="119"
-						width="101"
+						width="126"
 						height="15"
 						key="textField-57"/>
 					<box></box>
@@ -1088,7 +1088,7 @@
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="413"
+						x="457"
 						y="119"
 						width="42"
 						height="15"
@@ -1101,9 +1101,9 @@
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="303"
+						x="331"
 						y="119"
-						width="109"
+						width="125"
 						height="15"
 						key="textField-59"/>
 					<box></box>
@@ -1114,9 +1114,9 @@
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="220"
+						x="238"
 						y="136"
-						width="76"
+						width="71"
 						height="15"
 						key="textField-60"/>
 					<box></box>
@@ -1129,7 +1129,7 @@
 					<reportElement
 						x="140"
 						y="136"
-						width="78"
+						width="98"
 						height="15"
 						key="textField-61"/>
 					<box></box>
@@ -1140,7 +1140,7 @@
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="387"
+						x="431"
 						y="136"
 						width="68"
 						height="15"
@@ -1153,9 +1153,9 @@
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="303"
+						x="331"
 						y="136"
-						width="78"
+						width="99"
 						height="15"
 						key="textField-64"/>
 					<box></box>
