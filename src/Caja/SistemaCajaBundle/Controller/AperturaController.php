@@ -6,6 +6,7 @@ use Common\AuditorBundle\Lib\IModuloAuditable;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\View\TwitterBootstrapView;
 use Caja\SistemaCajaBundle\Entity\Apertura;
 use Caja\SistemaCajaBundle\Entity\Lote;
@@ -101,8 +102,10 @@ class AperturaController extends Controller implements IControllerAuditable
     protected function paginator($queryBuilder)
     {
         // Paginator
-        $adapter = new DoctrineORMAdapter($queryBuilder);
-        $pagerfanta = new Pagerfanta($adapter);
+        //$adapter = new DoctrineORMAdapter($queryBuilder);
+        //$pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta = new Pagerfanta(new ArrayAdapter($queryBuilder->getQuery()->getResult()));
+        $pagerfanta->setMaxPerPage(10);
         $currentPage = $this->getRequest()->get('page', 1);
         $pagerfanta->setCurrentPage($currentPage);
         $entities = $pagerfanta->getCurrentPageResults();
