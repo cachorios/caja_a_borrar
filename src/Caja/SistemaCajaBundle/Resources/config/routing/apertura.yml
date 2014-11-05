@@ -102,3 +102,7 @@ apertura_mas_info:
     #Es llamada desde el monitor para ver el detalle de cobros de un tipo de seccion
     pattern:  /masInfo
     defaults: { _controller: "SistemaCajaBundle:Apertura:masInfo" }
+
+apertura_obtener_puerto:
+      pattern:  /obtenerPuerto
+      defaults: { _controller: "SistemaCajaBundle:Apertura:obtenerPuerto" }

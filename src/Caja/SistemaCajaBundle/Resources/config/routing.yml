@@ -25,3 +25,15 @@ SistemaCajaBundle_feriado:
 SistemaCajaBundle_responsable:
     resource: "@SistemaCajaBundle/Resources/config/routing/responsable.yml"
     prefix:   /responsable
+
+SistemaCajaBundle_puesto:
+    resource: "@SistemaCajaBundle/Resources/config/routing/puesto.yml"
+    prefix:   /puesto
+
+SistemaCajaBundle_delegacion:
+    resource: "@SistemaCajaBundle/Resources/config/routing/delegacion.yml"
+    prefix:   /delegacion
+
+SistemaCajaBundle_habilitacion:
+    resource: "@SistemaCajaBundle/Resources/config/routing/habilitacion.yml"
+    prefix:   /habilitacion

@@ -16,32 +16,26 @@ class CajaRepository extends EntityRepository
     public function findCajas()
     {
         $c = $this->createQueryBuilder('c');
-        $c->join("c.cajero","t");
+        $c->join("c.cajero", "t");
 
         return $c;
     }
 
-	public function getCajaUsuario($usuario_id)
-	{
-		$em = $this->getEntityManager();
+    public function getCajaUsuario($usuario_id)
+    {
+        $em = $this->getEntityManager();
         $q = $em->createQuery("
         	SELECT c
-              FROM SistemaCajaBundle:Caja c
+             FROM SistemaCajaBundle:Caja c
              WHERE c.cajero = :cajero")
-			->setParameter("cajero", $usuario_id)
-		;
+            ->setParameter("cajero", $usuario_id);
 
+        $res = $q->getResult();
 
-		$res = $q->getResult();
+        if (count($res) == 0) {
+            return null;
+        }
 
-		if(count($res) == 0){
-			return null;
-		}
-
-		return $res[0];
-	}
-
-
-
-
+        return $res[0];
+    }
 }

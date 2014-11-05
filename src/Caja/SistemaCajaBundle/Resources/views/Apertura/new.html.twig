@@ -53,23 +53,20 @@
         <script>
 
             jQuery("#form_apertura").hide();
-
             var bOpen = 0;
             var impresoraOK = 0; // de inicio no esta ok, verificar estado
             var esperandoEstado = 1;
 
             var attributes = {
-                code:"applet.Main",
-                archive:"{{  asset('SerialLar.jar')}}",
-                width:5,
-                height:5,
-                id:'SerialLar',
-                visible:false
+                code:       "applet.Main",
+                archive:    "{{  asset('SerialLar.jar')}}",
+                width:      5,
+                height:     5,
+                id:			'SerialLar',
+                visible: false
             };
-            var parameters = {separate_jvm:"true", draggable:"true", jnlp_href:"{{  asset('SerialLar.jnlp') }}", puerto:"{{ caja.puerto }}"};
-            <!-- Applet Parameters -->
-            var version = "1.5";
-            <!-- Required Java Version -->
+            var parameters = {separate_jvm:"true", draggable:"true", jnlp_href:"{{  asset('SerialLar.jnlp') }}", puerto: "{{ puerto }}"}; <!-- Applet Parameters -->
+            var version = "1.5"; <!-- Required Java Version -->
             deployJava.runApplet(attributes, parameters, version);
 
             function noticia(parm, tipo) {
@@ -104,7 +101,6 @@
                     });
                 } else {
                     impresoraOK = 1;
-                    //$("#msgBarra").html("TICKET: " + parm+ " "+tipo);
                 }
             }
         </script>

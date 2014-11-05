@@ -71,6 +71,12 @@ class Apertura
      */
     protected $lotes;
 
+    /**
+     * @var integer
+     * @ORM\ManyToOne(targetEntity="Caja\SistemaCajaBundle\Entity\Habilitacion")
+     */
+    private $habilitacion;
+
     public function __construct()
     {
         $this->fecha = new \DateTime();
@@ -348,5 +354,28 @@ class Apertura
     public function getArchivoCierre()
     {
         return $this->archivo_cierre;
+    }
+
+    /**
+     * Set habilitacion
+     *
+     * @param \Caja\SistemaCajaBundle\Entity\Habilitacion $habilitacion
+     * @return Apertura
+     */
+    public function setHabilitacion(\Caja\SistemaCajaBundle\Entity\Habilitacion $habilitacion = null)
+    {
+        $this->habilitacion = $habilitacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get habilitacion
+     *
+     * @return \Caja\SistemaCajaBundle\Entity\Habilitacion 
+     */
+    public function getHabilitacion()
+    {
+        return $this->habilitacion;
     }
 }

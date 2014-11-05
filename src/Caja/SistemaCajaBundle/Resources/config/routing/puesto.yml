@@ -1,0 +1,30 @@
+puesto:
+    pattern:  /
+    defaults: { _controller: "SistemaCajaBundle:Puesto:index" }
+
+puesto_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "SistemaCajaBundle:Puesto:show" }
+
+puesto_new:
+    pattern:  /new
+    defaults: { _controller: "SistemaCajaBundle:Puesto:new" }
+
+puesto_create:
+    pattern:  /create
+    defaults: { _controller: "SistemaCajaBundle:Puesto:create" }
+    requirements: { _method: post }
+
+puesto_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "SistemaCajaBundle:Puesto:edit" }
+
+puesto_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "SistemaCajaBundle:Puesto:update" }
+    requirements: { _method: post|put }
+
+puesto_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "SistemaCajaBundle:Puesto:delete" }
+    requirements: { _method: post|delete }

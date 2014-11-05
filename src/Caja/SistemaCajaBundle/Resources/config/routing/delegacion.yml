@@ -1,0 +1,30 @@
+delegacion:
+    pattern:  /
+    defaults: { _controller: "SistemaCajaBundle:Delegacion:index" }
+
+delegacion_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "SistemaCajaBundle:Delegacion:show" }
+
+delegacion_new:
+    pattern:  /new
+    defaults: { _controller: "SistemaCajaBundle:Delegacion:new" }
+
+delegacion_create:
+    pattern:  /create
+    defaults: { _controller: "SistemaCajaBundle:Delegacion:create" }
+    requirements: { _method: post }
+
+delegacion_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "SistemaCajaBundle:Delegacion:edit" }
+
+delegacion_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "SistemaCajaBundle:Delegacion:update" }
+    requirements: { _method: post|put }
+
+delegacion_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "SistemaCajaBundle:Delegacion:delete" }
+    requirements: { _method: post|delete }

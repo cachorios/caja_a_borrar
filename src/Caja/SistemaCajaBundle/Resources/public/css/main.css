@@ -47,6 +47,9 @@
 #mod_larparametro .container aside nav ul .larparametro,
 #mod_usuario .container aside nav ul .usuario,
 #mod_anular .container aside nav ul .anular
+#mod_puesto.container aside nav ul .puesto
+#mod_delegacion .container aside nav ul .delegacion
+#mod_habilitacion .container aside nav ul .habilitacion
 
 {color:#ffffff;text-shadow:0 -1px 0 rgba(0, 0, 0, 0.25);background-color:#ef643e;background-image:-moz-linear-gradient(top, #ff764e, #d64926);background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#ff764e), to(#d64926));background-image:-webkit-linear-gradient(top, #ff764e, #d64926);background-image:-o-linear-gradient(top, #ff764e, #d64926);background-image:linear-gradient(to bottom, #ff764e, #d64926);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffff764e', endColorstr='#ffd64926', GradientType=0);border-color:#d64926 #d64926 #95331a;border-color:rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);border-top:1px solid #d27349;border-bottom:1px solid rgba(0, 0, 0, 0.9);}
 
@@ -64,6 +67,9 @@
 #mod_larparametro .container aside nav ul .larparametro  a:hover,
 #mod_usuario .container aside nav ul .usuario a:hover,
 #mod_anular .container aside nav ul .anular a:hover
+#mod_puesto .container aside nav ul .puesto a:hover
+#mod_delegacion .container aside nav ul .delegacion a:hover
+#mod_habilitacion .container aside nav ul .habilitacion a:hover
 
 {background-color: transparent  !important;}
 /*----------- FIN LEFT NAV  -----------------*
@@ -195,10 +201,10 @@
 
 
 /*---- Usuario form ----*/
-      #foto img{
-          width:  100%;
-          /*height: 250px;*/
-      }
+#foto img{
+    width:  100%;
+    /*height: 250px;*/
+}
 /*---- Fin Usuario form ----*/
 
 /*--------- registro ----------*/
@@ -270,10 +276,10 @@ div#caja_sistemacajabundle_registrotype_detalle tfoot h2{
     width: 100%;
     background-color: Gray;
     moz-opacity: 0.5; //Filtro transparencia mozilla
-    khtml-opacity: .5; //Filtro transparencia todos los navegadores
-    opacity: .5; //Filtro transparencia CSS 3
-    filter: alpha(opacity=50); //Filtro transparencia IE 8.0+
-    z-index: 9998;
+khtml-opacity: .5; //Filtro transparencia todos los navegadores
+opacity: .5; //Filtro transparencia CSS 3
+filter: alpha(opacity=50); //Filtro transparencia IE 8.0+
+z-index: 9998;
     height: 100%;
     position: absolute;
     top: 0;
@@ -346,5 +352,5 @@ div#caja_sistemacajabundle_registrotype_detalle tfoot h2{
 
 /*-----------Appler serial-----------------*/
 #SerialLar{
-visibility: hidden;
+    visibility: hidden;
 }

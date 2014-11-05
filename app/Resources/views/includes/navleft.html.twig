@@ -60,23 +60,26 @@
                     </li>
                 {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}
-
                     <li class="codigobarra">
                         <a href="{{ path("codigobarra") }}"><i class="icon-barcode icon-white"></i>C&oacute;digo de Barra</a>
                     </li>
-                {% endif %}
-                {% if is_granted('ROLE_ADMIN') %}
                     <li class="usuario">
                         <a href="{{ path("usuario") }}"><i class="icon-user icon-white"></i>Usuarios</a>
                     </li>
                     <li class="usuarioingreso">
                         <a href="{{ path("usuarioingreso") }}"><i class="icon-user icon-white"></i>Ingreso de Usuarios</a>
                     </li>
+                    <li class="delegacion">
+                        <a href="{{ path("delegacion") }}"><i class="icon-home icon-white"></i>Delegaciones</a>
+                    </li>
+                    <li class="puesto">
+                        <a href="{{ path("puesto") }}"><i class="icon-flag icon-white"></i>Puestos de Trabajo</a>
+                    </li>
+                    <li class="habilitacion">
+                        <a href="{{ path("habilitacion") }}"><i class="icon-hand-right icon-white"></i>Habilitaciones de Puestos</a>
+                    </li>
                 {% endif %}
-
-
             </ul>
-
         </nav>
     </aside>
 </div>

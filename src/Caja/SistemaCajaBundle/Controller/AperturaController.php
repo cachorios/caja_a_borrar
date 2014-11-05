@@ -165,10 +165,32 @@ class AperturaController extends Controller implements IControllerAuditable
         $breadcrumbs->addItem("Nuevo");
 
         $entity = new Apertura();
-        $form = $this->createForm(new AperturaType(), $entity);
+        $usuario = $this->get('security.context')->getToken()->getUser()->getId();
+        $form = $this->createForm(new AperturaType($usuario), $entity);
+
+        //Recupero el puerto del puesto que tiene el usuario:
+        $em = $this->getDoctrine()->getManager();
+
+        $q = $em->createQuery("SELECT p.puerto
+              FROM
+                  SistemaCajaBundle:Habilitacion h JOIN h.puesto p
+              WHERE
+                  h.usuario = :usuario_id
+              GROUP BY p.puerto")
+            ->setParameter("usuario_id", $usuario);
+
+        $res = $q->getResult();
+        $array_puerto = $res[0];
+        if (count($res) == 1) {
+            $puerto = $array_puerto['puerto'];
+        } else {
+            $puerto = 'COM1'; //puerto por defecto
+        }
 
         return $this->render('SistemaCajaBundle:Apertura:new.html.twig', array(
             'entity' => $entity,
+            'usuario' => $usuario,
+            'puerto' => $puerto,
             'form' => $form->createView(),
             'caja' => $this->container->get("caja.manager")->getCaja()
         ));
@@ -183,7 +205,8 @@ class AperturaController extends Controller implements IControllerAuditable
 
         $entity = new Apertura();
         $request = $this->getRequest();
-        $form = $this->createForm(new AperturaType(), $entity);
+        $usuario = $this->get('security.context')->getToken()->getUser()->getId();
+        $form = $this->createForm(new AperturaType($usuario), $entity);
 
         $form->bind($request);
         $msg = false;
@@ -227,7 +250,6 @@ class AperturaController extends Controller implements IControllerAuditable
         $response->setContent(json_encode($ret));
         return $response;
 
-
     }
 
     /**
@@ -250,7 +272,8 @@ class AperturaController extends Controller implements IControllerAuditable
             throw $this->createNotFoundException('Unable to find Apertura entity.');
         }
 
-        $editForm = $this->createForm(new AperturaType(), $entity);
+        $usuario = $this->get('security.context')->getToken()->getUser()->getId();
+        $editForm = $this->createForm(new AperturaType($usuario), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('SistemaCajaBundle:Apertura:edit.html.twig',
@@ -272,7 +295,8 @@ class AperturaController extends Controller implements IControllerAuditable
             throw $this->createNotFoundException('Unable to find Apertura entity.');
         }
 
-        $editForm = $this->createForm(new AperturaType(), $entity);
+        $usuario = $this->get('security.context')->getToken()->getUser()->getId();
+        $editForm = $this->createForm(new AperturaType($usuario), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         $request = $this->getRequest();
@@ -298,6 +322,7 @@ class AperturaController extends Controller implements IControllerAuditable
     {
         $entity = $this->container->get('caja.manager')->getApertura();
         $caja = $this->container->get("caja.manager")->getCaja();
+
         $editForm = $this->createForm(new AperturaCierreType(), $entity);
         $msg = false;
         if (!$entity) {
@@ -390,8 +415,8 @@ class AperturaController extends Controller implements IControllerAuditable
 
             }
         }
-
-        return $this->render('SistemaCajaBundle:Apertura:cierre.html.twig', array('entity' => $entity, 'caja' => $caja, 'edit_form' => $editForm->createView(),));
+        $puesto = $entity->getHabilitacion()->getPuesto();
+        return $this->render('SistemaCajaBundle:Apertura:cierre.html.twig', array('entity' => $entity, 'caja' => $caja, 'puesto' => $puesto, 'edit_form' => $editForm->createView(),));
     }
 
 
@@ -449,10 +474,11 @@ class AperturaController extends Controller implements IControllerAuditable
         $DetalleTipoPago = $this->getDetalleTipoPago($apertura->getId());
         //$detalle_pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetallePagos($apertura->getId());
         $DetalleTipoSeccion = $this->getPagosTipoSeccion($apertura->getId());
-
+        $habilitacion = $em->getRepository('SistemaCajaBundle:Habilitacion')->findOneBy(array('id' => $apertura->getHabilitacion()));
         return $this->render('SistemaCajaBundle:Apertura:monitor.html.twig',
             array('caja' => $caja,
                 'apertura' => $apertura,
+                'habilitacion' => $habilitacion,
                 'importe_pago' => sprintf("%9.2f", $pagos),
                 'pagos_anulado' => sprintf("%9.2f", $pagosAnulado),
                 'detalle_tipo_pagos' => $DetalleTipoPago,
@@ -515,6 +541,7 @@ class AperturaController extends Controller implements IControllerAuditable
 
         $caja = $this->container->get('caja.manager')->getCaja();
         $apertura = $this->container->get('caja.manager')->getApertura();
+        $puesto = $apertura->getHabilitacion()->getPuesto();
 
         //Si no hay apertura activa, no dejo hacer nada:
         if (!$apertura) {
@@ -523,7 +550,7 @@ class AperturaController extends Controller implements IControllerAuditable
         }
 
         return $this->render('SistemaCajaBundle:Apertura:anular.html.twig',
-            array('caja' => $caja, "form" => $form->createView(), 'apertura' => $apertura));
+            array('caja' => $caja, "form" => $form->createView(), 'apertura' => $apertura, 'puesto' => $puesto ));
     }
 
     /**
@@ -933,8 +960,8 @@ class AperturaController extends Controller implements IControllerAuditable
         }
 
         $deleteForm = $this->createDeleteForm($id);
-
-        return $this->render('SistemaCajaBundle:Apertura:reimprimirCierre.html.twig', array('entity' => $entity, 'caja' => $caja, 'delete_form' => $deleteForm->createView(),));
+        $puesto = $entity->getHabilitacion()->getPuesto();
+        return $this->render('SistemaCajaBundle:Apertura:reimprimirCierre.html.twig', array('entity' => $entity, 'caja' => $caja, 'puesto' => $puesto, 'delete_form' => $deleteForm->createView(),));
     }
 
     /**
@@ -1228,8 +1255,8 @@ class AperturaController extends Controller implements IControllerAuditable
         }
 
         $deleteForm = $this->createDeleteForm($id);
-
-        return $this->render('SistemaCajaBundle:Apertura:mostrarReimpresionTickets.html.twig', array('entities' => $entities, 'caja' => $caja, 'delete_form' => $deleteForm->createView(),));
+        $puesto = $entity->getHabilitacion()->getPuesto();
+        return $this->render('SistemaCajaBundle:Apertura:mostrarReimpresionTickets.html.twig', array('entities' => $entities, 'caja' => $caja, 'puesto' => $puesto, 'delete_form' => $deleteForm->createView(),));
     }
 
 
@@ -1266,8 +1293,8 @@ class AperturaController extends Controller implements IControllerAuditable
         }
         $referencia = $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH);
         $deleteForm = $this->createDeleteForm($id);
-
-        return $this->render('SistemaCajaBundle:Apertura:reimprimirTicket.html.twig', array('entity' => $detalle, 'caja' => $caja, 'delete_form' => $deleteForm->createView(), 'seccion' => $seccion, 'referencia' => $referencia));
+        $puesto = $caja->getApertura()->getHabilitacion()->getPuesto();
+        return $this->render('SistemaCajaBundle:Apertura:reimprimirTicket.html.twig', array('entity' => $detalle, 'caja' => $caja, 'puesto' => $puesto, 'delete_form' => $deleteForm->createView(), 'seccion' => $seccion, 'referencia' => $referencia));
     }
 
 
@@ -1358,6 +1385,27 @@ class AperturaController extends Controller implements IControllerAuditable
     function getNoAuditables()
     {
         return array();
+    }
+
+    /**
+     * Método usado para obtener el puerto de un puesto seleccionado al hacer la apertura
+     */
+    public function obtenerPuertoAction()
+    {
+        $response = new Response();
+        $puesto_id = $this->getRequest()->get('puesto');
+
+        //Se verifica si existe en la base:
+        $em = $this->getDoctrine()->getManager();
+        $puesto = $em->getRepository('SistemaCajaBundle:Puesto')->findOneBy(array('id' => $puesto_id,));
+
+        if ($puesto) {
+            $rJson = json_encode(array('ok' => 1, 'puerto' => $puesto->getPuerto()
+            ));
+        } else {
+            $rJson = json_encode(array('ok' => 0, 'msg' => 'No existe el puesto ' . $puesto_id));
+        }
+        return $response->setContent($rJson);
     }
 
 }

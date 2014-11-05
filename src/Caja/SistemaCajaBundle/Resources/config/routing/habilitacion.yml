@@ -1,0 +1,30 @@
+habilitacion:
+    pattern:  /
+    defaults: { _controller: "SistemaCajaBundle:Habilitacion:index" }
+
+habilitacion_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "SistemaCajaBundle:Habilitacion:show" }
+
+habilitacion_new:
+    pattern:  /new
+    defaults: { _controller: "SistemaCajaBundle:Habilitacion:new" }
+
+habilitacion_create:
+    pattern:  /create
+    defaults: { _controller: "SistemaCajaBundle:Habilitacion:create" }
+    requirements: { _method: post }
+
+habilitacion_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "SistemaCajaBundle:Habilitacion:edit" }
+
+habilitacion_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "SistemaCajaBundle:Habilitacion:update" }
+    requirements: { _method: post|put }
+
+habilitacion_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "SistemaCajaBundle:Habilitacion:delete" }
+    requirements: { _method: post|delete }

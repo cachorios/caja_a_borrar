@@ -110,22 +110,14 @@
                                            href="{{ path('apertura_preparar_envio', { 'id': entity.id }) }}">
                                             {{ 'Reenviar Archivo'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
                                         </a>
-
-                                        {% if not tiene_apertura_activa %}
-                                            {#<a class="btn btn-mini"#}
-                                               {#href="{{ path('apertura_preparar_reimpresion_cierre', { 'id': entity.id }) }}">#}
-                                                {#{{ 'Reimprimir Cierre'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}#}
-                                            {#</a>#}
-
-                                            <a class="btn btn-mini" target="_blank"
-                                               href="{{ path('apertura_preparar_reimpresion_cierre_reporte', { 'id': entity.id }) }}">
-                                                {{ 'Cierre'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
-                                            </a>
-                                            <a class="btn btn-mini" target="_blank"
-                                               href="{{ path('apertura_imprimir_arqueo', { 'id': entity.id }) }}">
-                                                {{ 'Arqueo'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
-                                            </a>
-                                        {% endif %}
+                                        <a class="btn btn-mini" target="_blank"
+                                           href="{{ path('apertura_preparar_reimpresion_cierre_reporte', { 'id': entity.id }) }}">
+                                            {{ 'Cierre'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                                        </a>
+                                        <a class="btn btn-mini" target="_blank"
+                                           href="{{ path('apertura_imprimir_arqueo', { 'id': entity.id }) }}">
+                                            {{ 'Arqueo'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                                        </a>
                                     {% endif %}
                                     {% if  not entity.fechacierre and is_granted('ROLE_ADMIN') %}
                                         <a class="btn btn-mini"

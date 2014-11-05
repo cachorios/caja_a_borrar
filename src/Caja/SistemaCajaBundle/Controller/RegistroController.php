@@ -28,6 +28,7 @@ class RegistroController extends Controller implements IControllerAuditable
 
         $caja = $this->container->get('caja.manager')->getCaja();
         $apertura = $this->container->get('caja.manager')->getApertura();
+        $puesto = $apertura->getHabilitacion()->getPuesto();
 
         $em = $this->getDoctrine()->getManager();
         $tipoPago = $em->getRepository("SistemaCajaBundle:TipoPago")->getDefaulPago();
@@ -37,6 +38,7 @@ class RegistroController extends Controller implements IControllerAuditable
                 "form" => $form->createView(),
                 "caja" => $caja,
                 "apertura" => $apertura,
+                'puesto' => $puesto,
                 "tipoPagoDefault" => $tipoPago
             )
         );

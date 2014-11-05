@@ -171,7 +171,7 @@ class ImpresionCierre implements Imprimible
         $apertura = $this->getApertura();
         $bm = $this->container->get("caja.barra");
         $detalle_pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetallePagos($apertura->getId());
-
+        $habilitacion = $em->getRepository('SistemaCajaBundle:Habilitacion')->findOneBy(array('id' => $apertura->getHabilitacionId()));
         $datos_apertura = "CIERRE DE CAJA" . "|"; //TITULO
         /*
         // Se ingresa una suerte de encabezado de cierre, para facilitar la division de grupos
@@ -182,13 +182,13 @@ class ImpresionCierre implements Imprimible
         }
         */
         $datos_apertura .= $caja->getNumero() . "|"; //numero_caja
-        $datos_apertura .= $caja->getUbicacion() . "|"; //ubicacion
+        $datos_apertura .= $apertura->getHabilitacion()->getPuesto()->getDescripcion() . "|"; //ubicacion
         $datos_apertura .= $apertura->getFecha()->format("d/m/Y") . "|"; //fecha_apertura
         $datos_apertura .= $apertura->getFecha()->format("H:i:s") . "|"; //hora_apertura
         $datos_apertura .= $apertura->getFechaCierre()->format("d/m/Y") . "|"; //fecha_cierre
         $datos_apertura .= $apertura->getFechaCierre()->format("H:i:s") . "|"; //hora_cierre
         $datos_apertura .= $apertura->getId() . "|"; //numero_apertura
-        $datos_apertura .= $caja->getCajero()->getUsername() . "|"; //cajero
+        $datos_apertura .= $habilitacion->getUsuario()->getUsername() . "|"; //cajero
 
         $pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagos($apertura->getId());
         $pagosAnulado = $em->getRepository('SistemaCajaBundle:Apertura')->getImportePagosAnulado($apertura->getId());

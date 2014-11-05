@@ -8,7 +8,7 @@
  */
 
 namespace Caja\SistemaCajaBundle\Lib;
-
+use Doctrine\ORM\EntityManager;
 
 define("ESC", chr(27));
 define("NL", chr(10));
@@ -31,7 +31,6 @@ class Ticket
     {
         $this->cajamanager = $cajaman;
         $this->valores = Array();
-        //$this->isValores = false;
     }
 
     public function setContenido($contenido)
@@ -194,7 +193,8 @@ class Ticket
         $str = "";
        // $str .= ESC . "U" . chr(0); //cancelar unidireccional
         $str .= ESC . "!" . chr(1); //caracter normal
-        $caja = $this->cajamanager->getCaja();
+        $em = $this->cajamanager->getEntityManager();
+        $habilitacion = $em->getRepository('SistemaCajaBundle:Habilitacion')->findOneBy(array('usuario' => $this->cajamanager->getUsuario()));
         if ($tipo == 0) {
             if($this->valores)
                 $str .= "COD.BARRA: " . $this->valores['codigobarra'] . NL;
@@ -203,7 +203,7 @@ class Ticket
             }
             $str .= str_pad("", 40, "-") . NL;
             $str .= str_pad("*** GRACIAS ***", 40, " ", STR_PAD_BOTH) . ESC . "d" . chr(2);
-            $str .= str_pad("CAJERO: ". $caja->getCajero()->getUsername()  , 40, " ", STR_PAD_BOTH) . ESC . "d" . chr(2);
+            $str .= str_pad("CAJERO: ". $habilitacion->getUsuario()->getUsername()  , 40, " ", STR_PAD_BOTH) . ESC . "d" . chr(2);
             $str .= str_pad("visite: www.posadas.gov.ar", 40, " ", STR_PAD_BOTH) . ESC . "d" . chr(1);
             $str .= str_pad("***", 40, " ", STR_PAD_BOTH) . ESC . "d" . chr(12); //posicion de corte
             $str .= ESC . 'i';

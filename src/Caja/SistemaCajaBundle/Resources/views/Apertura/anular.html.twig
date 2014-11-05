@@ -86,7 +86,7 @@
             id:			'SerialLar',
             visible: false
         };
-        var parameters = {separate_jvm:"true", draggable:"true", jnlp_href:"{{  asset('SerialLar.jnlp') }}", puerto: "{{ caja.puerto }}"}; <!-- Applet Parameters -->
+        var parameters = {separate_jvm:"true", draggable:"true", jnlp_href:"{{  asset('SerialLar.jnlp') }}", puerto: "{{ puesto.puerto }}"}; <!-- Applet Parameters -->
         var version = "1.5"; <!-- Required Java Version -->
         deployJava.runApplet(attributes, parameters, version);
 
