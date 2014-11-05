@@ -39,7 +39,7 @@ class Habilitacion
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="desde", type="date")
+     * @ORM\Column(name="desde", type="date", nullable=false)
      */
     private $desde;
 

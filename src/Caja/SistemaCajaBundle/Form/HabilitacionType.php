@@ -11,13 +11,18 @@ class HabilitacionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('desde')
-            //->add('hasta', 'text', array('empty_value' => "Seleccione la fecha"))
-            ->add('hasta','text')
-            ->add('caja')
-            ->add('usuario')
-            ->add('puesto')
-        ;
+            ->add('desde')//, array('required' => true))
+            ->add('hasta', null)
+            ->add('caja', 'entity', array('required' => true,
+                                          //'disabled' => true,
+                                          'class' => 'SistemaCajaBundle:Caja',
+                                          'empty_value' => "Seleccione la Caja"))
+            ->add('usuario', 'entity', array('required' => true,
+                                             'class' => 'UsuarioBundle:Usuario',
+                                              'empty_value' => "Seleccione el Usuario"))
+            ->add('puesto', 'entity', array('required' => true,
+                                            'class' => 'SistemaCajaBundle:Puesto',
+                                            'empty_value' => "Seleccione el Puesto"));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
