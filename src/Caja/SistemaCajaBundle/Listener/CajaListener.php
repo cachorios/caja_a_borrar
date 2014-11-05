@@ -46,9 +46,9 @@ class CajaListener
     public function onKernelResponse(FilterResponseEvent $event)
     {
         if($this->logIn == 1){
-            $caja = $this->contenedor->get("caja.manager")->getCaja();
-            if ($caja) {
-                //es cajero
+            //$caja = $this->contenedor->get("caja.manager")->getCaja();
+            //if ($caja) {
+            if ($this->contenedor->get("caja.manager")->esCajero()){
                 $apertura = $this->contenedor->get("caja.manager")->getApertura();
                 //Si tiene apertura mostrar el monitor, sino, que cree una apertura
                 if($apertura){
@@ -58,7 +58,7 @@ class CajaListener
                 }
 
             } else {
-                //mostrar el home de no cajeros
+                //mostrar el home de no cajeros. Se supone que es admin, sino no va a ver
                 $toRedirect = $this->contenedor->get("router")->generate('usuario') ;
             }
             $event->setResponse(new RedirectResponse($toRedirect));

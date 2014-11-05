@@ -12,13 +12,14 @@ use Doctrine\ORM\EntityRepository;
  */
 class AperturaRepository extends EntityRepository
 {
+
     public function getAperturas($usuario)
     {
         $em = $this->getEntityManager();
 
         $a = $this->createQueryBuilder("a")
-            ->join("a.caja", "c")
-            ->where('c.cajero = :cajero')
+            ->join("a.habilitacion", "h")
+            ->where('h.usuario = :cajero')
             ->setParameter("cajero", $usuario->getId())
             ->orderBy("a.id", 'desc');
 

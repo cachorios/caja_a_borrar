@@ -25,16 +25,16 @@ class RegistroController extends Controller implements IControllerAuditable
         $lote = new Lote();
         $lote->addPago(new LotePago());
         $form = $this->createForm(new RegistroType(), $lote);
-
+        $em = $this->getDoctrine()->getManager();
         $caja = $this->container->get('caja.manager')->getCaja();
         $apertura = $this->container->get('caja.manager')->getApertura();
         $puesto = $apertura->getHabilitacion()->getPuesto();
-
+        $habilitacion = $em->getRepository('SistemaCajaBundle:Habilitacion')->findOneBy(array('id' => $apertura->getHabilitacion()));
         $em = $this->getDoctrine()->getManager();
         $tipoPago = $em->getRepository("SistemaCajaBundle:TipoPago")->getDefaulPago();
-
         return $this->render("SistemaCajaBundle:Registro:registro.html.twig", array(
                 "lote" => $lote,
+                "habilitacion" => $habilitacion,
                 "form" => $form->createView(),
                 "caja" => $caja,
                 "apertura" => $apertura,

@@ -3,11 +3,13 @@
 namespace Caja\SistemaCajaBundle\Twig\Extension;
 class CajaExtension extends \Twig_Extension
 {
-    private $container ;
+    private $container;
+
     public function __construct($container)
     {
         $this->container = $container;
     }
+
     public function getName()
     {
         return 'lar.usuario';
@@ -22,12 +24,14 @@ class CajaExtension extends \Twig_Extension
     }
 
 
-    public function esCajero(){
-        return $this->container->get("caja.manager")->esCajero() ;
+    public function esCajero()
+    {
+        return $this->container->get("caja.manager")->esCajero();
     }
 
-    public function tieneApertura(){
-        return !$this->container->get("caja.manager")->getApertura() == null ;
+    public function tieneApertura()
+    {
+        return !$this->container->get("caja.manager")->getApertura() == null;
     }
 
 }

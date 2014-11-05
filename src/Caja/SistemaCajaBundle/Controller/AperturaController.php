@@ -548,9 +548,10 @@ class AperturaController extends Controller implements IControllerAuditable
             $this->get('session')->getFlashBag()->add('error', 'No existe una apertura activa.');
             return $this->redirect($this->generateUrl('apertura_new'));
         }
-
+        $em = $this->getDoctrine()->getManager();
+        $habilitacion = $em->getRepository('SistemaCajaBundle:Habilitacion')->findOneBy(array('id' => $apertura->getHabilitacion()));
         return $this->render('SistemaCajaBundle:Apertura:anular.html.twig',
-            array('caja' => $caja, "form" => $form->createView(), 'apertura' => $apertura, 'puesto' => $puesto ));
+            array('caja' => $caja, 'habilitacion' => $habilitacion, "form" => $form->createView(), 'apertura' => $apertura, 'puesto' => $puesto ));
     }
 
     /**

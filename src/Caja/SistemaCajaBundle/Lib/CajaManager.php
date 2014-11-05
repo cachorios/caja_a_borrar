@@ -37,8 +37,6 @@ class CajaManager
                     } else {
                         $caja = null;
                     }
-
-                    //$caja = $this->contenedor->get("doctrine.orm.entity_manager")->getRepository("SistemaCajaBundle:Caja")->getCajaUsuario($idUsuario);
                     $this->caja = $caja;
                 } else {
                     $caja = $this->caja;
@@ -90,8 +88,24 @@ class CajaManager
 
     public function esCajero()
     {
-        $caja = $this->getCaja();
-        return !$caja == null;
+        $usuario = $this->getUsuario();
+        // determinar si el usuario logueado tiene habilitacion vigente
+
+        $consulta = $this->contenedor->get("doctrine.orm.entity_manager")
+            ->createQuery("SELECT h
+                FROM SistemaCajaBundle:Habilitacion h
+                WHERE h.hasta is null
+                AND h.usuario = :usuario_id")
+            ->setParameter("usuario_id", $usuario)
+            ->getResult();
+
+        if (count($consulta)>0) {
+            return true;
+        } else {
+            return false;
+        }
+        //$caja = $this->getCaja();
+        //return !$caja == null;
     }
 
 
@@ -102,6 +116,6 @@ class CajaManager
 
     public function getUsuario()
     {
-        return  $usuario = $this->contenedor->get("security.context")->getToken()->getUser();
+        return $usuario = $this->contenedor->get("security.context")->getToken()->getUser();
     }
 }
