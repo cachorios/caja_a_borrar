@@ -84,7 +84,7 @@ class UsuarioIngreso
     /**
      * @var boolean
      *
-     * @ORM\Column(name="lugar_ingreso", type="boolean")
+     * @ORM\Column(name="lugar_ingreso", type="boolean", nullable=true)
      */
     private $lugar_ingreso;
 
