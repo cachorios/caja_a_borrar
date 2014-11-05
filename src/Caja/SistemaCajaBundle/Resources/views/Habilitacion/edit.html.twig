@@ -1,0 +1,44 @@
+{% extends '::layout.html.twig' %}
+{% block id  "mod_habilitacion" %}
+
+    {% block title %}
+        {{ parent() }} - Habilitaciones de Puestos {{ 'views.edit.edit'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+    {% endblock %}
+
+    {% block page %}
+        <section id="form_feriado">
+            <h1>Habilitaciones {{ 'views.edit.edit'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</h1>
+
+            <div class="row-fluid">
+                <div class="span12">
+                    <form class="well" action="{{ path('habilitacion_update', { 'id': entity.id }) }}"
+                          method="post" {{ form_enctype(edit_form) }}>
+                        <input type="hidden" name="_method" value="PUT"/>
+                        {{ form_widget(edit_form) }}
+                        <p>
+                            <button type="submit"
+                                    class="btn btn-success">{{ 'views.edit.editbutton'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
+                        </p>
+                    </form>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="offset2 span2">
+                        <a class="btn" href="{{ path('habilitacion') }}">
+                            {{ 'views.recordactions.backtothelist'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+                        </a>
+                    </div>
+                    <div class=" span2">
+                        <form action="{{ path('habilitacion_delete', { 'id': entity.id }) }}" method="post">
+                            <input type="hidden" name="_method" value="DELETE"/>
+                            {{ form_widget(delete_form) }}
+                            <button class="btn btn-danger" type="submit"
+                                    onclick="return confirm('{{ 'views.recordactions.confirm'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}');">{{ 'views.recordactions.delete'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section>
+    {% endblock %}
