@@ -46,7 +46,7 @@ class Habilitacion
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="hasta", type="date")
+     * @ORM\Column(name="hasta", type="date", nullable=true)
      */
     private $hasta;
 

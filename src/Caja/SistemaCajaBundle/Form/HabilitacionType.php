@@ -12,7 +12,8 @@ class HabilitacionType extends AbstractType
     {
         $builder
             ->add('desde')
-            ->add('hasta')
+            //->add('hasta', 'text', array('empty_value' => "Seleccione la fecha"))
+            ->add('hasta','text')
             ->add('caja')
             ->add('usuario')
             ->add('puesto')

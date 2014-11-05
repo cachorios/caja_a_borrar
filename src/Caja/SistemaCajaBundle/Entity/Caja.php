@@ -15,7 +15,6 @@ use Lar\UsuarioBundle\Entity\Usuario;
  *
  * @DoctrineAssert\UniqueEntity("numero")
  * @DoctrineAssert\UniqueEntity("nombre")
- * @DoctrineAssert\UniqueEntity("cajero")
  */
 class Caja
 {

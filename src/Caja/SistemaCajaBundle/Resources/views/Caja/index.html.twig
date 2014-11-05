@@ -66,7 +66,6 @@
                     <tr>
                         <td><a href="{{ path('caja_show', { 'id': entity.id }) }}">{{ entity.numero }}</a></td>
                             <td>{{ entity.nombre }}</td>
-                            <td>{{ entity.cajero }}</td>
                             <td>
         <a class="btn btn-mini" href="{{ path('caja_show', { 'id': entity.id }) }}">
             {{ 'views.actions.show'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
