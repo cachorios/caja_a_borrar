@@ -46,8 +46,6 @@ class CajaListener
     public function onKernelResponse(FilterResponseEvent $event)
     {
         if($this->logIn == 1){
-            //$caja = $this->contenedor->get("caja.manager")->getCaja();
-            //if ($caja) {
             if ($this->contenedor->get("caja.manager")->esCajero()){
                 $apertura = $this->contenedor->get("caja.manager")->getApertura();
                 //Si tiene apertura mostrar el monitor, sino, que cree una apertura

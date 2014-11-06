@@ -56,15 +56,7 @@ class CajaManager
      */
     public function getApertura()
     {
-        $caja_id = null; //caja por defecto
         $usuario = $this->contenedor->get("security.context")->getToken()->getUser();
-        /*
-       if ($this->getCaja()) {
-           $caja_id = $this->getCaja()->getId();
-       }
-
-       $apertura = $this->contenedor->get("doctrine.orm.entity_manager")->getRepository("SistemaCajaBundle:Apertura")->findOneBy(array("caja" => $caja_id, 'fecha_cierre' => null));
-       */
         $consulta = $this->contenedor->get("doctrine.orm.entity_manager")
             ->createQuery("SELECT a
                 FROM SistemaCajaBundle:Apertura a JOIN a.habilitacion h
@@ -104,8 +96,6 @@ class CajaManager
         } else {
             return false;
         }
-        //$caja = $this->getCaja();
-        //return !$caja == null;
     }
 
 
