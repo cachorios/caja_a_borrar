@@ -18,23 +18,26 @@ class AperturaType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if(null == $options['data']->getId()) {
+        $qb = function ($usuario_id) {
+            return function (EntityRepository $er) use ($usuario_id) {
+                return $er->createQueryBuilder('h')
+                    ->where('h.hasta is null')
+                    ->andWhere('h.usuario = ' .$usuario_id)
+                    ->orderBy('h.puesto', 'ASC');
+            };
+        };
+        if (null == $options['data']->getId()) {
             $builder->add('fecha');
-        }else{
-            $builder->add('fecha',null,array("disabled" =>true));
+        } else {
+            $builder->add('fecha', null, array("disabled" => true));
         }
         $builder->add('habilitacion', 'entity', array(
             'empty_value' => "Seleccione el Puesto",
             'class' => 'SistemaCajaBundle:Habilitacion',
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('h')
-                    ->where('h.hasta is null')
-                    ->andWhere('h.usuario = ' . $this->usuario_id)
-                    ->orderBy('h.puesto', 'ASC');
-            },
+            'query_builder' => $qb($this->usuario_id)
         ));
 
-        $builder->add('importe_inicial','number');
+        $builder->add('importe_inicial', 'number');
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -48,4 +51,5 @@ class AperturaType extends AbstractType
     {
         return 'caja_sistemacajabundle_aperturatype';
     }
+
 }

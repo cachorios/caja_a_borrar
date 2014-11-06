@@ -175,9 +175,9 @@ class AperturaController extends Controller implements IControllerAuditable
               FROM
                   SistemaCajaBundle:Habilitacion h JOIN h.puesto p
               WHERE
-                  h.usuario = :usuario_id
+                  h.usuario = :usuario
               GROUP BY p.puerto")
-            ->setParameter("usuario_id", $usuario);
+            ->setParameter("usuario", $usuario);
 
         $res = $q->getResult();
         $array_puerto = $res[0];
