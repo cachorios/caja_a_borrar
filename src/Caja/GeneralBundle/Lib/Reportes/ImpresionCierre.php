@@ -171,7 +171,7 @@ class ImpresionCierre implements Imprimible
         $apertura = $this->getApertura();
         $bm = $this->container->get("caja.barra");
         $detalle_pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetallePagos($apertura->getId());
-        $habilitacion = $em->getRepository('SistemaCajaBundle:Habilitacion')->findOneBy(array('id' => $apertura->getHabilitacionId()));
+        $habilitacion = $em->getRepository('SistemaCajaBundle:Habilitacion')->findOneBy(array('id' => $apertura->getHabilitacion()->getId()));
         $datos_apertura = "CIERRE DE CAJA" . "|"; //TITULO
         /*
         // Se ingresa una suerte de encabezado de cierre, para facilitar la division de grupos
