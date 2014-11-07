@@ -93,7 +93,8 @@ class ImpresionCierre implements Imprimible
      */
     private function getApertura()
     {
-        return $this->em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $this->getAperturaId(), "caja" => $this->getCajaId()));
+        return $this->em->getRepository('SistemaCajaBundle:Apertura')
+            ->find($this->getAperturaId());
     }
 
     /**

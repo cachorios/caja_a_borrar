@@ -61,12 +61,6 @@ class Apertura
     private $archivo_cierre;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Caja\SistemaCajaBundle\Entity\Caja")
-     * @ORM\JoinColumn(name="caja_id", referencedColumnName="id")
-     */
-    protected $caja;
-
-    /**
      * @ORM\OneToMany(targetEntity="Lote", mappedBy="apertura")
      */
     protected $lotes;
@@ -163,30 +157,6 @@ class Apertura
         return $this->fecha_cierre;
     }
 
-
-    /**
-     * Set caja
-     *
-     * @param \Caja\SistemaCajaBundle\Entity\Caja $caja
-     * @return Apertura
-     */
-    public function setCaja(\Caja\SistemaCajaBundle\Entity\Caja $caja = null)
-    {
-        $this->caja = $caja;
-
-        return $this;
-    }
-
-    /**
-     * Get caja
-     *
-     * @return \Caja\SistemaCajaBundle\Entity\Caja
-     */
-    public function getCaja()
-    {
-        return $this->caja;
-    }
-
     /**
      * Add lotes
      *
@@ -239,7 +209,7 @@ class Apertura
 
         $n = 0;
         foreach ($this->getLotes() as $lote) {
-           foreach ($lote->getDetalle() as $detalle) {
+            foreach ($lote->getDetalle() as $detalle) {
                 if ($detalle->getAnulado()) {
                     $n++;
                 }
@@ -256,7 +226,7 @@ class Apertura
                 $pagos = $lote->getPagos();
                 foreach ($pagos as $pago) {
                     //if(!$pago->getAnulado()){
-                        $n += $pago->getImporte() ;
+                    $n += $pago->getImporte();
                     //}
                 }
             }
@@ -273,8 +243,8 @@ class Apertura
             foreach ($this->getLotes() as $lote) {
                 $pagos = $lote->getPagos();
                 foreach ($pagos as $pago) {
-                    if($pago->getImporte() < 0){
-                        $n += $pago->getImporte() ;
+                    if ($pago->getImporte() < 0) {
+                        $n += $pago->getImporte();
                     }
                 }
             }
@@ -283,7 +253,6 @@ class Apertura
         }
         return ($n == null ? 0 : -$n);
     }
-
 
 
     /**
@@ -295,14 +264,14 @@ class Apertura
     public function setDireccionIp($direccionIp)
     {
         $this->direccion_ip = $direccionIp;
-    
+
         return $this;
     }
 
     /**
      * Get direccion_ip
      *
-     * @return string 
+     * @return string
      */
     public function getDireccionIp()
     {
@@ -318,14 +287,14 @@ class Apertura
     public function setHost($host)
     {
         $this->host = $host;
-    
+
         return $this;
     }
 
     /**
      * Get host
      *
-     * @return string 
+     * @return string
      */
     public function getHost()
     {
@@ -342,14 +311,14 @@ class Apertura
     public function setArchivoCierre($archivoCierre)
     {
         $this->archivo_cierre = $archivoCierre;
-    
+
         return $this;
     }
 
     /**
      * Get archivo_cierre
      *
-     * @return string 
+     * @return string
      */
     public function getArchivoCierre()
     {
@@ -365,14 +334,14 @@ class Apertura
     public function setHabilitacion(\Caja\SistemaCajaBundle\Entity\Habilitacion $habilitacion = null)
     {
         $this->habilitacion = $habilitacion;
-    
+
         return $this;
     }
 
     /**
      * Get habilitacion
      *
-     * @return \Caja\SistemaCajaBundle\Entity\Habilitacion 
+     * @return \Caja\SistemaCajaBundle\Entity\Habilitacion
      */
     public function getHabilitacion()
     {
