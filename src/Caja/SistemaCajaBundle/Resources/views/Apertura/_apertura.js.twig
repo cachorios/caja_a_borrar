@@ -1,21 +1,11 @@
 <script type="text/javascript">
 
-/*
-    setearPuerto = function (puerto) {
-        parameters = {separate_jvm:"true", draggable:"true", jnlp_href:"{{  asset('SerialLar.jnlp') }}", puerto: puerto };
-        <!-- Applet Parameters -->
-        version = "1.5";
-        <!-- Required Java Version -->
-        deployJava.runApplet(attributes, parameters, version);
-    };
-
-*/
-$(document).ready(function (e) {
-    var cantidad_elementos = document.querySelector("#caja_sistemacajabundle_aperturatype_habilitacion").length;
-    if (cantidad_elementos == 2) {
-        jQuery("#caja_sistemacajabundle_aperturatype_habilitacion").prop("selectedIndex",1);
-    }
-}); //fin document ready
+    $(document).ready(function (e) {
+        var cantidad_elementos = document.querySelector("#caja_sistemacajabundle_aperturatype_habilitacion").length;
+        if (cantidad_elementos == 2) {
+            jQuery("#caja_sistemacajabundle_aperturatype_habilitacion").prop("selectedIndex",1);
+        }
+    }); //fin document ready
 
     var miTimer;
     miTimer = setInterval(function(){
@@ -30,27 +20,6 @@ $(document).ready(function (e) {
         $.blockUI({ message:"Esperando impresora..." });
         $("#form_apertura").submit(function (e) {
             e.preventDefault();
-            //Recupero el puerto seleccionado
-            /*
-            var puesto = $("#caja_sistemacajabundle_aperturatype_habilitacion").val();
-            $.ajax({
-                url:"{{ path('apertura_obtener_puerto') }}",
-                data:{ puesto:puesto },
-                dataType:"json",
-                async:false,
-                success:function (data) {
-                    if (data.ok == 1) {
-                        //alert("puerto del puesto seleccionado: " + data.puerto);
-                        setearPuerto(data.puerto);
-                    } else {
-                        alert(data.msg);
-                    }
-                },
-                error:function (jqXHR, status, error) {
-                    alert('Disculpe, hubo un problema al recuperar el puerto de impresion: ' + error);
-                }
-            });
-            */
             $.blockUI({ message:"Imprimiendo ticket..." });
             verificarEstadoSerial("comprobarImpresora");
             return false;
@@ -97,7 +66,7 @@ $(document).ready(function (e) {
         try {
             pser.ifEstadoRun(sFuncion);
         } catch (e) {
-            alert('Estado del Puerto: ' + e);
+            alert(e);
         }
     }
 

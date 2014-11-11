@@ -142,7 +142,7 @@ class AperturaController extends Controller implements IControllerAuditable
         $em = $this->getDoctrine()->getManager();
 
         $caja = $this->container->get('caja.manager')->getCaja();
-        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id, "caja" => $caja->getId()));
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id));
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Apertura entity.');
@@ -216,7 +216,6 @@ class AperturaController extends Controller implements IControllerAuditable
         } else {
 
             $caja = $this->container->get("caja.manager")->getCaja();
-            $entity->setCaja($caja);
 
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
@@ -266,7 +265,7 @@ class AperturaController extends Controller implements IControllerAuditable
         $em = $this->getDoctrine()->getManager();
 
         $caja = $this->container->get('caja.manager')->getCaja();
-        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id, "caja" => $caja->getId()));
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id));
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Apertura entity.');
@@ -289,7 +288,7 @@ class AperturaController extends Controller implements IControllerAuditable
         $em = $this->getDoctrine()->getManager();
 
         $caja = $this->container->get('caja.manager')->getCaja();
-        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id, "caja" => $caja->getId()));
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id));
         $fecha = $entity->getFecha();
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Apertura entity.');
@@ -322,6 +321,7 @@ class AperturaController extends Controller implements IControllerAuditable
     {
         $entity = $this->container->get('caja.manager')->getApertura();
         $caja = $this->container->get("caja.manager")->getCaja();
+        $habilitacion = $entity->getHabilitacion();
 
         $editForm = $this->createForm(new AperturaCierreType(), $entity);
         $msg = false;
@@ -415,7 +415,7 @@ class AperturaController extends Controller implements IControllerAuditable
 
             }
         }
-        $puesto = $entity->getHabilitacion()->getPuesto();
+        $puesto = $habilitacion->getPuesto();
         return $this->render('SistemaCajaBundle:Apertura:cierre.html.twig', array('entity' => $entity, 'caja' => $caja, 'puesto' => $puesto, 'edit_form' => $editForm->createView(),));
     }
 
@@ -718,7 +718,7 @@ class AperturaController extends Controller implements IControllerAuditable
         $em = $this->getDoctrine()->getManager();
 
         $caja = $this->container->get('caja.manager')->getCaja();
-        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id, "caja" => $caja->getId()));
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id));
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Apertura entity.');
@@ -737,7 +737,7 @@ class AperturaController extends Controller implements IControllerAuditable
     {
         $em = $this->getDoctrine()->getManager();
         $caja = $this->container->get('caja.manager')->getCaja();
-        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id, "caja" => $caja->getId()));
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id));
         $deleteForm = $this->createDeleteForm($id);
 
         if ($entity) {
@@ -846,7 +846,7 @@ class AperturaController extends Controller implements IControllerAuditable
         $id_apertura = $this->getRequest()->get('id');
         $em = $this->getDoctrine()->getManager();
         $caja = $this->container->get("caja.manager")->getCaja();
-        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id_apertura, "caja" => $caja->getId()));
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id_apertura));
 
         if (!$entity) { //No se pudo recuperar la apertura
             $ret = array("ok" => 0);
@@ -954,7 +954,7 @@ class AperturaController extends Controller implements IControllerAuditable
         $em = $this->getDoctrine()->getManager();
 
         $caja = $this->container->get('caja.manager')->getCaja();
-        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id, "caja" => $caja->getId()));
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id));
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Apertura entity.');
@@ -991,7 +991,7 @@ class AperturaController extends Controller implements IControllerAuditable
         $em = $this->getDoctrine()->getManager();
 
         $caja = $this->container->get('caja.manager')->getCaja();
-        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id, "caja" => $caja->getId()));
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id));
         $deleteForm = $this->createDeleteForm($id);
         $msg = false;
         if ($entity) {
@@ -1025,7 +1025,7 @@ class AperturaController extends Controller implements IControllerAuditable
         $em = $this->getDoctrine()->getManager();
         $tk = "";
         $caja = $this->container->get('caja.manager')->getCaja();
-        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id, "caja" => $caja->getId()));
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id));
         $ticket = $this->get("sistemacaja.ticket");
         $servicio_tabla = $this->get("lar.parametro.tabla");
         $bm = $this->container->get("caja.barra");
@@ -1056,7 +1056,7 @@ class AperturaController extends Controller implements IControllerAuditable
 
         $caja = $this->container->get('caja.manager')->getCaja();
 
-        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id, "caja" => $caja->getId()));
+        $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id));
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Apertura entity.');
