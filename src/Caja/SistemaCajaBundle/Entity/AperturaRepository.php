@@ -171,7 +171,7 @@ class AperturaRepository extends EntityRepository
                         */
                         $datos .= $detalle->getFecha()->format('Ymd'); //fecha de pago
                         $datos .= 1; //Código Fijo de empresa. Uso interno. Usar siempre un Valor Fijo = 1 (Uno)
-                        $datos .= sprintf("%02d", $apertura->getCaja()->getNumero()); //Numero de Caja Rellenados con ceros a la izquierda
+                        $datos .= sprintf("%02d", $apertura->getHabilitacion()->getCaja()->getNumero()); //Numero de Caja Rellenados con ceros a la izquierda
                         $datos .= "00" . "\r" . "\n"; //Numero de sucursal Rellenados con ceros a la izquierda, no se esta usando
                         //$datos .= "00" . chr(13) . chr(10); //Numero de sucursal Rellenados con ceros a la izquierda, no se esta usando
                         $write = fputs($fp, $datos);

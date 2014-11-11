@@ -372,7 +372,7 @@ class AperturaController extends Controller implements IControllerAuditable
 
                     if ($entity->getComprobanteCantidad() > 0) {
                         $apertura_id = $entity->getId();
-                        $numero_caja = $entity->getCaja()->getNumero();
+                        $numero_caja = $entity->getHabilitacion()->getCaja()->getNumero();
                         $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
                         if (!file_exists($path_archivos)) {
                             //Si no existe el directorio donde se guardan los archivos de cierre, lo creo;
@@ -889,7 +889,7 @@ class AperturaController extends Controller implements IControllerAuditable
 
         } else { //No hubo cobranza
             $apertura_id = $entity->getId();
-            $numero_caja = $entity->getCaja()->getId();
+            $numero_caja = $entity->getHabilitacion()->getCaja()->getNumero();
             $datos_caja = 'Caja: ' . $numero_caja . '- Apertura: ' . $apertura_id . ' - Fecha: ' . $entity->getFechaCierre()->format('d-m-Y');
             $contenido = 'No hubo cobranza en la presente caja: ' . $datos_caja;
             // En el contenido se podria incluir la cantidad de comprobantes cobrados, el monto total, la fecha, numero de caja, cajero, etc
