@@ -169,7 +169,9 @@ class ImpresionCierre implements Imprimible
 
         $em = $this->getEntityManager();
         $caja = $this->container->get('caja.manager')->getCaja();
-        $apertura = $this->getApertura();
+        //$apertura = $this->getApertura();
+        $apertura = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $this->getAperturaId()));
+        $caja = $apertura->getHabilitacion()->getCaja();
         $bm = $this->container->get("caja.barra");
         $detalle_pagos = $em->getRepository('SistemaCajaBundle:Apertura')->getDetallePagos($apertura->getId());
         $habilitacion = $em->getRepository('SistemaCajaBundle:Habilitacion')->findOneBy(array('id' => $apertura->getHabilitacion()->getId()));

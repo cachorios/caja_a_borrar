@@ -23,7 +23,6 @@ class CajaManager
      */
     public function getCaja()
     {
-
         if ($this->contenedor->get("security.context")->getToken()->isAuthenticated()) {
             $usuario = $this->contenedor->get("security.context")->getToken()->getUser();
             $idUsuario = $usuario->getId();

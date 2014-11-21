@@ -226,8 +226,8 @@ class AperturaController extends Controller implements IControllerAuditable
                 $ticket = $this->get("sistemacaja.ticket");
                 $ticket->setContenido(
                     str_pad("Apertura de Caja", 40, " ", STR_PAD_BOTH) .
-                        str_pad("-", 40, "-", STR_PAD_BOTH) .
-                        str_pad("Apertura nro. " . $entity->getId(), 40, "-", STR_PAD_BOTH)
+                    str_pad("-", 40, "-", STR_PAD_BOTH) .
+                    str_pad("Apertura nro. " . $entity->getId(), 40, "-", STR_PAD_BOTH)
                 );
                 $tk = $ticket->getTicketTestigo();
                 ////return $this->redirect($this->generateUrl('apertura'));
@@ -321,100 +321,104 @@ class AperturaController extends Controller implements IControllerAuditable
     {
         $entity = $this->container->get('caja.manager')->getApertura();
         $caja = $this->container->get("caja.manager")->getCaja();
+        if (!$entity) {
+            $msg = 'No se pudo recuperar la apertura';
+            $ret = array("ok" => 0, "msg" => $msg);
+            $response = new Response();
+            $response->setContent(json_encode($ret));
+            return $response;
+        }
         $habilitacion = $entity->getHabilitacion();
 
         $editForm = $this->createForm(new AperturaCierreType(), $entity);
         $msg = false;
-        if (!$entity) {
-            $msg = 'No se pudo recuperar la apertura';
-        } else {
-            $entity->setFechaCierre(new \DateTime());
-            $entity->setDireccionIp($_SERVER['REMOTE_ADDR']);
-            $entity->setHost($_SERVER['HTTP_HOST']);
+        $entity->setFechaCierre(new \DateTime());
+        $entity->setDireccionIp($_SERVER['REMOTE_ADDR']);
+        $entity->setHost($_SERVER['HTTP_HOST']);
 
-            $request = $this->getRequest();
-            $tk = "";
-            if ($request->getMethod() == 'POST') {
-                $editForm->bind($request);
-                if ($editForm->isValid()) {
-                    $em = $this->getDoctrine()->getManager();
+        $request = $this->getRequest();
+        $tk = "";
+        if ($request->getMethod() == 'POST') {
+            $editForm->bind($request);
+            if ($editForm->isValid()) {
+                $em = $this->getDoctrine()->getManager();
 
-                    // Hago el "commit" del cierre, entonces si falla la generacion del archivo, no interfiere con esto
-                    $em->persist($entity);
-                    $em->flush();
+                // Hago el "commit" del cierre, entonces si falla la generacion del archivo, no interfiere con esto
+                $em->persist($entity);
+                $em->flush();
 
-                    $tk = $this->imprimirCierre($entity->getId(), 1);
-                    if ($tk == "") {
-                        $msg = 'No se pudieron recuperar los datos del cierre.';
+                $tk = $this->imprimirCierre($entity->getId(), 1);
+                if ($tk == "") {
+                    $msg = 'No se pudieron recuperar los datos del cierre.';
+                }
+
+                //Genero el archivo de texto que se envia por mail. CONSIDERACIONES GENERALES:
+                //                El archivo con el detalle de las cobranzas debería tener  la siguiente estructura.
+                //                Solicito que el nombre comience con EP seguido de la fecha de cobro en formado DDMMAA. EJ:
+                //                Cobranzas del Día 18 de Marzo del 2013, EP180313.TXT – Cobranzas del Día 2 de Mayo del 2013, EP020513.TXT,
+                //                dado que la incorporacion de datos a nuestros sistema esta automatizada
+                //                y espera un archivo con esa estructura de nombres.
+                //                Cabe mencionar que este formato es igual y único para cualquier tasa municipal que se cobra
+
+                //Por cada comprobante generado:
+                //                Desde	Hasta	Longitud	Descripción
+                //                1	    44	    44	        Código de Barras de la Municipalidad Utilizado para la Cobranza.  Sin modificaciones
+                //                45	50	    6	        Valor Entero del  Importe Cobrado
+                //                51	52	    2	        Valor Decimales del Importe Cobrado
+                //                53	60	    8	        Fecha de Pago – Formato AAAAMMDD
+                //                61	61	    1	        Código Fijo de empresa. Uso interno de la Municipalidad de Posadas. Usar siempre un Valor Fijo = 1 (Uno)
+                //                62	65	    4	        Numero de Caja Rellenados con ceros a la izquierda
+
+
+                /////////////////////////////////////////////////////////////
+                ///////SI NO HUBO COBROS, NO GENERO EL ARCHIVO, SOLO ENVIO EL MAIL////////////////
+                /////////////////////////////////////////////////////////////
+
+                if ($entity->getComprobanteCantidad() > 0) {
+                    $apertura_id = $entity->getId();
+                    $numero_caja = $entity->getHabilitacion()->getCaja()->getNumero();
+                    $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
+                    if (!file_exists($path_archivos)) {
+                        //Si no existe el directorio donde se guardan los archivos de cierre, lo creo;
+                        if (!mkdir($path_archivos, '0644')) { // 0644 es lectura y escritura para el propietario, lectura para los demás
+                            $msg = '¡¡¡ Error al crear el directorio que va a contener los archivos de cierre !!!!!';
+                        }
                     }
 
-                    //Genero el archivo de texto que se envia por mail. CONSIDERACIONES GENERALES:
-                    //                El archivo con el detalle de las cobranzas debería tener  la siguiente estructura.
-                    //                Solicito que el nombre comience con EP seguido de la fecha de cobro en formado DDMMAA. EJ:
-                    //                Cobranzas del Día 18 de Marzo del 2013, EP180313.TXT – Cobranzas del Día 2 de Mayo del 2013, EP020513.TXT,
-                    //                dado que la incorporacion de datos a nuestros sistema esta automatizada
-                    //                y espera un archivo con esa estructura de nombres.
-                    //                Cabe mencionar que este formato es igual y único para cualquier tasa municipal que se cobra
+                    //Si esta todo bien, sigo:
+                    if (!$msg) {
 
-                    //Por cada comprobante generado:
-                    //                Desde	Hasta	Longitud	Descripción
-                    //                1	    44	    44	        Código de Barras de la Municipalidad Utilizado para la Cobranza.  Sin modificaciones
-                    //                45	50	    6	        Valor Entero del  Importe Cobrado
-                    //                51	52	    2	        Valor Decimales del Importe Cobrado
-                    //                53	60	    8	        Fecha de Pago – Formato AAAAMMDD
-                    //                61	61	    1	        Código Fijo de empresa. Uso interno de la Municipalidad de Posadas. Usar siempre un Valor Fijo = 1 (Uno)
-                    //                62	65	    4	        Numero de Caja Rellenados con ceros a la izquierda
-
-
-                    /////////////////////////////////////////////////////////////
-                    ///////SI NO HUBO COBROS, NO GENERO EL ARCHIVO, SOLO ENVIO EL MAIL////////////////
-                    /////////////////////////////////////////////////////////////
-
-                    if ($entity->getComprobanteCantidad() > 0) {
-                        $apertura_id = $entity->getId();
-                        $numero_caja = $entity->getHabilitacion()->getCaja()->getNumero();
-                        $path_archivos = $this->container->getParameter('caja.apertura.dir_files');
-                        if (!file_exists($path_archivos)) {
-                            //Si no existe el directorio donde se guardan los archivos de cierre, lo creo;
-                            if (!mkdir($path_archivos, '0644')) { // 0644 es lectura y escritura para el propietario, lectura para los demás
-                                $msg = '¡¡¡ Error al crear el directorio que va a contener los archivos de cierre !!!!!';
-                            }
+                        $archivo_generado = $em->getRepository('SistemaCajaBundle:Apertura')->generaArchivoTexto($apertura_id, $numero_caja, $path_archivos);
+                        if (!$archivo_generado) {
+                            $msg = '¡¡¡ Error al generar el archivo de texto que se envia por mail !!!!!';
                         }
-
                         //Si esta todo bien, sigo:
                         if (!$msg) {
-
-                            $archivo_generado = $em->getRepository('SistemaCajaBundle:Apertura')->generaArchivoTexto($apertura_id, $numero_caja, $path_archivos);
-                            if (!$archivo_generado) {
-                                $msg = '¡¡¡ Error al generar el archivo de texto que se envia por mail !!!!!';
-                            }
-                            //Si esta todo bien, sigo:
-                            if (!$msg) {
-                                //Por ultimo: guardo en la tabla Apertura el nombre del archivo generado:
-                                $entity->setArchivoCierre($archivo_generado . '.txt');
-                                $em->persist($entity);
-                                $em->flush();
-                            }
+                            //Por ultimo: guardo en la tabla Apertura el nombre del archivo generado:
+                            $entity->setArchivoCierre($archivo_generado . '.txt');
+                            $em->persist($entity);
+                            $em->flush();
                         }
                     }
-                    $em->close();
-                } else {
-                    $msg = 'Alguno de los datos ingresados es incorrecto';
                 }
-
-                //Verifico si estuvo todo ok, y devuelvo:
-                if (!$msg) {
-                    $ret = array("ok" => 1, "tk" => $tk);
-                } else {
-                    $ret = array("ok" => 0, "msg" => $msg);
-                }
-
-                $response = new Response();
-                $response->setContent(json_encode($ret));
-                return $response;
-
+                $em->close();
+            } else {
+                $msg = 'Alguno de los datos ingresados es incorrecto';
             }
+
+            //Verifico si estuvo todo ok, y devuelvo:
+            if (!$msg) {
+                $ret = array("ok" => 1, "tk" => $tk);
+            } else {
+                $ret = array("ok" => 0, "msg" => $msg);
+            }
+
+            $response = new Response();
+            $response->setContent(json_encode($ret));
+            return $response;
+
         }
+
         $puesto = $habilitacion->getPuesto();
         return $this->render('SistemaCajaBundle:Apertura:cierre.html.twig', array('entity' => $entity, 'caja' => $caja, 'puesto' => $puesto, 'edit_form' => $editForm->createView(),));
     }
@@ -551,7 +555,7 @@ class AperturaController extends Controller implements IControllerAuditable
         $em = $this->getDoctrine()->getManager();
         $habilitacion = $em->getRepository('SistemaCajaBundle:Habilitacion')->findOneBy(array('id' => $apertura->getHabilitacion()));
         return $this->render('SistemaCajaBundle:Apertura:anular.html.twig',
-            array('caja' => $caja, 'habilitacion' => $habilitacion, "form" => $form->createView(), 'apertura' => $apertura, 'puesto' => $puesto ));
+            array('caja' => $caja, 'habilitacion' => $habilitacion, "form" => $form->createView(), 'apertura' => $apertura, 'puesto' => $puesto));
     }
 
     /**
@@ -620,8 +624,8 @@ class AperturaController extends Controller implements IControllerAuditable
                     $ticket = $this->get("sistemacaja.ticket");
                     $ticket->setContenido(
                         str_pad(" ", 40, " ", STR_PAD_BOTH) .
-                            str_pad("Comprobante " . $comprobante->getComprobante(), 25, " ", STR_PAD_RIGHT) .
-                            str_pad(sprintf("%9.2f", $comprobante->getImporte()), 15, " ", STR_PAD_LEFT)
+                        str_pad("Comprobante " . $comprobante->getComprobante(), 25, " ", STR_PAD_RIGHT) .
+                        str_pad(sprintf("%9.2f", $comprobante->getImporte()), 15, " ", STR_PAD_LEFT)
                     );
 
                     $ticket->setValores(array(
@@ -765,7 +769,7 @@ class AperturaController extends Controller implements IControllerAuditable
                 $mensaje = \Swift_Message::newInstance()
                     ->setSubject('REENVIO - Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado)
                     ->setFrom('administrador@posadas.gov.ar')
-                //->setTo('eduardo4979@gmail.com')
+                    //->setTo('eduardo4979@gmail.com')
                     ->setBody($contenido)
                     ->attach(\Swift_Attachment::fromPath($path_documento));
 
@@ -866,7 +870,7 @@ class AperturaController extends Controller implements IControllerAuditable
             $mensaje_detalle = \Swift_Message::newInstance()
                 ->setSubject('Municipalidad de Posadas - Cierre de Caja - ' . $archivo_generado)
                 ->setFrom('administrador@posadas.gov.ar')
-            //->setTo('cobros@posadas.gov.ar')
+                //->setTo('cobros@posadas.gov.ar')
                 ->setBody($contenido)
                 ->attach(\Swift_Attachment::fromPath($path_documento));
             //Adjunto
@@ -972,12 +976,15 @@ class AperturaController extends Controller implements IControllerAuditable
      */
     public function prepararReimpresionCierreReporteAction($id, $reporte)
     {
-        //$em = $this->getDoctrine()->getManager();
-        //T::setEM($em);
-        //$em = $this->getDoctrine()->getManager();
-        $caja = $this->container->get('caja.manager')->getCaja();
+        $em = $this->getDoctrine()->getManager();
+        T::setEM($em);
+        $em = $this->getDoctrine()->getManager();
+        $apertura = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id));
+        $habilitacion = $apertura->getHabilitacion();
+        $caja = $habilitacion->getCaja();
+        //$caja = $this->container->get('caja.manager')->getCaja();
         $servicio_tabla = $this->get("lar.parametro.tabla");
-        $parametro = array('clase' => 'Caja\GeneralBundle\Lib\Reportes\ImpresionCierre', 'apertura_id' => $id, "caja_id" => $caja->getId(), "reporte"=> $reporte);
+        $parametro = array('clase' => 'Caja\GeneralBundle\Lib\Reportes\ImpresionCierre', 'apertura_id' => $id, "caja_id" => $caja->getId(), "reporte" => $reporte);
         $this->get('session')->getFlashBag()->add('parametro', $parametro);
         return $this->redirect($this->generateUrl("reporte_imprimir"));
     }
