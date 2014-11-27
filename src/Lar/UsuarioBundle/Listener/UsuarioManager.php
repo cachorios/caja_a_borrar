@@ -33,7 +33,7 @@ class UsuarioManager
     }
 
 
-    public function RegistrarIngreso(Usuario $usuario)
+    public function registrarIngreso(Usuario $usuario)
     {
         $this->usuario = $usuario;
 
@@ -47,6 +47,20 @@ class UsuarioManager
 
     }
 
+    /*
+     * Controlo que tenga un rol asignado para poder ingresar al sistema:
+     */
+    public function validarRol(Usuario $usuario)
+    {
+        $grupos = $usuario->getGrupos();
+        if (count($grupos) > 0) {
+            return true;
+        }
+
+        $this->guardarIngreso("Ingreso RECHAZADO. Perfil incompleto");
+        return false;
+
+    }
 
     private function verificarIngreso()
     {

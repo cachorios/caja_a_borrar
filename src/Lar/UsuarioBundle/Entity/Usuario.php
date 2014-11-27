@@ -471,8 +471,6 @@ class Usuario implements AdvancedUserInterface
         foreach ($this->grupos as $grupo) {
             $roles[] = $grupo->getRole();
         }
-
-        //ld($roles);
         return $roles;
     }
 

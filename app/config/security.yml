@@ -46,8 +46,12 @@ security:
         - { path: ^/larparametro/*, roles: ROLE_ADMIN }
         - { path: ^/codigobarra/*,  roles: ROLE_ADMIN }
         - { path: ^/usuario/*,      roles: ROLE_ADMIN }
+        - { path: ^/tipopago/*,     roles: ROLE_ADMIN }
+        - { path: ^/caja/*,         roles: ROLE_ADMIN }
+        - { path: ^/feriado/*,      roles: ROLE_ADMIN }
+        - { path: ^/responsable/*,  roles: ROLE_ADMIN }
+        - { path: ^/puesto/*,       roles: ROLE_ADMIN }
+        - { path: ^/delegacion/*,   roles: ROLE_ADMIN }
+        - { path: ^/habilitacion/*, roles: ROLE_ADMIN }
         - { path: ^/*,              roles: ROLE_USUARIO }
 #        - { path: ^/larutils/*, role: ROLE_USUARIO }
-
-
-

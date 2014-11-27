@@ -22,13 +22,21 @@ class LoginListener
 
     public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)
     {
+
         $usuario = $event->getAuthenticationToken()->getUser();
 
         $um = $this->contenedor->get('usuario_manager');
 
-        if (!$um->RegistrarIngreso($usuario)) {
+        if (!$um->registrarIngreso($usuario)) {
             throw new BadCredentialsException('Ingreso rechazado. Dia, horario o lugar no permitidos.', 0);
             $event->stopPropagation();
         }
+
+        //Controlo que tenga roles asociados:
+        if (!$um->validarRol($usuario)) {
+            throw new BadCredentialsException('Ingreso rechazado. Su perfil no permite ingreso', 0);
+            $event->stopPropagation();
+        }
+
     }
 }

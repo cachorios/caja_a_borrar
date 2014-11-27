@@ -46,7 +46,7 @@ class CajaListener
     public function onKernelResponse(FilterResponseEvent $event)
     {
         if($this->logIn == 1){
-            if ($this->contenedor->get("caja.manager")->esCajero()){
+            if ($this->contenedor->get("caja.manager")->esCajero()){//tiene rol de cajero y habilitacion activa
                 $apertura = $this->contenedor->get("caja.manager")->getApertura();
                 //Si tiene apertura mostrar el monitor, sino, que cree una apertura
                 if($apertura){
@@ -55,9 +55,12 @@ class CajaListener
                     $toRedirect = $this->contenedor->get("router")->generate('apertura_new') ;
                 }
 
-            } else {
-                //mostrar el home de no cajeros. Se supone que es admin, sino no va a ver
-                $toRedirect = $this->contenedor->get("router")->generate('usuario') ;
+            } else if ($this->contenedor->get('security.context')->isGranted('ROLE_ADMIN')) { //es administrador
+                   $toRedirect = $this->contenedor->get("router")->generate('apertura') ;
+            } else { // seria para el caso de un usuario comun sin caja asignada o sin habilitacion vigente
+                //throw new BadCredentialsException('Ingreso rechazado. El usuario no tiene caja asignada', 0);
+                //$event->stopPropagation();
+                $toRedirect = $this->contenedor->get("router")->generate('apertura') ;
             }
             $event->setResponse(new RedirectResponse($toRedirect));
             $event->stopPropagation();

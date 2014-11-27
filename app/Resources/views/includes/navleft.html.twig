@@ -15,7 +15,7 @@
                     </li>
                 {% endif %}
 
-                {% if esCajero() %}
+                {% if esCajero() or is_granted('ROLE_ADMIN')%}
                     <li class="apertura">
                         <a href="{{ path('apertura') }}"><i class="icon-font icon-white"></i>Apertura</a>
                     </li>

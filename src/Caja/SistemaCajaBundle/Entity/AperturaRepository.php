@@ -16,13 +16,20 @@ class AperturaRepository extends EntityRepository
     public function getAperturas($usuario)
     {
         $em = $this->getEntityManager();
-
         $a = $this->createQueryBuilder("a")
             ->join("a.habilitacion", "h")
             ->where('h.usuario = :cajero')
             ->setParameter("cajero", $usuario->getId())
             ->orderBy("a.id", 'desc');
+        return $a;
+    }
 
+    public function getTodasAperturas()
+    {
+        $em = $this->getEntityManager();
+        $a = $this->createQueryBuilder("a")
+            ->join("a.habilitacion", "h")
+            ->orderBy("a.id", 'desc');
         return $a;
     }
 

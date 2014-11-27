@@ -79,6 +79,12 @@ class CajaManager
 
     public function esCajero()
     {
+        //Pregunto si tiene el rol de cajero
+
+        if (!$this->contenedor->get('security.context')->isGranted('ROLE_USUARIO')) {
+            return false;
+        }
+
         $usuario = $this->getUsuario();
         // determinar si el usuario logueado tiene habilitacion vigente
 

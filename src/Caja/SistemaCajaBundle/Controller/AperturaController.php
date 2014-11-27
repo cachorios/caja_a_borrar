@@ -34,12 +34,12 @@ class AperturaController extends Controller implements IControllerAuditable
      */
     public function indexAction()
     {
+
         $breadcrumbs = $this->get("white_october_breadcrumbs");
         $breadcrumbs->addItem("Inicio", $this->get("router")->generate("home_page"));
         $breadcrumbs->addItem("Apertura", $this->get("router")->generate("apertura"));
         list($filterForm, $queryBuilder) = $this->filter();
         list($entities, $pagerHtml) = $this->paginator($queryBuilder);
-
         $apertura = $this->container->get('caja.manager')->getApertura();
         if ($apertura) {
             $tiene_apertura_activa = true;
@@ -64,7 +64,13 @@ class AperturaController extends Controller implements IControllerAuditable
         $session = $request->getSession();
         $filterForm = $this->createForm(new AperturaFilterType());
         $em = $this->getDoctrine()->getManager();
-        $queryBuilder = $em->getRepository('SistemaCajaBundle:Apertura')->getAperturas($this->getUser());
+
+        //El caso normal es que sea un cajero:
+        if ($this->container->get("caja.manager")->esCajero()) {
+            $queryBuilder = $em->getRepository('SistemaCajaBundle:Apertura')->getAperturas($this->getUser());
+        }else {//Si es administrador, ve todas las aperturas:
+            $queryBuilder = $em->getRepository('SistemaCajaBundle:Apertura')->getTodasAperturas();
+        }
 
         // Reset filter
         if ($request->getMethod() == 'POST' && $request->get('filter_action') == 'reset') {
