@@ -194,33 +194,20 @@ class CodigoBarraLive
                 $this->seccion = 0;
                 $seccion_original = substr($this->codigo, $pos->getPosicion() - 1, $pos->getLongitud());
                 $seccion_equivalente = $this->em->getRepository("SistemaCajaBundle:BarraSeccion")->findOneBy(array("valor" => $seccion_original, "codigobarra" => $this->cbReg->getId()));
-                if ($seccion_equivalente)
+                if ($seccion_equivalente) {
                     $this->seccion = $seccion_equivalente->getCodigoT10(); //uno o dos digitos, dependiendo del tipo de cod barra
-                //$this->seccion = substr($this->codigo, $pos->getPosicion() - 1, $pos->getLongitud());
-                //01 => TGI     11 => CEM
+                }
             }
 
             $ls_desc_tab = substr($this->codigo, $pos->getPosicion() - 1, $pos->getLongitud());
             if ($pos->getTabla() > 0) {
-                /****************CODIGO NUEVO ****************/
                 $barra_seccion = $this->em->getRepository("SistemaCajaBundle:BarraSeccion")->findOneBy(array("valor" => $ls_desc_tab, "codigobarra" => $this->cbReg->getId()));
                 if ($barra_seccion) {
                     $ls_desc_tab = $barra_seccion->getCodigoT10();
                 }
-                /****************CODIGO NUEVO ****************/
-                //$t = $this->tabla_man->getParametro($pos->getTabla(), substr($this->codigo, $pos->getPosicion() -1, $pos->getLongitud()));
                 $t = $this->tabla_man->getParametro($pos->getTabla(), $ls_desc_tab);
-                /*
-                ld($ls_desc_tab);//  "01"
-                ld($pos->getTabla()); //    10
-                ld($pos->getPosicion()); // 19
-                ld($pos->getLongitud());//  2
-                ld($this->codigo); //   93390001160014336201131000310001300000000061
-                ld(substr($this->codigo, $pos->getPosicion() - 1, $pos->getLongitud())); // "01"
-                */
                 if ($t && $t->getTabla() > 1) {
                     $ls_desc_tab = $t->getDescripcion();
-                    //Tasa General de Inmuebles, Cementerio, etc
                 }
             }
 
