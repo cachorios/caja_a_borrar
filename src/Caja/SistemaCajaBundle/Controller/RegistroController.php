@@ -162,6 +162,7 @@ class RegistroController extends Controller implements IControllerAuditable
 
     public function barraDetalleAction()
     {
+
         $imp = 0;
         $response = new Response();
 
@@ -178,7 +179,7 @@ class RegistroController extends Controller implements IControllerAuditable
         if (count($res) > 0) {
             $rJson = json_encode(array(
                 'ok' => 0,
-                'msg' => "Este comprobante ya se ha registrado, el dia " . $res[0]->getFecha()->format('d-m-Y H:i:s')
+                'msg' => "Este comprobante ya se ha registrado el dia " . $res[0]->getFecha()->format('d-m-Y H:i:s')
             ));
             return $response->setContent($rJson);
         }
@@ -187,7 +188,6 @@ class RegistroController extends Controller implements IControllerAuditable
         $bm = $this->container->get("caja.barra");
         $bm->setCodigo($cb, $apertura->getFecha());
         //valido el tipo de seccion del codigo:
-        /*
         if (!$bm->validarSeccion()) {
             $rJson = json_encode(array(
                 'ok' => 0,
@@ -195,7 +195,6 @@ class RegistroController extends Controller implements IControllerAuditable
             ));
             return $response->setContent($rJson);
         }
-        */
         $imp = $bm->getImporte($this->container->get("sistemacaja.prorroga"));
 
         if ($imp > 0) {
@@ -216,6 +215,7 @@ class RegistroController extends Controller implements IControllerAuditable
         }
 
         return $response->setContent($rJson);
+
     }
 
     /**

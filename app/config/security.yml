@@ -5,8 +5,7 @@ security:
         #Stock\StockBundle\Entity\Cliente:   { algorithm: sha512, iterations: 10 }
 
     role_hierarchy:
-        ROLE_ADMIN:       [ROLE_ADMIN]
-        ROLE_JEFE_CAJA:   [ROLE_USUARIO, ROLE_JEFE_CAJA]
+        ROLE_ADMIN:       [ROLE_USUARIO, ROLE_ADMIN]
         ROLE_USUARIO:     [ROLE_USUARIO]
 
     providers:
@@ -37,26 +36,22 @@ security:
 
 
     access_control:
-        - { path: ^/login,             roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/larparametro/*,    roles: ROLE_ADMIN }
-        - { path: ^/codigobarra/*,     roles: ROLE_ADMIN }
-
-        - { path: ^/tipopago/*,        roles: ROLE_ADMIN }
-        - { path: ^/caja/*,            roles: ROLE_ADMIN }
-        - { path: ^/responsable/*,     roles: ROLE_ADMIN }
-        - { path: ^/puesto/*,          roles: ROLE_ADMIN }
-        - { path: ^/delegacion/*,      roles: ROLE_ADMIN }
-
-        - { path: ^/usuarioingreso/*,  roles: [ROLE_ADMIN, ROLE_JEFE_CAJA] }
-        - { path: ^/habilitacion/*,    roles: [ROLE_ADMIN, ROLE_JEFE_CAJA] }
-        - { path: ^/feriado/*,         roles: [ROLE_ADMIN, ROLE_JEFE_CAJA] }
-
-        - { path: ^/usuario/*,         roles: ROLE_ADMIN }
-
-        - { path: ^/*,                 roles: [ROLE_ADMIN, ROLE_JEFE_CAJA, ROLE_USUARIO] }
+        - { path: ^/login,          roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
 
-#        - { path: ^/larutils/*, role: ROLE_USUARIO }
 #        - { path: ^/registro/*,     roles: IS_AUTHENTICATED_ANONYMOUSLY }
 #        - { path: ^/apertura,       roles: ROLE_USUARIO }
 #        - { path: ^/caja,           roles: ROLE_USUARIO }
+
+        - { path: ^/larparametro/*, roles: ROLE_ADMIN }
+        - { path: ^/codigobarra/*,  roles: ROLE_ADMIN }
+        - { path: ^/usuario/*,      roles: ROLE_ADMIN }
+        - { path: ^/tipopago/*,     roles: ROLE_ADMIN }
+        - { path: ^/caja/*,         roles: ROLE_ADMIN }
+        - { path: ^/feriado/*,      roles: ROLE_ADMIN }
+        - { path: ^/responsable/*,  roles: ROLE_ADMIN }
+        - { path: ^/puesto/*,       roles: ROLE_ADMIN }
+        - { path: ^/delegacion/*,   roles: ROLE_ADMIN }
+        - { path: ^/habilitacion/*, roles: ROLE_ADMIN }
+        - { path: ^/*,              roles: ROLE_USUARIO }
+#        - { path: ^/larutils/*, role: ROLE_USUARIO }
