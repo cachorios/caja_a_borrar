@@ -68,8 +68,17 @@ class AperturaController extends Controller implements IControllerAuditable
         //El caso normal es que sea un cajero:
         if ($this->container->get("caja.manager")->esCajero()) {
             $queryBuilder = $em->getRepository('SistemaCajaBundle:Apertura')->getAperturas($this->getUser());
-        }else {//Si es administrador, ve todas las aperturas:
+        } else {//Si es administrador, ve todas las aperturas: ROLE_ADMIN o ROLE_JEFE_CAJA
             $queryBuilder = $em->getRepository('SistemaCajaBundle:Apertura')->getTodasAperturas();
+        }
+
+        //if ($this->securityContext->isGranted('ROLE_ADMIN') || $this->securityContext->isGranted('ROLE_JEFE_CAJA')) {
+        if (!$this->container->get('security.context')->isGranted('ROLE_ADMIN') || $this->container->get('security.context')->isGranted('ROLE_JEFE_CAJA')) {
+            $queryBuilder = $em->getRepository('SistemaCajaBundle:Apertura')->getTodasAperturas();
+        } else if ($this->container->get("caja.manager")->esCajero()) {
+            $queryBuilder = $em->getRepository('SistemaCajaBundle:Apertura')->getAperturas($this->getUser());
+        } else{
+            $queryBuilder = $em->getRepository('SistemaCajaBundle:Apertura')->getAperturas(0); //NO es cajero ni admin. NO ve nada
         }
 
         // Reset filter

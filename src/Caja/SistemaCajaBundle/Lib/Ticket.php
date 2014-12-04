@@ -105,7 +105,6 @@ class Ticket
             if($this->valores)
                 $str .= "NRO. RECIBO: " . $this->valores['ticket'] . NL;
 
-         //   $str .= ESC . 'p' . chr(0) . chr(10) . chr(100); //envia pulso?? esto copie, voy a verificarlo
 
         }elseif ($tipo == 1) {
 

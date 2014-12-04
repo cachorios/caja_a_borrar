@@ -33,7 +33,7 @@ $(document).ready(function (e) {
         $barra = $(this);
         dataBarra = "";
 
-        $.blockUI({ message: null });
+        $.blockUI({message: null});
 
         cb = $barra.val().replace(/^\s*|\s*$/g, "");
 
@@ -61,7 +61,7 @@ $(document).ready(function (e) {
                  */
                 $.ajax({
                     url: "{{ path('registro_barra') }}",
-                    data: { cb: cb  },
+                    data: {cb: cb},
                     dataType: "json",
                     success: actDesdeCB,
                     error: function (jqXHR, status, error) {
@@ -161,6 +161,9 @@ $(document).ready(function (e) {
         $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_fecha').attr('readonly', 'readonly');
         $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_importe').attr('readonly', 'readonly');
 
+        $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_fecha').css("width", "200px");
+        $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_importe').css("width", "125px");
+
         totalizaComprobante();
 
         $('a.info-barra', row).attr('data-content', dataBarra.detalle);
@@ -236,15 +239,15 @@ $(document).ready(function (e) {
 //            ],
 //            success: function (result) {
 //                if (result == "Si") {
-                    $("#apago_importe").text(formato_numero(totalComprobante, 2));
-                    /* quitar las lineas actuales para que iniciar */
-                    $pagmod = $("#PagoModal");
-                    $("table tbody", $pagmod).remove();
-                    $("table", $pagmod).append("<tbody></tbody>");
+        $("#apago_importe").text(formato_numero(totalComprobante, 2));
+        /* quitar las lineas actuales para que iniciar */
+        $pagmod = $("#PagoModal");
+        $("table tbody", $pagmod).remove();
+        $("table", $pagmod).append("<tbody></tbody>");
 
-                    btnAdd = $("[data-coleccion-add-btn]", $pagmod);
-                    btnAdd.trigger('click');
-                    $pagmod.modal();
+        btnAdd = $("[data-coleccion-add-btn]", $pagmod);
+        btnAdd.trigger('click');
+        $pagmod.modal();
 //                }
 //            }
 //        });
@@ -351,8 +354,8 @@ $(document).ready(function (e) {
             content: "Si esta todo correcto,<br> procede a almacenar el pago e imprimir ticket!",
             type: "confirm",
             buttons: [
-                { value: "Si" },
-                { value: "Cancelar"}
+                {value: "Si"},
+                {value: "Cancelar"}
             ],
             success: function (result) {
                 if (result == "Si") {
@@ -423,9 +426,9 @@ $(document).ready(function (e) {
         try {
             if (impresoraOK == 1) {
                 //Particiono la variable tk recibida, para evitar el llenado del buffer:
-                for (var i=0;i<data.length; i+=250) {
+                for (var i = 0; i < data.length; i += 250) {
                     var t = new Date().getTime();
-                    while ((new Date().getTime()) -t < 1500) {
+                    while ((new Date().getTime()) - t < 1500) {
                         ///alert('timer');
                     }
                     pser.escribir(data.substr(i, 250));

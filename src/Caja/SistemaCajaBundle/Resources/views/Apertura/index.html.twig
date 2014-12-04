@@ -23,7 +23,7 @@
                     </div>
                     <div class="ayuda pull-right">
                         <a href="#" data-ayuda="{{ path("pagina_estatica", {pagina: "apertura"}) }}"><img
-                                src="{{ asset("img/ayuda.png" ) }}"/>
+                                    src="{{ asset("img/ayuda.png" ) }}"/>
                         </a>
                     </div>
                 </h1>
@@ -92,14 +92,14 @@
                         {% for entity in entities %}
                             <tr>
                                 <td><a href="{{ path('apertura_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                                <td>{{ entity.habilitacion.caja}}</td>
-                                <td>{{ entity.habilitacion.usuario}}</td>
+                                <td>{{ entity.habilitacion.caja }}</td>
+                                <td>{{ entity.habilitacion.usuario }}</td>
                                 <td>{% if entity.fecha %}{{ entity.fecha|date('d-m-Y H:i') }}{% endif %}</td>
                                 <td>{% if entity.fechacierre %}
-                                    {{ entity.fechacierre|date('d-m-Y H:i') }}
-                                {% else %}
-                                    <span class="badge badge-info">&nbsp;&nbsp;&nbsp;Activo&nbsp;&nbsp;&nbsp;</span>
-                                {% endif %}</td>
+                                        {{ entity.fechacierre|date('d-m-Y H:i') }}
+                                    {% else %}
+                                        <span class="badge badge-info">&nbsp;&nbsp;&nbsp;Activo&nbsp;&nbsp;&nbsp;</span>
+                                    {% endif %}</td>
                                 <td>
                                     <a class="btn btn-mini" href="{{ path('apertura_show', { 'id': entity.id }) }}">
                                         {{ 'Ver'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
@@ -121,7 +121,7 @@
                                             {{ 'Arqueo'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
                                         </a>
                                     {% endif %}
-                                    {% if  not entity.fechacierre and is_granted('ROLE_ADMIN') %}
+                                    {% if  (not entity.fechacierre and (is_granted('ROLE_ADMIN') or is_granted('ROLE_JEFE_CAJA'))) %}
                                         <a class="btn btn-mini"
                                            href="{{ path('apertura_mostrar_reimpresion_tickets', { 'id': entity.id }) }}">
                                             {{ 'Reimprimir Ticket'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}

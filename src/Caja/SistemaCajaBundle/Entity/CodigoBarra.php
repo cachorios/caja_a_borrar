@@ -64,9 +64,15 @@ class CodigoBarra
     /**
      * @ORM\OneToMany(targetEntity="BarraDetalle", mappedBy="codigobarra", cascade={"persist"}  )
      * @ORM\OrderBy({"posicion" = "ASC"})
+     * * @ORM\OrderBy({"longitud" = "ASC"})
      */
     protected $posiciones;
 
+
+    /**
+     * @ORM\OneToMany(targetEntity="BarraSeccion", mappedBy="codigobarra", cascade={"persist"}  )
+     */
+    protected $secciones;
 
     /**
      * @ORM\OneToMany(targetEntity="VtoImporteCodigoBarra", mappedBy="codigobarra", cascade={"persist"}  )
@@ -123,14 +129,14 @@ class CodigoBarra
     public function setEmpresa($empresa)
     {
         $this->empresa = $empresa;
-    
+
         return $this;
     }
 
     /**
      * Get empresa
      *
-     * @return string 
+     * @return string
      */
     public function getEmpresa()
     {
@@ -146,14 +152,14 @@ class CodigoBarra
     public function setLongitud($longitud)
     {
         $this->longitud = $longitud;
-    
+
         return $this;
     }
 
     /**
      * Get longitud
      *
-     * @return integer 
+     * @return integer
      */
     public function getLongitud()
     {
@@ -169,14 +175,14 @@ class CodigoBarra
     public function setIdentificador($identificador)
     {
         $this->identificador = $identificador;
-    
+
         return $this;
     }
 
     /**
      * Get identificador
      *
-     * @return string 
+     * @return string
      */
     public function getIdentificador()
     {
@@ -192,14 +198,14 @@ class CodigoBarra
     public function setValor($valor)
     {
         $this->valor = $valor;
-    
+
         return $this;
     }
 
     /**
      * Get valor
      *
-     * @return string 
+     * @return string
      */
     public function getValor()
     {
@@ -215,14 +221,14 @@ class CodigoBarra
     public function setObservacion($observacion)
     {
         $this->observacion = $observacion;
-    
+
         return $this;
     }
 
     /**
      * Get observacion
      *
-     * @return string 
+     * @return string
      */
     public function getObservacion()
     {
@@ -238,9 +244,9 @@ class CodigoBarra
     public function __construct()
     {
         $this->posiciones = new \Doctrine\Common\Collections\ArrayCollection();
-		$this->vtos_importes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->vtos_importes = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Add posiciones
      *
@@ -272,7 +278,7 @@ class CodigoBarra
     /**
      * Get posiciones
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getPosiciones()
     {
@@ -299,7 +305,7 @@ class CodigoBarra
     public function addVtosImporte(\Caja\SistemaCajaBundle\Entity\VtoImporteCodigoBarra $vtosImportes)
     {
         $this->vtos_importes[] = $vtosImportes;
-    
+
         return $this;
     }
 
@@ -316,14 +322,15 @@ class CodigoBarra
     /**
      * Get vtos_importes
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getVtosImportes()
     {
         return $this->vtos_importes;
     }
 
-    public function __toString(){
+    public function __toString()
+    {
         return $this->getNombre();
     }
 
@@ -343,10 +350,43 @@ class CodigoBarra
     /**
      * Get con_referencia
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getConReferencia()
     {
         return $this->con_referencia;
+    }
+
+    /**
+     * Add secciones
+     *
+     * @param \Caja\SistemaCajaBundle\Entity\BarraSeccion $secciones
+     * @return CodigoBarra
+     */
+    public function addSeccione(\Caja\SistemaCajaBundle\Entity\BarraSeccion $secciones)
+    {
+        $this->secciones[] = $secciones;
+    
+        return $this;
+    }
+
+    /**
+     * Remove secciones
+     *
+     * @param \Caja\SistemaCajaBundle\Entity\BarraSeccion $secciones
+     */
+    public function removeSeccione(\Caja\SistemaCajaBundle\Entity\BarraSeccion $secciones)
+    {
+        $this->secciones->removeElement($secciones);
+    }
+
+    /**
+     * Get secciones
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getSecciones()
+    {
+        return $this->secciones;
     }
 }

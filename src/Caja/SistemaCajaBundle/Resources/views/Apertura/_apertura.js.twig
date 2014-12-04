@@ -3,24 +3,25 @@
     $(document).ready(function (e) {
         var cantidad_elementos = document.querySelector("#caja_sistemacajabundle_aperturatype_habilitacion").length;
         if (cantidad_elementos == 2) {
-            jQuery("#caja_sistemacajabundle_aperturatype_habilitacion").prop("selectedIndex",1);
+            jQuery("#caja_sistemacajabundle_aperturatype_habilitacion").prop("selectedIndex", 1);
         }
     }); //fin document ready
 
     var miTimer;
-    miTimer = setInterval(function(){
-        if (document.SerialLar.isActive()){
+    miTimer = setInterval(function () {
+        if (document.SerialLar.isActive()) {
             jQuery("#form_apertura").show();
             window.clearTimeout(miTimer);
             $.unblockUI();
         }
-    },500);
+    }, 500);
 
     $(function () {
-        $.blockUI({ message:"Esperando impresora..." });
+        $.blockUI({message: "Esperando impresora..."});
         $("#form_apertura").submit(function (e) {
             e.preventDefault();
-            $.blockUI({ message:"Imprimiendo ticket..." });
+            $.blockUI({message: "Imprimiendo testigo..."});
+
             verificarEstadoSerial("comprobarImpresora");
             return false;
         });
@@ -28,10 +29,11 @@
 
         comprobarImpresora = function () {
             $("#form_apertura").ajaxSubmit({
-                dataType:'json',
-                success:function (data, statusText, xhr, $form) {
+                dataType: 'json',
+                success: function (data, statusText, xhr, $form) {
 
                     if (statusText == 'success') {
+
                         if (data.ok == 1) {
                             imprimirSerial(data.tk);
                             //Despues de imprimir, se redirige al monitor:
@@ -44,15 +46,14 @@
                         }
                     }
                 },
-                error:function (data) {
+                error: function (data) {
                     $.unblockUI();
                     alert('Mensaje de error al imprimir: ' + data.msg + '. Ticket: ' + data.tk);
 
                 }
             });
-
-
         }
+
     });
 
 

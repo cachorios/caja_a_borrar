@@ -159,7 +159,7 @@ class ImpresionCierre implements Imprimible
     }
 
     /**
-     * Genera el txt de la reimpresi�n del cierre.
+     * Genera el txt de la reimpresion del cierre.
      *
      */
     function generarTxt() {

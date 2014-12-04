@@ -39,7 +39,7 @@
                                 <td>{% if entity.fecha %}{{ entity.fecha|date('d-m-Y H:i:s') }}{% endif %}</td>
                                 <td>{{ entity.codigoBarra }}</td>
                                 <td>{{ entity.importe | number_format(2, '.', ',') }}</td>
-                                <td>{% if is_granted('ROLE_ADMIN') %}
+                                <td>{% if (is_granted('ROLE_ADMIN') OR is_granted('ROLE_JEFE_CAJA') %}
                                     <a class="btn btn-mini"
                                        href="{{ path('apertura_preparar_reimpresion_ticket', { 'id': entity.id }) }}">
                                         {{ 'Reimprimir'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}

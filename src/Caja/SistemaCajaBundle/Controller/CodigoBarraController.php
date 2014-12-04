@@ -214,16 +214,6 @@ class CodigoBarraController extends Controller
         $breadcrumbs->addItem("CodigoBarra", $this->get("router")->generate("codigobarra"));
         $breadcrumbs->addItem("Editar" );
 
-
-
-//        $bm = $this->container->get("caja.barra");
-//        $bm->setCodigo("93390004711713051130179887510000000000000000", new \DateTime('2013-01-27'));
-//        $arr = $bm->getDetalle();
-//        ld($arr);
-//        $i = $bm->getImporte();
-//		$v = $bm->getVto();
-//        //ld($i,$v);
-
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SistemaCajaBundle:CodigoBarra')->find($id);
 

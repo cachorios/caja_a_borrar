@@ -189,15 +189,38 @@ class CodigoBarraLive
             if ($pos->getComp()) {
                 $this->comprobante = substr($this->codigo, $pos->getPosicion() - 1, $pos->getLongitud());
             }
+
             if ($pos->getSeccion()) {
-                $this->seccion = substr($this->codigo, $pos->getPosicion() - 1, $pos->getLongitud());
+                $this->seccion = 0;
+                $seccion_original = substr($this->codigo, $pos->getPosicion() - 1, $pos->getLongitud());
+                $seccion_equivalente = $this->em->getRepository("SistemaCajaBundle:BarraSeccion")->findOneBy(array("valor" => $seccion_original, "codigobarra" => $this->cbReg->getId()));
+                if ($seccion_equivalente)
+                    $this->seccion = $seccion_equivalente->getCodigoT10(); //uno o dos digitos, dependiendo del tipo de cod barra
+                //$this->seccion = substr($this->codigo, $pos->getPosicion() - 1, $pos->getLongitud());
+                //01 => TGI     11 => CEM
             }
 
             $ls_desc_tab = substr($this->codigo, $pos->getPosicion() - 1, $pos->getLongitud());
             if ($pos->getTabla() > 0) {
-                $t = $this->tabla_man->getParametro($pos->getTabla(), substr($this->codigo, $pos->getPosicion() - 1, $pos->getLongitud()));
+                /****************CODIGO NUEVO ****************/
+                $barra_seccion = $this->em->getRepository("SistemaCajaBundle:BarraSeccion")->findOneBy(array("valor" => $ls_desc_tab, "codigobarra" => $this->cbReg->getId()));
+                if ($barra_seccion) {
+                    $ls_desc_tab = $barra_seccion->getCodigoT10();
+                }
+                /****************CODIGO NUEVO ****************/
+                //$t = $this->tabla_man->getParametro($pos->getTabla(), substr($this->codigo, $pos->getPosicion() -1, $pos->getLongitud()));
+                $t = $this->tabla_man->getParametro($pos->getTabla(), $ls_desc_tab);
+                /*
+                ld($ls_desc_tab);//  "01"
+                ld($pos->getTabla()); //    10
+                ld($pos->getPosicion()); // 19
+                ld($pos->getLongitud());//  2
+                ld($this->codigo); //   93390001160014336201131000310001300000000061
+                ld(substr($this->codigo, $pos->getPosicion() - 1, $pos->getLongitud())); // "01"
+                */
                 if ($t && $t->getTabla() > 1) {
                     $ls_desc_tab = $t->getDescripcion();
+                    //Tasa General de Inmuebles, Cementerio, etc
                 }
             }
 
@@ -261,7 +284,8 @@ class CodigoBarraLive
         return $ret;
     }
 
-    public function getReferencia(){
+    public function getReferencia()
+    {
         if ($this->getConReferencia() == 1) { //solo se aplica para el código de barra del sistema nuevo
             $sql = "select REFERENCIA from view_boleta_referencia where comprobante = " . $this->getComprobante();
             $connection = $this->em->getConnection();
@@ -284,7 +308,20 @@ class CodigoBarraLive
         return $referencia;
     }
 
-
+    /*
+     * Valido el tipo de seccion del codigo de barra
+     * La idea es no permitir el cobro de secciones no definidas / habilitadas
+     * Se controla el campo codigo_t10 y no el valor porque ya fue pisado / redefinido el atributo seccion del cb
+     */
+    public function validarSeccion()
+    {
+        $seccion_a_cobrar = $this->em->getRepository("SistemaCajaBundle:BarraSeccion")->findOneBy(array("codigo_t10" => $this->seccion, "codigobarra" => $this->cbReg->getId()));
+        if ($seccion_a_cobrar) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 
 

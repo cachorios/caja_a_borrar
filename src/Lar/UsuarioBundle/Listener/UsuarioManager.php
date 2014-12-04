@@ -64,7 +64,7 @@ class UsuarioManager
 
     private function verificarIngreso()
     {
-        if ($this->contenedor->get('security.context')->isGranted('ROLE_ADMIN')) {
+        if (($this->contenedor->get('security.context')->isGranted('ROLE_ADMIN')) || ($this->contenedor->get('security.context')->isGranted('ROLE_JEFE_CAJA'))) {
             return true;
         }
         if ($this->esDiaValido(date("w")) && $this->esHorarioValido()) {
@@ -90,12 +90,12 @@ class UsuarioManager
         if (!$ingreso) return false;
 
         return $d == 0 && $ingreso->getDomingo() ||
-            $d == 1 && $ingreso->getLunes() ||
-            $d == 2 && $ingreso->getMartes() ||
-            $d == 3 && $ingreso->getMiercoles() ||
-            $d == 4 && $ingreso->getJueves() ||
-            $d == 5 && $ingreso->getViernes() ||
-            $d == 6 && $ingreso->getSabado();
+        $d == 1 && $ingreso->getLunes() ||
+        $d == 2 && $ingreso->getMartes() ||
+        $d == 3 && $ingreso->getMiercoles() ||
+        $d == 4 && $ingreso->getJueves() ||
+        $d == 5 && $ingreso->getViernes() ||
+        $d == 6 && $ingreso->getSabado();
     }
 
     private function esHorarioValido()

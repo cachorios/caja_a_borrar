@@ -80,7 +80,6 @@ class CajaManager
     public function esCajero()
     {
         //Pregunto si tiene el rol de cajero
-
         if (!$this->contenedor->get('security.context')->isGranted('ROLE_USUARIO')) {
             return false;
         }
@@ -92,8 +91,12 @@ class CajaManager
             ->createQuery("SELECT h
                 FROM SistemaCajaBundle:Habilitacion h
                 WHERE h.hasta is null
+
                 AND h.usuario = :usuario_id")
             ->setParameter("usuario_id", $usuario)
+            //->setParameter("hoy", $usuario)
+            //->setParameter("hasta", $usuario)
+            //and h.desde BETWEEN campo2 and campo3
             ->getResult();
 
         if (count($consulta)>0) {

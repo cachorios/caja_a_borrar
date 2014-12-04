@@ -1,5 +1,6 @@
 <?php
 namespace Caja\SistemaCajaBundle\Listener;
+
 /**
  * Created by JetBrains PhpStorm.
  * User: cacho
@@ -16,6 +17,7 @@ class CajaListener
 {
     protected $contenedor;
     private $logIn;
+
     public function __construct($cnt = null)
     {
         $this->contenedor = $cnt;
@@ -31,7 +33,7 @@ class CajaListener
     {
         $tk = $event->getAuthenticationToken();
         $usuario = $tk->getUser();
-        $this->logIn=1;
+        $this->logIn = 1;
         $usuario->setUltimoIngreso(new \DateTime());
         $usuario->setPassword(null);
 
@@ -45,22 +47,23 @@ class CajaListener
 
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if($this->logIn == 1){
-            if ($this->contenedor->get("caja.manager")->esCajero()){//tiene rol de cajero y habilitacion activa
+        if ($this->logIn == 1) {
+            if ($this->contenedor->get("caja.manager")->esCajero()) {//tiene rol de cajero y habilitacion activa
                 $apertura = $this->contenedor->get("caja.manager")->getApertura();
                 //Si tiene apertura mostrar el monitor, sino, que cree una apertura
-                if($apertura){
-                    $toRedirect = $this->contenedor->get("router")->generate('apertura_monitor') ;
-                }else{
-                    $toRedirect = $this->contenedor->get("router")->generate('apertura_new') ;
+                if ($apertura) {
+                    $toRedirect = $this->contenedor->get("router")->generate('apertura_monitor');
+                } else {
+                    $toRedirect = $this->contenedor->get("router")->generate('apertura_new');
                 }
 
-            } else if ($this->contenedor->get('security.context')->isGranted('ROLE_ADMIN')) { //es administrador
-                   $toRedirect = $this->contenedor->get("router")->generate('apertura') ;
+            } else if (($this->contenedor->get('security.context')->isGranted('ROLE_ADMIN')) || ($this->contenedor->get('security.context')->isGranted('ROLE_JEFE_CAJA'))) {
+                //es administrador O JEFE DE CAJA
+                $toRedirect = $this->contenedor->get("router")->generate('apertura');
             } else { // seria para el caso de un usuario comun sin caja asignada o sin habilitacion vigente
                 //throw new BadCredentialsException('Ingreso rechazado. El usuario no tiene caja asignada', 0);
                 //$event->stopPropagation();
-                $toRedirect = $this->contenedor->get("router")->generate('apertura') ;
+                $toRedirect = $this->contenedor->get("router")->generate('apertura');
             }
             $event->setResponse(new RedirectResponse($toRedirect));
             $event->stopPropagation();

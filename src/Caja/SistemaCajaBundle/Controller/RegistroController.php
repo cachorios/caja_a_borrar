@@ -176,7 +176,6 @@ class RegistroController extends Controller implements IControllerAuditable
         $res = $em->getRepository("SistemaCajaBundle:LoteDetalle")->findBy(array('codigo_barra' => $cb));
 
         if (count($res) > 0) {
-            //ld($res);
             $rJson = json_encode(array(
                 'ok' => 0,
                 'msg' => "Este comprobante ya se ha registrado, el dia " . $res[0]->getFecha()->format('d-m-Y H:i:s')
@@ -187,11 +186,15 @@ class RegistroController extends Controller implements IControllerAuditable
         //Servicio de codigo de barra, para interpretarlo
         $bm = $this->container->get("caja.barra");
         $bm->setCodigo($cb, $apertura->getFecha());
-
+        //valido el tipo de seccion del codigo:
+        if (!$bm->validarSeccion()) {
+            $rJson = json_encode(array(
+                'ok' => 0,
+                'msg' => "Seccion No Reconocida - Codigo de Barra Invalido"
+            ));
+            return $response->setContent($rJson);
+        }
         $imp = $bm->getImporte($this->container->get("sistemacaja.prorroga"));
-
-        //referencia del comprobante
-        $referencia = $bm->getReferencia();
 
         if ($imp > 0) {
             $rJson = json_encode(array('ok' => 1,
@@ -199,7 +202,7 @@ class RegistroController extends Controller implements IControllerAuditable
                 'comprobante' => $bm->getComprobante(),
                 'seccion' => $bm->getSeccion(),
                 'vencimiento' => $bm->getVto(),
-                'referencia' => $referencia,
+                'referencia' => $bm->getReferencia(),
                 'detalle' => $this->renderView("SistemaCajaBundle:Registro:_detalle.html.twig", array('elementos' => $bm->getDetalle()))
             ));
         } else {
@@ -212,43 +215,6 @@ class RegistroController extends Controller implements IControllerAuditable
 
         return $response->setContent($rJson);
     }
-
-    /*
-    public function getTicketAction($tipo = 0)
-    {
-        $tk = "Hola";
-        $ticket = $this->get("sistemacaja.ticket");
-
-        $contenido = array(
-            array("TGI-4545 02/13", 36.45),
-            //array("TGI-4546 02/13, 4547 02/13, 4548 02/13, 4549 02/13", 185.99),
-            //array("Otro item", 100.00),
-        );
-
-
-        //$ticket->setContenido("Item!!!!");
-        $ticket->setContenido($contenido);
-        $ticket->setValores(array(
-            'ticket' => "121212",
-            'codigobarra' => '93390001416013105162030070012011000000000088'
-        ));
-
-
-        //if($tipo == 0)
-        $tk = $ticket->getTicketFull();
-
-        //if($tipo == 1)
-        $tk .= $ticket->getTicketTestigo();
-//        if($tipo == 3){
-//
-//        }
-
-
-        $response = new Response();
-        return $response->setContent($tk);
-
-    }
-    */
 
     /**
      * @return Array, un array con los nombres de los actions excluidos

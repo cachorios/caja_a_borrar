@@ -1,20 +1,20 @@
 <script type="text/javascript">
 
     var miTimer;
-    miTimer = setInterval(function(){
+    miTimer = setInterval(function () {
 
-        if (document.SerialLar.isActive()){
+        if (document.SerialLar.isActive()) {
             jQuery("#form_cierre").show();
             window.clearTimeout(miTimer);
             $.unblockUI();
         }
-    },500);
+    }, 500);
 
     $(function () {
-        $.blockUI({ message:"Esperando impresora..." });
+        $.blockUI({message: "Esperando impresora..."});
         $("#form_cierre").submit(function (e) {
             e.preventDefault();
-            $.blockUI({ message:"Imprimiendo ticket..." });
+            $.blockUI({message: "Imprimiendo ticket..."});
             verificarEstadoSerial("comprobarImpresora");
             return false;
         });
@@ -23,8 +23,8 @@
         comprobarImpresora = function () {
 
             $("#form_cierre").ajaxSubmit({
-                dataType:'json',
-                success:function (data, statusText, xhr, $form) {
+                dataType: 'json',
+                success: function (data, statusText, xhr, $form) {
 
                     if (statusText == 'success') {
                         if (data.ok == 1) {
@@ -39,13 +39,14 @@
                         }
                     }
                 },
-                error:function (data) {
+                error: function (data) {
                     $.unblockUI();
                     alert('Mensaje de error al imprimir: ' + data.msg + '. Ticket: ' + data.tk);
 
                 }
             });
         }
+
     });
 
 
@@ -76,10 +77,10 @@
      * Envia el mail correspondiente
      */
     envioMail = function () {
-        $.blockUI({ message:"Enviando mail..." });
+        $.blockUI({message: "Enviando mail..."});
         $("#form_envio_mail").ajaxSubmit({
-            dataType:'json',
-            success:function (data, statusText, xhr, $form) {
+            dataType: 'json',
+            success: function (data, statusText, xhr, $form) {
 
                 if (statusText == 'success') {
                     if (data.ok == 1) {
@@ -93,7 +94,7 @@
                     }
                 }
             },
-            error:function (data) {
+            error: function (data) {
                 $.unblockUI();
                 alert('Error al enviar el mail correspondiente..');
             }
