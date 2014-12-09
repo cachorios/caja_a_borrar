@@ -22,31 +22,7 @@
             e.preventDefault();
             $.blockUI({message: "Imprimiendo testigo..."});
 
-            //verificarEstadoSerial("comprobarImpresora");
-            $("#form_apertura").ajaxSubmit({
-                dataType: 'json',
-                success: function (data, statusText, xhr, $form) {
-
-                    if (statusText == 'success') {
-
-                        if (data.ok == 1) {
-                            imprimirSerial(data.tk);
-                            //Despues de imprimir, se redirige al monitor:
-                            $.unblockUI();
-                            window.location = "{{ path('apertura_monitor') }}";
-                        }
-                        else if (data.ok != 1) {
-                            $.unblockUI();
-                            alert('Mensaje de error: ' + data.msg);
-                        }
-                    }
-                },
-                error: function (data) {
-                    $.unblockUI();
-                    alert('Mensaje de error al imprimir: ' + data.msg + '. Ticket: ' + data.tk);
-
-                }
-            });
+            verificarEstadoSerial("comprobarImpresora");
             return false;
         });
 

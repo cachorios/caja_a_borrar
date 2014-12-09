@@ -364,28 +364,7 @@ $(document).ready(function (e) {
 
                     //ocultar el boton de cancelar con jquery clasico
                     //guardarRegistro sera llamado si el estado esta ok!
-                    //verificarEstadoSerial("guardarRegistro");
-
-                    miForm = $("form", "#form_CodigoBarra"); //.submit();
-                    $.ajax({
-                        type: 'POST',
-                        url: $(miForm).attr('action'),
-                        data: $(miForm).serialize(),
-                        dataType: "json",
-                        success: function (data) {
-                            //$('#result').html(data);
-                            if (data.ok == 1) {
-                                imprimirSerial(data.ticket);
-                                //redirigir
-
-                                window.location = "{{ path('registro') }}";
-                            }
-                            else if (data.ok != 1) {
-                                alert(data.error);
-                            }
-                        }
-                    })
-
+                    verificarEstadoSerial("guardarRegistro");
                     return false;
                 }
                 if (result == "Cancelar") {

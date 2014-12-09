@@ -15,32 +15,7 @@
         $("#form_cierre").submit(function (e) {
             e.preventDefault();
             $.blockUI({message: "Imprimiendo ticket..."});
-            //verificarEstadoSerial("comprobarImpresora");
-
-            $("#form_cierre").ajaxSubmit({
-                dataType: 'json',
-                success: function (data, statusText, xhr, $form) {
-
-                    if (statusText == 'success') {
-                        if (data.ok == 1) {
-                            imprimirSerial(data.tk);
-                            //Despues de imprimir, mando el mail como una llamada ajax separada:
-                            $.unblockUI();
-                            envioMail();
-                        }
-                        else if (data.ok != 1) {
-                            $.unblockUI();
-                            alert('Mensaje de error: ' + data.msg);
-                        }
-                    }
-                },
-                error: function (data) {
-                    $.unblockUI();
-                    alert('Mensaje de error al imprimir: ' + data.msg + '. Ticket: ' + data.tk);
-
-                }
-            });
-
+            verificarEstadoSerial("comprobarImpresora");
             return false;
         });
 
