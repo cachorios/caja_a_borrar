@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="es-AR">
 <head>
-    <script src="{{  asset('js/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
 </head>
 <body>
 
-    <form id="motorImpresion" action="http://sistema.posadas.gov.ar:8080/MuniReportes/ReporteControlador" method="post">
+<form id="motorImpresion" action="http://localhost:8080/MuniReportes/ReporteControlador" method="post">
 
-        {% for key,value in parametros %}
-                <input type="hidden" name="{{ key }}" value="{{ value }}">
-        {% endfor %}
-     </form>
+    {% for key,value in parametros %}
+        <input type="hidden" name="{{ key }}" value="{{ value }}">
+    {% endfor %}
+</form>
 
-    <script type="text/javascript">
-        jQuery(document).ready(function(){
-            jQuery("#motorImpresion").submit();
-        });
-    </script>
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        jQuery("#motorImpresion").submit();
+    });
+</script>
 
 </body>
 </html>
