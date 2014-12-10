@@ -73,7 +73,7 @@ class AperturaController extends Controller implements IControllerAuditable
         }
 
         //if ($this->securityContext->isGranted('ROLE_ADMIN') || $this->securityContext->isGranted('ROLE_JEFE_CAJA')) {
-        if (!$this->container->get('security.context')->isGranted('ROLE_ADMIN') || $this->container->get('security.context')->isGranted('ROLE_JEFE_CAJA')) {
+        if ($this->container->get('security.context')->isGranted('ROLE_ADMIN') || $this->container->get('security.context')->isGranted('ROLE_JEFE_CAJA')) {
             $queryBuilder = $em->getRepository('SistemaCajaBundle:Apertura')->getTodasAperturas();
         } else if ($this->container->get("caja.manager")->esCajero()) {
             $queryBuilder = $em->getRepository('SistemaCajaBundle:Apertura')->getAperturas($this->getUser());
