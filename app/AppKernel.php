@@ -34,6 +34,7 @@ class AppKernel extends Kernel
             new Caja\SistemaCajaBundle\SistemaCajaBundle(),
             new Common\AuditorBundle\CommonAuditorBundle(),
             new Caja\GeneralBundle\GeneralBundle(),
+            new Caja\ComercioBundle\ComercioBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

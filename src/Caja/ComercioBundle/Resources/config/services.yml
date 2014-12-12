@@ -1,0 +1,7 @@
+parameters:
+#    comercio.example.class: Caja\ComercioBundle\Example
+
+services:
+#    comercio.example:
+#        class: %comercio.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

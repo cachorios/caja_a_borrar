@@ -1,3 +1,7 @@
+comercio:
+    resource: "@ComercioBundle/Resources/config/routing.yml"
+    prefix:   /
+
 general:
     resource: "@GeneralBundle/Resources/config/routing.yml"
     prefix:   /

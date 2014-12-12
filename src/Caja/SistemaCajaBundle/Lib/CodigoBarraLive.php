@@ -32,7 +32,8 @@ class CodigoBarraLive
     private $seccion;
     private $vtos;
     private $conReferencia;
-
+    private $valor;
+    private $em_comercio;
 
     public function __construct($em, $tabla_man, $logger = null)
     {
@@ -45,8 +46,9 @@ class CodigoBarraLive
         $this->vtos = array();
     }
 
-    public function setCodigo($codigo, $fecha = null)
+    public function setCodigo($codigo, $fecha = null, $em_comercio)
     {
+        $this->em_comercio = $em_comercio;
         $this->codigo = trim($codigo);
         $this->fechaCalculo = $fecha == null ? new \DateTime('now') : $fecha;
 
@@ -151,6 +153,7 @@ class CodigoBarraLive
                 if ($soloIndentificar == false) {
                     $this->conReferencia = $this->cbReg->getConReferencia();
                     $this->detalle = $this->def2Array($reg);
+                    $this->valor = $this->cbReg->getValor();
                 }
 
                 return true;
@@ -263,9 +266,6 @@ class CodigoBarraLive
 
     private function evalExp($exp)
     {
-
-        //eval("\$ret=".$exp.";");
-
         $fn = create_function("", "return ({$exp});");
         $ret = $fn();
         return $ret;
@@ -273,33 +273,62 @@ class CodigoBarraLive
 
     public function getReferencia()
     {
-        if ($this->getConReferencia() == 1) { //solo se aplica para el código de barra del sistema nuevo
-            $sql = "select REFERENCIA from view_boleta_referencia where comprobante = " . $this->getComprobante();
-            $connection = $this->em->getConnection();
-            $statement = $connection->prepare($sql);
-            $statement->execute();
-            $referencias = $statement->fetchAll();
-            $cantidad = count($referencias);
-            $referencia = "";
-            if ($cantidad > 0) {
-                foreach ($referencias as $ref) {
-                    $referencia .= $ref['REFERENCIA'] . ' * '; //FALTA EL FOR EACH ....
-                }
-            } else {
-                $referencia = "";
-            }
-        } else {
-            $referencia = "";
-        }
+        if ($this->getConReferencia() == 1) {
+            $referencia = null;
+            $func = '$this->api_' . $this->valor . '()';
+            $respuesta = "\$referencia=" . trim($func, ";\t\n\r\0\x0B") . ";";
 
+            eval($respuesta);
+
+            if (is_null($referencia)) {
+                $referencia = '';
+            }
+            return $referencia;
+        }
+    }
+
+    /*
+     * Devuelve la referencia del codigo de barra del sistema "nuevo"
+     */
+    private function api_93392()
+    {
+        //solo se aplica para el código de barra del sistema nuevo
+        $sql = "select REFERENCIA from view_boleta_referencia where comprobante = " . $this->getComprobante();
+        $connection = $this->em->getConnection();
+        $statement = $connection->prepare($sql);
+        $statement->execute();
+        $referencias = $statement->fetchAll();
+        $cantidad = count($referencias);
+        $referencia = "";
+        if ($cantidad > 0) {
+            foreach ($referencias as $ref) {
+                $referencia .= $ref['REFERENCIA'] . ' * '; //FALTA EL FOR EACH ....
+            }
+        }
         return $referencia;
     }
 
     /*
-     * Valido el tipo de seccion del codigo de barra
-     * La idea es no permitir el cobro de secciones no definidas / habilitadas
-     * Se controla el campo codigo_t10 y no el valor porque ya fue pisado / redefinido el atributo seccion del cb
+     * Devuelve la referencia del codigo de barra dle sistema "viejo" de comercio
      */
+    private function api_93391()
+    {
+
+        $referencia = "";
+        //$em_comercio = $this->contenedor->get("comercio.manager");
+        //$actividad = $em_comercio->getRepository('ComercioBundle:Comercio')->findOneBy(array('codigo' => '011111' ));
+        $actividad = $this->em_comercio->findOneBy(array('codigo' => '011111' ));
+        if ($actividad) {
+            $referencia = $actividad->getCodigo();
+        }
+        return $referencia;
+    }
+
+    /*
+         * Valido el tipo de seccion del codigo de barra
+         * La idea es no permitir el cobro de secciones no definidas / habilitadas
+         * Se controla el campo codigo_t10 y no el valor porque ya fue pisado / redefinido el atributo seccion del cb
+         */
     public function validarSeccion()
     {
         $seccion_a_cobrar = $this->em->getRepository("SistemaCajaBundle:BarraSeccion")->findOneBy(array("codigo_t10" => $this->seccion, "codigobarra" => $this->cbReg->getId()));

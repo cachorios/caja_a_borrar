@@ -87,6 +87,7 @@ class CodigoBarra
      */
     protected $con_referencia;
 
+
     /**
      * Get id
      *

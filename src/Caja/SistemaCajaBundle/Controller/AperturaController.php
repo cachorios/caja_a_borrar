@@ -77,7 +77,7 @@ class AperturaController extends Controller implements IControllerAuditable
             $queryBuilder = $em->getRepository('SistemaCajaBundle:Apertura')->getTodasAperturas();
         } else if ($this->container->get("caja.manager")->esCajero()) {
             $queryBuilder = $em->getRepository('SistemaCajaBundle:Apertura')->getAperturas($this->getUser());
-        } else{
+        } else {
             $queryBuilder = $em->getRepository('SistemaCajaBundle:Apertura')->getAperturas(0); //NO es cajero ni admin. NO ve nada
         }
 
@@ -185,7 +185,6 @@ class AperturaController extends Controller implements IControllerAuditable
 
         //Recupero el puerto del puesto que tiene el usuario:
         $em = $this->getDoctrine()->getManager();
-
         $q = $em->createQuery("SELECT p.puerto
               FROM
                   SistemaCajaBundle:Habilitacion h JOIN h.puesto p

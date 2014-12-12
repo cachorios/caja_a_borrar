@@ -186,7 +186,18 @@ class RegistroController extends Controller implements IControllerAuditable
 
         //Servicio de codigo de barra, para interpretarlo
         $bm = $this->container->get("caja.barra");
-        $bm->setCodigo($cb, $apertura->getFecha());
+        /**************************************************/
+        $comercio_manager = $this->container->get("comercio_manager");
+        /*
+        $referencia = "";
+        $actividad = $comercio_manager->findOneBy(array('codigo' => '011111'));
+        if ($actividad)
+            $referencia = $actividad->getCodigo();
+
+        $emc = $this->getDoctrine()->getManager('comercio');
+        */
+        /**************************************************/
+        $bm->setCodigo($cb, $apertura->getFecha(), $comercio_manager);
         //valido el tipo de seccion del codigo:
         if (!$bm->validarSeccion()) {
             $rJson = json_encode(array(
