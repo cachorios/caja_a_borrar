@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Comercio
  *
- * @ORM\Table(name="actividades")
+ * @ORM\Table(name="djm_vista_cajas")
  * *@ORM\Entity(repositoryClass="Caja\ComercioBundle\Entity\ComercioRepository")
  */
 class Comercio
@@ -16,7 +16,7 @@ class Comercio
    /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="comprobante", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
@@ -25,22 +25,30 @@ class Comercio
     /**
      * @var string
      *
-     * @ORM\Column(name="codigo", type="string", length=32)
+     * @ORM\Column(name="razon_social", type="string", length=200)
      */
-    private $codigo;
+    private $razonsocial;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="alicuota", type="integer")
+     * @ORM\Column(name="contribuyente", type="string", length=9)
      */
-    private $alicuota;
+    private $contribuyente;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="periodos", type="string", length=512)
+     */
+    private $periodos;
+
 
 
     /**
      * Get id
      *
-     * @return integer
+     * @return integer 
      */
     public function getId()
     {
@@ -48,48 +56,71 @@ class Comercio
     }
 
     /**
-     * Set codigo
+     * Set razonsocial
      *
-     * @param string $codigo
+     * @param string $razonsocial
      * @return Comercio
      */
-    public function setCodigo($codigo)
+    public function setRazonsocial($razonsocial)
     {
-        $this->codigo = $codigo;
-
+        $this->razonsocial = $razonsocial;
+    
         return $this;
     }
 
     /**
-     * Get codigo
+     * Get razonsocial
      *
-     * @return string
+     * @return string 
      */
-    public function getCodigo()
+    public function getRazonsocial()
     {
-        return $this->codigo;
+        return $this->razonsocial;
     }
 
     /**
-     * Set alicuota
+     * Set contribuyente
      *
-     * @param integer $alicuota
+     * @param string $contribuyente
      * @return Comercio
      */
-    public function setAlicuota($alicuota)
+    public function setContribuyente($contribuyente)
     {
-        $this->alicuota = $alicuota;
-
+        $this->contribuyente = $contribuyente;
+    
         return $this;
     }
 
     /**
-     * Get alicuota
+     * Get contribuyente
      *
-     * @return integer
+     * @return string 
      */
-    public function getAlicuota()
+    public function getContribuyente()
     {
-        return $this->alicuota;
+        return $this->contribuyente;
+    }
+
+    /**
+     * Set periodos
+     *
+     * @param string $periodos
+     * @return Comercio
+     */
+    public function setPeriodos($periodos)
+    {
+        $this->periodos = $periodos;
+    
+        return $this;
+    }
+
+    /**
+     * Get periodos
+     *
+     * @return string 
+     */
+    public function getPeriodos()
+    {
+        return $this->periodos;
     }
 }

@@ -8,24 +8,21 @@
 
             <table id="tscroll" width="100%">
                 <thead>
-                    <tr>
-                        <th>##</th>
-                        <th>Comprobante </th>
-                        <th>Referencia </th>
-                        <th>Vencimiento </th>
-                        <th>Importe </th>
-                        <th>Acción</th>
-
-                    </tr>
-
+                <tr>
+                    <th style="width: 5%;">##</th>
+                    <th style="width: 15%;">Comprobante</th>
+                    <th style="width: 35%;">Referencia</th>
+                    <th style="width: 10%;">Vencimiento</th>
+                    <th style="width: 10%;">Importe</th>
+                    <th style="width: 10%;">Acción</th>
+                </tr>
                 </thead>
                 <tbody class="items"></tbody>
                 <tfoot>
-                    <tr>
-                        <td colspan="3"><h2>Total: &nbsp;</h2></td>
-                        <td><span id="lote_detalle_total">0.00</span></td>
-
-                    </tr>
+                <tr>
+                    <td colspan="3"><h2>Total: &nbsp;</h2></td>
+                    <td><span id="lote_detalle_total">0.00</span></td>
+                </tr>
                 </tfoot>
             </table>
             {{ form_rest(form) }}
@@ -33,7 +30,8 @@
 
             <div class="clear"></div>
 
-            <button  class="btn btn-mini add_item" style="margin-top: 13px; display: none;" data-coleccion-add-btn-det="" >
+            <button class="btn btn-mini add_item" style="margin-top: 13px; display: none;"
+                    data-coleccion-add-btn-det="">
                 <span class="icon-plus-sign"></span> Agregar
             </button>
 
@@ -56,12 +54,12 @@
                 <div class="active">
 
 
-                <a href="#"
-                   class="info-barra"
-                   data-content="?"
-                   data-original-title="Mas detalle"  >
-                    <span class="icon-zoom-in"></span>
-                </a>
+                    <a href="#"
+                       class="info-barra"
+                       data-content="?"
+                       data-original-title="Mas detalle">
+                        <span class="icon-zoom-in"></span>
+                    </a>
                 </div>
             </td>
             <td align="center">

@@ -161,8 +161,13 @@ $(document).ready(function (e) {
         $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_fecha').attr('readonly', 'readonly');
         $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_importe').attr('readonly', 'readonly');
 
-        $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_fecha').css("width", "200px");
-        $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_importe').css("width", "125px");
+        $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_comprobante').css("width", "140px");
+        $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_referencia').css("width", "315px");
+        $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_fecha').css("width", "100px");
+        $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_importe').css("width", "100px");
+
+        $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_comprobante').css('text-align', 'center');
+        $('#caja_sistemacajabundle_registrotype_detalle_' + index + '_fecha').css('text-align', 'center');
 
         totalizaComprobante();
 

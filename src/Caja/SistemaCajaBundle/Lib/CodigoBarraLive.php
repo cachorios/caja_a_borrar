@@ -313,13 +313,13 @@ class CodigoBarraLive
      */
     private function api_93391()
     {
-
         $referencia = "";
-        //$em_comercio = $this->contenedor->get("comercio.manager");
-        //$actividad = $em_comercio->getRepository('ComercioBundle:Comercio')->findOneBy(array('codigo' => '011111' ));
-        $actividad = $this->em_comercio->findOneBy(array('codigo' => '011111' ));
-        if ($actividad) {
-            $referencia = $actividad->getCodigo();
+        if ($this->seccion == 4) { //comercio en la tabla de equivalencias
+            $comprobante = substr($this->codigo, 20, 8);
+            $djm_vista_cajas = $this->em_comercio->findOneBy(array('id' => $comprobante));
+            if ($djm_vista_cajas) {
+                $referencia = 'Contr. ' . $djm_vista_cajas->getContribuyente() . ' - ' . $djm_vista_cajas->getPeriodos();
+            }
         }
         return $referencia;
     }
