@@ -190,9 +190,6 @@ class CodigoBarraLive
         $aDet = array();
 
         foreach ($det as $pos) {
-            if ($pos->getComp()) {
-                $this->comprobante = substr($this->codigo, $pos->getPosicion() - 1, $pos->getLongitud());
-            }
 
             if ($pos->getSeccion()) {
                 $this->seccion = 0;
@@ -201,6 +198,12 @@ class CodigoBarraLive
                 if ($seccion_equivalente) {
                     $this->seccion = $seccion_equivalente->getCodigoT10(); //uno o dos digitos, dependiendo del tipo de cod barra
                 }
+            }
+
+            if ($pos->getComp()) {
+                $this->comprobante = substr($this->codigo, $pos->getPosicion() - 1, $pos->getLongitud());
+            } else if ($this->seccion == 4) { //Si fuera comercio:
+                $this->comprobante  = substr($this->codigo, 19, 8);
             }
 
             $ls_desc_tab = substr($this->codigo, $pos->getPosicion() - 1, $pos->getLongitud());
@@ -316,11 +319,10 @@ class CodigoBarraLive
     {
         $referencia = "";
         if ($this->seccion == 4) { //comercio en la tabla de equivalencias
-            $comprobante = substr($this->codigo, 20, 8);
+            $comprobante = substr($this->codigo, 19, 8);
             $djm_vista_cajas = $this->em_comercio->getRepository('ComercioBundle:Comercio' ) ->find($comprobante) ;
             if ($djm_vista_cajas) {
-                $this->comprobante = $comprobante;
-                $referencia = 'COM ' . $djm_vista_cajas->getContribuyente() . ' - ' . $djm_vista_cajas->getPeriodos();
+                $referencia = 'Contr. ' . $djm_vista_cajas->getContribuyente() . ' - ' . $djm_vista_cajas->getPeriodos();
             }
         }
         return $referencia;
