@@ -3,13 +3,8 @@ parameters:
     caja.cajamanager:    Caja\SistemaCajaBundle\Lib\CajaManager
     caja.barra:          Caja\SistemaCajaBundle\Lib\CodigoBarraLive
     comercio.manager:    Caja\ComercioBundle\Entity\Comercio
-#    comercio.manager:    Caja\ComercioBundle\Entity\Comercio
-    #caja.ticket.class:   Caja\SistemaCajaBundle\Lib\Ticket
 
 services:
-#    caja.example:
-#        class: %caja.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
     caja.entity.listener:
         class: %caja.listener.class%
         tags:
@@ -28,7 +23,7 @@ services:
 
     sistemacaja.codigobarra:
         class: %caja.barra%
-        arguments: [@doctrine.orm.entity_manager, @lar.parametro.tabla,@logger]
+        arguments: [@service_container, @lar.parametro.tabla,@logger]
 
     sistemacaja.ticket:
         class:  Caja\SistemaCajaBundle\Lib\Ticket
@@ -51,17 +46,7 @@ services:
         class: 'Caja\SistemaCajaBundle\Lib\ProrrogaService'
         arguments: [@doctrine.orm.entity_manager]
 
-    comercio_manager:
-        class: %comercio.manager%
-        factory_service: doctrine.orm.comercio_entity_manager
-        factory_method:  getRepository
-        arguments:
-            - "ComercioBundle:Comercio"
-#        class: %comercio.manager%
-#        arguments: [@doctrine.orm.comercio_entity_manager]
-
     caja.oracleInit:
         class: Doctrine\DBAL\Event\Listeners\OracleSessionInit
         tags:
             - { name: doctrine.event_listener, event: postConnect }
-

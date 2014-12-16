@@ -15,6 +15,7 @@ use Caja\SistemaCajaBundle\Lib\ProrrogaService;
 class CodigoBarraLive
 {
     private $em;
+    private $em_comercio;
     /**
      * @var \Lar\ParametroBundle\Lib\LarParametroService
      */
@@ -33,11 +34,12 @@ class CodigoBarraLive
     private $vtos;
     private $conReferencia;
     private $valor;
-    private $em_comercio;
 
-    public function __construct($em, $tabla_man, $logger = null)
+    public function __construct($contenedor, $tabla_man, $logger = null)
     {
-        $this->em = $em;
+        $this->contenedor = $contenedor;
+        $this->em = $this->contenedor->get("doctrine.orm.entity_manager");
+        $this->em_comercio = $this->contenedor->get("doctrine.orm.comercio_entity_manager");
         $this->tabla_man = $tabla_man;
         $this->logger = $logger;
         $this->comprobante = 0;
@@ -46,9 +48,8 @@ class CodigoBarraLive
         $this->vtos = array();
     }
 
-    public function setCodigo($codigo, $fecha = null, $em_comercio)
+    public function setCodigo($codigo, $fecha = null)
     {
-        $this->em_comercio = $em_comercio;
         $this->codigo = trim($codigo);
         $this->fechaCalculo = $fecha == null ? new \DateTime('now') : $fecha;
 
@@ -316,9 +317,10 @@ class CodigoBarraLive
         $referencia = "";
         if ($this->seccion == 4) { //comercio en la tabla de equivalencias
             $comprobante = substr($this->codigo, 20, 8);
-            $djm_vista_cajas = $this->em_comercio->findOneBy(array('id' => $comprobante));
+            $djm_vista_cajas = $this->em_comercio->getRepository('ComercioBundle:Comercio' ) ->find($comprobante) ;
             if ($djm_vista_cajas) {
-                $referencia = 'Contr. ' . $djm_vista_cajas->getContribuyente() . ' - ' . $djm_vista_cajas->getPeriodos();
+                $this->comprobante = $comprobante;
+                $referencia = 'COM ' . $djm_vista_cajas->getContribuyente() . ' - ' . $djm_vista_cajas->getPeriodos();
             }
         }
         return $referencia;
@@ -339,6 +341,3 @@ class CodigoBarraLive
         }
     }
 }
-
-
-
