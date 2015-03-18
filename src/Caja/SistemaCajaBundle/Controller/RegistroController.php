@@ -64,7 +64,6 @@ class RegistroController extends Controller implements IControllerAuditable
 
         $lote->setApertura($apertura);
 
-
         $response = new Response();
         if ($form->isValid()) {
 
@@ -74,27 +73,44 @@ class RegistroController extends Controller implements IControllerAuditable
                 $em->flush();
 
                 //Aqui debe retornar al timbrado de cada comprobante
-
-                $tk = "";
+                $array_timbrado = array();
+                $tk_testigo = "";
+                $contador = 0;
                 foreach ($lote->getDetalle() as $detalle) {
                     $ticket = $this->get("sistemacaja.ticket");
                     $ticket->setContenido(array(
                             array("Comprobante " . $detalle->getComprobante(), $detalle->getImporte()),
                         )
-
                     );
                     $ticket->setValores(array(
                         'ticket' => $detalle->getId(),
                         'codigobarra' => $detalle->getCodigoBarra(),
-                        'referencia' => $detalle->getReferencia()
+                        'referencia' => $detalle->getReferencia(),
+                        'id' => $detalle->getId()
                     ));
-                    $tk .= $ticket->getTicketFull();
-                    $tk .= $ticket->getTicketTestigo();
+                    //$tk .= $ticket->getTicketFull();
+                    //$tk .= $ticket->getTicketPisado();
 
+                    //$tk .= $ticket->getTicketTestigo(); //Al testigo llama siempre
+                    //$tk .= $ticket->getTimbrado($detalle->getSeccion());
+                    $tk_testigo .= $ticket->getTicketTestigo(); //Al testigo llama siempre
+                    $bm = $this->container->get("caja.barra");
+                    $servicio_tabla = $this->get("lar.parametro.tabla");
+                    $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
+                    $seccion = $servicio_tabla->getParametro($tabla, $detalle->getSeccion());
+                    if ($seccion) {
+                        $seccion = $seccion->getDescripcion();
+                    } else {
+                        $seccion = "seccion desconocida";
+                    }
+                    $referencia = $detalle->getComprobante() . ' - ' . $seccion . ' - $ ' . $detalle->getImporte();
+                    $array_timbrado[$contador] = array($referencia, $ticket->getTimbrado($detalle->getSeccion()));
+                    $contador++;
                 }
                 $response->setContent(json_encode(array(
                     "ok" => 1,
-                    "ticket" => $tk
+                    "ticket_testigo" => $tk_testigo,
+                    "ticket_timbrado" => $array_timbrado
                 )));
 
 
@@ -171,7 +187,7 @@ class RegistroController extends Controller implements IControllerAuditable
         $cb = trim($cb);
 
         $apertura = $this->container->get("caja.manager")->getApertura();
-
+        /*
         //Verificar si ya no se cobro
         $em = $this->getDoctrine()->getManager();
         $res = $em->getRepository("SistemaCajaBundle:LoteDetalle")->findBy(array('codigo_barra' => $cb));
@@ -183,7 +199,7 @@ class RegistroController extends Controller implements IControllerAuditable
             ));
             return $response->setContent($rJson);
         }
-
+        */
         //Servicio de codigo de barra, para interpretarlo
         $bm = $this->container->get("caja.barra");
         $bm->setCodigo($cb, $apertura->getFecha());

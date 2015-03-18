@@ -27,7 +27,7 @@ services:
 
     sistemacaja.ticket:
         class:  Caja\SistemaCajaBundle\Lib\Ticket
-        arguments: [@caja.manager]
+        arguments: [@caja.manager, @caja.barra]
 
     caja.manager:
         alias:  sistemacaja.caja_manager

@@ -1075,13 +1075,12 @@ class AperturaController extends Controller implements IControllerAuditable
 
         $em = $this->getDoctrine()->getManager();
 
-        $caja = $this->container->get('caja.manager')->getCaja();
-
         $entity = $em->getRepository('SistemaCajaBundle:Apertura')->findOneBy(array('id' => $id));
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Apertura entity.');
         } else {
+            $caja = $entity->getHabilitacion()->getCaja();
             $entities = $em->getRepository('SistemaCajaBundle:Apertura')->getDetallePagos($entity->getId());
         }
 
@@ -1106,13 +1105,13 @@ class AperturaController extends Controller implements IControllerAuditable
 
         $em = $this->getDoctrine()->getManager();
 
-        $caja = $this->container->get('caja.manager')->getCaja();
+        //$caja = $this->container->get('caja.manager')->getCaja();
         $detalle = $em->getRepository('SistemaCajaBundle:LoteDetalle')->findOneBy(array('id' => $id));
 
         if (!$detalle) {
             throw $this->createNotFoundException('Unable to find LoteDetalle entity.');
         }
-
+        $caja = $detalle->getLote()->getApertura()->getHabilitacion()->getCaja();
         $bm = $this->container->get("caja.barra");
         $servicio_tabla = $this->get("lar.parametro.tabla");
         $tabla = $bm->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
@@ -1124,7 +1123,7 @@ class AperturaController extends Controller implements IControllerAuditable
         }
         $referencia = $this->formateaReferencia($detalle->getReferencia(), " ", 17, STR_PAD_BOTH);
         $deleteForm = $this->createDeleteForm($id);
-        $puesto = $caja->getApertura()->getHabilitacion()->getPuesto();
+        $puesto = $detalle->getLote()->getApertura()->getHabilitacion()->getPuesto();
         return $this->render('SistemaCajaBundle:Apertura:reimprimirTicket.html.twig', array('entity' => $detalle, 'caja' => $caja, 'puesto' => $puesto, 'delete_form' => $deleteForm->createView(), 'seccion' => $seccion, 'referencia' => $referencia));
     }
 

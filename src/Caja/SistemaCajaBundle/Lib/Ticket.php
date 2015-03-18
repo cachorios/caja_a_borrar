@@ -8,10 +8,12 @@
  */
 
 namespace Caja\SistemaCajaBundle\Lib;
+
 use Doctrine\ORM\EntityManager;
 
 define("ESC", chr(27));
 define("NL", chr(10));
+
 class Ticket
 {
 
@@ -21,15 +23,17 @@ class Ticket
      */
     private $contenido;
     private $valores;
-    //private $isValores;
+
     /**
      * @var CajaManager
      */
     private $cajamanager;
+    private $barra;
 
-    public function __construct(CajaManager $cajaman)
+    public function __construct(CajaManager $cajaman, CodigoBarraLive $barra)
     {
         $this->cajamanager = $cajaman;
+        $this->barra = $barra;
         $this->valores = Array();
     }
 
@@ -40,16 +44,8 @@ class Ticket
 
     public function setValores($valores)
     {
-        /**
-         * valores:
-         * tiecket: nnnnnnnn
-         * codigobarra: xxxxxxxxxxxxxxxxxxxxx
-         */
         $this->valores = $valores;
-        //$this->isValores = true;
     }
-
-
 
     public function getTicketFull()
     {
@@ -59,8 +55,22 @@ class Ticket
         $sticket .= $this->getPie(0);
 
         return $sticket;
+    }
 
+    /*
+     * Dependiendo del tipo de seccion
+     * la impresion sale por una u otra boca
+     */
+    public function getTimbrado($seccion)
+    {
+        //Si es de cementerio, convenio u otras tasas, o patente imprime con la timbradora
+        if ($seccion == 11 || $seccion == 3 || $seccion == 6 || $seccion == 2) {
+            $sticket = $this->getTicketPisado($seccion);
+        } else {
+            $sticket = $this->getTicketFull();
+        }
 
+        return $sticket;
     }
 
     public function getTicketTestigo()
@@ -73,11 +83,148 @@ class Ticket
         return $sticket;
     }
 
-    public function getTicketPisado()
+    public function getTicketPisado($seccion)
     {
         // tipo = 2
-        $sticket = $this->getCabecera(2);
+        $completo = "";
+        $completo .= ESC . "=" . chr(1); //Activar la impresora
+        $completo .= ESC . '@'; //Inicializa
+        $completo .= ESC . "c0" . chr(4); // impresion en la cinta slip - documento (timbradora);
 
+        $sticket = $this->getCabecera(2);
+        $sticket .= $this->getContenido(2);
+        $sticket .= $this->getPie(2);
+
+        //Obtengo la cantidad de lineas que me ocupa la referencia:
+        $referencia = 0;
+        if (array_key_exists('referencia', $this->valores)) {
+            $referencia = $this->valores['referencia'];
+        }
+        $caracteres = strlen($referencia);
+        $lineas = $caracteres / 80;
+        if ($lineas != intval($lineas)) {
+            $lineas = intval($lineas) + 1;
+        }
+
+        if ($seccion == 11 || $seccion == 3) { //cementerio o convenio
+
+            $salto_1 = 10;
+            $salto_2 = 30 - (4 + $lineas); //4 es la segunda parte fija, desde caja hasta el final (lugar)
+            $salto_3 = 17 - (4 + $lineas);
+
+
+            // Bloque 1 (talon para el contribuyente)
+            $contador = 1;
+            while ($contador <= $salto_1) {
+                $completo .= str_pad("", 1, " ", STR_PAD_BOTH) . NL;
+                $contador++;
+            }
+            $completo .= $sticket;
+
+            // Bloque 2 (talon municipalidad)
+            $contador = 1;
+            while ($contador <= $salto_2) {
+                $completo .= str_pad("", 1, " ", STR_PAD_BOTH) . NL;
+                $contador++;
+            }
+            $completo .= $sticket;
+
+            // Bloque 3 (talon rendicion de cuentas)
+            $contador = 1;
+            while ($contador <= $salto_3) {
+                $completo .= str_pad("", 1, " ", STR_PAD_BOTH) . NL;
+                $contador++;
+            }
+            $completo .= $sticket;
+
+            $completo .= chr(12); // expulsa la hoja despues de timbrarla
+        }
+
+        if ($seccion == 6) { //otras tasas
+
+            $salto_1 = 8;
+            $salto_2 = 16 - (4 + $lineas); ///4 es la segunda parte fija, desde caja hasta el final (lugar)
+            $salto_3 = 16 - (4 + $lineas);
+            $salto_4 = 16 - (4 + $lineas);
+
+            // Bloque 1 (talon para el contribuyente)
+            $contador = 1;
+            while ($contador <= $salto_1) {
+                $completo .= str_pad("", 1, " ", STR_PAD_BOTH) . NL;
+                $contador++;
+            }
+            $completo .= $sticket;
+
+            // Bloque 2 (talon otra oficina)
+            $contador = 1;
+            while ($contador <= $salto_2) {
+                $completo .= str_pad("", 1, " ", STR_PAD_BOTH) . NL;
+                $contador++;
+            }
+            $completo .= $sticket;
+
+            // Bloque 3 (talon rendicion de cuentas)
+            $contador = 1;
+            while ($contador <= $salto_3) {
+                $completo .= str_pad("", 1, " ", STR_PAD_BOTH) . NL;
+                $contador++;
+            }
+            $completo .= $sticket;
+
+            // Bloque 4 (talon oficina recaudadora)
+            $contador = 1;
+            while ($contador <= $salto_4) {
+                $completo .= str_pad("", 1, " ", STR_PAD_BOTH) . NL;
+                $contador++;
+            }
+            $completo .= $sticket;
+
+            $completo .= chr(12); // expulsa la hoja despues de timbrarla
+        }
+
+        if ($seccion == 2) { //patente
+
+            $salto_1 = 12;
+            $salto_2 = 14 - (4 + $lineas); ///4 es la segunda parte fija, desde caja hasta el final (lugar)
+            $salto_3 = 14 - (4 + $lineas);
+            $salto_4 = 14 - (4 + $lineas);
+
+            // Bloque 1 (talon para el contribuyente)
+            $contador = 1;
+            while ($contador <= $salto_1) {
+                $completo .= str_pad("", 1, " ", STR_PAD_BOTH) . NL;
+                $contador++;
+            }
+            $completo .= $sticket;
+
+            // Bloque 2 (talon para el municipio)
+            $contador = 1;
+            while ($contador <= $salto_2) {
+                $completo .= str_pad("", 1, " ", STR_PAD_BOTH) . NL;
+                $contador++;
+            }
+            $completo .= $sticket;
+
+            // Bloque 3 (talon DGR)
+            $contador = 1;
+            while ($contador <= $salto_3) {
+                $completo .= str_pad("", 1, " ", STR_PAD_BOTH) . NL;
+                $contador++;
+            }
+            $completo .= $sticket;
+
+            // Bloque 4 (talon para el banco)
+            $contador = 1;
+            while ($contador <= $salto_4) {
+                $completo .= str_pad("", 1, " ", STR_PAD_BOTH) . NL;
+                $contador++;
+            }
+            $completo .= $sticket;
+
+            $completo .= chr(12); // expulsa la hoja despues de timbrarla
+        }
+
+        return $completo;
     }
 
     private function getCabecera($tipo)
@@ -86,71 +233,120 @@ class Ticket
         $hora = date("H:i:s");
         $str = "";
         $caja = $this->cajamanager->getCaja();
-
-        $str .= ESC . "=" . chr(1); //Activar la impresora
-        $str .= ESC . '@'; //Inicializa
+        $em = $this->cajamanager->getEntityManager();
+        $habilitacion = $em->getRepository('SistemaCajaBundle:Habilitacion')->findOneBy(array('usuario' => $this->cajamanager->getUsuario()));
+        $seccion = "seccion desconocida";
+        $detalle = $em->getRepository('SistemaCajaBundle:LoteDetalle')->findOneBy(array('id' => $this->valores['id']));
+        if ($detalle) {
+            $tabla = $this->barra->getTablaSeccionByCodigoBarra($detalle->getCodigoBarra());
+            $seccion = $em->getRepository("LarParametroBundle:LarParametro")->findOneBy(array('tabla' => $tabla, 'codigo' => $detalle->getSeccion()));
+            if ($seccion) {
+                $seccion = $seccion->getDescripcion();
+            }
+        }
+        //$str .= ESC . "=" . chr(1); //Activar la impresora
+        //$str .= ESC . '@'; //Inicializa
         if ($tipo == 0) {
-            $str .= ESC ."c0" .chr(2); // jornal
+            $str .= ESC . "=" . chr(1); //Activar la impresora
+            $str .= ESC . '@'; //Inicializa
+            $str .= ESC . "c0" . chr(2); // impresion full, hacia afuera (receipt)
             $str .= ESC . '!' . chr(8);
-            $str .= str_pad("MUNICIPALIDAD DE POSADAS",30," ",STR_PAD_BOTH).NL. ESC . 'J' . chr(20);
-            $str .= str_pad("***",30," ",STR_PAD_BOTH).NL . ESC . 'J' . chr(30);
-            $str .= ESC . '!' . '0'.NL;
+            $str .= str_pad("MUNICIPALIDAD DE POSADAS", 30, " ", STR_PAD_BOTH) . NL . ESC . 'J' . chr(20);
+            $str .= str_pad("***", 30, " ", STR_PAD_BOTH) . NL . ESC . 'J' . chr(30);
+            $str .= ESC . '!' . '0' . NL;
             //$str .= ESC . 'a' . chr(0); //izquierda
             $str .= ESC . '!' . chr(1);
             $str .= "DIR: " . "RIVADAVIA 1579, POSADAS, MISIONES" . NL;
             $str .= str_pad("FECHA: $fecha", 20, " ", STR_PAD_RIGHT) . str_pad("HORA: $hora", 19, " ", STR_PAD_LEFT) . NL;
-            $str .= str_pad("", 40, "-") .NL;
+            $str .= str_pad("", 40, "-") . NL;
 
             $str .= "CAJA: " . $caja->getNumero() . NL;
-            if($this->valores)
+            if ($this->valores)
                 $str .= "NRO. RECIBO: " . $this->valores['ticket'] . NL;
 
-
-        }elseif ($tipo == 1) {
-
-            $str .= ESC ."c0" .chr(1); // jornal
-            if (isset($this->valores['titulo'])){
+        } elseif ($tipo == 1) {
+            $str .= ESC . "=" . chr(1); //Activar la impresora
+            $str .= ESC . '@'; //Inicializa
+            $str .= ESC . "c0" . chr(1); // impresion en la cinta testigo (jornal)
+            if (isset($this->valores['titulo'])) {
                 $str .= str_pad($this->valores['titulo'], 40, " ", STR_PAD_BOTH);
             }
             $str .= "CAJA: " . $caja->getNumero() . NL;
-            $str .= str_pad("FECHA: $fecha", 20, " ", STR_PAD_RIGHT) . str_pad("HORA: $hora", 19, " ", STR_PAD_LEFT) . NL;
-            if($this->valores)
+            $str .= str_pad("FECHA:" . $fecha, 20, " ", STR_PAD_RIGHT) . str_pad("HORA: " . $hora, 19, " ", STR_PAD_LEFT) . NL;
+            if ($this->valores)
                 $str .= "NRO. RECIBO: " . $this->valores['ticket'] . NL;
-        }
 
+        } elseif ($tipo == 2) {
+            $str .= ESC . "c0" . chr(4); // impresion en la cinta slip - documento (timbradora)
+            $referencia = "";
+            if (array_key_exists('referencia', $this->valores)) {
+                $referencia = $this->valores['referencia'];
+            }
+            $str .= str_pad($seccion, 20, " ", STR_PAD_RIGHT) . str_pad($referencia, 35, " ", STR_PAD_LEFT) . NL;
+            $str .= str_pad("Caja: " . $caja->getNumero() . " Cajero: " . $habilitacion->getUsuario()->getUsername(), 30, " ", STR_PAD_RIGHT) . str_pad(" Fecha: " . $fecha . " / " . $hora, 30, " ", STR_PAD_LEFT) . NL;
+            /*
+            if (isset($this->valores['titulo'])) {
+                $str .= str_pad($this->valores['titulo'], 40, " ", STR_PAD_BOTH);
+            }
+            $str .= str_pad("DELEGACION: ". $habilitacion->getPuesto()->getDelegacion(), 25, " ", STR_PAD_RIGHT) . str_pad("PUESTO: " . $habilitacion->getPuesto(), 25, " ", STR_PAD_LEFT) . NL;
+            $str .= str_pad("CAJA: " .  $caja->getNumero(), 25, " ", STR_PAD_RIGHT) . str_pad("CAJERO: " . $habilitacion->getUsuario()->getUsername(), 25, " ", STR_PAD_LEFT) . NL;
+            $str .= str_pad("FECHA: " . $fecha, 25, " ", STR_PAD_RIGHT) . str_pad("HORA:" . $hora, 25, " ", STR_PAD_LEFT) . NL;
+            if ($this->valores) {
+                $str .= "NRO. RECIBO: " . $this->valores['ticket'] . NL;
+            }
+            */
+        }
         return $str;
     }
-
 
     private function getContenido($tipo)
     {
         $str = "";
         $str .= ESC . '!' . chr(1);
-
         $total = 0;
-
-        if($tipo == 0 ){ //ticket full
+        $em = $this->cajamanager->getEntityManager();
+        $detalle = $em->getRepository('SistemaCajaBundle:LoteDetalle')->findOneBy(array('id' => $this->valores['id']));
+        if ($tipo == 0) { //ticket full
             if (is_array($this->contenido)) {
-                $str .= $this->armaDetalle( $total);
+                $str .= $this->armaDetalle($total);
                 $str .= ESC . "U" . chr(1); //unidireccional
                 $str .= ESC . "!" . chr(17);
-                $str .= str_pad("TOTAL:", 20, " ", STR_PAD_RIGHT) . str_pad(sprintf('%9.2f',$total), 20, " ", STR_PAD_LEFT) . NL;
+                $str .= str_pad("TOTAL:", 20, " ", STR_PAD_RIGHT) . str_pad(sprintf('%9.2f', $total), 20, " ", STR_PAD_LEFT) . NL;
             } else {
-                $str .= $this->contenido.NL;
+                $str .= $this->contenido . NL;
             }
         }
-        if($tipo == 1){ // ticket testigo
+        if ($tipo == 1) { // ticket testigo
             if (is_array($this->contenido)) {
-                $str .= $this->armaDetalle( $total);
+                $str .= $this->armaDetalle($total);
                 $str .= ESC . "U" . chr(1); //unidireccional
-                $str .= str_pad("TOTAL:", 20, " ", STR_PAD_RIGHT) . str_pad(sprintf('%9.2f',$total), 20, " ", STR_PAD_LEFT) . NL;
+                $str .= str_pad("TOTAL:", 20, " ", STR_PAD_RIGHT) . str_pad(sprintf('%9.2f', $total), 20, " ", STR_PAD_LEFT) . NL;
             } else {
-                $str .= $this->contenido.NL;
+                $str .= $this->contenido . NL;
             }
         }
-
-        $str .=  ESC . 'J' . chr(20);
-
+        if ($tipo == 2) { // timbradora (slip)
+            $pagos = "";
+            $lotePagos = $em->getRepository('SistemaCajaBundle:LotePago')->findBy(array('lote' => $detalle->getLote()->getId()));
+            foreach ($lotePagos as $lotePago) {
+                if ($pagos == "") {
+                    $pagos .= $lotePago->getTipoPago();
+                } else {
+                    $pagos .= " - " . $lotePago->getTipoPago();
+                }
+            }
+            $str .= str_pad("Rec: " . $this->valores['ticket'], 15, " ", STR_PAD_RIGHT) . str_pad("$ " . sprintf('%9.2f', $detalle->getImporte()), 15, " ", STR_PAD_LEFT) . str_pad(" - Pago con " . $pagos, 50, " ", STR_PAD_RIGHT);
+            /*
+            if (is_array($this->contenido)) {
+                $str .= $this->armaDetalle($total);
+                $str .= ESC . "U" . chr(1); //unidireccional
+                $str .= str_pad("TOTAL:", 20, " ", STR_PAD_RIGHT) . str_pad(sprintf('%9.2f', $total), 20, " ", STR_PAD_LEFT) . NL;
+            } else {
+                $str .= $this->contenido . NL;
+            }
+            */
+        }
+        $str .= ESC . 'J' . chr(20); ////////DESCOMENTAR //////////////////
 
         return $str;
     }
@@ -161,7 +357,8 @@ class Ticket
      * @param $total por referencia, para retornar la suma
      * @return string
      */
-    private function armaDetalle(& $total){
+    private function armaDetalle(& $total)
+    {
         $str = "";
         foreach ($this->contenido as $reg) {
             //largo del concepto supera 29, dividirlo
@@ -179,7 +376,7 @@ class Ticket
                 }
             } else {
                 $str .= str_pad($reg[0], 29, ' ');
-                $str .= str_pad(sprintf("%01.2f",$reg[1]), 11, ' ', STR_PAD_LEFT) . NL;
+                $str .= str_pad(sprintf("%01.2f", $reg[1]), 11, ' ', STR_PAD_LEFT) . NL;
             }
             $total += $reg[1];
         }
@@ -190,33 +387,45 @@ class Ticket
     private function getPie($tipo)
     {
         $str = "";
-       // $str .= ESC . "U" . chr(0); //cancelar unidireccional
+        // $str .= ESC . "U" . chr(0); //cancelar unidireccional
         $str .= ESC . "!" . chr(1); //caracter normal
         $em = $this->cajamanager->getEntityManager();
         $habilitacion = $em->getRepository('SistemaCajaBundle:Habilitacion')->findOneBy(array('usuario' => $this->cajamanager->getUsuario()));
-        if ($tipo == 0) {
-            if($this->valores)
+        if ($tipo == 0) { // IMPRESION HACIA AFUERA - FULL
+            if ($this->valores)
                 $str .= "COD.BARRA: " . $this->valores['codigobarra'] . NL;
             if (array_key_exists('referencia', $this->valores)) {
                 $str .= "REF: " . $this->valores['referencia'] . NL;
             }
             $str .= str_pad("", 40, "-") . NL;
             $str .= str_pad("*** GRACIAS ***", 40, " ", STR_PAD_BOTH) . ESC . "d" . chr(2);
-            $str .= str_pad("CAJERO: ". $habilitacion->getUsuario()->getUsername()  , 40, " ", STR_PAD_BOTH) . ESC . "d" . chr(2);
+            $str .= str_pad("CAJERO: " . $habilitacion->getUsuario()->getUsername(), 40, " ", STR_PAD_BOTH) . ESC . "d" . chr(2);
             $str .= str_pad("visite: www.posadas.gov.ar", 40, " ", STR_PAD_BOTH) . ESC . "d" . chr(1);
             $str .= str_pad("***", 40, " ", STR_PAD_BOTH) . ESC . "d" . chr(12); //posicion de corte
             $str .= ESC . 'i';
         }
-        if($tipo == 1 ){
-            if($this->valores)
+        if ($tipo == 1) { //CINTA TESTIGO (JOURNAL)
+            if ($this->valores)
                 $str .= "COD.BARRA: " . $this->valores['codigobarra'] . NL;
-                if (array_key_exists('referencia', $this->valores)) {
-                    $str .= "REF: " . $this->valores['referencia'] . NL;
-                }
-            $str .= str_pad("", 40, "-"). NL;
+            if (array_key_exists('referencia', $this->valores)) {
+                $str .= "REF: " . $this->valores['referencia'] . NL;
+            }
+            $str .= str_pad("", 40, "-") . NL;
 
         }
-
+        if ($tipo == 2) { //TIMBRADORA - SPLIT
+            if ($this->valores) {
+                $str .= "COD.BARRA: " . $this->valores['codigobarra'] . NL;
+            }
+            $str .= str_pad($habilitacion->getPuesto() . " / " . $habilitacion->getPuesto()->getDelegacion() . " / MUNICIPALIDAD DE POSADAS", 60, " ", STR_PAD_BOTH) . NL;
+            /*
+            if (array_key_exists('referencia', $this->valores)) {
+                $str .= "REF: " . $this->valores['referencia'] . NL;
+            }
+            */
+            ///$str .= str_pad("", 40, "-") . NL;
+            //$str .= chr(12); // expulsa la hoja despues de timbrarla
+        }
         return $str;
     }
 

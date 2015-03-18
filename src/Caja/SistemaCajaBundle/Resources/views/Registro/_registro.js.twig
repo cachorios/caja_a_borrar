@@ -356,7 +356,7 @@ $(document).ready(function (e) {
         //$this = $(this);
         $.msgBox({
             title: "Registración de Pago",
-            content: "Si esta todo correcto,<br> procede a almacenar el pago e imprimir ticket!",
+            content: "Si los datos son correctos,<br> se registra el pago e imprime el ticket!",
             type: "confirm",
             buttons: [
                 {value: "Si"},
@@ -364,9 +364,7 @@ $(document).ready(function (e) {
             ],
             success: function (result) {
                 if (result == "Si") {
-                    //$this.hide();
-                    $(".modal-footer").hide();
-
+                      $(".modal-footer").hide();
                     //ocultar el boton de cancelar con jquery clasico
                     //guardarRegistro sera llamado si el estado esta ok!
                     verificarEstadoSerial("guardarRegistro");
@@ -376,7 +374,6 @@ $(document).ready(function (e) {
                 }
             }
         });
-
         e.preventDefault();
         return false;
 
@@ -393,12 +390,20 @@ $(document).ready(function (e) {
             data: $(miForm).serialize(),
             dataType: "json",
             success: function (data) {
-                //$('#result').html(data);
                 if (data.ok == 1) {
-                    imprimirSerial(data.ticket);
-                    //redirigir
-
-                    window.location = "{{ path('registro') }}";
+                    var timbrado = data.ticket_timbrado;
+                    var cantidad_comprobantes = timbrado.length;
+                    var contador_impresiones = 0;
+                    // Imprime el/los ticket/s testigo/s:
+                    imprimirSerial(data.ticket_testigo);
+                    //Luego, timbra el/los ticket/s de a uno:
+                    for (contador_impresiones; contador_impresiones < cantidad_comprobantes; contador_impresiones++) {
+                        var descripcion_ticket = timbrado[contador_impresiones][0];
+                        var contenido_ticket = timbrado[contador_impresiones][1];
+                        alert("Ingrese el comprobante: " + descripcion_ticket);
+                        imprimirSerial($contenido_ticket);
+                    }
+                    window.location = "{{ path('registro') }}";//redirigir
                 }
                 else if (data.ok != 1) {
                     alert(data.error);
@@ -446,6 +451,5 @@ $(document).ready(function (e) {
     }
 
 }); //fin document ready
-
 
 </script>
