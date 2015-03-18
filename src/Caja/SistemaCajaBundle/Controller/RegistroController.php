@@ -88,11 +88,6 @@ class RegistroController extends Controller implements IControllerAuditable
                         'referencia' => $detalle->getReferencia(),
                         'id' => $detalle->getId()
                     ));
-                    //$tk .= $ticket->getTicketFull();
-                    //$tk .= $ticket->getTicketPisado();
-
-                    //$tk .= $ticket->getTicketTestigo(); //Al testigo llama siempre
-                    //$tk .= $ticket->getTimbrado($detalle->getSeccion());
                     $tk_testigo .= $ticket->getTicketTestigo(); //Al testigo llama siempre
                     $bm = $this->container->get("caja.barra");
                     $servicio_tabla = $this->get("lar.parametro.tabla");
@@ -187,7 +182,7 @@ class RegistroController extends Controller implements IControllerAuditable
         $cb = trim($cb);
 
         $apertura = $this->container->get("caja.manager")->getApertura();
-        /*
+
         //Verificar si ya no se cobro
         $em = $this->getDoctrine()->getManager();
         $res = $em->getRepository("SistemaCajaBundle:LoteDetalle")->findBy(array('codigo_barra' => $cb));
@@ -199,7 +194,7 @@ class RegistroController extends Controller implements IControllerAuditable
             ));
             return $response->setContent($rJson);
         }
-        */
+
         //Servicio de codigo de barra, para interpretarlo
         $bm = $this->container->get("caja.barra");
         $bm->setCodigo($cb, $apertura->getFecha());
