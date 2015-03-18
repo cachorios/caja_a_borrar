@@ -401,7 +401,7 @@ $(document).ready(function (e) {
                         var descripcion_ticket = timbrado[contador_impresiones][0];
                         var contenido_ticket = timbrado[contador_impresiones][1];
                         alert("Ingrese el comprobante: " + descripcion_ticket);
-                        imprimirSerial($contenido_ticket);
+                        imprimirSerial(contenido_ticket);
                     }
                     window.location = "{{ path('registro') }}";//redirigir
                 }
