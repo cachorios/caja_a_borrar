@@ -63,8 +63,9 @@ class Ticket
      */
     public function getTimbrado($seccion)
     {
-        //Si es de cementerio, convenio u otras tasas, o patente imprime con la timbradora
-        if ($seccion == 11 || $seccion == 3 || $seccion == 6 || $seccion == 2) {
+        //Si es de cementerio,   convenio     u otras tasas,   o patente    o dominio publico,    o publicidad,
+        // imprime con la timbradora
+        if ($seccion == 11 || $seccion == 3 || $seccion == 6 || $seccion == 2 || $seccion == 12 || $seccion == 10) {
             $sticket = $this->getTicketPisado($seccion);
         } else {
             $sticket = $this->getTicketFull();
@@ -105,8 +106,8 @@ class Ticket
         if ($lineas != intval($lineas)) {
             $lineas = intval($lineas) + 1;
         }
-
-        if ($seccion == 11 || $seccion == 3) { //cementerio o convenio
+        //  cementerio        o convenio      o dominio publico, o publicidad,
+        if ($seccion == 11 || $seccion == 3 || $seccion == 12 || $seccion == 10) {
 
             $salto_1 = 10;
             $salto_2 = 30 - (4 + $lineas); //4 es la segunda parte fija, desde caja hasta el final (lugar)
@@ -282,7 +283,7 @@ class Ticket
             if (array_key_exists('referencia', $this->valores)) {
                 $referencia = $this->valores['referencia'];
             }
-            $str .= str_pad($seccion, 20, " ", STR_PAD_RIGHT) . str_pad($referencia, 35, " ", STR_PAD_LEFT) . NL;
+            $str .= str_pad($seccion, 25, " ", STR_PAD_RIGHT) . str_pad($referencia, 35, " ", STR_PAD_LEFT) . NL;
             $str .= str_pad("Caja: " . $caja->getNumero() . " Cajero: " . $habilitacion->getUsuario()->getUsername(), 30, " ", STR_PAD_RIGHT) . str_pad(" Fecha: " . $fecha . " / " . $hora, 30, " ", STR_PAD_LEFT) . NL;
             /*
             if (isset($this->valores['titulo'])) {
