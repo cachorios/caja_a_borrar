@@ -63,14 +63,16 @@ class Ticket
      */
     public function getTimbrado($seccion)
     {
-        //Si es de cementerio,   convenio     u otras tasas,   o patente    o dominio publico,    o publicidad,
+        /*
+        //Si es de cementerio,   convenio     u otras tasas,   o patente    o dominio publico,    o publicidad, o espectaculos publicos
         // imprime con la timbradora
-        if ($seccion == 11 || $seccion == 3 || $seccion == 6 || $seccion == 2 || $seccion == 12 || $seccion == 10) {
+        if ($seccion == 11 || $seccion == 3 || $seccion == 6 || $seccion == 2 || $seccion == 12 || $seccion == 10 || $seccion == 4) {
             $sticket = $this->getTicketPisado($seccion);
         } else {
             $sticket = $this->getTicketFull();
         }
-
+        */
+        $sticket = $this->getTicketPisado($seccion);
         return $sticket;
     }
 
@@ -106,8 +108,8 @@ class Ticket
         if ($lineas != intval($lineas)) {
             $lineas = intval($lineas) + 1;
         }
-        //  cementerio        o convenio      o dominio publico, o publicidad,
-        if ($seccion == 11 || $seccion == 3 || $seccion == 12 || $seccion == 10) {
+        //  cementerio        o convenio      o dominio publico, o publicidad,    o inmuebles,   o espectaculos publicos
+        if ($seccion == 11 || $seccion == 3 || $seccion == 12 || $seccion == 10 || $seccion == 1 || $seccion == 4) {
 
             $salto_1 = 10;
             $salto_2 = 30 - (4 + $lineas); //4 es la segunda parte fija, desde caja hasta el final (lugar)
