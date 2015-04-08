@@ -71,6 +71,20 @@ class Apertura
      */
     private $habilitacion;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="proceso_incorporacion", type="decimal", nullable=true)
+     */
+    private $proceso_incorporacion;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="proceso_fecha", type="datetime", nullable=true)
+     */
+    private $proceso_fecha;
+
     public function __construct()
     {
         $this->fecha = new \DateTime();
@@ -346,5 +360,51 @@ class Apertura
     public function getHabilitacion()
     {
         return $this->habilitacion;
+    }
+
+    /**
+     * Set proceso_incorporacion
+     *
+     * @param string $procesoIncorporacion
+     * @return Apertura
+     */
+    public function setProcesoIncorporacion($procesoIncorporacion)
+    {
+        $this->proceso_incorporacion = $procesoIncorporacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get proceso_incorporacion
+     *
+     * @return string 
+     */
+    public function getProcesoIncorporacion()
+    {
+        return $this->proceso_incorporacion;
+    }
+
+    /**
+     * Set proceso_fecha
+     *
+     * @param \DateTime $procesoFecha
+     * @return Apertura
+     */
+    public function setProcesoFecha($procesoFecha)
+    {
+        $this->proceso_fecha = $procesoFecha;
+    
+        return $this;
+    }
+
+    /**
+     * Get proceso_fecha
+     *
+     * @return \DateTime 
+     */
+    public function getProcesoFecha()
+    {
+        return $this->proceso_fecha;
     }
 }
