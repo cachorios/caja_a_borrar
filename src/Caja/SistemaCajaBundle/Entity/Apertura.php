@@ -90,6 +90,7 @@ class Apertura
         $this->fecha = new \DateTime();
         $this->fecha_cierre = null;
         $this->importe_inicial = 0;
+        $this->proceso_incorporacion = 0;
     }
 
     /**
