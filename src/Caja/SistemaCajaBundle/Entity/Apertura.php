@@ -85,6 +85,13 @@ class Apertura
      */
     private $proceso_fecha;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="proceso_usuario", type="string", length=32, nullable=true)
+     */
+    private $proceso_usuario;
+
     public function __construct()
     {
         $this->fecha = new \DateTime();
@@ -407,5 +414,28 @@ class Apertura
     public function getProcesoFecha()
     {
         return $this->proceso_fecha;
+    }
+
+    /**
+     * Set proceso_usuario
+     *
+     * @param string $procesoUsuario
+     * @return Apertura
+     */
+    public function setProcesoUsuario($procesoUsuario)
+    {
+        $this->proceso_usuario = $procesoUsuario;
+    
+        return $this;
+    }
+
+    /**
+     * Get proceso_usuario
+     *
+     * @return string 
+     */
+    public function getProcesoUsuario()
+    {
+        return $this->proceso_usuario;
     }
 }
