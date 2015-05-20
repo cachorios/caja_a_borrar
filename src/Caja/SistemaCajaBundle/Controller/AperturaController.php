@@ -929,7 +929,7 @@ class AperturaController extends Controller implements IControllerAuditable
         $lista_resumen = array();
         //Recupero los responsables a los cuales se les envia el mail:
         $responsables = $em->getRepository('SistemaCajaBundle:Responsable')->getResponsablesActivos();
-        $ret = array("ok" => 0);
+        $ret = array("ok" => 1); //Edu - 20/05/2015 - EL ENVIO DEL MAIL YA NO ES IMPRESCINDIBLE
         foreach ($responsables as $responsable) {
             if ($responsable->getDetalle()) { //Si tiene activada la opcion para recibir el archivo con el detalle del cierre
                 $lista_detalle[] = $responsable->getEmail();
